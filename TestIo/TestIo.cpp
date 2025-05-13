@@ -51,6 +51,8 @@ void createTestFiles() {
 
 // Xử lý một test theo số
 void runTest(int test) {
+    srand((unsigned)time(NULL));
+
     std::string base = TEST_DIR + "\\test_" + std::to_string(test) + ".txt";
     if (test != 10 && test != 9)
         writeRandom(base);
@@ -181,7 +183,8 @@ void runTest(int test) {
         LPVOID v = MapViewOfFile(m, FILE_MAP_WRITE, 0, 0, 100 * 1024 * 1024);
         if (v) {
             // Ghi dữ liệu mẫu vào đầu file (không cần ghi toàn bộ 100MB)
-            memset(v, 'A', 100 * 1024);
+            char c = 'A' + rand() % 25;
+            memset(v, 'A', 100 * 1024 * 1024);
             //FlushViewOfFile(v, 0);
 
             MoveFileA(base.c_str(), (TEST_DIR + "\\test_9_renamed.txt").c_str());
