@@ -118,7 +118,7 @@ namespace file
         IO_STATUS_BLOCK io_status_block;
         RtlInitUnicodeString(&uni_str, file_path_.Data());
         InitializeObjectAttributes(&obj_attr, &uni_str, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
-        NTSTATUS status = FltCreateFileEx(p_filter_handle_, p_instance_, &file_handle_, &p_file_object_, FILE_GENERIC_READ | FILE_GENERIC_WRITE, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, 0, FILE_OPEN_IF, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0, 0);
+        NTSTATUS status = FltCreateFileEx(p_filter_handle_, p_instance_, &file_handle_, &p_file_object_, FILE_ALL_ACCESS, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, 0, FILE_OPEN_IF, FILE_NON_DIRECTORY_FILE, NULL, 0, 0);
         if (NT_SUCCESS(status))
         {
             is_open_ = true;
@@ -165,7 +165,8 @@ namespace file
         ULONG bytes_read = 0;
         LARGE_INTEGER byte_offset;
         byte_offset.QuadPart = offset;
-        NTSTATUS status = FltReadFile(p_instance_, p_file_object_, &byte_offset, (ULONG)length, buffer, FLTFL_IO_OPERATION_NON_CACHED | FLTFL_IO_OPERATION_DO_NOT_UPDATE_BYTE_OFFSET, &bytes_read, nullptr, nullptr);
+        // If FLTFL_IO_OPERATION_DO_NOT_UPDATE_BYTE_OFFSET and FLTFL_IO_OPERATION_NON_CACHED are only set, the function will hang forever.
+        NTSTATUS status = FltReadFile(p_instance_, p_file_object_, &byte_offset, (ULONG)length, buffer, FLTFL_IO_OPERATION_DO_NOT_UPDATE_BYTE_OFFSET | FLTFL_IO_OPERATION_NON_CACHED | FLTFL_IO_OPERATION_PAGING | FLTFL_IO_OPERATION_SYNCHRONOUS_PAGING, &bytes_read, nullptr, nullptr);
         if (!NT_SUCCESS(status))
         {
             DebugMessage("FltReadFile failed: %x\n", status);
@@ -186,7 +187,7 @@ namespace file
         byte_offset.LowPart = FILE_WRITE_TO_END_OF_FILE;
         byte_offset.HighPart = -1;
 
-        NTSTATUS status = FltWriteFile(p_instance_, p_file_object_, &byte_offset, (ULONG)length, buffer, FLTFL_IO_OPERATION_NON_CACHED, &bytes_written, nullptr, nullptr);
+        NTSTATUS status = FltWriteFile(p_instance_, p_file_object_, &byte_offset, (ULONG)length, buffer, FLTFL_IO_OPERATION_NON_CACHED | FLTFL_IO_OPERATION_PAGING | FLTFL_IO_OPERATION_SYNCHRONOUS_PAGING, &bytes_written, nullptr, nullptr);
         if (!NT_SUCCESS(status))
         {
             DebugMessage("FltWriteFile failed: %x\n", status);
@@ -210,6 +211,7 @@ namespace file
         NTSTATUS status = FltCreateFile(p_filter_handle_, p_instance_, &file_handle_tmp, FILE_READ_ATTRIBUTES, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, FILE_OPEN, FILE_NON_DIRECTORY_FILE, NULL, 0, 0);
         if (NT_SUCCESS(status))
         {
+            FltClose(file_handle_tmp);
             return true;
         }
         if (status == STATUS_OBJECT_NAME_NOT_FOUND 
