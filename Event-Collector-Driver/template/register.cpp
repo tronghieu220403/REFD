@@ -63,12 +63,16 @@ namespace reg
         DebugMessage("Unregistering kFilterHandle\n");
 		FltUnregisterFilter(kFilterHandle);
 
+        DebugMessage("Unregistering filter\n");
 		collector::FltUnload();
 
+        DebugMessage("Free memory structures\n");
 		delete kFltFuncVector;
 		kFltFuncVector = nullptr;
 		delete com::kComPort;
         com::kComPort = nullptr;
+
+		DebugMessage("Done %s\n", __FUNCTION__);
 		return;
 	}
 

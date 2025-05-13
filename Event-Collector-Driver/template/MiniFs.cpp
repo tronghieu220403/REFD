@@ -358,6 +358,8 @@ DriverUnload(
 {
     DebugMessage("%ws\n", __FUNCTIONW__);
     reg::DrvUnload(driver_object);
+
+    DebugMessage("Successfully unloaded driver\n");
     return STATUS_SUCCESS;
 }
 
@@ -373,6 +375,7 @@ MiniFsUnload (
     DebugMessage("%ws\n", __FUNCTIONW__);
     reg::FltUnload();
 
+    DebugMessage("Successfully unloaded filter\n");
     return STATUS_SUCCESS;
 }
 
@@ -383,8 +386,6 @@ MiniFsPreOperation (
     _Flt_CompletionContext_Outptr_ PVOID *completion_context
     )
 {
-    UNREFERENCED_PARAMETER( completion_context );
-
     PAGED_CODE();
 
     if (flt_objects->FileObject == NULL)
@@ -478,7 +479,7 @@ MiniFsPostOperation (
             if ((*(p->status))[i] != FLT_PREOP_SUCCESS_NO_CALLBACK && (*(p->status))[i] != FLT_PREOP_COMPLETE)
             {
                 PVOID completion_context_tmp = (*p->completion_context)[i];
-                auto ret_status = (*reg::kFltFuncVector)[i].post_func(data, flt_objects, &completion_context_tmp, flags);
+                auto ret_status = (*reg::kFltFuncVector)[i].post_func(data, flt_objects, completion_context_tmp, flags);
                 if (ret_status == FLT_POSTOP_MORE_PROCESSING_REQUIRED)
                 {
                     postop_status = FLT_POSTOP_MORE_PROCESSING_REQUIRED;

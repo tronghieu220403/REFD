@@ -20,8 +20,9 @@ namespace collector
 		bool is_deleted = false;
 		bool is_created = false;
         bool is_renamed = false;
+        bool is_success = true;
         WCHAR current_path[MAX_PATH] = { 0 };
-        WCHAR new_path[MAX_PATH] = { 0 };
+        WCHAR old_path[MAX_PATH] = { 0 };
         WCHAR backup_name[MAX_PATH] = { 0 };
     } HANDLE_CONTEXT, * PHANDLE_CONTEXT;
 

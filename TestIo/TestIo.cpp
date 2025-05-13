@@ -52,6 +52,8 @@ void createTestFiles() {
 // Xử lý một test theo số
 void runTest(int test) {
     std::string base = TEST_DIR + "\\test_" + std::to_string(test) + ".txt";
+    if (test != 10 && test != 9)
+        writeRandom(base);
     switch (test) {
     case 1: {   // Write
         HANDLE h = CreateFileA(base.c_str(),
@@ -83,7 +85,7 @@ void runTest(int test) {
     case 4: {   // Create new + random write
         HANDLE h = CreateFileA(base.c_str(),
             GENERIC_READ | GENERIC_WRITE, 0, NULL,
-            CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+            OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if (h == INVALID_HANDLE_VALUE) {
             std::cerr << "[4] Create new failed\n";
         }
@@ -123,7 +125,7 @@ void runTest(int test) {
     case 7: {   // Create new + write (constant)
         HANDLE h = CreateFileA(base.c_str(),
             GENERIC_WRITE, 0, NULL,
-            CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+            OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if (h == INVALID_HANDLE_VALUE) { std::cerr << "[7] Fail\n"; break; }
         const char* txt = "Create+Write\n"; DWORD w;
         WriteFile(h, txt, DWORD(strlen(txt)), &w, NULL);
@@ -156,26 +158,48 @@ void runTest(int test) {
             FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
             NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if (h == INVALID_HANDLE_VALUE) { std::cerr << "[9] Open fail\n"; break; }
-        LARGE_INTEGER L; L.QuadPart = 1024;
-        SetFilePointerEx(h, L, NULL, FILE_BEGIN);
-        SetEndOfFile(h);
-        HANDLE m = CreateFileMappingA(h, NULL, PAGE_READWRITE, 0, 0, NULL);
-        LPVOID v = MapViewOfFile(m, FILE_MAP_WRITE, 0, 0, 0);
+
+        // Set file size to 100MB
+        LARGE_INTEGER fileSize;
+        fileSize.QuadPart = 100 * 1024 * 1024; // 100MB
+        if (!SetFilePointerEx(h, fileSize, NULL, FILE_BEGIN) || !SetEndOfFile(h)) {
+            std::cerr << "[9] Failed to set file size\n";
+            CloseHandle(h);
+            break;
+        }
+
+        Sleep(5000);
+
+        // Create file mapping with full 100MB
+        HANDLE m = CreateFileMappingA(h, NULL, PAGE_READWRITE, 0, 100 * 1024 * 1024, NULL);
+        if (!m) {
+            std::cerr << "[9] CreateFileMapping failed\n";
+            CloseHandle(h);
+            break;
+        }
+
+        LPVOID v = MapViewOfFile(m, FILE_MAP_WRITE, 0, 0, 100 * 1024 * 1024);
         if (v) {
-            memcpy(v, "MemMap+Rename\n", 14);
-            FlushViewOfFile(v, 0);
+            // Ghi dữ liệu mẫu vào đầu file (không cần ghi toàn bộ 100MB)
+            memset(v, 'A', 100 * 1024);
+            //FlushViewOfFile(v, 0);
+
             MoveFileA(base.c_str(), (TEST_DIR + "\\test_9_renamed.txt").c_str());
             UnmapViewOfFile(v);
-            std::cout << "[9] Mem‐mapped + renamed\n";
+            std::cout << "[9] Mem-mapped + renamed\n";
+        } else {
+            std::cerr << "[9] MapViewOfFile failed\n";
         }
-        CloseHandle(m); CloseHandle(h);
+
+        CloseHandle(m);
+        CloseHandle(h);
         break;
     }
     case 10: { // Create new + rename
         HANDLE h = CreateFileA(base.c_str(),
             SPECIFIC_RIGHTS_ALL | STANDARD_RIGHTS_ALL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL,
-            CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
-        if (h == INVALID_HANDLE_VALUE) { std::cerr << "[10] Create new failed\n"; break; }
+            OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        if (h == INVALID_HANDLE_VALUE) { std::cerr << "[10] Create new failed: " << GetLastError() << "\n";  break; }
         std::string to = TEST_DIR + "\\test_10.txtggez";
         // Ghi 5KB ký tự printable ngẫu nhiên (ví dụ ký tự 'A')
         DWORD written = 0;

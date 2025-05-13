@@ -125,7 +125,7 @@ namespace file
         }
         else
         {
-            DebugMessage("FltCreateFile failed: %x\n", status);
+            DebugMessage("FltCreateFile %ws failed: %x\n", file_path_.Data(), status);
             is_open_ = false;
         }
         return NT_SUCCESS(status);
