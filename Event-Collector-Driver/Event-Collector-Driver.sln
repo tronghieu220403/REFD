@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Event-Collector-Driver", "Event-Collector-Driver.vcxproj", "{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Debug|ARM64.Build.0 = Debug|ARM64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Debug|x64.ActiveCfg = Debug|x64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Debug|x64.Build.0 = Debug|x64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Debug|x64.Deploy.0 = Debug|x64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Release|ARM64.ActiveCfg = Release|ARM64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Release|ARM64.Build.0 = Release|ARM64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Release|ARM64.Deploy.0 = Release|ARM64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Release|x64.ActiveCfg = Release|x64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Release|x64.Build.0 = Release|x64
+		{E02F21A4-99E5-4784-6BC1-6AE99E3823BB}.Release|x64.Deploy.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4D2A71FC-A28E-4C88-863A-C98C0B1BAC9D}
+	EndGlobalSection
+EndGlobal
