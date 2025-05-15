@@ -30,8 +30,8 @@ def login_as_system():
     vm.login('hieu','1', False)
     print("Logged as SYSTEM", flush=True)
 
-def run_cmd(cmd: str):
-    vm.proc_run("C:\\Windows\\System32\\cmd.exe", '/c "' + cmd + '"', True)
+def run_cmd(cmd: str, wait: bool = True):
+    vm.proc_run("C:\\Windows\\System32\\cmd.exe", '/c "' + cmd + '"', wait)
 
 vm_path = r'E:\\VM\\Windows_10_test_ransom_0\\RansomTestWindows10.vmx'
 host = VixHost()
@@ -44,25 +44,59 @@ vm.wait_for_tools()
 login_as_system()
 
 def init_env():
+    print("Init env")
+    try:
+        vm.create_directory('E:\\backup')
+    except VixError as e:
+        pass
+    try:
+        vm.create_directory('E:\\hieunt210330')
+    except VixError as e:
+        pass
+    print("Shut down service")
+    run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
+    run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
+    #time.sleep(5)
+    run_cmd('E:\\stop_driver.bat')
 
-    run_cmd(r'E:\stop_driver.bat')
+    print("Copy files")
+    '''
+    vm.copy_host_to_guest('E:\\hieunt20210330\\TrID\\TrIDLib.dll', 'E:\\hieunt210330\\TrIDLib.dll')
+    vm.copy_host_to_guest('E:\\hieunt20210330\\TrID\\triddefs.trd', 'E:\\hieunt210330\\triddefs.trd')
+    vm.copy_host_to_guest('E:\\Code\\Github\\REFD\\Event-Collector-Driver\\x64\\Debug\\EventCollectorDriver.sys', 'E:\\EventCollectorDriver.sys')
+    vm.copy_host_to_guest('E:\\Code\\Github\\REFD\\Event-Collector-Driver\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\EventCollectorDriver.pdb')
+    '''
+    while True:
+        try:
+            vm.copy_host_to_guest("E:\\Code\\Github\\REFD\\TestIo\\x64\\Debug\\TestIo.exe", 'E:\\TestIo.exe')
+            vm.copy_host_to_guest('E:\\Code\\Github\\REFD\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\RansomDetectorService.exe')
+            vm.copy_host_to_guest('E:\\Code\\Github\\REFD\\RansomDetectorService\\Debug\\RansomDetectorService.pdb', 'E:\\hieunt210330\\RansomDetectorService.pdb')
+        except Exception as e:
+            print("Error copying files, retrying...", e)
+            continue
+        break
     
-    vm.copy_host_to_guest(r"E:\Code\VS2022\TestIo\x64\Debug\TestIo.exe", r'E:\TestIo.exe')
-    vm.copy_host_to_guest(r'E:\Code\VS2022\Event-Collector-Driver\x64\Debug\EventCollectorDriver.sys', r'E:\EventCollectorDriver.sys')
-    vm.copy_host_to_guest(r'E:\Code\VS2022\Event-Collector-Driver\x64\Debug\EventCollectorDriver.pdb', r'E:\EventCollectorDriver.pdb')
+    print("Start driver and service")
+    run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
 
-    run_cmd(r'E:\start_driver.bat')
+    run_cmd("E:\\start_driver.bat")
+    run_cmd("E:\\hieunt210330\\RansomDetectorService.exe", False)
 
 init_env()
 
-for i in range(10000):
+print("Start testing")
 
-    test_cmdl = "E:\\TestIo.exe d c 1 2 3 4 5 6 7 8 9 10"
+time.sleep(2)
+
+for i in range(1):
+
+    test_cmdl = "E:\\TestIo.exe d 9 10"
 
     run_cmd(test_cmdl)
+    time.sleep(1)
 
-    #time.sleep(5)
+time.sleep(30)
+print("Test done")
 
-    #run_cmd(r'E:\start_driver.bat')
-
-#run_cmd(r'E:\stop_driver.bat')
+run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
+run_cmd('E:\\stop_driver.bat')

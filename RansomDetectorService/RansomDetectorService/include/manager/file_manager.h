@@ -19,14 +19,14 @@
 
 #define MIN_DIR_COUNT 2
 
-#define FILE_MAX_TOTAL_SIZE_SCAN ((10 * 1024 * 1024) * EVALUATATION_INTERVAL_SEC) // 10MB per sec
-#define FILE_MAX_WRITE_OFFSET (3 * 1024) // 3KB
+#define FILE_MAX_SIZE_SCAN (30 * 1024 * 1024) // 30MB
 
 #define THRESHOLD_PERCENTAGE 80
 #define BelowThreshold(part, total) (part <= total * THRESHOLD_PERCENTAGE / 100)
 
 #define BEGIN_WIDTH 1024
 #define END_WIDTH 1024
+#define HIEUNT_MAX_PATH (260 * 4)
 
 namespace manager {
 
@@ -37,10 +37,9 @@ namespace manager {
 		bool is_deleted = false;
 		bool is_created = false;
 		bool is_renamed = false;
-		bool is_success = true;
-		WCHAR current_path[MAX_PATH] = { 0 };
-		WCHAR new_path_list[MAX_PATH] = { 0 };
-		WCHAR backup_name[MAX_PATH] = { 0 };
+		WCHAR current_path[HIEUNT_MAX_PATH] = { 0 };
+		WCHAR new_path[HIEUNT_MAX_PATH] = { 0 };
+		WCHAR backup_name[HIEUNT_MAX_PATH] = { 0 };
 	};
 
 	struct FileIoInfo

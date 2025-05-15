@@ -48,6 +48,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\trid\trid_api.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\com\driver_comm.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ulti\support.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\trid\trid_api.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

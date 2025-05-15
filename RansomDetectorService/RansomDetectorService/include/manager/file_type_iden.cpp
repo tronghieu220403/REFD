@@ -1,4 +1,7 @@
 #include "file_type_iden.h"
+#include "ulti/support.h"
+#include "ulti/debug.h"
+#include "file_manager.h"
 
 namespace type_iden
 {
@@ -137,4 +140,153 @@ namespace type_iden
 
 		return !BelowTextThreshold(printable_chars, total_chars);
 	}
+
+	bool IsPrintableFile(const fs::path& file_path)
+	{
+		try
+		{
+            auto file_size = manager::GetFileSize(file_path);
+            if (file_size == 0 || file_size > FILE_MAX_SIZE_SCAN) {
+                return false;
+            }
+			std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
+			if (!file.is_open()) {
+				return false; // File cannot be opened
+			}
+
+			std::vector<unsigned char> buffer(file_size); // Buffer to hold file data
+			file.read(reinterpret_cast<char*>(buffer.data()), file_size); // Read all data into buffer
+			file.close();
+
+			// Check against different encodings and return true if any matches
+			if (CheckPrintableUTF8(buffer) || CheckPrintableUTF16(buffer) || CheckPrintableANSI(buffer)) {
+				return true;
+			}
+		}
+		catch (...)
+		{
+
+		}
+		return false; // If no encoding matches, return false
+	}
+
+    TrID::~TrID()
+    {
+        if (trid_api != nullptr)
+        {
+            delete trid_api;
+            trid_api = nullptr;
+        }
+        issue_thread_id = 0;
+    }
+
+    bool TrID::Init(const std::wstring& defs_dir, const std::wstring& trid_dll_path)
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+		if (ulti::IsCurrentX86Process() == false)
+		{
+			PrintDebugW(L"Current process is not a x86 process");
+			return false;
+		}
+        if (trid_api != nullptr)
+        {
+            delete trid_api;
+            trid_api = nullptr;
+        }
+		try
+		{
+			trid_api = new TridApi(ulti::WstrToStr(defs_dir).c_str(), trid_dll_path.c_str());
+		}
+        catch (int trid_error_code)
+        {
+			if (trid_error_code == TRID_MISSING_LIBRARY)
+			{
+				PrintDebugW(L"TrIDLib.dll not found");
+			}
+            if (trid_api != nullptr)
+            {
+                delete trid_api;
+                trid_api = nullptr;
+            }
+            return false;
+        }
+        issue_thread_id = GetCurrentThreadId();
+		return true;
+    }
+
+    std::vector<std::string> TrID::GetTypes(const fs::path& file_path)
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        PrintDebugW(L"GetTypes of file: %s", file_path.c_str());
+        if (issue_thread_id != GetCurrentThreadId())
+        {
+            PrintDebugW(L"TrID API is not thread-safe");
+            return {};
+        }
+        if (trid_api == nullptr)
+        {
+            PrintDebugW(L"TrID API is not initialized");
+            return {};
+        }
+		if (file_path.empty())
+		{
+			PrintDebugW(L"File path is empty");
+			return {};
+		}
+		int ret;
+		std::vector<std::string> types;
+
+		trid_api->SubmitFileA(file_path.string().c_str());
+		ret = trid_api->Analyze();
+		if (ret)
+		{
+			char buf[512];
+			*buf = 0;
+			ret = trid_api->GetInfo(TRID_GET_RES_NUM, 0, buf);
+			for (int i = ret + 1; i--;)
+			{
+				trid_api->GetInfo(TRID_GET_RES_FILETYPE, i, buf);
+				std::string type_str(buf);
+				if (type_str.find("ransom") != std::string::npos || type_str.find("ncrypt") != std::string::npos)
+				{
+					continue;
+				}
+				trid_api->GetInfo(TRID_GET_RES_FILEEXT, i, buf);
+				std::string ext_str(buf);
+
+				if (ext_str.size() > 0)
+				{
+					std::stringstream ss(ext_str);
+					std::string ext;
+					while (std::getline(ss, ext, '/'))
+					{
+						types.push_back(ext); // Save found extension
+					}
+				}
+				else
+				{
+					if (type_str.size() > 0)
+					{
+						types.push_back(type_str);
+					}
+				}
+				*buf = 0;
+			}
+		}
+
+        // Read all bytes of the file
+		std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
+		if (!file.is_open()) {
+            PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
+			return types; // File cannot be opened
+		}
+
+		if (IsPrintableFile(file_path))
+		{
+            PrintDebugW(L"File %ws is a printable file", file_path.c_str());
+			types.push_back("TXT");
+		}
+        return types;
+    }
+
 }

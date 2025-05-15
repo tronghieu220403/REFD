@@ -97,13 +97,13 @@ namespace debug {
             GetLocalTime(&time);
 
             wchar_t time_str[64];
-            swprintf_s(time_str, 64, L"[%d/%02d/%02d - %02d:%02d:%02d][HieuEtwService] ",
+            swprintf_s(time_str, 64, L"[%d/%02d/%02d - %02d:%02d:%02d][RansomDetectorService] ",
                 time.wYear, time.wMonth, time.wDay,
                 time.wHour, time.wMinute, time.wSecond);
 
             log.insert(0, time_str);
             OutputDebugStringW(log.c_str());
-            WriteDebugToFileW(log.c_str());
+            //WriteDebugToFileW(log.c_str());
         }
 
         va_end(args);

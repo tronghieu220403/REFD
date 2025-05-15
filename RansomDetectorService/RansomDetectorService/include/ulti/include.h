@@ -52,6 +52,7 @@
 #pragma comment(lib, "ntdll.lib")
 #pragma comment(lib, "Wtsapi32.lib")
 #pragma comment(lib, "Userenv.lib")
+#pragma comment(lib, "Kernel32.lib")
 
 template<typename F>
 class defer_finalizer {

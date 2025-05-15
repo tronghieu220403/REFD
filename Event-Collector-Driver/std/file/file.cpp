@@ -250,7 +250,6 @@ namespace file
 
     void FileFlt::Close()
     {
-        DebugMessage("FileFlt::Close %ws\n", file_path_.Data());
         if (KeGetCurrentIrql() != PASSIVE_LEVEL)
         {
             return;

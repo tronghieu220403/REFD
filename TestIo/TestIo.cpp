@@ -54,8 +54,7 @@ void runTest(int test) {
     srand((unsigned)time(NULL));
 
     std::string base = TEST_DIR + "\\test_" + std::to_string(test) + ".txt";
-    if (test != 10 && test != 9)
-        writeRandom(base);
+    writeRandom(base);
     switch (test) {
     case 1: {   // Write
         HANDLE h = CreateFileA(base.c_str(),
@@ -169,8 +168,6 @@ void runTest(int test) {
             CloseHandle(h);
             break;
         }
-
-        Sleep(5000);
 
         // Create file mapping with full 100MB
         HANDLE m = CreateFileMappingA(h, NULL, PAGE_READWRITE, 0, 100 * 1024 * 1024, NULL);

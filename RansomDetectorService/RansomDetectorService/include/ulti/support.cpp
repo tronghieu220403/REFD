@@ -47,6 +47,35 @@ namespace ulti
         return result;
     }
 
+    bool IsCurrentX86Process()
+    {
+        static bool is_eval = false;
+        static bool is_x86 = false;
+        if (is_eval)
+        {
+            return is_x86;
+        }
+        SYSTEM_INFO systemInfo = { 0 };
+        GetNativeSystemInfo(&systemInfo);
+
+        // x86 environment
+        if (systemInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL)
+        {
+            is_x86 = true;
+            is_eval = true;
+            return true;
+        }
+
+        BOOL is_wow64 = FALSE;
+        if (IsWow64Process(GetCurrentProcess(), &is_wow64) == FALSE)
+        {
+            debug::DebugPrintW(L"IsWow64Process error 0x%x", GetLastError());
+        }
+        is_x86 = (is_wow64 == FALSE) ? false : true;
+        is_eval = true;
+        return is_wow64;
+    }
+
     bool CreateDir(const std::wstring& dir_path)
     {
         BOOL status = ::CreateDirectory(dir_path.c_str(), NULL);

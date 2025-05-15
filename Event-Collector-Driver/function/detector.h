@@ -4,7 +4,7 @@
 
 #define BEGIN_WIDTH 1024
 #define END_WIDTH 1024
-#define MAX_PATH (260 * 4)
+#define HIEUNT_MAX_PATH (260 * 4)
 
 #include "../template/debug.h"
 #include "../../std/string/string.h"

@@ -25,8 +25,13 @@ namespace com
 			}
 			else
 			{
+                DebugMessage("FltCreateCommunicationPort failed: %x\n", status);
 				ComPort::Close();
 			}
+		}
+		else
+		{
+            DebugMessage("FltBuildDefaultSecurityDescriptor failed: %x\n", status);
 		}
 		return status;
 	}
@@ -35,10 +40,11 @@ namespace com
 	{
 		if (client_port_ == nullptr)
 		{
+            DebugMessage("client_port_ is null\n");
 			return STATUS_CONNECTION_INVALID;
 		}
 		LARGE_INTEGER timeout;
-		timeout.QuadPart = -50000000; // 5s
+		timeout.QuadPart = -150000000; // 15s
 		NTSTATUS status = FltSendMessage(p_filter_handle_,
 			&client_port_,
 			sender_buffer,
@@ -49,10 +55,11 @@ namespace com
 		);
 		if (status != STATUS_SUCCESS && status != 0x11)
 		{
-
+            DebugMessage("SendMessage failed: %x\n", status);
 		}
 		else
 		{
+            DebugMessage("SendMessage success: %x\n", status);
 			status = STATUS_SUCCESS;
 		}
 		return status;
@@ -83,7 +90,7 @@ namespace com
 
 		client_port_ = client_port;
 
-		// DebugMessage("Connected");
+		DebugMessage("ComPort::ConnectHandler connected, client port: %p", client_port_);
 
 		return STATUS_SUCCESS;
 	}

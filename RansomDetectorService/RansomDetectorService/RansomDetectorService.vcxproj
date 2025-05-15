@@ -145,6 +145,7 @@
     <ClCompile Include="include\manager\process_manager.cpp" />
     <ClCompile Include="include\mutex\mutex.cpp" />
     <ClCompile Include="include\service\service.cpp" />
+    <ClCompile Include="include\trid\trid_api.cpp" />
     <ClCompile Include="include\ulti\debug.cpp" />
     <ClCompile Include="include\ulti\support.cpp" />
     <ClCompile Include="main.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="include\manager\process_manager.h" />
     <ClInclude Include="include\mutex\mutex.h" />
     <ClInclude Include="include\service\service.h" />
+    <ClInclude Include="include\trid\trid_api.h" />
     <ClInclude Include="include\ulti\debug.h" />
     <ClInclude Include="include\ulti\include.h" />
     <ClInclude Include="include\ulti\support.h" />

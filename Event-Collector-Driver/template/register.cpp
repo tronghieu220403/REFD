@@ -1,5 +1,6 @@
 #include "register.h"
 #include "../function/collector.h"
+
 namespace reg
 {
 	Vector<IrpMjFunc>* kFltFuncVector = nullptr;

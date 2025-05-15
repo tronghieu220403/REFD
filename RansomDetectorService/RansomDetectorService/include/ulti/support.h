@@ -16,6 +16,8 @@ namespace ulti
     std::vector<unsigned char> StringToVectorUChar(const std::string& s);
     std::wstring ToLower(const std::wstring& wstr);
 
+    bool IsCurrentX86Process();
+
     bool CreateDir(const std::wstring& dir_path);
 
     bool KillProcess(DWORD pid);

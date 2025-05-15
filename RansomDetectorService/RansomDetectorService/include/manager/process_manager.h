@@ -8,18 +8,10 @@
 namespace manager {
 
     struct ProcessInfo {
-        uint64_t pid = 0;
-    };
-
-    class ProcessManager {
-    public:
-        
-		void LockMutex();
-        void UnlockMutex();
-
-    private:
-        std::unordered_map<uint64_t, ProcessInfo> process_map_; // PID -> ProcessInfo
-        std::mutex process_map_mutex_;
+        size_t pid = 0;
+        size_t deleted_count = 0;
+        size_t created_write_count = 0;
+        size_t overwrite_count = 0;
     };
 }
 #endif  // PROCESS_MANAGER_H_

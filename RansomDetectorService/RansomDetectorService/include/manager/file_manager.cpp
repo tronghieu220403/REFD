@@ -35,7 +35,27 @@ namespace manager
 
     void FileIoManager::PushFileEventToQueue(const RawFileIoInfo* raw_file_io_info)
     {
-		
+        FileIoInfo file_io_info;
+        file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
+        file_io_info.is_modified = raw_file_io_info->is_modified;
+        file_io_info.is_deleted = raw_file_io_info->is_deleted;
+        file_io_info.is_created = raw_file_io_info->is_created;
+        file_io_info.is_renamed = raw_file_io_info->is_renamed;
+        file_io_info.current_path = std::move(ulti::ToLower(manager::GetWin32Path(raw_file_io_info->current_path)));
+        file_io_info.current_backup_name = raw_file_io_info->backup_name;
+        file_io_info.new_path_list.push_back(std::move(ulti::ToLower(manager::GetWin32Path(raw_file_io_info->new_path))));
+#ifdef _DEBUG
+        // Print full data of the event
+        PrintDebugW(L"File I/O event: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path_list: %ws",
+            file_io_info.requestor_pid,
+            file_io_info.is_modified,
+            file_io_info.is_deleted,
+            file_io_info.is_created,
+            file_io_info.is_renamed,
+            file_io_info.current_path.c_str(),
+            file_io_info.new_path_list[0].c_str());
+#endif // _DEBUG
+        file_io_queue_.push(std::move(file_io_info));
     }
 
     std::wstring GetNativePath(const std::wstring& win32_path)
@@ -183,24 +203,29 @@ namespace manager
 	{
 		std::wstring tmp_name = std::to_wstring(GetPathHash(file_path));
         std::wstring dest = TEMP_DIR + tmp_name;
+        PrintDebugW(L"Copying file %ws to %ws", file_path.c_str(), dest.c_str());
 		if (FileExist(dest) == true)
 		{
+            PrintDebugW(L"File %ws already exists", dest.c_str());
 			return tmp_name;
 		}
         HANDLE h_src = CreateFileW(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
         if (h_src == INVALID_HANDLE_VALUE)
         {
+            PrintDebugW(L"CreateFile failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
             return L"";
         }
         HANDLE h_dest = CreateFileW(dest.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if (h_dest == INVALID_HANDLE_VALUE)
         {
+            PrintDebugW(L"CreateFile failed for file %ws, error %s", dest.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
             CloseHandle(h_src);
             return L"";
         }
 		ull tmp_file_size = 0;
 		if (::GetFileSizeEx(h_src, (PLARGE_INTEGER)&tmp_file_size) == 0 || tmp_file_size > INT_MAX)
 		{
+            PrintDebugW(L"GetFileSizeEx failed for file %ws, error %s, tmp_file_size %lld", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str(), tmp_file_size);
 			return L"";
 		}
 		std::vector<UCHAR> data;
@@ -213,6 +238,7 @@ namespace manager
 			if (!ReadFile(h_src, data.data(), (DWORD)tmp_file_size, &bytes_cnt, NULL) || bytes_cnt != tmp_file_size 
 				|| !WriteFile(h_dest, data.data(), bytes_cnt, &bytes_cnt, NULL) || bytes_cnt != tmp_file_size)
 			{
+                PrintDebugW(L"ReadFile or WriteFile failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
 				CloseHandle(h_src);
 				CloseHandle(h_dest);
 				return L"";
@@ -228,6 +254,7 @@ namespace manager
 				|| !WriteFile(h_dest, data.data(), bytes_cnt, &bytes_cnt, NULL) || bytes_cnt != END_WIDTH
 				)
 			{
+                PrintDebugW(L"ReadFile or WriteFile failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
 				CloseHandle(h_src);
 				CloseHandle(h_dest);
 				return L"";
@@ -237,7 +264,7 @@ namespace manager
 		// Close both files after completion
 		CloseHandle(h_src);
 		CloseHandle(h_dest);
-
+        PrintDebugW(L"File %ws copied to %ws", file_path.c_str(), dest.c_str());
 		return tmp_name;
     }
 
