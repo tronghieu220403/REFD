@@ -206,7 +206,7 @@ namespace manager {
 						{
 							PrintDebugW(L"Process %d: new path exist %ws", pid, event.new_path_list[i].c_str());
 							event.new_backup_name = manager::CopyToTmp(event.new_path_list[i]);
-							event.new_types = kTrID->GetTypes(event.new_backup_name);
+							event.new_types = kTrID->GetTypes(TEMP_DIR + event.new_backup_name);
 							std::string new_types_str = "<";
 							for (const auto& type : event.new_types)
 							{

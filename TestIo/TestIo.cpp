@@ -162,7 +162,7 @@ void runTest(int test) {
 
         // Set file size to 100MB
         LARGE_INTEGER fileSize;
-        fileSize.QuadPart = 100 * 1024 * 1024; // 100MB
+        fileSize.QuadPart = 20 * 1024 * 1024; // 100MB
         if (!SetFilePointerEx(h, fileSize, NULL, FILE_BEGIN) || !SetEndOfFile(h)) {
             std::cerr << "[9] Failed to set file size\n";
             CloseHandle(h);
@@ -170,18 +170,18 @@ void runTest(int test) {
         }
 
         // Create file mapping with full 100MB
-        HANDLE m = CreateFileMappingA(h, NULL, PAGE_READWRITE, 0, 100 * 1024 * 1024, NULL);
+        HANDLE m = CreateFileMappingA(h, NULL, PAGE_READWRITE, 0, 20 * 1024 * 1024, NULL);
         if (!m) {
             std::cerr << "[9] CreateFileMapping failed\n";
             CloseHandle(h);
             break;
         }
 
-        LPVOID v = MapViewOfFile(m, FILE_MAP_WRITE, 0, 0, 100 * 1024 * 1024);
+        LPVOID v = MapViewOfFile(m, FILE_MAP_WRITE, 0, 0, 20 * 1024 * 1024);
         if (v) {
             // Ghi dữ liệu mẫu vào đầu file (không cần ghi toàn bộ 100MB)
             char c = 'A' + rand() % 25;
-            memset(v, 'A', 100 * 1024 * 1024);
+            memset(v, 'A', 20 * 1024 * 1024);
             //FlushViewOfFile(v, 0);
 
             MoveFileA(base.c_str(), (TEST_DIR + "\\test_9_renamed.txt").c_str());
