@@ -90,7 +90,7 @@ time.sleep(2)
 
 for i in range(1):
 
-    test_cmdl = "E:\\TestIo.exe d 9 10"
+    test_cmdl = "E:\\TestIo.exe" + " d 1 2 3 4 5 6 7 7 9 10" * 30
 
     run_cmd(test_cmdl)
     time.sleep(1)
