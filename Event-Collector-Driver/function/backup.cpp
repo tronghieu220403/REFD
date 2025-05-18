@@ -53,23 +53,6 @@ namespace backup
             return false;
         }
 
-        file::FileFlt dst_file(backup_path, p_filter_handle, p_instance);
-        
-        // Backup file already exists
-        if (dst_file.Exist())
-        {
-            DebugMessage("Backup file %ws already exists\n", backup_path);
-            return true;
-        }
-
-        if (dst_file.Open() == false)
-        {
-            DebugMessage("Open backup file %ws failed\n", backup_path);
-            backup_path_len = 0;
-            backup_path[0] = L'\0';
-            return false;
-        }
-
         if (src_file_size < BEGIN_WIDTH + END_WIDTH)
         {
             if (src_file.ReadWithOffset(buffer, src_file_size, 0) != src_file_size)
@@ -93,6 +76,27 @@ namespace backup
                 DebugMessage("Read file %ws failed\n", file_path);
                 return false;
             }
+        }
+
+        file::FileFlt dst_file(backup_path, p_filter_handle, p_instance);
+
+        // Backup file already exists
+        if (dst_file.Exist())
+        {
+            DebugMessage("Backup file %ws already exists\n", backup_path);
+            return true;
+        }
+
+        if (dst_file.Open() == false)
+        {
+            DebugMessage("Open backup file %ws failed\n", backup_path);
+            backup_path_len = 0;
+            backup_path[0] = L'\0';
+            return false;
+        }
+        else
+        {
+            DebugMessage("Open backup file %ws success\n", backup_path);
         }
 
         ull size_to_write = min(src_file_size, BEGIN_WIDTH + END_WIDTH);

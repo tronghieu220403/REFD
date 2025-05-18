@@ -329,8 +329,8 @@ namespace manager {
                     {
                         iterator_process_map->second.overwrite_count += 1;
                     }
-
 					path_hash_to_merged_index[new_path_hash] = merged_events.size() - 1;
+					EvaluateProcess(pid);
 				}
 			}
 		}

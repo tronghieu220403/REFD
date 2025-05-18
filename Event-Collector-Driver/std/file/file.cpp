@@ -231,10 +231,12 @@ namespace file
     {
         if (KeGetCurrentIrql() != PASSIVE_LEVEL)
         {
+            DebugMessage("KeGetCurrentIrql != PASSIVE_LEVEL\n");
             return ULL_MAX;
         }
         if (is_open_ == false)
         {
+            DebugMessage("File is not open\n");
             return ULL_MAX;
         }
         IO_STATUS_BLOCK io_status_block;
@@ -244,6 +246,10 @@ namespace file
         {
             DebugMessage("FltQueryInformationFile failed: %x\n", status);
             return ULL_MAX;
+        }
+        else
+        {
+            DebugMessage("FltQueryInformationFile success: %x\n", status);
         }
         return file_info.EndOfFile.QuadPart;
     }

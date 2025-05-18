@@ -51,7 +51,7 @@ namespace detector
         L".pdf",
         L".lossless",
         L".q50",
-        L".7zip",
+        L".7z",
         L".png",
         L".zip",
         L".jpg"
