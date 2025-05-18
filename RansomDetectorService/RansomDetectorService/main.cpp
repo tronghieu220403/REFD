@@ -127,7 +127,7 @@ static void ServiceMain()
         while (true)
         {
             auto start_time = std::chrono::high_resolution_clock::now();
-            manager::EvaluateProcesses();
+            //manager::EvaluateProcesses();
             if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
             {
                 PrintDebugW(L"ggez.txt detected, terminate service");
