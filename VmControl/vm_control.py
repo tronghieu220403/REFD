@@ -53,7 +53,7 @@ def init_env():
         vm.create_directory('E:\\hieunt210330')
     except VixError as e:
         pass
-    print("Shut down service")
+    print("Shut down services")
     run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
     run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
     #time.sleep(5)
@@ -88,9 +88,9 @@ print("Start testing")
 
 time.sleep(2)
 
-for i in range(1):
+for i in range(5):
 
-    test_cmdl = "E:\\TestIo.exe" + " d 1 2 3 4 5 6 7 7 9 10" * 30
+    test_cmdl = "E:\\TestIo.exe" + " c 1 2 3 4 5 6 7 8 9 10"
 
     run_cmd(test_cmdl)
     time.sleep(1)

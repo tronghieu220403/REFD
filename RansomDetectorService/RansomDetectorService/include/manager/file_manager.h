@@ -28,6 +28,10 @@
 #define END_WIDTH 1024
 #define HIEUNT_MAX_PATH (260 * 4)
 
+#define TYPE_MATCH_NOT_EVALUATED 0
+#define TYPE_MISMATCH 1
+#define TYPE_HAS_COMMON 2
+
 namespace manager {
 
 	struct RawFileIoInfo
@@ -50,6 +54,9 @@ namespace manager {
 		bool is_created = false;
 		bool is_renamed = false;
 		bool is_success = true;
+		bool is_current_get_type = false;
+        bool is_new_get_type = false;
+		ULONG type_match = TYPE_MATCH_NOT_EVALUATED;
 		std::wstring current_path;
 		std::wstring current_backup_name;
 		std::vector<std::wstring> new_path_list;
@@ -77,16 +84,18 @@ namespace manager {
 	/*___________________________________________*/
 
 	inline std::unordered_map<std::wstring, const std::wstring> kNativePath;
-	inline std::unordered_map<std::wstring, const std::wstring> kWin32Path;
+	inline std::unordered_map<std::wstring, const std::wstring> kDosPath;
 
 	/*_________________FUNCTIONS_________________*/
 
+	void InitDosDeviceCache();
+
 	// DOS path getter function
-	std::wstring GetNativePath(const std::wstring& win32_path);
+	std::wstring GetNativePath(const std::wstring& dos_path);
 
 	// Win32 path getter function
-	std::wstring GetWin32PathCaseSensitive(const std::wstring& path);
-	std::wstring GetWin32Path(const std::wstring& path);
+	std::wstring GetDosPathCaseSensitive(const std::wstring& nt_path);
+	std::wstring GetDosPath(const std::wstring& nt_path);
 
 	bool FileExist(const std::wstring& file_path);
 	bool DirExist(const std::wstring& dir_path);
@@ -95,9 +104,9 @@ namespace manager {
 
 	std::wstring GetFileExtension(const std::wstring& file_name);
 
-	ull GetPathHash(const std::wstring& file_path);
+	size_t GetPathHash(const std::wstring& file_path);
 	
-	std::wstring CopyToTmp(const std::wstring& file_path);
+	std::wstring CopyToTmp(const std::wstring& file_path, bool create_new_if_duplicate = false);
 
 	void ClearTmpFiles();
 

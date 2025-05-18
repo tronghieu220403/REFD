@@ -47,6 +47,21 @@ namespace ulti
         return result;
     }
 
+    void ToLowerOverride(std::string& wstr)
+    {
+        std::setlocale(LC_ALL, "en_US.utf8");
+        defer{
+            std::setlocale(LC_ALL, nullptr);
+        };
+        for (char& c : wstr)
+        {
+            if (std::isalpha(c))
+            {
+                c = std::tolower(c);
+            }
+        }
+    }
+
     bool IsCurrentX86Process()
     {
         static bool is_eval = false;

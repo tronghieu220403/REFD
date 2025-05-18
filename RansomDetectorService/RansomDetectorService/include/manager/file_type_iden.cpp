@@ -5,6 +5,27 @@
 
 namespace type_iden
 {
+	// Checks whether two vectors of strings have any common element.
+	// Returns true if there is at least one string that appears in both vectors.
+	bool HasCommonType(const std::vector<std::string>& types1, const std::vector<std::string>& types2) {
+		// To optimize, insert the smaller vector into a hash set for faster lookup.
+		const std::vector<std::string>& smaller = (types1.size() < types2.size()) ? types1 : types2;
+		const std::vector<std::string>& larger = (types1.size() < types2.size()) ? types2 : types1;
+
+		// Create a set from the smaller vector for O(1) lookups
+		std::unordered_set<std::string> type_set(smaller.begin(), smaller.end());
+
+		// Check if any element in the larger vector exists in the set
+		for (const auto& type : larger) {
+			if (type_set.count(type) > 0) {
+				return true;
+			}
+		}
+
+		// No common elements found
+		return false;
+	}
+
 	bool CheckPrintableUTF16(const std::vector<unsigned char>& buffer)
 	{
 		if (buffer.size() == 0) {
@@ -218,11 +239,13 @@ namespace type_iden
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         PrintDebugW(L"GetTypes of file: %s", file_path.c_str());
+		/*
         if (issue_thread_id != GetCurrentThreadId())
         {
             PrintDebugW(L"TrID API is not thread-safe");
             return {};
         }
+		*/
         if (trid_api == nullptr)
         {
             PrintDebugW(L"TrID API is not initialized");
@@ -260,6 +283,7 @@ namespace type_iden
 					std::string ext;
 					while (std::getline(ss, ext, '/'))
 					{
+						ulti::ToLowerOverride(ext);
 						types.push_back(ext); // Save found extension
 					}
 				}
@@ -267,6 +291,7 @@ namespace type_iden
 				{
 					if (type_str.size() > 0)
 					{
+						ulti::ToLowerOverride(type_str);
 						types.push_back(type_str);
 					}
 				}
@@ -285,6 +310,10 @@ namespace type_iden
 		{
             PrintDebugW(L"File %ws is a printable file", file_path.c_str());
 			types.push_back("TXT");
+		}
+		if (types.size() == 0)
+		{
+			types.push_back("");
 		}
         return types;
     }

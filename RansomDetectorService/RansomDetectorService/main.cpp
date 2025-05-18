@@ -84,29 +84,50 @@ static void ServiceMain()
     */
 
     manager::Init();
+
+    if (ulti::CreateDir(TEMP_DIR) == false)
+    {
+        PrintDebugW(L"Create temp dir %ws failed", TEMP_DIR);
+        return;
+    }
+    kTrID = new type_iden::TrID();
+    if (kTrID == nullptr || kTrID->Init(PRODUCT_PATH, (std::wstring(PRODUCT_PATH) + L"TrIDLib.dll").c_str()) == false)
+    {
+        PrintDebugW(L"TrID init failed");
+        return;
+    }
+
     std::jthread collector_thread(([]() {
         while (true)
         {
             StartEventCollector();
+            if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
+            {
+                PrintDebugW(L"ggez.txt detected, terminate service");
+                ExitProcess(0);
+            }
             Sleep(50);
         }
         }));
+    
+    std::thread processing_thread([]() {
+        while (true)
+        {
+            manager::ProcessDataQueue();
+            if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
+            {
+                PrintDebugW(L"ggez.txt detected, terminate service");
+                ExitProcess(0);
+            }
+            Sleep(100);
+        }
+        });
+
     std::jthread manager_thread([]() {
-        if (ulti::CreateDir(TEMP_DIR) == false)
-        {
-            PrintDebugW(L"Create temp dir %ws failed", TEMP_DIR);
-            return;
-        }
-        kTrID = new type_iden::TrID();
-        if (kTrID == nullptr || kTrID->Init(PRODUCT_PATH, (std::wstring(PRODUCT_PATH) + L"TrIDLib.dll").c_str()) == false)
-        {
-            PrintDebugW(L"TrID init failed");
-            return;
-        }
         while (true)
         {
             auto start_time = std::chrono::high_resolution_clock::now();
-            manager::EvaluateProcess();
+            manager::EvaluateProcesses();
             if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
             {
                 PrintDebugW(L"ggez.txt detected, terminate service");
@@ -119,8 +140,9 @@ static void ServiceMain()
             Sleep(sleep_ms);
         }
         });
-    manager_thread.join();
+    processing_thread.join();
     collector_thread.join();
+    manager_thread.join();
     debug::CleanupDebugLog();
 }
 

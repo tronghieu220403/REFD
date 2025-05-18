@@ -36,17 +36,29 @@ namespace manager
     void FileIoManager::PushFileEventToQueue(const RawFileIoInfo* raw_file_io_info)
     {
         FileIoInfo file_io_info;
+        PrintDebugW(L"File I/O event before: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path_list: %ws",
+            raw_file_io_info->requestor_pid,
+            raw_file_io_info->is_modified,
+            raw_file_io_info->is_deleted,
+            raw_file_io_info->is_created,
+            raw_file_io_info->is_renamed,
+            raw_file_io_info->current_path,
+            raw_file_io_info->new_path);
+
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
         file_io_info.is_modified = raw_file_io_info->is_modified;
         file_io_info.is_deleted = raw_file_io_info->is_deleted;
         file_io_info.is_created = raw_file_io_info->is_created;
         file_io_info.is_renamed = raw_file_io_info->is_renamed;
-        file_io_info.current_path = std::move(ulti::ToLower(manager::GetWin32Path(raw_file_io_info->current_path)));
+        file_io_info.current_path = std::move(ulti::ToLower(manager::GetDosPath(raw_file_io_info->current_path)));
         file_io_info.current_backup_name = raw_file_io_info->backup_name;
-        file_io_info.new_path_list.push_back(std::move(ulti::ToLower(manager::GetWin32Path(raw_file_io_info->new_path))));
+        if (raw_file_io_info->is_renamed == true)
+        {
+            file_io_info.new_path_list.push_back(std::move(ulti::ToLower(manager::GetDosPath(raw_file_io_info->new_path))));
+        }
 #ifdef _DEBUG
         // Print full data of the event
-        PrintDebugW(L"File I/O event: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path_list: %ws",
+        PrintDebugW(L"File I/O event after: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path_list: %ws",
             file_io_info.requestor_pid,
             file_io_info.is_modified,
             file_io_info.is_deleted,
@@ -58,12 +70,27 @@ namespace manager
         file_io_queue_.push(std::move(file_io_info));
     }
 
-    std::wstring GetNativePath(const std::wstring& win32_path)
+    void InitDosDeviceCache()
     {
-        std::wstring drive_name = win32_path.substr(0, win32_path.find_first_of('\\'));
+        wchar_t device_path[MAX_PATH];
+
+        for (wchar_t drive = L'A'; drive <= L'Z'; ++drive) {
+            std::wstring drive_str = std::wstring(1, drive) + L":";
+            if (QueryDosDeviceW(drive_str.c_str(), device_path, MAX_PATH)) {
+                std::wstring device_name = device_path;
+                kDosPath.insert({device_name, drive_str});
+                kNativePath.insert({ drive_str, device_name });
+                PrintDebugW(L"Cached: %ws -> %ws", device_name.c_str(), drive_str.c_str());
+            }
+        }
+    }
+
+    std::wstring GetNativePath(const std::wstring& dos_path)
+    {
+        std::wstring drive_name = dos_path.substr(0, dos_path.find_first_of('\\'));
         if (kNativePath.find(drive_name) != kNativePath.end())
         {
-            return kNativePath[drive_name] + win32_path.substr(drive_name.length());
+            return kNativePath[drive_name] + dos_path.substr(drive_name.length());
         }
 
         std::wstring device_name;
@@ -74,77 +101,56 @@ namespace manager
             status = GetLastError();
             if (status != ERROR_INSUFFICIENT_BUFFER)
             {
-                PrintDebugW(L"QueryDosDevice failed for Win32 file_path %ws, error %s", win32_path.c_str(), debug::GetErrorMessage(status).c_str());
+                PrintDebugW(L"QueryDosDevice failed for Win32 file_path %ws, error %s", dos_path.c_str(), debug::GetErrorMessage(status).c_str());
                 return std::wstring();
             }
             device_name.resize(device_name.size() * 2);
         }
         device_name.resize(wcslen(device_name.data()));
         kNativePath.insert({ drive_name, device_name });
-        return device_name + win32_path.substr(win32_path.find_first_of('\\'));
+        return device_name + dos_path.substr(dos_path.find_first_of('\\'));
     }
 
-    std::wstring GetWin32PathCaseSensitive(const std::wstring& path)
+    std::wstring GetDosPathCaseSensitive(const std::wstring& nt_path)
     {
         // If the file_path is empty or it does not start with "\\" (not a device file_path), return as-is
-        if (path.empty() || path[0] != L'\\') {
-            return path;
+        if (nt_path.empty() || nt_path[0] != L'\\') {
+            return nt_path;
         }
 
         // Remove Win32 Device Namespace or File Namespace prefix if present
-        std::wstring clean_path = path;
+        std::wstring clean_path = nt_path;
         if (clean_path.find(L"\\\\?\\") == 0 || clean_path.find(L"\\\\.\\") == 0) {
             return clean_path.substr(4); // Remove "\\?\" or "\\.\"
         }
 
-        std::wstring device_name = path.substr(0, path.find(L'\\', sizeof("\\Device\\") - 1)); // Extract device name
-        auto it = kWin32Path.find(device_name);
-        if (it != kWin32Path.end()) {
+        std::wstring device_name = nt_path.substr(0, nt_path.find(L'\\', sizeof("\\Device\\") - 1)); // Extract device name
+        auto it = kDosPath.find(device_name);
+        if (it != kDosPath.end()) {
             return it->second + clean_path.substr(device_name.length());
         }
 
-        // Prepare UNICODE_STRING for the native file_path
-        UNICODE_STRING unicode_path = { (USHORT)(clean_path.length() * sizeof(wchar_t)), (USHORT)(clean_path.length() * sizeof(wchar_t)), (PWSTR)clean_path.c_str() };
-
-        OBJECT_ATTRIBUTES obj_attr;
-        InitializeObjectAttributes(&obj_attr, &unicode_path, OBJ_CASE_INSENSITIVE, NULL, NULL);
-
-        HANDLE file_handle;
-        IO_STATUS_BLOCK io_status;
-
-        // Attempt to open the file or device
-        NTSTATUS status = NtCreateFile(&file_handle, FILE_READ_ATTRIBUTES, &obj_attr, &io_status, NULL, FILE_ATTRIBUTE_READONLY, FILE_SHARE_READ, FILE_OPEN, FILE_NON_DIRECTORY_FILE, NULL, 0);
-
-        if (!NT_SUCCESS(status)) {
-            return L"";
-        }
-
-        // Get full file_path using the handle
-        WCHAR buffer[MAX_PATH];
-        DWORD result = GetFinalPathNameByHandleW(file_handle, buffer, MAX_PATH, FILE_NAME_NORMALIZED);
-        CloseHandle(file_handle);
-
-        std::wstring win_api_path;
-        if (result != 0 && result < MAX_PATH) {
-            win_api_path = std::wstring(buffer);
-            if (win_api_path.find(L"\\\\?\\") == 0 || win_api_path.find(L"\\\\.\\") == 0) {
-                win_api_path = win_api_path.substr(4); // Remove "\\?\" or "\\.\"
+        // Try all drive letters to find the matching device path
+        wchar_t device_path[MAX_PATH];
+        std::wstring dos_path = L"";
+        for (wchar_t drive = L'A'; drive <= L'Z'; ++drive) {
+            std::wstring drive_str = std::wstring(1, drive) + L":";
+            if (QueryDosDeviceW(drive_str.c_str(), device_path, MAX_PATH)) {
+                std::wstring device_name = device_path;
+                if (clean_path.find(device_name) == 0) {
+                    dos_path = drive_str + clean_path.substr(device_name.length());
+                    kDosPath.insert({device_name, drive_str}); // Cache
+                    break;
+                }
             }
-            // Extract and cache the device prefix
-            const std::wstring device_prefix = clean_path.substr(0, clean_path.find(L'\\', sizeof("\\Device\\") - 1));
-            const std::wstring drive_prefix = win_api_path.substr(0, win_api_path.find_first_of(L'\\')); // Get the drive letter part (e.g., "C:")
-            kWin32Path.insert({ device_name, drive_prefix }); // Cache the prefix mapping
-        }
-        else {
-            win_api_path = L""; // Fallback to original file_path if conversion fails
         }
 
-        return win_api_path;
+        return dos_path;
     }
 
-    std::wstring GetWin32Path(const std::wstring& path)
+    std::wstring GetDosPath(const std::wstring& nt_path)
     {
-        return ulti::ToLower(GetWin32PathCaseSensitive(path));
+        return ulti::ToLower(GetDosPathCaseSensitive(nt_path));
     }
 
     bool FileExist(const std::wstring& file_path)
@@ -186,12 +192,12 @@ namespace manager
         if (dot_pos == std::wstring::npos || name_pos > dot_pos) {
             return L""; // No file extension
         }
-        return ulti::ToLower(file_name.substr(dot_pos + 1)); // Return the file extension
+        return std::move(ulti::ToLower(std::move(file_name.substr(dot_pos + 1)))); // Return the file extension
     }
 
-	ull GetPathHash(const std::wstring& file_path)
+	size_t GetPathHash(const std::wstring& file_path)
 	{
-		ull backup_hash = 0;
+		size_t backup_hash = 0;
 		for (auto& c : file_path)
 		{
 			backup_hash += (backup_hash * 65535 + c) % (10000000007);
@@ -199,16 +205,34 @@ namespace manager
 		return backup_hash;
 	}
 
-    std::wstring CopyToTmp(const std::wstring& file_path)
+    std::wstring CopyToTmp(const std::wstring& file_path, bool create_new_if_duplicate)
 	{
-		std::wstring tmp_name = std::to_wstring(GetPathHash(file_path));
-        std::wstring dest = TEMP_DIR + tmp_name;
-        PrintDebugW(L"Copying file %ws to %ws", file_path.c_str(), dest.c_str());
-		if (FileExist(dest) == true)
-		{
-            PrintDebugW(L"File %ws already exists", dest.c_str());
-			return tmp_name;
-		}
+		std::wstring base_tmp_name = std::to_wstring(GetPathHash(file_path));
+        std::wstring dest = TEMP_DIR + base_tmp_name;
+        if (create_new_if_duplicate == false)
+        {
+            PrintDebugW(L"Copying file %ws to %ws", file_path.c_str(), dest.c_str());
+            if (FileExist(dest) == true)
+            {
+                PrintDebugW(L"File %ws already exists", dest.c_str());
+                return base_tmp_name;
+            }
+        }
+        else
+        {
+            // Create a unique name for the destination file
+            std::wstring base_name = dest;
+            std::wstring tmp_name = base_tmp_name;
+            int counter = 1;
+            while (FileExist(dest) == true)
+            {
+                tmp_name = base_tmp_name + L"_" + std::to_wstring(counter);
+                dest = base_name + L"_" + std::to_wstring(counter);
+                counter++;
+            }
+            base_tmp_name = tmp_name;
+            PrintDebugW(L"Copying file %ws to %ws", file_path.c_str(), dest.c_str());
+        }
         HANDLE h_src = CreateFileW(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
         if (h_src == INVALID_HANDLE_VALUE)
         {
@@ -265,7 +289,7 @@ namespace manager
 		CloseHandle(h_src);
 		CloseHandle(h_dest);
         PrintDebugW(L"File %ws copied to %ws", file_path.c_str(), dest.c_str());
-		return tmp_name;
+		return base_tmp_name;
     }
 
     // Function to clear temporary files

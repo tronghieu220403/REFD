@@ -13,8 +13,12 @@ namespace manager {
 	void Init();
 	void Cleanup();
 
-	void EvaluateProcess();
+	void EvaluateProcesses();
+	
+	void EvaluateProcess(ULONG pid);
 
-	bool OverallEventFilter(size_t issuing_pid);
+	void ProcessDataQueue();
+
+	bool DiscardEventByPid(size_t issuing_pid);
 }
 #endif  // MANAGER_H_
