@@ -116,7 +116,7 @@ namespace manager {
 
             //PrintDebugW(L"Pid %d: %d events", pid, events.size());
 			// Process each event
-			for (size_t i = 0; i < events.size(); ++i)
+			for (int i = 0; i < (int)events.size(); ++i)
 			{
 				FileIoInfo& current_event = events[i];
 				bool merged = false;
@@ -124,7 +124,7 @@ namespace manager {
 				// Only attempt to merge if the event is renamed
 				if (current_event.is_renamed) {
                     //PrintDebugW(L"Process %d: Renamed event", pid);
-					size_t current_hash = manager::GetPathHash(current_event.current_path);
+					size_t current_hash = manager::GetPathHash(current_event.path_list[0]);
 
 					// Try to find the matching event based on the hash map
 					auto it = path_hash_to_merged_index.find(current_hash);
@@ -156,73 +156,13 @@ namespace manager {
 							last_event.is_renamed |= current_event.is_renamed;
 						}
 
-						if (last_event.is_renamed == true && current_event.new_path_list.back().empty() == false)
-						{
-							last_event.new_path_list.push_back(current_event.new_path_list.back());
-							// Update the path hash map
-							size_t new_path_hash = manager::GetPathHash(last_event.new_path_list.back());
-
-                            // Nếu trước đó chưa bị modified mà bây giờ bị modified thì phải lấy type
-							if (current_event.is_modified == true && last_event.is_modified == false && last_event.is_new_get_type == false)
-							{
-								if (FileExist(TEMP_DIR + std::to_wstring(new_path_hash)) == true)
-								{
-									last_event.new_backup_name = std::to_wstring(new_path_hash);
-									last_event.new_types = kTrID->GetTypes(TEMP_DIR + last_event.new_backup_name);
-									last_event.is_new_get_type = true;
-								}
-								else if (FileExist(current_event.new_path_list.back()) == true)
-								{
-									last_event.new_backup_name = manager::CopyToTmp(current_event.new_path_list.back());
-									if (last_event.new_backup_name != L"") {
-										last_event.new_types = kTrID->GetTypes(TEMP_DIR + last_event.new_backup_name);
-										last_event.is_new_get_type = true;
-									}
-								}
-							}
-							auto index = it->second;
-							path_hash_to_merged_index.erase(it);
-							path_hash_to_merged_index[new_path_hash] = index;
-						}
-						
-                        // Nếu trước đó chưa lấy type mà có đã bị thay đổi
-						if (last_event.is_current_get_type == false && last_event.is_modified == true)
-						{
-							if (last_event.current_backup_name == L"")
-							{
-								if (FileExist(TEMP_DIR + current_event.current_backup_name) == true)
-								{
-									last_event.current_backup_name = current_event.current_backup_name;
-                                    last_event.current_types = std::move(kTrID->GetTypes(TEMP_DIR + last_event.current_backup_name));
-                                    last_event.is_current_get_type = true;
-								}
-								else if (FileExist(current_event.current_path) == true)
-								{
-									last_event.current_backup_name = manager::CopyToTmp(current_event.current_path);
-                                    if (last_event.current_backup_name != L"") {
-                                        last_event.current_types = std::move(kTrID->GetTypes(TEMP_DIR + last_event.current_backup_name));
-                                        last_event.is_current_get_type = true;
-                                    }
-								}
-							}
-							else
-							{
-                                if (FileExist(TEMP_DIR + current_event.current_backup_name) == true)
-                                {
-                                    last_event.current_backup_name = current_event.current_backup_name;
-                                    last_event.current_types = std::move(kTrID->GetTypes(TEMP_DIR + last_event.current_backup_name));
-                                    last_event.is_current_get_type = true;
-                                }
-                                else if (FileExist(current_event.current_path) == true)
-                                {
-                                    last_event.current_backup_name = manager::CopyToTmp(current_event.current_path);
-                                    if (last_event.current_backup_name != L"") {
-                                        last_event.current_types = std::move(kTrID->GetTypes(TEMP_DIR + last_event.current_backup_name));
-                                        last_event.is_current_get_type = true;
-                                    }
-                                }
-							}
-						}
+						last_event.path_list.push_back(current_event.path_list.back());
+                        last_event.backup_name_list.push_back(current_event.backup_name_list.back());
+						// Update the path hash map
+						size_t new_path_hash = manager::GetPathHash(last_event.path_list.back());
+						auto index = it->second;
+						path_hash_to_merged_index.erase(it);
+						path_hash_to_merged_index[new_path_hash] = index;
 
                         // Update the global process map
                         if (last_event.is_deleted == true && old_is_deleted == false)
@@ -241,100 +181,36 @@ namespace manager {
 						{
 							iterator_process_map->second.overwrite_count += 1;
 						}
-                        EvaluateProcess(pid);
 						merged = true;
 					}
 				}
 
 				// If the event wasn't merged, add it as a new event
 				if (merged == false) {
-                    //PrintDebugW(L"Process %d: New event", pid);
-                    // Reupdate the current back up name
-					if (current_event.current_backup_name.empty() == false && FileExist(TEMP_DIR + current_event.current_backup_name) == false) {
-						if (current_event.is_created == false && (current_event.is_renamed | current_event.is_deleted | current_event.is_created) == false && FileExist(current_event.current_path) == true)
-						{
-							current_event.current_backup_name = manager::CopyToTmp(current_event.current_path);
-                        }
-						else {
-							current_event.current_backup_name = L"";
-						}
-					}
-					else {
-						current_event.current_backup_name = current_event.current_backup_name;
-					}
-
-					if (current_event.current_backup_name.empty() == false && current_event.is_created == false && (current_event.is_modified | current_event.is_deleted | current_event.is_created) == false)
-					{
-						current_event.current_types = kTrID->GetTypes(current_event.current_backup_name);
-						current_event.is_current_get_type = true;
-					}
-
-					if (current_event.is_renamed == true && current_event.is_modified == true)
-					{
-                        if (FileExist(current_event.new_backup_name) == false)
-                        {
-                            if (current_event.new_path_list.back().empty() == false && FileExist(current_event.new_path_list.back()) == true)
-                            {
-                                current_event.new_backup_name = manager::CopyToTmp(current_event.new_path_list.back());
-                                if (current_event.new_backup_name != L"") {
-                                    current_event.new_types = kTrID->GetTypes(TEMP_DIR + current_event.new_backup_name);
-                                    current_event.is_new_get_type = true;
-                                }
-                            }
-                            else
-                            {
-                                current_event.new_backup_name = L"";
-                            }
-                        }
-                        else
-                        {
-                            current_event.new_backup_name = current_event.new_backup_name;
-                            current_event.new_types = kTrID->GetTypes(current_event.new_backup_name);
-                            current_event.is_new_get_type = true;
-                        }	
-					}
-					/*
-					PrintDebugW(L"Add new event: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path_list: %ws",
-						current_event.requestor_pid,
-						current_event.is_modified,
-						current_event.is_deleted,
-						current_event.is_created,
-						current_event.is_renamed,
-						current_event.current_path.c_str(),
-                        current_event.new_path_list.back().c_str());
-					*/
 					merged_events.push_back(current_event);
 					
 					// Update the path hash map
-					size_t new_path_hash;
-					if (current_event.new_path_list.back().empty() == false)
-					{
-						new_path_hash = manager::GetPathHash(current_event.new_path_list.back());
-					}
-					else
-					{
-						new_path_hash = manager::GetPathHash(current_event.current_path);
-					}
+					size_t new_path_hash = manager::GetPathHash(current_event.path_list.back());
+					path_hash_to_merged_index[new_path_hash] = merged_events.size() - 1;
 
                     // Update the global process map
                     if (current_event.is_deleted == true)
                     {
                         iterator_process_map->second.deleted_count += 1;
-                    }
-                    else if (current_event.is_created == true && current_event.is_modified == true)
-                    {
-                        iterator_process_map->second.created_write_count += 1;
-                    }
-                    else if (current_event.is_modified == true)
-                    {
-                        iterator_process_map->second.overwrite_count += 1;
-                    }
-					path_hash_to_merged_index[new_path_hash] = merged_events.size() - 1;
-					EvaluateProcess(pid);
+					}
+					else if (current_event.is_created == true && current_event.is_modified == true)
+					{
+						iterator_process_map->second.created_write_count += 1;
+					}
+					else if (current_event.is_modified == true)
+					{
+						iterator_process_map->second.overwrite_count += 1;
+					}
 				}
+				EvaluateProcess(pid);
 			}
 		}
-        PrintDebugW(L"End processing data queue");
+		PrintDebugW(L"End processing data queue");
 	}
 
 	void EvaluateProcesses()
@@ -347,86 +223,100 @@ namespace manager {
 		for (auto& pid_events : global_merged_events_by_pid) {
 			std::vector<FileIoInfo>& events = pid_events.second;
 			auto pid = pid_events.first;
-            auto it = global_process_map.find(pid);
-            if (it == global_process_map.end())
-            {
-                global_process_map[pid] = ProcessInfo();
-                global_process_map[pid].pid = pid;
-                it = global_process_map.find(pid);
-            }
+			auto it = global_process_map.find(pid);
+			if (it == global_process_map.end())
+			{
+				global_process_map[pid] = ProcessInfo();
+				global_process_map[pid].pid = pid;
+				it = global_process_map.find(pid);
+			}
 			for (auto& event : events)
 			{
 				if (event.is_deleted == true)
 				{
-                    //PrintDebugW(L"Process %d: deleted file %ws", pid, event.current_path.c_str());
+					//PrintDebugW(L"Process %d: deleted file %ws", pid, event.current_path.c_str());
 					it->second.deleted_count += 1;
 				}
 				else if (event.is_created == true && event.is_modified == true)
 				{
-                    //PrintDebugW(L"Process %d: created and modified file %ws", pid, event.current_path.c_str());
-                    it->second.created_write_count += 1;
-                }
+					//PrintDebugW(L"Process %d: created and modified file %ws", pid, event.current_path.c_str());
+					it->second.created_write_count += 1;
+				}
 				else if (event.is_modified == true)
 				{
-                    //PrintDebugW(L"Process %d: modified file %ws", pid, event.current_path.c_str());
+					//PrintDebugW(L"Process %d: modified file %ws", pid, event.current_path.c_str());
 					it->second.overwrite_count += 1;
 				}
 			}
 		}
-#ifdef _DEBUG
-        PrintDebugW(L"Print debug processes and event info:");
-		for (auto& pid_events : global_merged_events_by_pid) {
-			std::vector<FileIoInfo>& events = pid_events.second;
-			auto pid = pid_events.first;
-            PrintDebugW(L"Process %d: %d events", pid, events.size());
-			auto it = global_process_map.find(pid);
-			if (it == global_process_map.end())
-			{
-				continue;
-			}
-            PrintDebugW(L"Process %d: deleted_count: %d, created_write_count: %d, overwrite_count: %d",
-                it->second.pid,
-                it->second.deleted_count,
-                it->second.created_write_count,
-                it->second.overwrite_count);
-			for (const auto& event : events)
-			{
-				std::wstring new_path_list_str = L"<";
-				for (const auto& new_path : event.new_path_list)
+		PrintDebugW(L"End evaluating processes");
+	}
+
+	bool AnalyzeEvent(FileIoInfo& event)
+	{
+		int old_index = -1;
+		int new_index = -1;
+
+		if (event.is_created == false) {
+			for (int i = 0; i < (int)event.path_list.size(); i++) {
+				auto backup_path = TEMP_DIR + event.backup_name_list[i];
+				if (FileExist(backup_path) == true)
 				{
-                    new_path_list_str += new_path + L", ";
+					event.old_types = std::move(kTrID->GetTypes(backup_path));
+					event.is_old_type_gotten = true;
+					DeleteFileW(backup_path.c_str());
 				}
-				new_path_list_str[new_path_list_str.size() - 2] = L'>';
-				std::string current_types_str = "<";
-                for (const auto& type : event.current_types)
-                {
-                    current_types_str += type + ", ";
-                }
-				current_types_str[current_types_str.size() - 2] = L'>';
-				std::string new_types_str = "<";
-                for (const auto& type : event.new_types)
-                {
-                    new_types_str += type + ", ";
-                }
-                new_types_str[new_types_str.size() - 2] = L'>';
-                PrintDebugW(L"Event: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path_list: %ws, current_types: %ws, new_types: %ws",
-                    event.requestor_pid,
-                    event.is_modified,
-                    event.is_deleted,
-                    event.is_created,
-                    event.is_renamed,
-                    event.current_path.c_str(),
-                    new_path_list_str.c_str(),
-                    ulti::StrToWStr(current_types_str).c_str(),
-					ulti::StrToWStr(new_types_str).c_str());
 			}
 		}
-#endif // _DEBUG
+		if (old_index == -1) {
+			old_index = 0;
+		}
 
+		for (int i = (int)event.path_list.size() - 1; i >= old_index; --i) {
+			if (FileExist(event.path_list[i]) == true)
+			{
+				new_index = i;
+				std::wstring backup_path = TEMP_DIR + CopyToTmp(event.path_list[i], true);
+				event.new_types = std::move(kTrID->GetTypes(backup_path));
+				event.is_new_type_gotten = true;
+				DeleteFileW(backup_path.c_str());
+			}
+		}
 
+		if (new_index == -1)
+		{
+			event.type_match = TYPE_NO_EVALUATION;
+			return false;
+		}
+		
+		bool is_default_types_matched = false;
+		std::string ext;
+		for (int i = 0; i < (int)event.path_list.size(); i++) {
+			auto ext_tmp = ulti::WstrToStr(GetFileExtension(event.path_list[i]));
+			if (type_iden::kExtensionMap.find(ext_tmp) != type_iden::kExtensionMap.end()) {
+				ext = ext_tmp;
+			}
+		}
+		if (ext != "") {
+			const std::vector<std::string>& ext_accepted_types = type_iden::kExtensionMap[ext];
+			is_default_types_matched = type_iden::HasCommonType(ext_accepted_types, event.new_types);
+		}
 
-        PrintDebugW(L"End evaluating processes");
+		bool is_types_matched_after_modified = false;
+		if (event.is_created == false)
+		{
+			is_types_matched_after_modified = type_iden::HasCommonType(event.old_types, event.new_types);
+		}
+
+		if (ext == "" && event.is_created == true) {
+			event.type_match = 1 + (event.new_types.size() > 0);
+		} else {
+			event.type_match = 1 + (is_default_types_matched | is_types_matched_after_modified);
+		}
+
+		return true;
 	}
+
 
 	void EvaluateProcess(ULONG pid)
 	{
@@ -448,175 +338,62 @@ namespace manager {
 		auto& events = global_merged_events_by_pid[pid];
         bool is_ransomware = false;
 
-		if (process_info.overwrite_count > 5)
+		if (process_info.overwrite_count > MIN_FILE_COUNT)
 		{
-			int cnt = 0;
-			for (auto& event : events)
+			for (int i = (int)process_info.last_index; i < (int)events.size(); ++i)
 			{
-                if (event.is_modified == true && event.is_deleted == false && event.is_created == false)
-                {
-					if (event.type_match == TYPE_MATCH_NOT_EVALUATED)
-					{
-						if (event.is_current_get_type == false)
-						{
-							PrintDebugW(L"WARNING: Process %d: File %ws is modified, but not evaluated", pid, event.current_path.c_str());
-							continue;
+				auto& event = events[i];
+				if (event.type_match == TYPE_MATCH_NOT_EVALUATED && event.is_modified == true && event.is_created == false && event.is_deleted == false) {
+					if (AnalyzeEvent(event) == true) {
+						if (event.type_match == TYPE_MISMATCH) {
+							process_info.overwrite_mismatch_count++;
 						}
-						std::vector<std::string> newest_types;
-						if (event.is_renamed)
-						{
-                            if (event.is_new_get_type == false)
-                            {
-                                PrintDebugW(L"WARNING: Process %d: File %ws is modified and renamed, but not evaluated", pid, event.current_path.c_str());
-                                continue;
-                            }
-                            newest_types = event.new_types;
-						}
-						else
-						{
-							auto newest_backup_path = CopyToTmp(event.current_path, true);
-							if (newest_backup_path == L"") {
-								PrintDebugW(L"WARNING: Process %d: Can not create backup for file %ws", pid, event.current_path.c_str());
-								continue;
-							}
-							newest_types = kTrID->GetTypes(TEMP_DIR + event.current_backup_name);
-						}
-
-						bool is_valid_file = type_iden::HasCommonType(newest_types, event.current_types);
-						if (is_valid_file == false)
-						{
-							auto ext = ulti::WstrToStr(GetFileExtension(event.current_path));
-							if (event.is_renamed == true && type_iden::kExtensionMap.find(ext) != type_iden::kExtensionMap.end())
-							{
-								is_valid_file = type_iden::HasCommonType(newest_types, type_iden::kExtensionMap[ext]);
-							}
-							else if (event.is_renamed == false) {
-                                ext = ulti::WstrToStr(GetFileExtension(event.new_path_list.back()));
-                                if (type_iden::kExtensionMap.find(ext) != type_iden::kExtensionMap.end())
-                                {
-                                    is_valid_file = type_iden::HasCommonType(newest_types, type_iden::kExtensionMap[ext]);
-                                }
-                                else
-                                {
-                                    PrintDebugW(L"WARNING: Process %d: File %ws is modified, but can not ext", pid, event.current_path.c_str());
-                                    continue;
-                                }
-							}
-						}
-						event.type_match = (is_valid_file == false) ? TYPE_HAS_COMMON : TYPE_MISMATCH;
-					}
-					if (event.type_match == TYPE_MISMATCH)
-					{
-						PrintDebugW(L"Type mismatch: %ws", event.current_path.c_str());
-						cnt += 1;
-					}
-					else
-					{
-                        PrintDebugW(L"Type match: %ws", event.current_path.c_str());
 					}
 				}
 			}
-            if (cnt > 1)
+            if (process_info.overwrite_mismatch_count > MIN_FILE_COUNT)
             {
                 is_ransomware = true;
             }
 		}
-		else if (process_info.deleted_count > 5 && process_info.created_write_count > 5)
+		else if (process_info.deleted_count > MIN_FILE_COUNT && process_info.created_write_count > MIN_FILE_COUNT)
 		{
-            int true_deleted_count = 0;
-			for (const auto& event : events)
+			for (int i = (int)process_info.last_index; i < (int)events.size(); ++i)
 			{
-				if (event.is_deleted == true)
-				{
-					auto ext = ulti::WstrToStr(GetFileExtension(event.current_path));
+				auto& event = events[i];
+				if (event.is_deleted == true) {
+					event.type_match = TYPE_NO_EVALUATION;
+					process_info.true_deleted_count += 1;
+					/*
+					auto ext = ulti::WstrToStr(GetFileExtension(event.path_list.front()));
 					if (type_iden::kExtensionMap.find(ext) != type_iden::kExtensionMap.end())
 					{
-						true_deleted_count += 1;
+						process_info.true_deleted_count += 1;
 					}
-					else if (event.is_renamed == true)
-					{
-						ext = ulti::WstrToStr(GetFileExtension(event.new_path_list.back()));
-						if (type_iden::kExtensionMap.find(ext) != type_iden::kExtensionMap.end())
-						{
-							true_deleted_count += 1;
+					*/
+				} 
+				else if (event.type_match == TYPE_MATCH_NOT_EVALUATED && event.is_modified == true && event.is_created == true && event.is_deleted == false)
+				{
+					if (AnalyzeEvent(event) == true) {
+						if (event.type_match == TYPE_MISMATCH) {
+							process_info.created_write_null_count++;
 						}
 					}
 				}
             }
-			if (true_deleted_count < 5)
+
+			if (process_info.true_deleted_count < MIN_FILE_COUNT)
 			{
                 goto end_evaluate_process;
 			}
-			int cnt = 0;
-			for (auto& event : events)
-			{
-				if (event.is_deleted == true)
-				{
-					continue;
-				}
-				if (event.is_created == true && event.is_modified == true)
-				{
-					if (event.type_match == TYPE_MATCH_NOT_EVALUATED)
-					{
-						if (event.is_current_get_type == false)
-						{
-							PrintDebugW(L"WARNING: Process %d: File %ws is created and modified, but not evaluated", pid, event.current_path.c_str());
-							continue;
-						}
-						std::vector<std::string> newest_types;
-						std::wstring current_path;
-						if (event.is_renamed)
-						{
-							if (FileExist(event.new_path_list.back()) == true)
-							{
-                                current_path = event.new_path_list.back();
-                                auto newest_backup_path = CopyToTmp(current_path, true);
-                                if (newest_backup_path == L"") {
-                                    PrintDebugW(L"WARNING: Process %d: Can not create backup for file %ws", pid, current_path.c_str());
-                                    continue;
-                                }
-                                newest_types = kTrID->GetTypes(TEMP_DIR + event.new_backup_name);
-							}
-						}
-						else
-						{
-                            current_path = event.current_path;
-                            auto newest_backup_path = CopyToTmp(current_path, true);
-                            if (newest_backup_path == L"") {
-                                PrintDebugW(L"WARNING: Process %d: Can not create backup for file %ws", pid, current_path.c_str());
-                                continue;
-                            }
-                            newest_types = kTrID->GetTypes(TEMP_DIR + event.current_backup_name);
-						}
-						if (newest_types.size() == 1 && newest_types.back() == "")
-						{
-                            event.type_match = TYPE_MISMATCH;
-                            cnt += 1;
-						}
-						else
-						{
-                            event.type_match = TYPE_HAS_COMMON;
-						}
-					}
-                    if (event.type_match == TYPE_MISMATCH)
-                    {
-                        PrintDebugW(L"Type null: %ws", event.current_path.c_str());
-                        cnt += 1;
-                    }
-                    else
-                    {
-                        PrintDebugW(L"Type match: %ws", event.current_path.c_str());
-                    }
-				}
-			}
-			if (cnt > 5)
+
+			if (process_info.created_write_null_count > MIN_FILE_COUNT)
 			{
 				is_ransomware = true;
 			}
 		}
 		else
 		{
-            PrintDebugW(L"Process %d: Not enough events to evaluate", pid);
 			return;
 		}
 
@@ -627,6 +404,7 @@ namespace manager {
 	end_evaluate_process:
 		process_info.is_first_evaluation = false;
 		process_info.last_evaluation_time = std::chrono::steady_clock::now();
+		process_info.last_index = events.size();
         PrintDebugW(L"End evaluating process, pid %d", pid);
 	}
 

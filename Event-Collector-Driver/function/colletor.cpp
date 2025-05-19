@@ -275,12 +275,14 @@ namespace collector
             goto pre_write_release_context;
         }
 
+        /*
         // Only backup if the file extension is monitored.
         if (!detector::IsExtensionMonitored(p_handle_context->current_path))
         {
             DebugMessage("File: %ws, extension not monitored\n", p_handle_context->current_path);
             goto pre_write_release_context;
         }
+        */
 
         // Create a backup
         if (backup::BackupFile(p_handle_context->current_path, p_handle_context->backup_name, HIEUNT_MAX_PATH, &backup_name_size, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject))
@@ -374,6 +376,7 @@ namespace collector
             {
                 DebugMessage("FltGetDestinationFileNameInformation failed: %x\n", status);
             }
+            is_sensitive_info_class = false;
         }
         else if (file_info_class == FileDispositionInformation || file_info_class == FileDispositionInformationEx)
         {

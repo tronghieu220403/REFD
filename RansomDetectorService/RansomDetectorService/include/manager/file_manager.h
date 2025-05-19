@@ -14,7 +14,7 @@
 #define MIN_TOTAL_SIZE_CHECK (MIN_TOTAL_SIZE_CHECK_PER_SEC * EVALUATATION_INTERVAL_SEC)
 
 #define MIN_FILE_COUNT_PER_SEC 2
-#define MIN_FILE_COUNT (MIN_FILE_COUNT_PER_SEC * EVALUATATION_INTERVAL_SEC)
+#define MIN_FILE_COUNT 5
 #define MAX_FILE_COUNT (MIN_FILE_COUNT * 5)
 
 #define MIN_DIR_COUNT 2
@@ -31,6 +31,7 @@
 #define TYPE_MATCH_NOT_EVALUATED 0
 #define TYPE_MISMATCH 1
 #define TYPE_HAS_COMMON 2
+#define TYPE_NO_EVALUATION 3
 
 namespace manager {
 
@@ -54,14 +55,12 @@ namespace manager {
 		bool is_created = false;
 		bool is_renamed = false;
 		bool is_success = true;
-		bool is_current_get_type = false;
-        bool is_new_get_type = false;
+		bool is_old_type_gotten = false;
+        bool is_new_type_gotten = false;
 		ULONG type_match = TYPE_MATCH_NOT_EVALUATED;
-		std::wstring current_path;
-		std::wstring current_backup_name;
-		std::vector<std::wstring> new_path_list;
-		std::wstring new_backup_name;
-		std::vector<std::string> current_types;
+		std::vector<std::wstring> path_list;
+		std::vector<std::wstring> backup_name_list;
+		std::vector<std::string> old_types;
 		std::vector<std::string> new_types;
 	};
 

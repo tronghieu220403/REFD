@@ -59,18 +59,25 @@ def init_env():
     #time.sleep(5)
     run_cmd('E:\\stop_driver.bat')
 
-    print("Copy files")
+    print("Delete files in E:\\test and E:\\backup")
+    run_cmd("powershell -Command \"Remove-Item \'E:\\test\\*\' -Recurse -Force\"")
+    run_cmd("powershell -Command \"Remove-Item \'E:\\backup\\*\' -Recurse -Force\"")
+    print("Copy files to E:\\test")
+    run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny" "E:\\test" /E /I /Y')
     '''
     vm.copy_host_to_guest('E:\\hieunt20210330\\TrID\\TrIDLib.dll', 'E:\\hieunt210330\\TrIDLib.dll')
     vm.copy_host_to_guest('E:\\hieunt20210330\\TrID\\triddefs.trd', 'E:\\hieunt210330\\triddefs.trd')
+    '''
+    print("Copy driver files to E:\\")
     vm.copy_host_to_guest('E:\\Code\\Github\\REFD\\Event-Collector-Driver\\x64\\Debug\\EventCollectorDriver.sys', 'E:\\EventCollectorDriver.sys')
     vm.copy_host_to_guest('E:\\Code\\Github\\REFD\\Event-Collector-Driver\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\EventCollectorDriver.pdb')
-    '''
     while True:
         try:
             vm.copy_host_to_guest("E:\\Code\\Github\\REFD\\TestIo\\x64\\Debug\\TestIo.exe", 'E:\\TestIo.exe')
+            '''
             vm.copy_host_to_guest('E:\\Code\\Github\\REFD\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\RansomDetectorService.exe')
             vm.copy_host_to_guest('E:\\Code\\Github\\REFD\\RansomDetectorService\\Debug\\RansomDetectorService.pdb', 'E:\\hieunt210330\\RansomDetectorService.pdb')
+            '''
         except Exception as e:
             print("Error copying files, retrying...", e)
             continue
@@ -84,19 +91,21 @@ def init_env():
 
 init_env()
 
+time.sleep(3)
+
 print("Start testing")
 
-time.sleep(2)
+test_cmdl = "E:\\TestIo.exe" + " n 2"
 
-for i in range(5):
+run_cmd(test_cmdl)
 
-    test_cmdl = "E:\\TestIo.exe" + " c 1 2 3 4 5 6 7 8 9 10"
+print("Test stop")
 
-    run_cmd(test_cmdl)
-    time.sleep(1)
+time.sleep(60)
 
-time.sleep(30)
 print("Test done")
 
 run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
 run_cmd('E:\\stop_driver.bat')
+time.sleep(5)
+run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
