@@ -365,12 +365,12 @@ namespace collector
     {
         NTSTATUS status;
 
-        DebugMessage("File %ws, instance %p, file object %p, pid %d", flt::GetFileFullPathName(data).Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
-
         if (data->RequestorMode == KernelMode)
         {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
+
+        DebugMessage("File %ws, instance %p, file object %p, pid %d", flt::GetFileFullPathName(data).Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
         PHANDLE_CONTEXT p_handle_context = nullptr;
 
