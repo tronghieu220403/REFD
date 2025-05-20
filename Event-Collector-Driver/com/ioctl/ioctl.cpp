@@ -2,7 +2,7 @@
 
 NTSTATUS ioctl::DrvRegister(PDRIVER_OBJECT driver_object, PUNICODE_STRING registry_path)
 {
-	DebugMessage("%ws\n", __FUNCTIONW__);
+	DebugMessage("%ws", __FUNCTIONW__);
 
 	driver_object->MajorFunction[IRP_MJ_DEVICE_CONTROL] = ioctl::HandleIoctl;
 
@@ -14,22 +14,22 @@ NTSTATUS ioctl::DrvRegister(PDRIVER_OBJECT driver_object, PUNICODE_STRING regist
 
 	if (!NT_SUCCESS(status))
 	{
-		DebugMessage("Could not create device %wZ\n", DEVICE_NAME);
+		DebugMessage("Could not create device %wZ", DEVICE_NAME);
 		return STATUS_UNSUCCESSFUL;
 	}
 	else
 	{
-		DebugMessage("Device %wZ created\n", DEVICE_NAME);
+		DebugMessage("Device %wZ created", DEVICE_NAME);
 	}
 
 	status = IoCreateSymbolicLink(&DEVICE_SYMBOLIC_NAME, &DEVICE_NAME);
 	if (NT_SUCCESS(status))
 	{
-		DebugMessage("Symbolic link %wZ created\n", DEVICE_SYMBOLIC_NAME);
+		DebugMessage("Symbolic link %wZ created", DEVICE_SYMBOLIC_NAME);
 	}
 	else
 	{
-		DebugMessage("Error creating symbolic link %wZ\n", DEVICE_SYMBOLIC_NAME);
+		DebugMessage("Error creating symbolic link %wZ", DEVICE_SYMBOLIC_NAME);
 		return STATUS_UNSUCCESSFUL;
 	}
 	return STATUS_SUCCESS;
@@ -37,7 +37,7 @@ NTSTATUS ioctl::DrvRegister(PDRIVER_OBJECT driver_object, PUNICODE_STRING regist
 
 NTSTATUS ioctl::DrvUnload(PDRIVER_OBJECT driver_object)
 {
-	DebugMessage("%ws\n", __FUNCTIONW__);
+	DebugMessage("%ws", __FUNCTIONW__);
 
 	IoDeleteSymbolicLink(&DEVICE_SYMBOLIC_NAME);
 	IoDeleteDevice(driver_object->DeviceObject);
@@ -96,10 +96,10 @@ NTSTATUS ioctl::MajorFunction(PDEVICE_OBJECT device_object, PIRP irp)
 	switch (stackLocation->MajorFunction)
 	{
 	case IRP_MJ_CREATE:
-		DebugMessage("Handle to symbolink link %wZ opened\n", DEVICE_SYMBOLIC_NAME);
+		DebugMessage("Handle to symbolink link %wZ opened", DEVICE_SYMBOLIC_NAME);
 		break;
 	case IRP_MJ_CLOSE:
-		DebugMessage("Handle to symbolink link %wZ closed\n", DEVICE_SYMBOLIC_NAME);
+		DebugMessage("Handle to symbolink link %wZ closed", DEVICE_SYMBOLIC_NAME);
 		break;
 	default:
 		break;

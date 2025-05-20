@@ -6,6 +6,7 @@
 #include <random>
 #include <iostream>
 #include <cstdint>
+#include <fstream>
 
 constexpr uint8_t XOR_KEY = 0xFF;
 constexpr size_t JUNK_SIZE = 1024; // bytes rác cho test 4
@@ -159,10 +160,41 @@ void test4(const std::wstring& path, bool mapping, bool withJunk) {
         std::wcerr << L"[3/4] Delete error: " << path << L"\n";
 }
 
+void GenerateRandomTextFiles(const std::wstring& directory) {
+	std::filesystem::create_directories(directory);
+
+	std::mt19937 rng(std::random_device{}());
+	std::uniform_int_distribution<size_t> size_dist(100 * 1024, 1024 * 1024); // 100KB - 1MB
+	std::uniform_int_distribution<short> char_dist(0, 51); // Index for A-Z, a-z
+
+	const char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+	for (int i = 0; i < 100; ++i) {
+		std::wstring filename = directory + L"/file_" + std::to_wstring(i) + L".txt";
+		size_t file_size = size_dist(rng);
+
+		std::ofstream file(filename, std::ios::binary);
+		if (!file.is_open()) {
+			std::wcerr << L"Failed to create file: " << filename << L"\n";
+			continue;
+		}
+
+		for (size_t j = 0; j < file_size; ++j) {
+			file.put(alphabet[char_dist(rng)]);
+		}
+
+		file.close();
+	}
+}
 
 int wmain(int argc, wchar_t* argv[]) {
     if (argc < 3) {
-        std::wcerr << L"Usage: ransomware_simulator.exe <m|n> <test#> [...]\n";
+		if (argc == 2 && wcscmp(argv[1], L"c") == 0)
+		{
+			GenerateRandomTextFiles(TEST_DIR);
+			return 0;
+		}
+        std::wcerr << L"Usage: ransomware_simulator.exe <c|m|n> <test#> [...]\n";
         return 1;
     }
     bool mapping = false;

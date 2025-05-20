@@ -309,12 +309,12 @@ DriverEntry (
 
     UNREFERENCED_PARAMETER( registry_path );
 
-    DebugMessage("%ws\n", __FUNCTIONW__);
+    DebugMessage("%ws", __FUNCTIONW__);
 
-    DebugMessage("GetSystemRoutineAddresses\n");
+    DebugMessage("GetSystemRoutineAddresses");
     GetSystemRoutineAddresses();
 
-    DebugMessage("DrvRegister\n");
+    DebugMessage("DrvRegister");
     reg::DrvRegister(driver_object, registry_path);
 
     driver_object->DriverUnload = (PDRIVER_UNLOAD)DriverUnload;
@@ -356,10 +356,10 @@ DriverUnload(
     PDRIVER_OBJECT driver_object
 )
 {
-    DebugMessage("%ws\n", __FUNCTIONW__);
+    DebugMessage("%ws", __FUNCTIONW__);
     reg::DrvUnload(driver_object);
 
-    DebugMessage("Successfully unloaded driver\n");
+    DebugMessage("Successfully unloaded driver");
     return STATUS_SUCCESS;
 }
 
@@ -372,10 +372,10 @@ MiniFsUnload (
 
     PAGED_CODE();
 
-    DebugMessage("%ws\n", __FUNCTIONW__);
+    DebugMessage("%ws", __FUNCTIONW__);
     reg::FltUnload();
 
-    DebugMessage("Successfully unloaded filter\n");
+    DebugMessage("Successfully unloaded filter");
     return STATUS_SUCCESS;
 }
 
@@ -496,17 +496,17 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
 {
     if (context_type == FLT_STREAMHANDLE_CONTEXT)
     {
-        DebugMessage("%ws, FLT_STREAMHANDLE_CONTEXT\n", __FUNCTIONW__);
+        DebugMessage("%ws, FLT_STREAMHANDLE_CONTEXT", __FUNCTIONW__);
         collector::HANDLE_CONTEXT* handle_context = (collector::HANDLE_CONTEXT*)context;
         if (handle_context != nullptr)
         {
-            DebugMessage("File: %ws, handle context %p\n", handle_context->current_path, handle_context);
+            DebugMessage("File: %ws, handle context %p", handle_context->current_path, handle_context);
             if (handle_context->is_modified + handle_context->is_deleted + handle_context->is_created + handle_context->is_renamed == 0)
             {
-                DebugMessage("File: %ws, no operation, do not send to user mode\n", handle_context->current_path);
+                DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
             }
-            DebugMessage("Sending event to user mode: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws\n",
+            DebugMessage("Sending event to user mode: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws",
                 handle_context->requestor_pid,
                 handle_context->is_modified,
                 handle_context->is_deleted,
@@ -521,17 +521,17 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
     }
     else if (context_type == FLT_FILE_CONTEXT)
     {
-        DebugMessage("%ws, FLT_FILE_CONTEXT\n", __FUNCTIONW__);
+        DebugMessage("%ws, FLT_FILE_CONTEXT", __FUNCTIONW__);
         collector::HANDLE_CONTEXT* handle_context = (collector::HANDLE_CONTEXT*)context;
         if (handle_context != nullptr)
         {
-            DebugMessage("File: %ws, handle context %p\n", handle_context->current_path, handle_context);
+            DebugMessage("File: %ws, handle context %p", handle_context->current_path, handle_context);
             if (handle_context->is_modified + handle_context->is_deleted + handle_context->is_created + handle_context->is_renamed == 0)
             {
-                DebugMessage("File: %ws, no operation, do not send to user mode\n", handle_context->current_path);
+                DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
             }
-            DebugMessage("Sending event to user mode: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws\n",
+            DebugMessage("Sending event to user mode: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws",
                 handle_context->requestor_pid,
                 handle_context->is_modified,
                 handle_context->is_deleted,
@@ -545,7 +545,7 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
     }
     else
     {
-        DebugMessage("Unknown context type: %d\n", context_type);
+        DebugMessage("Unknown context type: %d", context_type);
     }
     return;
 }

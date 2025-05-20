@@ -12,6 +12,7 @@ Write a class in Windows Kernel Driver that have the following operation on a fi
 
 namespace file
 {
+	ull IoGetFileSize(const WCHAR* file_path);
 
     // SHOULD NOT USE INSIDE ANY MINIFILTER FUNCTION.
     class File {
@@ -22,7 +23,7 @@ namespace file
         File(const String<WCHAR>& current_path);
         ull Read(PVOID buffer, ull length);
         ull Append(PVOID buffer, ull length);
-        ull Size();
+		ull Size();
 
         String<WCHAR> GetPath() const { return file_path_; }
         ~File();
@@ -41,10 +42,11 @@ namespace file
         PFLT_FILTER p_filter_handle_ = { 0 };
         PFLT_INSTANCE p_instance_ = { 0 };
         HANDLE file_handle_ = nullptr;
+		ULONG create_disposition_ = FILE_OPEN;
         bool is_open_ = false;
         bool pre_alloc_file_object_ = false; // if true, the caller must free the file object.
     public:
-        FileFlt(const String<WCHAR>& current_path, const PFLT_FILTER p_filter_handle, const PFLT_INSTANCE p_instance, const PFILE_OBJECT p_file_object = nullptr);
+        FileFlt(const String<WCHAR>& current_path, const PFLT_FILTER p_filter_handle, const PFLT_INSTANCE p_instance, const PFILE_OBJECT p_file_object = nullptr, ULONG create_disposition = FILE_OPEN);
         bool Open();
         void Close();
 

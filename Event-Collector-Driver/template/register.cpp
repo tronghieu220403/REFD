@@ -25,7 +25,7 @@ namespace reg
 
 	void DrvUnload(PDRIVER_OBJECT driver_object)
 	{
-		DebugMessage("%ws\n", __FUNCTIONW__);
+		DebugMessage("%ws", __FUNCTIONW__);
 
 		collector::DrvUnload();
 		//ioctl::DrvUnload(driver_object);
@@ -58,22 +58,22 @@ namespace reg
 
 	void FltUnload()
 	{
-		DebugMessage("%ws\n", __FUNCTIONW__);
-        DebugMessage("Closing com port\n");
+		DebugMessage("%ws", __FUNCTIONW__);
+        DebugMessage("Closing com port");
 		com::kComPort->Close();
-        DebugMessage("Unregistering kFilterHandle\n");
+        DebugMessage("Unregistering kFilterHandle");
 		FltUnregisterFilter(kFilterHandle);
 
-        DebugMessage("Unregistering filter\n");
+        DebugMessage("Unregistering filter");
 		collector::FltUnload();
 
-        DebugMessage("Free memory structures\n");
+        DebugMessage("Free memory structures");
 		delete kFltFuncVector;
 		kFltFuncVector = nullptr;
 		delete com::kComPort;
         com::kComPort = nullptr;
 
-		DebugMessage("Done %s\n", __FUNCTION__);
+		DebugMessage("Done %s", __FUNCTION__);
 		return;
 	}
 

@@ -35,6 +35,10 @@ namespace manager
 
     void FileIoManager::PushFileEventToQueue(const RawFileIoInfo* raw_file_io_info)
     {
+		if (whitelist_pid_set_.find(raw_file_io_info->requestor_pid) != whitelist_pid_set_.end())
+		{
+			return;
+		}
         FileIoInfo file_io_info;
         PrintDebugW(L"File I/O event before: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path_list: %ws",
             raw_file_io_info->requestor_pid,
@@ -59,6 +63,21 @@ namespace manager
         }
         file_io_queue_.push(std::move(file_io_info));
     }
+
+	bool FileIoManager::IsPidInWhiteList(ULONG pid)
+	{
+		return whitelist_pid_set_.find(pid) != whitelist_pid_set_.end();
+	}
+
+	void FileIoManager::AddPidToWhitelist(ULONG pid)
+	{
+		whitelist_pid_set_.insert(pid);
+	}
+
+	void FileIoManager::RemovePidToWhitelist(ULONG pid)
+	{
+		whitelist_pid_set_.erase(pid);
+	}
 
     void InitDosDeviceCache()
     {

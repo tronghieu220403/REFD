@@ -13,9 +13,7 @@
 #define MIN_TOTAL_SIZE_CHECK_PER_SEC (0)// 0MB
 #define MIN_TOTAL_SIZE_CHECK (MIN_TOTAL_SIZE_CHECK_PER_SEC * EVALUATATION_INTERVAL_SEC)
 
-#define MIN_FILE_COUNT_PER_SEC 2
 #define MIN_FILE_COUNT 5
-#define MAX_FILE_COUNT (MIN_FILE_COUNT * 5)
 
 #define MIN_DIR_COUNT 2
 
@@ -55,8 +53,6 @@ namespace manager {
 		bool is_created = false;
 		bool is_renamed = false;
 		bool is_success = true;
-		bool is_old_type_gotten = false;
-        bool is_new_type_gotten = false;
 		ULONG type_match = TYPE_MATCH_NOT_EVALUATED;
 		std::vector<std::wstring> path_list;
 		std::vector<std::wstring> backup_name_list;
@@ -68,6 +64,7 @@ namespace manager {
 	private:
 		std::mutex file_io_mutex_;
 		std::queue<FileIoInfo> file_io_queue_;
+		std::unordered_set<ULONG> whitelist_pid_set_;
 	public:
 		void LockMutex();
 		void UnlockMutex();
@@ -78,6 +75,11 @@ namespace manager {
 		void MoveQueue(std::queue<FileIoInfo>& target_file_io_queue);
 
 		void PushFileEventToQueue(const RawFileIoInfo* raw_file_io_info);
+
+		bool IsPidInWhiteList(ULONG pid);
+		void AddPidToWhitelist(ULONG pid);
+		void RemovePidToWhitelist(ULONG pid);
+
 	};
 
 	/*___________________________________________*/

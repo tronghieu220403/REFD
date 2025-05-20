@@ -5,7 +5,7 @@
 #include "../ulti/debug.h"
 #include "file_manager.h"
 
-#define INTERVAL_MINUTE_PROCESS_EVALUATION 1
+#define INTERVAL_SECONDS_PROCESS_EVALUATION 15
 
 namespace manager {
 
