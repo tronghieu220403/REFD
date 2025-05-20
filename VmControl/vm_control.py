@@ -120,7 +120,7 @@ def init_env():
 
 init_env()
 
-time.sleep(10)
+#time.sleep(10)
 
 print("Start testing")
 

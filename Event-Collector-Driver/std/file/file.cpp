@@ -199,16 +199,35 @@ namespace file
 		{
 			return 0;
 		}
+        DebugMessage("ReadWithOffset %ws, offset: %llu, length: %llu", file_path_.Data(), offset, length);
 		ULONG bytes_read = 0;
+
+		// Word around to avoid STATUS_INVALID_OFFSET_ALIGNMENT (0xC0000474) error.
+		ull new_length;
+        PVOID new_buffer;
+        ull new_offset = offset / 4 * 4;
+		if (new_offset < offset)
+		{
+			new_length = length + (offset - new_offset);
+			new_buffer = new UCHAR[new_length];
+		}
+        else
+        {
+            new_offset = offset;
+            new_length = length;
+            new_buffer = buffer;
+        }
+
 		LARGE_INTEGER byte_offset;
-		byte_offset.QuadPart = offset;
+		byte_offset.QuadPart = new_offset;
 		// If FLTFL_IO_OPERATION_DO_NOT_UPDATE_BYTE_OFFSET and FLTFL_IO_OPERATION_NON_CACHED are only set, the function will hang forever.
-		NTSTATUS status = FltReadFile(p_instance_, p_file_object_, &byte_offset, (ULONG)length, buffer, FLTFL_IO_OPERATION_DO_NOT_UPDATE_BYTE_OFFSET | FLTFL_IO_OPERATION_NON_CACHED | FLTFL_IO_OPERATION_PAGING | FLTFL_IO_OPERATION_SYNCHRONOUS_PAGING, &bytes_read, nullptr, nullptr);
+
+		NTSTATUS status = FltReadFile(p_instance_, p_file_object_, &byte_offset, (ULONG)new_length, new_buffer, FLTFL_IO_OPERATION_DO_NOT_UPDATE_BYTE_OFFSET | FLTFL_IO_OPERATION_NON_CACHED | FLTFL_IO_OPERATION_PAGING | FLTFL_IO_OPERATION_SYNCHRONOUS_PAGING, &bytes_read, nullptr, nullptr);
 		if (!NT_SUCCESS(status))
 		{
 			if (status == STATUS_END_OF_FILE)
 			{
-				DebugMessage("FltReadFile read %u bytes, exptected %llu bytes", bytes_read, length);
+				DebugMessage("FltReadFile read %u bytes, exptected %llu bytes", bytes_read, new_length);
 			}
 			else
 			{
@@ -216,7 +235,14 @@ namespace file
 				return 0;
 			}
 		}
-		return bytes_read;
+
+        // Copy the data from new_buffer to the old buffer
+		if (new_offset < offset)
+		{
+			memcpy(buffer, (PUCHAR)new_buffer + (offset - new_offset), bytes_read - (offset - new_offset));
+			delete[] new_buffer;
+		}
+		return bytes_read - (offset - new_offset);
 	}
 
 	bool FileFlt::Append(PVOID buffer, ull length)
@@ -289,23 +315,7 @@ namespace file
 		{
 			return li_file_size.QuadPart;
 		}
-		else
-		{
-			DebugMessage("FsRtlGetFileSize failed: %x", status);
-		}
-		IO_STATUS_BLOCK io_status_block;
-		FILE_STANDARD_INFORMATION file_info;
-		status = FltQueryInformationFile(p_instance_, p_file_object_, &file_info, sizeof(file_info), FileStandardInformation, nullptr);
-		if (!NT_SUCCESS(status))
-		{
-			DebugMessage("FltQueryInformationFile failed: %x", status);
-			return ULL_MAX;
-		}
-		else
-		{
-			DebugMessage("FltQueryInformationFile success");
-		}
-		return file_info.EndOfFile.QuadPart;
+		return ULL_MAX;
 	}
 
 	void FileFlt::Close()

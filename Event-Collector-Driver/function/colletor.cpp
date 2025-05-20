@@ -22,7 +22,7 @@ namespace collector
     {
         DebugMessage("%ws", __FUNCTIONW__);
 
-        reg::kFltFuncVector->PushBack({ IRP_MJ_CREATE, PreDoNothing, PostFileCreate });
+        reg::kFltFuncVector->PushBack({ IRP_MJ_CREATE, PreFileCreate, PostFileCreate });
         reg::kFltFuncVector->PushBack({ IRP_MJ_CLOSE, PreFileClose, PostFileClose });
         reg::kFltFuncVector->PushBack({ IRP_MJ_WRITE, PreWriteFile, PostFileWrite });
         reg::kFltFuncVector->PushBack({ IRP_MJ_ACQUIRE_FOR_SECTION_SYNCHRONIZATION, PreFileAcquireForSectionSync, PostFileAcquireForSectionSync });
@@ -38,8 +38,80 @@ namespace collector
         DebugMessage("%ws", __FUNCTIONW__);
     }
 
-    FLT_PREOP_CALLBACK_STATUS PreDoNothing(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
+    FLT_PREOP_CALLBACK_STATUS PreFileCreate(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
     {
+        //  Directory opens don't need to be scanned.
+        if (FlagOn(data->Iopb->Parameters.Create.Options, FILE_DIRECTORY_FILE))
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+
+        //  Skip pre-rename operations which always open a directory.
+        if (FlagOn(data->Iopb->OperationFlags, SL_OPEN_TARGET_DIRECTORY))
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+
+        //  Skip paging files.
+        if (FlagOn(data->Iopb->OperationFlags, SL_OPEN_PAGING_FILE))
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+
+        //  Skip scanning DASD opens 
+        if (FlagOn(flt_objects->FileObject->Flags, FO_VOLUME_OPEN))
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+
+        // Skip kernel mode
+        if (data->RequestorMode == KernelMode)
+        {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        ULONG_PTR stack_low;
+        ULONG_PTR stack_high;
+        PFILE_OBJECT file_obj = data->Iopb->TargetFileObject;
+
+        IoGetStackLimits(&stack_low, &stack_high);
+        if (((ULONG_PTR)file_obj > stack_low) &&
+            ((ULONG_PTR)file_obj < stack_high))
+        {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        String<WCHAR> current_path = flt::GetFileFullPathName(data);
+
+        if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1)
+        {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        DebugMessage("File %ws, instance %p, file object %p, pid %d", current_path.Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
+
+        file::FileFlt f = file::FileFlt(current_path, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject);
+
+        if (f.Exist() == false)
+        {
+            DebugMessage("File %ws not exist", current_path.Data());
+            return FLT_PREOP_SUCCESS_WITH_CALLBACK;
+        }
+
+        const auto& create_params = data->Iopb->Parameters.Create;
+        ULONG options = create_params.Options;
+        ULONG create_disposition = options >> 24;
+
+        DebugMessage("File %ws, create disposition %d", current_path.Data(), create_disposition);
+
+        if (create_disposition == FILE_OVERWRITE_IF)
+        {
+            // Create a backup
+            ull backup_name_size = 0;
+            WCHAR* p_backup_name = new WCHAR[HIEUNT_MAX_PATH];
+            if (backup::BackupFile(current_path.Data(), p_backup_name, HIEUNT_MAX_PATH, &backup_name_size, flt_objects->Filter, flt_objects->Instance, nullptr))
+            {
+                DebugMessage("Backup file %ws to %ws", current_path.Data(), p_backup_name);
+            }
+            else
+            {
+                DebugMessage("Backup file %ws failed", current_path.Data());
+            }
+            delete[] p_backup_name;
+        }
+
         return FLT_PREOP_SUCCESS_WITH_CALLBACK;
     }
 
@@ -53,28 +125,6 @@ namespace collector
         }
 
         if (flags & FLTFL_POST_OPERATION_DRAINING)
-        {
-            return FLT_POSTOP_FINISHED_PROCESSING;
-        }
-
-        //  Directory opens don't need to be scanned.
-        if (FlagOn(data->Iopb->Parameters.Create.Options, FILE_DIRECTORY_FILE))
-            return FLT_POSTOP_FINISHED_PROCESSING;
-
-        //  Skip pre-rename operations which always open a directory.
-        if (FlagOn(data->Iopb->OperationFlags, SL_OPEN_TARGET_DIRECTORY))
-            return FLT_POSTOP_FINISHED_PROCESSING;
-
-        //  Skip paging files.
-        if (FlagOn(data->Iopb->OperationFlags, SL_OPEN_PAGING_FILE))
-            return FLT_POSTOP_FINISHED_PROCESSING;
-
-        //  Skip scanning DASD opens 
-        if (FlagOn(flt_objects->FileObject->Flags, FO_VOLUME_OPEN))
-            return FLT_POSTOP_FINISHED_PROCESSING;
-
-        // Skip kernel mode
-        if (data->RequestorMode == KernelMode)
         {
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
@@ -93,17 +143,6 @@ namespace collector
 
 		DebugMessage("File %ws, instance %p, file object %p, pid %d", current_path.Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
-        ULONG_PTR stack_low;
-        ULONG_PTR stack_high;
-        PFILE_OBJECT file_obj = data->Iopb->TargetFileObject;
-
-        IoGetStackLimits(&stack_low, &stack_high);
-        if (((ULONG_PTR)file_obj > stack_low) &&
-            ((ULONG_PTR)file_obj < stack_high))
-        {
-            return FLT_POSTOP_FINISHED_PROCESSING;
-        }
-
         const auto& create_params = data->Iopb->Parameters.Create;
 
         bool is_delete_on_close = FlagOn(create_params.Options, FILE_DELETE_ON_CLOSE);
@@ -112,7 +151,7 @@ namespace collector
 
         if (!has_write_access && !is_delete_on_close && !has_delete_access)
         {
-            DebugMessage("File: %ws, no write access", current_path.Data());
+            DebugMessage("File: %ws, no write access, no delete on close, no delete accesss", current_path.Data());
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
 
@@ -195,7 +234,6 @@ namespace collector
 
     FLT_PREOP_CALLBACK_STATUS PreWriteFile(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
     {
-
         // not interested in writes to the paging file 
         if (FsRtlIsPagingFile(flt_objects->FileObject))
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
@@ -204,7 +242,8 @@ namespace collector
         auto& write_params = data->Iopb->Parameters.Write;
         ull write_offset = write_params.ByteOffset.QuadPart;
         ull write_length = write_params.Length;
-        if (write_length == 0 || write_offset > BEGIN_WIDTH)
+        // We only care about write operation to some first bytes of the file.
+        if (write_length == 0)
         {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
@@ -224,26 +263,21 @@ namespace collector
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-		ull file_size = f.Size();
-		if (file_size == 0 || file_size == ULL_MAX) {
-			DebugMessage("Failed, file %ws size: %lld", current_path.Data(), file_size);
-		}
-		else {
-			//DebugMessage("File %ws size: %lld", current_path.Data(), file_size);
-		}
+        ull file_size = ULL_MAX;
+        if (write_offset != 0)
+        {
+            file_size = f.Size();
+            if (file_size != 0 && file_size != ULL_MAX) {
+                // If file_size is archived, we only care about write operation to some first bytes and some last bytes of the file.
+                if (write_offset > BEGIN_WIDTH && write_offset + write_length < file_size - END_WIDTH)
+                {
+                    DebugMessage("Skip IO, file %ws, write offset: %I64d, length: %I64d, file size: %I64d", current_path.Data(), write_offset, write_length, file_size);
+                    return FLT_PREOP_SUCCESS_NO_CALLBACK;
+                }
+            }
+        }
 
-        // We only care about write operation to some first bytes or some last bytes of the file.
-        if (write_offset != 0 && write_offset + write_length < file_size - END_WIDTH)
-        {
-            DebugMessage("Skip IO, file %ws, write offset: %I64d, length: %I64d, file size: %I64d", current_path.Data(), write_offset, write_length, file_size);
-            return FLT_PREOP_SUCCESS_NO_CALLBACK;
-        }
-        else
-        {
-            DebugMessage("File: %ws, write offset: %I64d, length: %I64d, file size: %I64d", current_path.Data(), write_offset, write_length, file_size);
-        }
-        
-        DebugMessage("File %ws, instance %p, file object %p, pid %d", flt::GetFileFullPathName(data).Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
+        DebugMessage("File %ws, instance %p, file object %p, pid %d", current_path.Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
         PHANDLE_CONTEXT p_handle_context = nullptr;
 
@@ -294,16 +328,18 @@ namespace collector
             goto pre_write_release_context;
         }
         */
-
-        // Create a backup
-        if (backup::BackupFile(p_handle_context->current_path, p_handle_context->backup_name, HIEUNT_MAX_PATH, &backup_name_size, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject))
+        if (file_size != 0 && file_size != ULL_MAX)
         {
-            DebugMessage("Backup file %ws to %ws", p_handle_context->current_path, p_handle_context->backup_name);
-        }
-        else
-        {
-            RtlZeroMemory(p_handle_context->backup_name, sizeof(p_handle_context->backup_name));
-            DebugMessage("Backup file %ws failed", p_handle_context->current_path);
+            // Create a backup
+            if (backup::BackupFile(p_handle_context->current_path, p_handle_context->backup_name, HIEUNT_MAX_PATH, &backup_name_size, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject))
+            {
+                DebugMessage("Backup file %ws to %ws", p_handle_context->current_path, p_handle_context->backup_name);
+            }
+            else
+            {
+                RtlZeroMemory(p_handle_context->backup_name, sizeof(p_handle_context->backup_name));
+                DebugMessage("Backup file %ws failed", p_handle_context->current_path);
+            }
         }
     pre_write_release_context:
         if (data->RequestorMode == KernelMode)
@@ -329,12 +365,12 @@ namespace collector
     {
         NTSTATUS status;
 
+        DebugMessage("File %ws, instance %p, file object %p, pid %d", flt::GetFileFullPathName(data).Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
+
         if (data->RequestorMode == KernelMode)
         {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
-
-		DebugMessage("File %ws, instance %p, file object %p, pid %d", flt::GetFileFullPathName(data).Data() , flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
         PHANDLE_CONTEXT p_handle_context = nullptr;
 
@@ -391,15 +427,25 @@ namespace collector
         }
         else if (file_info_class == FileDispositionInformation || file_info_class == FileDispositionInformationEx)
         {
-            DebugMessage("FileDispositionInformation %ws", flt_objects->FileObject->FileName.Buffer);
+            DebugMessage("FileDispositionInformation %ws", p_handle_context->current_path);
             p_handle_context->is_deleted = true;
-            is_sensitive_info_class = false;
+            is_sensitive_info_class = true;
+        }
+        else if (file_info_class == FileAllocationInformation)
+        {
+            DebugMessage("FileAllocationInformation %ws", p_handle_context->current_path);
+            is_sensitive_info_class = true;
+        }
+        else if (file_info_class == FileEndOfFileInformation)
+        {
+            DebugMessage("FileAllocationInformation %ws", p_handle_context->current_path);
+            is_sensitive_info_class = true;
         }
         else
         {
             is_sensitive_info_class = false;
         }
-        
+
         if (is_sensitive_info_class == true)
         {
             // We don't need to backup if the file was just created.
@@ -410,6 +456,7 @@ namespace collector
                 return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
 
+            /*
             // Only backup if the file extension is monitored.
             if (!detector::IsExtensionMonitored(p_handle_context->current_path))
             {
@@ -418,17 +465,17 @@ namespace collector
                 return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
 
-            if (p_handle_context->new_path[0] != L'\0')
+            // We don't need to backup if the file was just renamed and kept the original extension.
+            if (p_handle_context->new_path[0] != L'\0' 
+                && (file_info_class == FileDispositionInformation || file_info_class == FileDispositionInformationEx) 
+                && detector::IsSameFileExtension(p_handle_context->current_path, p_handle_context->new_path))
             {
-                // We don't need to backup if the file was just renamed and kept the original extension.
-                if (detector::IsSameFileExtension(p_handle_context->current_path, p_handle_context->new_path))
-                {
-                    DebugMessage("File %ws was renamed to %ws, but kept the same extension", p_handle_context->current_path, p_handle_context->new_path);
-                    FltReleaseContext(p_handle_context);
-                    return FLT_PREOP_SUCCESS_NO_CALLBACK;
-                }
+                DebugMessage("File %ws was renamed to %ws, but kept the same extension", p_handle_context->current_path, p_handle_context->new_path);
+                FltReleaseContext(p_handle_context);
+                return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
-            
+            */
+
             // Create a backup
             ull backup_name_size = 0;
             if (backup::BackupFile(p_handle_context->current_path, p_handle_context->backup_name, HIEUNT_MAX_PATH, &backup_name_size, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject))
