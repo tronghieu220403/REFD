@@ -292,19 +292,33 @@ namespace manager {
 			is_default_types_matched = type_iden::HasCommonType(ext_accepted_types, event.new_types);
 			PrintDebugW(L"is_default_types_matched: %d", is_default_types_matched);
 		}
+		else
+		{
+			is_default_types_matched = true;
+		}
 
 		bool is_types_matched_after_modified = false;
 		if (event.is_created == false)
 		{
-			is_types_matched_after_modified = type_iden::HasCommonType(event.old_types, event.new_types);
+            if ((event.old_types.size() == 1 && event.old_types.front() == "") || event.old_types.size() == 0)
+            {
+				if (!((event.new_types.size() == 1 && event.new_types.front() == "") || event.new_types.size() == 0))
+				{
+                    is_types_matched_after_modified = true;
+				}
+            }
+			else
+			{
+				is_types_matched_after_modified = type_iden::HasCommonType(event.old_types, event.new_types);
+			}
 			PrintDebugW(L"is_types_matched_after_modified: %d", is_types_matched_after_modified);
 		}
 
 		if (ext == "" && event.is_created == true) {
-			event.type_match = 1 + (event.new_types.size() > 0);
+			event.type_match = ((event.new_types.size() == 1 && event.new_types.front() == "") || event.new_types.size() == 0) ? TYPE_NULL : TYPE_NOT_NULL;
 		}
 		else {
-			event.type_match = 1 + (is_default_types_matched | is_types_matched_after_modified);
+			event.type_match = ((is_default_types_matched | is_types_matched_after_modified) == true) ? TYPE_HAS_COMMON : TYPE_MISMATCH ;
 		}
 #ifdef _DEBUG
 		switch (event.type_match)
@@ -319,6 +333,14 @@ namespace manager {
 
 		case TYPE_HAS_COMMON:
 			PrintDebugW(L"event.type_match: TYPE_HAS_COMMON");
+			break;
+
+		case TYPE_NULL:
+			PrintDebugW(L"event.type_match: TYPE_NULL");
+			break;
+
+		case TYPE_NOT_NULL:
+			PrintDebugW(L"event.type_match: TYPE_NOT_NULL");
 			break;
 
 		case TYPE_NO_EVALUATION:
@@ -403,7 +425,7 @@ namespace manager {
 				else if (event.type_match == TYPE_MATCH_NOT_EVALUATED && event.is_modified == true && event.is_created == true)
 				{
 					if (AnalyzeEvent(event) == true) {
-						if (event.type_match == TYPE_MISMATCH) {
+						if (event.type_match == TYPE_MISMATCH || event.type_match == TYPE_NULL) {
 							process_info.created_write_null_count++;
 							created_write_null_count = true;
 							if (process_info.created_write_null_count > MIN_FILE_COUNT)

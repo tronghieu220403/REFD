@@ -321,7 +321,7 @@ namespace type_iden
 		std::string types_str = "<";
 		for (const auto& type : types)
 		{
-			types_str += type + ", ";
+			types_str += "\"" + type + "\", ";
 		}
 		types_str[types_str.size() - 2] = '>';
 		PrintDebugW(L"File types: %ws", ulti::StrToWStr(types_str).c_str());

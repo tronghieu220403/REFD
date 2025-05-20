@@ -392,7 +392,7 @@ MiniFsPreOperation (
     {
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
     }
-
+    /*
 #ifdef _DEBUG
     String<WCHAR> current_path = flt::GetFileFullPathName(data);
 
@@ -401,7 +401,7 @@ MiniFsPreOperation (
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
     }
 #endif // _DEBUG
-
+    */
     reg::Context* p = nullptr;
     if ((*completion_context) == nullptr)
     {

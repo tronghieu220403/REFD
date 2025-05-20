@@ -29,7 +29,9 @@
 #define TYPE_MATCH_NOT_EVALUATED 0
 #define TYPE_MISMATCH 1
 #define TYPE_HAS_COMMON 2
-#define TYPE_NO_EVALUATION 3
+#define TYPE_NULL 3
+#define TYPE_NOT_NULL 4
+#define TYPE_NO_EVALUATION 5
 
 namespace manager {
 

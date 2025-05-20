@@ -91,7 +91,7 @@ def init_env():
     except Exception as e:
         pass
     #run_cmd("E:\\TestIo.exe c")
-    run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\test" "E:\\test" /E /I /Y')
+    #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\test" "E:\\test" /E /I /Y')
     #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny" "E:\\test" /E /I /Y')
     
     #vm.copy_host_to_guest(f'{env_path}\\TrIDLib.dll', 'E:\\hieunt210330\\TrIDLib.dll')
@@ -103,7 +103,7 @@ def init_env():
     #vm.copy_host_to_guest(f'{git_path}\\Event-Collector-Driver\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\EventCollectorDriver.pdb')
     while True:
         try:
-            #vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\RansomDetectorService.exe')
+            vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\RansomDetectorService.exe')
             #vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.pdb', 'E:\\hieunt210330\\RansomDetectorService.pdb')
             pass
         except Exception as e:
@@ -124,17 +124,17 @@ init_env()
 
 print("Start testing")
 
-test_cmdl = "E:\\TestIo.exe" + " n 2"
+test_cmdl = "E:\\TestIo.exe" + " n 3"
 
 run_cmd(test_cmdl)
 
 print("Test stop")
 
-time.sleep(60)
+#time.sleep(180)
 
 print("Test done")
 
-#run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
-run_cmd('E:\\stop_driver.bat')
+run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
+#run_cmd('E:\\stop_driver.bat')
 time.sleep(5)
-#run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
+run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
