@@ -91,8 +91,8 @@ def init_env():
     except Exception as e:
         pass
     #run_cmd("E:\\TestIo.exe c")
-    #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\test" "E:\\test" /E /I /Y')
-    run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny" "E:\\test" /E /I /Y')
+    run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\test" "E:\\test" /E /I /Y')
+    #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny" "E:\\test" /E /I /Y')
     
     #vm.copy_host_to_guest(f'{env_path}\\TrIDLib.dll', 'E:\\hieunt210330\\TrIDLib.dll')
     #vm.copy_host_to_guest(f'{env_path}\\triddefs.trd', 'E:\\hieunt210330\\triddefs.trd')
