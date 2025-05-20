@@ -36,13 +36,13 @@ namespace file
 
 	}
 
-	File::File(const String<WCHAR>& current_path) :
+	ZwFile::ZwFile(const String<WCHAR>& current_path) :
 		file_path_(current_path)
 	{
 
 	}
 
-	bool File::Open(const WCHAR* file_path)
+	NTSTATUS ZwFile::Open(const WCHAR* file_path, ULONG create_disposition)
 	{
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
@@ -56,11 +56,11 @@ namespace file
 		RtlInitUnicodeString(&uni_str, file_path);
 		InitializeObjectAttributes(&obj_attr, &uni_str, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
 
-		NTSTATUS status = ZwCreateFile(&file_handle_, FILE_GENERIC_READ | FILE_GENERIC_WRITE, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, 0, FILE_CREATE, FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0);
-		return NT_SUCCESS(status);
+		NTSTATUS status = ZwCreateFile(&file_handle_, FILE_ALL_ACCESS, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, 0, create_disposition, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0);
+		return status;
 	}
 
-	ull File::Read(PVOID buffer, ull length)
+	ull ZwFile::Read(PVOID buffer, ull length)
 	{
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
@@ -74,21 +74,26 @@ namespace file
 		return io_status_block.Information;
 	}
 
-	ull File::Append(PVOID buffer, ull length)
+	ull ZwFile::Append(PVOID buffer, ull length)
 	{
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
 			return false;
 		}
 		IO_STATUS_BLOCK io_status_block;
-		if (!NT_SUCCESS(ZwWriteFile(file_handle_, NULL, NULL, NULL, &io_status_block, buffer, (ULONG)length, NULL, NULL)))
+
+		LARGE_INTEGER li_byte_offset;
+		li_byte_offset.HighPart = -1;
+		li_byte_offset.LowPart = FILE_WRITE_TO_END_OF_FILE;
+
+		if (!NT_SUCCESS(ZwWriteFile(file_handle_, NULL, NULL, NULL, &io_status_block, buffer, (ULONG)length, &li_byte_offset, NULL)))
 		{
 			return 0;
 		}
 		return io_status_block.Information;
 	}
 
-	ull File::Size()
+	ull ZwFile::Size()
 	{
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
@@ -105,16 +110,20 @@ namespace file
 	}
 
 
-	void File::Close() {
+	void ZwFile::Close() {
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
 			return;
 		}
+        if (file_handle_ == nullptr)
+        {
+            return;
+        }
 		ZwClose(file_handle_);
 		file_handle_ = nullptr;
 	}
 
-	File::~File()
+	ZwFile::~ZwFile()
 	{
 		Close();
 	}
@@ -288,6 +297,7 @@ namespace file
 			FltClose(file_handle_tmp);
 			return true;
 		}
+        DebugMessage("FltCreateFile %ws returned error: %x", file_path_.Data(), status);
 		return false;
 	}
 

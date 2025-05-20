@@ -248,12 +248,15 @@ namespace collector
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
+
         String<WCHAR> current_path = flt::GetFileFullPathName(data);
-        if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH)
+        if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1)
         {
-            DebugMessage("File: %ws, size error", current_path.Data());
+            DebugMessage("File: %ws, size %llu is an error", current_path.Data(), current_path.Size());
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
+
+        DebugMessage("File %ws, instance %p, file object %p, pid %d", current_path.Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
         file::FileFlt f = file::FileFlt(current_path, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject);
 
@@ -276,8 +279,6 @@ namespace collector
                 }
             }
         }
-
-        DebugMessage("File %ws, instance %p, file object %p, pid %d", current_path.Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
         PHANDLE_CONTEXT p_handle_context = nullptr;
 
@@ -534,6 +535,12 @@ namespace collector
 
             PHANDLE_CONTEXT handle_context = nullptr;
 
+            String<WCHAR> current_path = flt::GetFileFullPathName(data);
+            if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1)
+            {
+                return FLT_PREOP_SUCCESS_NO_CALLBACK;
+            }
+
             NTSTATUS status = FltGetFileContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&handle_context));
             if (!NT_SUCCESS(status))
             {
@@ -547,12 +554,6 @@ namespace collector
                 
                 memset(handle_context, 0, sizeof(HANDLE_CONTEXT));
 
-                String<WCHAR> current_path = flt::GetFileFullPathName(data);
-                if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH)
-                {
-                    FltReleaseContext(handle_context);
-                    return FLT_PREOP_SUCCESS_NO_CALLBACK;
-                }
                 RtlCopyMemory(handle_context->current_path, current_path.Data(), current_path.Size() * sizeof(WCHAR));
                 handle_context->requestor_pid = FltGetRequestorProcessId(data);
                 

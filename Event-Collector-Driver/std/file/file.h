@@ -15,22 +15,23 @@ namespace file
 	ull IoGetFileSize(const WCHAR* file_path);
 
     // SHOULD NOT USE INSIDE ANY MINIFILTER FUNCTION.
-    class File {
+    class ZwFile {
     private:
         String<WCHAR> file_path_;
         HANDLE file_handle_ = nullptr;
     public:
-        File(const String<WCHAR>& current_path);
+        ZwFile(const String<WCHAR>& current_path);
+        ZwFile() = default;
+        NTSTATUS Open(const WCHAR* file_path, ULONG create_disposition = FILE_OPEN_IF);
+
         ull Read(PVOID buffer, ull length);
         ull Append(PVOID buffer, ull length);
 		ull Size();
 
         String<WCHAR> GetPath() const { return file_path_; }
-        ~File();
-
-    protected:
-        bool Open(const WCHAR* file_path);
         void Close();
+        ~ZwFile();
+
     };
 
     // FltFile class using FltCreateFile, FltReadFile and FltWriteFile.
