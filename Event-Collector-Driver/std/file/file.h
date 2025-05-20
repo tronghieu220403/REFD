@@ -47,7 +47,7 @@ namespace file
         bool pre_alloc_file_object_ = false; // if true, the caller must free the file object.
     public:
         FileFlt(const String<WCHAR>& current_path, const PFLT_FILTER p_filter_handle, const PFLT_INSTANCE p_instance, const PFILE_OBJECT p_file_object = nullptr, ULONG create_disposition = FILE_OPEN);
-        bool Open();
+        NTSTATUS Open();
         void Close();
 
         bool IsOpen() const { return is_open_; }

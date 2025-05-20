@@ -103,7 +103,7 @@ namespace collector
             WCHAR* p_backup_name = new WCHAR[HIEUNT_MAX_PATH];
             if (backup::BackupFile(current_path.Data(), p_backup_name, HIEUNT_MAX_PATH, &backup_name_size, flt_objects->Filter, flt_objects->Instance, nullptr))
             {
-                DebugMessage("Backup file %ws to %ws", current_path.Data(), p_backup_name);
+                DebugMessage("Backed up file %ws to %ws", current_path.Data(), p_backup_name);
             }
             else
             {
@@ -218,7 +218,7 @@ namespace collector
             ull backup_name_size = 0;
             if (backup::BackupFile(handle_context->current_path, handle_context->backup_name, HIEUNT_MAX_PATH, &backup_name_size, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject))
             {
-                DebugMessage("Backup file %ws to %ws", handle_context->current_path, handle_context->backup_name);
+                DebugMessage("Backed up file %ws to %ws", handle_context->current_path, handle_context->backup_name);
             }
             else
             {
@@ -257,7 +257,7 @@ namespace collector
 
         file::FileFlt f = file::FileFlt(current_path, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject);
 
-        if (f.Open() == false)
+        if (!NT_SUCCESS(f.Open()))
         {
             DebugMessage("File: %ws, open failed", f.GetPath().Data());
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
@@ -333,7 +333,7 @@ namespace collector
             // Create a backup
             if (backup::BackupFile(p_handle_context->current_path, p_handle_context->backup_name, HIEUNT_MAX_PATH, &backup_name_size, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject))
             {
-                DebugMessage("Backup file %ws to %ws", p_handle_context->current_path, p_handle_context->backup_name);
+                DebugMessage("Backed up file %ws to %ws", p_handle_context->current_path, p_handle_context->backup_name);
             }
             else
             {
@@ -480,7 +480,7 @@ namespace collector
             ull backup_name_size = 0;
             if (backup::BackupFile(p_handle_context->current_path, p_handle_context->backup_name, HIEUNT_MAX_PATH, &backup_name_size, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject))
             {
-                DebugMessage("Backup file %ws to %ws", p_handle_context->current_path, p_handle_context->backup_name);
+                DebugMessage("Backed up file %ws to %ws", p_handle_context->current_path, p_handle_context->backup_name);
             }
             else
             {

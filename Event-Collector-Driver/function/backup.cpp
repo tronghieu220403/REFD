@@ -42,16 +42,9 @@ namespace backup
         ull src_file_size = src_file.Size();
         if (src_file_size == 0 || src_file_size == ULL_MAX)
         {
-			DebugMessage("Flt*: file %ws size is %llu", file_path, src_file_size);
-			src_file_size = file::IoGetFileSize(file_path);
-			if (src_file_size == 0 || src_file_size == ULL_MAX)
-			{
-				DebugMessage("Io*: file %ws size is %llu", file_path, src_file_size);
-				return false;
-			}
+			DebugMessage("File %ws size is %llu", file_path, src_file_size);
+			return false;
         }
-
-		DebugMessage("File %ws size is %llu", file_path, src_file_size);
 
         UCHAR* buffer = new UCHAR[BEGIN_WIDTH + END_WIDTH];
         if (buffer == nullptr)
@@ -86,16 +79,14 @@ namespace backup
             }
         }
 
-        file::FileFlt dst_file(backup_path, p_filter_handle, p_instance, nullptr, FILE_OPEN_IF);
-
-        // Backup file already exists
-        if (dst_file.Exist())
+        file::FileFlt dst_file(backup_path, p_filter_handle, p_instance, nullptr, FILE_CREATE);
+        NTSTATUS status = dst_file.Open();
+        if (status == STATUS_OBJECT_NAME_COLLISION)
         {
-            DebugMessage("Backup file %ws already exists", backup_path);
+            DebugMessage("File %ws already exist", backup_path);
             return true;
         }
-
-        if (dst_file.Open() == false)
+        else if (!NT_SUCCESS((status)))
         {
             DebugMessage("Open backup file %ws failed", backup_path);
             backup_path_len = 0;

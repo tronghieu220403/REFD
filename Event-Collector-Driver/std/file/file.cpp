@@ -56,7 +56,7 @@ namespace file
 		RtlInitUnicodeString(&uni_str, file_path);
 		InitializeObjectAttributes(&obj_attr, &uni_str, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
 
-		NTSTATUS status = ZwCreateFile(&file_handle_, FILE_GENERIC_READ | FILE_GENERIC_WRITE, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, 0, FILE_OPEN_IF, FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0);
+		NTSTATUS status = ZwCreateFile(&file_handle_, FILE_GENERIC_READ | FILE_GENERIC_WRITE, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, 0, FILE_CREATE, FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0);
 		return NT_SUCCESS(status);
 	}
 
@@ -137,7 +137,7 @@ namespace file
 		p_filter_handle_ = p_filter_handle;
 	}
 
-	bool FileFlt::Open()
+	NTSTATUS FileFlt::Open()
 	{
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
@@ -153,7 +153,7 @@ namespace file
 		IO_STATUS_BLOCK io_status_block;
 		RtlInitUnicodeString(&uni_str, file_path_.Data());
 		InitializeObjectAttributes(&obj_attr, &uni_str, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
-		NTSTATUS status = FltCreateFileEx(p_filter_handle_, p_instance_, &file_handle_, &p_file_object_, FILE_GENERIC_READ | FILE_GENERIC_WRITE, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, create_disposition_, FILE_NON_DIRECTORY_FILE, NULL, 0, 0);
+		NTSTATUS status = FltCreateFileEx(p_filter_handle_, p_instance_, &file_handle_, &p_file_object_, FILE_GENERIC_READ | FILE_GENERIC_WRITE, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, create_disposition_, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0, IO_IGNORE_SHARE_ACCESS_CHECK);
 		if (NT_SUCCESS(status))
 		{
 			is_open_ = true;
@@ -165,7 +165,7 @@ namespace file
 			file_handle_ = nullptr;
 			p_file_object_ = nullptr;
 		}
-		return NT_SUCCESS(status);
+		return status;
 	}
 
 	ull FileFlt::Read(PVOID buffer, ull length)
@@ -199,7 +199,7 @@ namespace file
 		{
 			return 0;
 		}
-        DebugMessage("ReadWithOffset %ws, offset: %llu, length: %llu", file_path_.Data(), offset, length);
+
 		ULONG bytes_read = 0;
 
 		// Word around to avoid STATUS_INVALID_OFFSET_ALIGNMENT (0xC0000474) error.
@@ -228,6 +228,10 @@ namespace file
 			if (status == STATUS_END_OF_FILE)
 			{
 				DebugMessage("FltReadFile read %u bytes, exptected %llu bytes", bytes_read, new_length);
+				if (bytes_read == 0)
+				{
+					return 0;
+				}
 			}
 			else
 			{
@@ -275,26 +279,16 @@ namespace file
 		HANDLE file_handle_tmp = nullptr;
 		UNICODE_STRING uni_str;
 		OBJECT_ATTRIBUTES obj_attr;
-		IO_STATUS_BLOCK io_status_block;
+		IO_STATUS_BLOCK io_status_block = { 0 };
 		RtlInitUnicodeString(&uni_str, file_path_.Data());
 		InitializeObjectAttributes(&obj_attr, &uni_str, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
-		NTSTATUS status = FltCreateFile(p_filter_handle_, p_instance_, &file_handle_tmp, FILE_READ_ATTRIBUTES, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, FILE_OPEN, FILE_NON_DIRECTORY_FILE, NULL, 0, 0);
+		NTSTATUS status = FltCreateFile(p_filter_handle_, p_instance_, &file_handle_tmp, FILE_READ_ATTRIBUTES, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, FILE_OPEN, FILE_NON_DIRECTORY_FILE, NULL, 0, IO_IGNORE_SHARE_ACCESS_CHECK);
 		if (NT_SUCCESS(status))
 		{
 			FltClose(file_handle_tmp);
 			return true;
 		}
-		if (status == STATUS_OBJECT_NAME_NOT_FOUND
-			|| io_status_block.Status == FILE_DOES_NOT_EXIST
-			|| status == STATUS_NO_SUCH_FILE
-			|| status == STATUS_OBJECT_PATH_NOT_FOUND
-			|| status == STATUS_OBJECT_NAME_INVALID
-			|| status == STATUS_OBJECT_PATH_INVALID
-			)
-		{
-			return false;
-		}
-		return true;
+		return false;
 	}
 
 	ull FileFlt::Size()
