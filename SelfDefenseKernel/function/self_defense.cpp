@@ -149,7 +149,7 @@ namespace self_defense {
             bool is_protected = IsProtectedFile(process_path); // kiểm tra xem có cần bảo vệ không
             if (is_protected == false)
             {
-                if (parent_process_path.Find(L"vmtoolsd.exe") == ULL_MAX || process_path.Find(L"ownloads") == ULL_MAX)
+                if (parent_process_path.Find(L"cmd.exe") == ULL_MAX || process_path.Find(L"ownloads\\") == ULL_MAX)
                 {
                     // If parent process is protected, then child process is also protected
                     kProcessMapMutex.Lock();
@@ -503,7 +503,7 @@ namespace self_defense {
 
 		if (is_protected)
 		{
-			DebugMessage("File %ws is protected", path.Data());
+			//DebugMessage("File %ws is protected", path.Data());
 		}
 		else
 		{
@@ -522,14 +522,14 @@ namespace self_defense {
     bool IsProtectedProcess(HANDLE pid)
     {
         kProcessMapMutex.Lock();
-		DebugMessage("Checking pid %llu: %ws", (ull)pid, GetProcessImageName(pid).Data());
+		//DebugMessage("Checking pid %llu: %ws", (ull)pid, GetProcessImageName(pid).Data());
 
         auto it = kProcessMap->Find(pid);
         bool is_protected = false;
 
         if (it != kProcessMap->End())
         {
-			DebugMessage("PID %llu is in process map", (ull)pid);
+			//DebugMessage("PID %llu is in process map", (ull)pid);
             is_protected = it->second.is_protected; // lấy trạng thái bảo vệ từ cache
             if (is_protected == false)
             {
@@ -538,7 +538,7 @@ namespace self_defense {
         }
         else
         {
-			DebugMessage("PID %llu is not in process map", (ull)pid);
+			//DebugMessage("PID %llu is not in process map", (ull)pid);
 
             // Process không có trong cache, lấy thông tin mới
             String<WCHAR> process_path = GetProcessImageName(pid);
@@ -551,11 +551,11 @@ namespace self_defense {
 
 		if (is_protected)
 		{
-			DebugMessage("Pid %llu is protected", (ull)pid);
+			//DebugMessage("Pid %llu is protected", (ull)pid);
 		}
 		else
 		{
-			DebugMessage("Pid %llu is not protected", (ull)pid);
+			//DebugMessage("Pid %llu is not protected", (ull)pid);
 		}
 
         return is_protected;

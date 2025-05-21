@@ -245,6 +245,7 @@ namespace manager {
 		int old_index = -1;
 		int new_index = -1;
 
+        PrintDebugW(L"Get old types");
 		if (event.is_created == false && event.old_types.size() == 0) {
 			for (int i = 0; i < (int)event.path_list.size(); i++) {
 				auto backup_path = TEMP_DIR + event.backup_name_list[i];
@@ -258,6 +259,8 @@ namespace manager {
 		if (old_index == -1) {
 			old_index = 0;
 		}
+
+        PrintDebugW(L"Get new types");
 
 		if (event.new_types.size() == 0)
 		{
@@ -278,6 +281,8 @@ namespace manager {
 				return false;
 			}
 		}
+
+        PrintDebugW("End getting types");
 
 		bool is_default_types_matched = false;
 		std::string ext;
@@ -302,10 +307,7 @@ namespace manager {
 		{
             if ((event.old_types.size() == 1 && event.old_types.front() == "") || event.old_types.size() == 0)
             {
-				if (!((event.new_types.size() == 1 && event.new_types.front() == "") || event.new_types.size() == 0))
-				{
-                    is_types_matched_after_modified = true;
-				}
+				is_types_matched_after_modified = true;
             }
 			else
 			{
@@ -320,6 +322,10 @@ namespace manager {
 		else {
 			event.type_match = ((is_default_types_matched | is_types_matched_after_modified) == true) ? TYPE_HAS_COMMON : TYPE_MISMATCH ;
 		}
+
+        PrintDebugW(L"old_types %ws, new_types %ws, default %ws", type_iden::CovertTypesToString(event.old_types).c_str(), type_iden::CovertTypesToString(event.new_types).c_str(),
+			type_iden::CovertTypesToString((type_iden::kExtensionMap.find(ext) != type_iden::kExtensionMap.end()) ? type_iden::kExtensionMap[ext] : std::vector<std::string>()).c_str());
+
 #ifdef _DEBUG
 		switch (event.type_match)
 		{

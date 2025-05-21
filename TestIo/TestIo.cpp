@@ -10,11 +10,12 @@
 
 constexpr uint8_t XOR_KEY = 0xFF;
 constexpr size_t JUNK_SIZE = 1024; // bytes rác cho test 4
-const std::wstring TEST_DIR = L"C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny";
+const std::wstring DOWNLOAD_DIR = L"C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny";
+const std::wstring TEST_DIR = L"E:\\test";
 
 // --- Utility: XOR-encrypt buffer in-place ---
 void xor_encrypt(std::vector<uint8_t>& buf) {
-    for (auto& b : buf) b ^= XOR_KEY;
+    //for (auto& b : buf) b ^= XOR_KEY;
 }
 
 // --- Normal I/O (ReadFile/WriteFile) ---
@@ -192,6 +193,7 @@ int wmain(int argc, wchar_t* argv[]) {
 		if (argc == 2 && wcscmp(argv[1], L"c") == 0)
 		{
 			GenerateRandomTextFiles(TEST_DIR);
+			GenerateRandomTextFiles(DOWNLOAD_DIR);
 			return 0;
 		}
         std::wcerr << L"Usage: ransomware_simulator.exe <c|m|n> <test#> [...]\n";
@@ -223,10 +225,19 @@ int wmain(int argc, wchar_t* argv[]) {
             files.push_back(e.path().wstring());
         }
     }
+    for (auto& e : std::filesystem::recursive_directory_iterator(DOWNLOAD_DIR)) {
+        if (e.is_regular_file())
+        {
+            files.push_back(e.path().wstring());
+        }
+    }
+
     if (files.empty()) {
         std::wcerr << L"No files in " << TEST_DIR << L"\n";
         return 0;
     }
+    std::wcout << L"Found " << files.size() << L" files.\n";
+
     // thực thi các test
     for (int t : tests) {
         for (auto& f : files) {

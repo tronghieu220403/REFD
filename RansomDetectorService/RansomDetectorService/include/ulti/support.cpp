@@ -3,7 +3,7 @@
 
 namespace ulti
 {
-    std::wstring StrToWStr(const std::string& str)
+    std::wstring StrToWstr(const std::string& str)
     {
         std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
         return myconv.from_bytes(str);

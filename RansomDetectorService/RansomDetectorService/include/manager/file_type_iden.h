@@ -85,6 +85,8 @@ namespace type_iden
         std::vector<std::string> GetTypes(const fs::path& file_path);
 	};
 
+    std::wstring CovertTypesToString(const std::vector<std::string>& types);
+
 }
 
 inline type_iden::TrID* kTrID = nullptr;

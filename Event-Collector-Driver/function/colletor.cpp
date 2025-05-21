@@ -75,7 +75,7 @@ namespace collector
 
         String<WCHAR> current_path = flt::GetFileFullPathName(data);
 
-        if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1)
+        if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1 || current_path.Find(L"\\Device\\HarddiskVolume4") != ULL_MAX)
         {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }

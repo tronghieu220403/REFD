@@ -40,14 +40,15 @@ namespace manager
 			return;
 		}
         FileIoInfo file_io_info;
-        PrintDebugW(L"File I/O event before: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path_list: %ws",
+        PrintDebugW(L"File I/O event before: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws, backup_name: %ws",
             raw_file_io_info->requestor_pid,
             raw_file_io_info->is_modified,
             raw_file_io_info->is_deleted,
             raw_file_io_info->is_created,
             raw_file_io_info->is_renamed,
             raw_file_io_info->current_path,
-            raw_file_io_info->new_path);
+            raw_file_io_info->new_path, 
+            raw_file_io_info->backup_name);
 
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
         file_io_info.is_modified = raw_file_io_info->is_modified;
@@ -59,7 +60,7 @@ namespace manager
         if (raw_file_io_info->is_renamed == true)
         {
             file_io_info.path_list.push_back(std::move(ulti::ToLower(manager::GetDosPath(raw_file_io_info->new_path))));
-            file_io_info.backup_name_list.push_back(raw_file_io_info->backup_name);
+            file_io_info.backup_name_list.push_back(L"");
         }
         file_io_queue_.push(std::move(file_io_info));
     }

@@ -59,8 +59,8 @@ sd_path = f'{git_path}\\SelfDefenseKernel'
 def init_env():
     print("Init env")
     try:
-        #vm.copy_host_to_guest(f'{env_path}\\start_collector_driver.bat', 'E:\\start_collector_driver.bat')
-        #vm.copy_host_to_guest(f'{env_path}\\stop_collector_driver.bat', 'E:\\stop_collector_driver.bat')
+        vm.copy_host_to_guest(f'{env_path}\\start_collector_driver.bat', 'E:\\start_collector_driver.bat')
+        vm.copy_host_to_guest(f'{env_path}\\stop_collector_driver.bat', 'E:\\stop_collector_driver.bat')
         vm.copy_host_to_guest(f'{env_path}\\start_sd_driver.bat', 'E:\\start_sd_driver.bat')
         vm.copy_host_to_guest(f'{env_path}\\stop_sd_driver.bat', 'E:\\stop_sd_driver.bat')
 
@@ -77,7 +77,7 @@ def init_env():
     except VixError as e:
         pass
     try:
-        vm.create_directory('E:\\backup')
+        vm.create_directory('E:\\test')
     except VixError as e:
         pass
     print("Shut down services")
@@ -89,34 +89,37 @@ def init_env():
 
     print("Delete files in C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny and E:\\backup")
     #run_cmd("powershell -Command \"Remove-Item \'C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny\\*\' -Recurse -Force\"")
-    #run_cmd("powershell -Command \"Remove-Item \'E:\\backup\\*\' -Recurse -Force\"")
+    #run_cmd("powershell -Command \"Remove-Item \'E:\\test\\*\' -Recurse -Force\"")
+    run_cmd("powershell -Command \"Remove-Item \'E:\\backup\\*\' -Recurse -Force\"")
 
-    print("Copy files to E:\\test")
+    print("Copy files to C:\\Users\\hieu\\Downloads\\TestIo.exe")
     try:
-        #vm.copy_host_to_guest(f"{git_path}\\TestIo\\x64\\Debug\\TestIo.exe", 'C:\\Users\\hieu\\Downloads\\TestIo.exe')
+        run_cmd("del /f C:\\Users\\hieu\\Downloads\\TestIo.exe")
+        vm.copy_host_to_guest(f"{git_path}\\TestIo\\x64\\Debug\\TestIo.exe", 'C:\\Users\\hieu\\Downloads\\TestIo.exe')
         pass
     except Exception as e:
         pass
     #run_cmd("E:\\TestIo.exe c")
     #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\test" "E:\\test" /E /I /Y')
     #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny" /E /I /Y')
-    
-    #vm.copy_host_to_guest(f'{env_path}\\TrIDLib.dll', 'E:\\hieunt210330\\TrIDLib.dll')
-    #vm.copy_host_to_guest(f'{env_path}\\triddefs.trd', 'E:\\hieunt210330\\triddefs.trd')
+    #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "E:\\test" /E /I /Y')
+
+    vm.copy_host_to_guest(f'{env_path}\\TrIDLib.dll', 'E:\\hieunt210330\\TrIDLib.dll')
+    vm.copy_host_to_guest(f'{env_path}\\triddefs.trd', 'E:\\hieunt210330\\triddefs.trd')
 
     print("Copy driver files to E:\\")
     vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.inf', 'E:\\EventCollectorDriver.inf')
     vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.sys', 'E:\\EventCollectorDriver.sys')
-    vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\EventCollectorDriver.pdb')
-    vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'C:\\Windows\\System32\\drivers\\EventCollectorDriver.pdb')
+    #vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\EventCollectorDriver.pdb')
+    #vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'C:\\Windows\\System32\\drivers\\EventCollectorDriver.pdb')
     vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.inf', 'E:\\SelfDefenseKernel.inf')
     vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.sys', 'E:\\SelfDefenseKernel.sys')
-    vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'E:\\SelfDefenseKernel.pdb')
-    vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'C:\\Windows\\System32\\drivers\\SelfDefenseKernel.pdb')
-
+    #vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'E:\\SelfDefenseKernel.pdb')
+    #vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'C:\\Windows\\System32\\drivers\\SelfDefenseKernel.pdb')
+    #os._exit(0)
     while True:
         try:
-            #vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\RansomDetectorService.exe')
+            vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\RansomDetectorService.exe')
             #vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.pdb', 'E:\\hieunt210330\\RansomDetectorService.pdb')
             pass
         except Exception as e:
@@ -130,18 +133,20 @@ def init_env():
 
     run_cmd("E:\\start_sd_driver.bat")
     #time.sleep(3)
-    #run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
+    run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
     run_cmd("E:\\start_collector_driver.bat")
-    #run_cmd("E:\\hieunt210330\\RansomDetectorService.exe", False)
+    run_cmd("E:\\hieunt210330\\RansomDetectorService.exe", False)
 
 init_env()
 
 
 print("Start testing")
 
-#run_cmd("C:\\Users\\hieu\\Downloads\\TestIo.exe n 2")
+run_cmd("C:\\Users\\hieu\\Downloads\\TestIo.exe n 1")
 
 print("Test stop")
+
+time.sleep(60)
 
 print("Test done")
 
