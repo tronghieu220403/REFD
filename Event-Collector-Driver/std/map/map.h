@@ -348,7 +348,8 @@ Pair<typename Map<Key, T, Compare>::iterator, bool> Map<Key, T, Compare>::Insert
 template <typename Key, typename T, typename Compare>
 Pair<typename Map<Key, T, Compare>::iterator, bool> Map<Key, T, Compare>::Insert(
     const Key& key, const T& val) {
-    Node* z = new Node(key, val);
+	Erase(key);
+	Node* z = new Node(key, val);
     Node* y = nil_;
     Node* x = root_;
 
