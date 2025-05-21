@@ -166,7 +166,7 @@ public:
 
 	bool HasSuffix(const String<T>&);
 
-	ull Find(const String<T>&);
+	ull Find(const String<T>&) const;
 
 	// Overloading the equal operator
 	bool operator==(const String<T>&);
@@ -706,7 +706,7 @@ inline bool String<T>::HasSuffix(const String<T>& str)
 }
 
 template<class T>
-inline ull String<T>::Find(const String<T>& str)
+inline ull String<T>::Find(const String<T>& str) const
 {
 	if (size_ < str.size_)
 	{

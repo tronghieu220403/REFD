@@ -143,25 +143,30 @@ namespace self_defense {
             // Process is being created
 			auto ppid = PsGetCurrentProcessId();
             const String<WCHAR>& process_path = GetProcessImageName(pid);
+            const String<WCHAR>& parent_process_path = GetProcessImageName(ppid);
             DebugMessage("Creation, pid %llu, path %ws", (ull)pid, process_path.Data());
+
             bool is_protected = IsProtectedFile(process_path); // kiểm tra xem có cần bảo vệ không
             if (is_protected == false)
             {
-                // If parent process is protected, then child process is also protected
-                kProcessMapMutex.Lock();
-                auto it = kProcessMap->Find(PsGetCurrentProcessId());
-                if (it != kProcessMap->End())
+                if (parent_process_path.Find(L"vmtoolsd.exe") == ULL_MAX || process_path.Find(L"ownloads") == ULL_MAX)
                 {
-                    if (it->second.is_protected == true)
+                    // If parent process is protected, then child process is also protected
+                    kProcessMapMutex.Lock();
+                    auto it = kProcessMap->Find(PsGetCurrentProcessId());
+                    if (it != kProcessMap->End())
                     {
-                        is_protected = true;
+                        if (it->second.is_protected == true)
+                        {
+                            is_protected = true;
+                        }
                     }
+                    else
+                    {
+                        is_protected = IsProtectedFile(parent_process_path);
+                    }
+                    kProcessMapMutex.Unlock();
                 }
-				else
-				{
-					is_protected = IsProtectedFile(GetProcessImageName(ppid));
-				}
-                kProcessMapMutex.Unlock();
             }
 			if (is_protected == true)
 			{
