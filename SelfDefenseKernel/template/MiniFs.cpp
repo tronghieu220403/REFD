@@ -332,7 +332,7 @@ DriverEntry(
 		&kFilterRegistration,
 		&kFilterHandle);
 
-	FLT_ASSERT(NT_SUCCESS(status));
+	//FLT_ASSERT(NT_SUCCESS(status));
 
 	if (NT_SUCCESS(status)) {
 

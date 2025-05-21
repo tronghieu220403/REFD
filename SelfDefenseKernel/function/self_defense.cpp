@@ -141,6 +141,7 @@ namespace self_defense {
         if (create_info)
         {
             // Process is being created
+			auto ppid = PsGetCurrentProcessId();
             const String<WCHAR>& process_path = GetProcessImageName(pid);
             DebugMessage("Creation, pid %llu, path %ws", (ull)pid, process_path.Data());
             bool is_protected = IsProtectedFile(process_path); // kiểm tra xem có cần bảo vệ không
@@ -156,6 +157,10 @@ namespace self_defense {
                         is_protected = true;
                     }
                 }
+				else
+				{
+					is_protected = IsProtectedFile(GetProcessImageName(ppid));
+				}
                 kProcessMapMutex.Unlock();
             }
 			if (is_protected == true)
@@ -219,17 +224,17 @@ namespace self_defense {
 			return FLT_PREOP_SUCCESS_NO_CALLBACK;
 		}
 
-		auto pid = PsGetCurrentProcessId();
-        if (IsProtectedProcess(pid))
+        String<WCHAR> file_path(flt::GetFileFullPathName(data));
+        if (file_path.Size() == 0 || IsProtectedFile(file_path) == false)
         {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-        String<WCHAR> file_path(flt::GetFileFullPathName(data));
-        if (IsProtectedFile(file_path) == false)
-        {
-            return FLT_PREOP_SUCCESS_NO_CALLBACK;
-        }
+		auto pid = PsGetCurrentProcessId();
+		if (IsProtectedProcess(pid))
+		{
+			return FLT_PREOP_SUCCESS_NO_CALLBACK;
+		}
 
 		DWORD desired_access = data->Iopb->Parameters.Create.SecurityContext->DesiredAccess;
         UINT8 create_disposition = data->Iopb->Parameters.Create.Options >> 24;

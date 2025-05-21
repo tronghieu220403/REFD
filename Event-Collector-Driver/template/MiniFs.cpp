@@ -330,7 +330,7 @@ DriverEntry (
                                 &kFilterRegistration,
                                 &kFilterHandle );
 
-    FLT_ASSERT( NT_SUCCESS( status ) );
+	//FLT_ASSERT( NT_SUCCESS( status ) );
 
     if (NT_SUCCESS( status )) {
 
@@ -344,9 +344,13 @@ DriverEntry (
 
             FltUnregisterFilter( kFilterHandle );
         }
-    }
 
-    reg::PostFltRegister();
+		reg::PostFltRegister();
+    }
+	else
+	{
+		DebugMessage("FltRegisterFilter failed: %x", status);
+	}
 
     return status;
 }
