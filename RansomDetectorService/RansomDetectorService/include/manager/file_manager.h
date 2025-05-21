@@ -107,7 +107,7 @@ namespace manager {
 
 	std::wstring GetFileExtension(const std::wstring& file_name);
 
-	size_t GetPathHash(const std::wstring& file_path);
+	ull GetPathHash(const std::wstring& file_path);
 	
 	std::wstring CopyToTmp(const std::wstring& file_path, bool create_new_if_duplicate = false);
 

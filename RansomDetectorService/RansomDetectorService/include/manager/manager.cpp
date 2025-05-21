@@ -98,10 +98,10 @@ namespace manager {
 			auto iterator_path_hash_to_merged_index = global_path_hash_to_merged_index_by_pid.find(pid);
 			if (iterator_path_hash_to_merged_index == global_path_hash_to_merged_index_by_pid.end())
 			{
-				global_path_hash_to_merged_index_by_pid[pid] = std::unordered_map<size_t, int>();
+				global_path_hash_to_merged_index_by_pid[pid] = std::unordered_map<ull, int>();
 				iterator_path_hash_to_merged_index = global_path_hash_to_merged_index_by_pid.find(pid);
 			}
-			std::unordered_map<size_t, int>& path_hash_to_merged_index = iterator_path_hash_to_merged_index->second;
+			std::unordered_map<ull, int>& path_hash_to_merged_index = iterator_path_hash_to_merged_index->second;
 
 			auto iterator_process_map = global_process_map.find(pid);
 			if (iterator_process_map == global_process_map.end())
@@ -121,7 +121,7 @@ namespace manager {
 				// Only attempt to merge if the event is renamed
 				if (current_event.is_renamed) {
 					//PrintDebugW(L"Process %d: Renamed event", pid);
-					size_t current_hash = manager::GetPathHash(current_event.path_list[0]);
+					ull current_hash = manager::GetPathHash(current_event.path_list[0]);
 
 					// Try to find the matching event based on the hash map
 					auto it = path_hash_to_merged_index.find(current_hash);
@@ -156,7 +156,7 @@ namespace manager {
 						last_event.path_list.push_back(current_event.path_list.back());
 						last_event.backup_name_list.push_back(current_event.backup_name_list.back());
 						// Update the path hash map
-						size_t new_path_hash = manager::GetPathHash(last_event.path_list.back());
+						ull new_path_hash = manager::GetPathHash(last_event.path_list.back());
 						auto index = it->second;
 						path_hash_to_merged_index.erase(it);
 						path_hash_to_merged_index[new_path_hash] = index;
@@ -187,7 +187,7 @@ namespace manager {
 					merged_events.push_back(current_event);
 
 					// Update the path hash map
-					size_t new_path_hash = manager::GetPathHash(current_event.path_list.back());
+					ull new_path_hash = manager::GetPathHash(current_event.path_list.back());
 					path_hash_to_merged_index[new_path_hash] = merged_events.size() - 1;
 
 					// Update the global process map

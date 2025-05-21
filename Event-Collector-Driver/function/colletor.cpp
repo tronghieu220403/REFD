@@ -266,10 +266,9 @@ namespace collector
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-        ull file_size = ULL_MAX;
+        ull file_size = f.Size();
         if (write_offset != 0)
         {
-            file_size = f.Size();
             if (file_size != 0 && file_size != ULL_MAX) {
                 // If file_size is archived, we only care about write operation to some first bytes and some last bytes of the file.
                 if (write_offset > BEGIN_WIDTH && write_offset + write_length < file_size - END_WIDTH)

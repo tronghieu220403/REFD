@@ -146,7 +146,7 @@ run_cmd("C:\\Users\\hieu\\Downloads\\TestIo.exe n 1")
 
 print("Test stop")
 
-time.sleep(60)
+#time.sleep(30)
 
 print("Test done")
 
