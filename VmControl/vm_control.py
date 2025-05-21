@@ -41,7 +41,9 @@ if os.path.exists(vm_path) == False:
 host = VixHost()
 vm = host.open_vm(vm_path)
 
-vm.power_on()
+#vm.snapshot_revert(vm.snapshot_get_current())
+
+vm.power_on(True)
 
 vm.wait_for_tools()
 
@@ -52,12 +54,16 @@ from pathlib import Path
 git_path = str(Path.cwd().parent)
 
 env_path = f"{git_path}\\guest_env"
-
+collector_path = f'{git_path}\\Event-Collector-Driver'
+sd_path = f'{git_path}\\SelfDefenseKernel'
 def init_env():
     print("Init env")
     try:
-        vm.copy_host_to_guest(f'{env_path}\\start_driver.bat', 'E:\\start_driver.bat')
-        vm.copy_host_to_guest(f'{env_path}\\stop_driver.bat', 'E:\\stop_driver.bat')
+        #vm.copy_host_to_guest(f'{env_path}\\start_collector_driver.bat', 'E:\\start_collector_driver.bat')
+        #vm.copy_host_to_guest(f'{env_path}\\stop_collector_driver.bat', 'E:\\stop_collector_driver.bat')
+        vm.copy_host_to_guest(f'{env_path}\\start_sd_driver.bat', 'E:\\start_sd_driver.bat')
+        vm.copy_host_to_guest(f'{env_path}\\stop_sd_driver.bat', 'E:\\stop_sd_driver.bat')
+
         pass
     except Exception as e:
         pass
@@ -78,32 +84,37 @@ def init_env():
     run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
     run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
     #time.sleep(5)
-    run_cmd('E:\\stop_driver.bat')
+    run_cmd('E:\\stop_collector_driver.bat')
+    run_cmd('E:\\stop_sd_driver.bat')
 
-    print("Delete files in E:\\test and E:\\backup")
-    run_cmd("powershell -Command \"Remove-Item \'E:\\test\\*\' -Recurse -Force\"")
+    print("Delete files in C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny and E:\\backup")
+    run_cmd("powershell -Command \"Remove-Item \'C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny\\*\' -Recurse -Force\"")
     run_cmd("powershell -Command \"Remove-Item \'E:\\backup\\*\' -Recurse -Force\"")
 
     print("Copy files to E:\\test")
     try:
-        vm.copy_host_to_guest(f"{git_path}\\TestIo\\x64\\Debug\\TestIo.exe", 'E:\\TestIo.exe')
+        vm.copy_host_to_guest(f"{git_path}\\TestIo\\x64\\Debug\\TestIo.exe", 'C:\\Users\\hieu\\Downloads\\TestIo.exe')
         pass
     except Exception as e:
         pass
     #run_cmd("E:\\TestIo.exe c")
     #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\test" "E:\\test" /E /I /Y')
-    #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny" "E:\\test" /E /I /Y')
+    #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny" /E /I /Y')
     
     #vm.copy_host_to_guest(f'{env_path}\\TrIDLib.dll', 'E:\\hieunt210330\\TrIDLib.dll')
     #vm.copy_host_to_guest(f'{env_path}\\triddefs.trd', 'E:\\hieunt210330\\triddefs.trd')
 
     print("Copy driver files to E:\\")
-    #vm.copy_host_to_guest(f'{git_path}\\Event-Collector-Driver\\x64\\Debug\\EventCollectorDriver.inf', 'E:\\EventCollectorDriver.inf')
-    vm.copy_host_to_guest(f'{git_path}\\Event-Collector-Driver\\x64\\Debug\\EventCollectorDriver.sys', 'E:\\EventCollectorDriver.sys')
-    #vm.copy_host_to_guest(f'{git_path}\\Event-Collector-Driver\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\EventCollectorDriver.pdb')
+    #vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.inf', 'E:\\EventCollectorDriver.inf')
+    vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.sys', 'E:\\EventCollectorDriver.sys')
+    #vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\EventCollectorDriver.pdb')
+    #vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.inf', 'E:\\SelfDefenseKernel.inf')
+    vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.sys', 'E:\\SelfDefenseKernel.sys')
+    #vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'E:\\SelfDefenseKernel.pdb')
+
     while True:
         try:
-            vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\RansomDetectorService.exe')
+            #vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\RansomDetectorService.exe')
             #vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.pdb', 'E:\\hieunt210330\\RansomDetectorService.pdb')
             pass
         except Exception as e:
@@ -111,30 +122,27 @@ def init_env():
             time.sleep(1)
             continue
         break
-    
-    print("Start driver and service")
-    run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
 
-    run_cmd("E:\\start_driver.bat")
+
+    print("Start driver and service")
+
+    run_cmd("E:\\start_sd_driver.bat")
+    #time.sleep(3)
+    #run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
+    run_cmd("E:\\start_collector_driver.bat")
     #run_cmd("E:\\hieunt210330\\RansomDetectorService.exe", False)
 
 init_env()
 
-#time.sleep(10)
 
 print("Start testing")
 
-test_cmdl = "E:\\TestIo.exe" + " n 3"
-
-run_cmd(test_cmdl)
+#run_cmd("C:\\Users\\hieu\\Downloads\\TestIo.exe n 2")
 
 print("Test stop")
-
-#time.sleep(180)
 
 print("Test done")
 
 run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
-#run_cmd('E:\\stop_driver.bat')
-time.sleep(5)
-run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
+run_cmd('E:\\stop_collector_driver.bat')
+run_cmd('E:\\stop_sd_driver.bat')

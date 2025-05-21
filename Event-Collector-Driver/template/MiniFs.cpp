@@ -216,7 +216,7 @@ CONST FLT_CONTEXT_REGISTRATION kContexts[] = {
 //  This defines what we want to filter with FltMgr
 //
 
-CONST FLT_REGISTRATION FilterRegistration = {
+CONST FLT_REGISTRATION kFilterRegistration = {
 
     sizeof(FLT_REGISTRATION),         //  Size
     FLT_REGISTRATION_VERSION,           //  Version
@@ -327,7 +327,7 @@ DriverEntry (
     //
 
     status = FltRegisterFilter( driver_object,
-                                &FilterRegistration,
+                                &kFilterRegistration,
                                 &kFilterHandle );
 
     FLT_ASSERT( NT_SUCCESS( status ) );

@@ -15,19 +15,32 @@ namespace self_defense {
     static Mutex kProcessMapMutex;
 
     static Vector<String<WCHAR>>* kProtectedDirList;
-    static Mutex kDirMutex;
+    static Vector<String<WCHAR>>* kProtectedFileList;
+    static Mutex kFileMutex;
     static PVOID kHandleRegistration;
     static bool kEnableProtectFile;
 
-    // Đăng ký các callback bảo vệ process và thread
     void DrvRegister()
     {
         DebugMessage("%ws", __FUNCTIONW__);
-        kDirMutex.Create();
+        kFileMutex.Create();
         kProcessMapMutex.Create();
 
+		kFileMutex.Lock();
         kProtectedDirList = new Vector<String<WCHAR>>();
-        kProtectedDirList->PushBack(GetDefaultProtectedDir());
+		Vector<String<WCHAR>> default_protected_dirs = GetDefaultProtectedDirs();
+		for (int i = 0; i < default_protected_dirs.Size(); ++i)
+		{
+			kProtectedDirList->PushBack(default_protected_dirs[i]);
+		}
+
+		kProtectedFileList = new Vector<String<WCHAR>>();
+		Vector<String<WCHAR>> default_protected_files = GetDefaultProtectedFiles();
+		for (int i = 0; i < default_protected_files.Size(); ++i)
+		{
+			kProtectedFileList->PushBack(default_protected_files[i]);
+		}
+		kFileMutex.Unlock();
 
         kProcessMap = new Map<HANDLE, ProcessInfo>(); // thay đổi kiểu dữ liệu của map
         NTSTATUS status;
@@ -74,7 +87,6 @@ namespace self_defense {
         }
     }
 
-    // Huỷ đăng ký các callback bảo vệ process và thread
     void DrvUnload()
     {
         DebugMessage("%ws", __FUNCTIONW__);
@@ -84,12 +96,11 @@ namespace self_defense {
         kProcessMapMutex.Lock();
         delete kProcessMap;
         kProcessMapMutex.Unlock();
-        kDirMutex.Lock();
+        kFileMutex.Lock();
         delete kProtectedDirList;
-        kDirMutex.Unlock();
+        kFileMutex.Unlock();
     }
 
-    // Đăng ký các bộ lọc bảo vệ file
     void FltRegister()
     {
         DebugMessage("%ws", __FUNCTIONW__);
@@ -98,14 +109,26 @@ namespace self_defense {
         reg::kFltFuncVector->PushBack({ IRP_MJ_SET_INFORMATION, PreSetInformationFile, nullptr });
         reg::kFltFuncVector->PushBack({ IRP_MJ_CREATE, PreCreateFile, nullptr });
 
-        DebugMessage("protect_file FltRegister completed successfully.");
+        DebugMessage("FltRegister completed successfully.");
         return;
     }
 
-    // Huỷ đăng ký các bộ lọc bảo vệ file
-    void FltUnload()
+    NTSTATUS FltUnload()
     {
-        DebugMessage("%ws", __FUNCTIONW__);
+        DebugMessage("Begin %ws", __FUNCTIONW__);
+		HANDLE pid = PsGetCurrentProcessId();
+		if (pid == (HANDLE)4 || ExGetPreviousMode() == KernelMode)
+		{
+			return STATUS_SUCCESS;
+		}
+		kProcessMapMutex.Lock();
+		const String<WCHAR>& process_path = GetProcessImageName(pid);
+		kProcessMapMutex.Unlock();
+		if (IsProtectedFile(process_path))
+		{
+			return STATUS_SUCCESS;
+		}
+		return STATUS_FLT_DO_NOT_DETACH;
     }
 
     // Process notification callback
@@ -119,8 +142,8 @@ namespace self_defense {
         {
             // Process is being created
             const String<WCHAR>& process_path = GetProcessImageName(pid);
-            DebugMessage("%ws: creation, pid %d, path %ws", __FUNCTIONW__, (int)pid, process_path.Data());
-            bool is_protected = IsInProtectedDirectory(process_path); // kiểm tra xem có cần bảo vệ không
+            DebugMessage("Creation, pid %llu, path %ws", (ull)pid, process_path.Data());
+            bool is_protected = IsProtectedFile(process_path); // kiểm tra xem có cần bảo vệ không
             if (is_protected == false)
             {
                 // If parent process is protected, then child process is also protected
@@ -137,11 +160,12 @@ namespace self_defense {
             }
 			if (is_protected == true)
 			{
-				DebugMessage("Protected process %d: %ws", (int)pid, process_path.Data());
+				DebugMessage("Protected process %llu: %ws", (ull)pid, process_path.Data());
 			}
             LARGE_INTEGER start_time;
             KeQuerySystemTime(&start_time);
             kProcessMapMutex.Lock();
+
             kProcessMap->Insert(pid, { pid, process_path, is_protected, start_time }); // lưu vào cache với trạng thái bảo vệ
             kProcessMapMutex.Unlock();
         }
@@ -149,7 +173,7 @@ namespace self_defense {
         {
             // Process kết thúc, xóa khỏi cache
             kProcessMapMutex.Lock();
-            DebugMessage("%ws: termination, pid %d, killer %d, path %ws", __FUNCTIONW__, (int)pid, (int)PsGetCurrentProcessId(), GetProcessImageName(pid).Data());
+            DebugMessage("%ws: termination, pid %llu, killer %llu, path %ws", __FUNCTIONW__, (ull)pid, (ull)PsGetCurrentProcessId(), GetProcessImageName(pid).Data());
             kProcessMap->Erase(pid);
             kProcessMapMutex.Unlock();
         }
@@ -162,14 +186,39 @@ namespace self_defense {
         {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
-        if (data->RequestorMode == KernelMode)
-        {
-            return FLT_PREOP_SUCCESS_NO_CALLBACK;
-        }
-        if (ExGetPreviousMode() == KernelMode)
-        {
-            return FLT_PREOP_SUCCESS_NO_CALLBACK;
-        }
+		//  Directory opens don't need to be scanned.
+		if (FlagOn(data->Iopb->Parameters.Create.Options, FILE_DIRECTORY_FILE))
+			return FLT_PREOP_SUCCESS_NO_CALLBACK;
+
+		//  Skip pre-rename operations which always open a directory.
+		if (FlagOn(data->Iopb->OperationFlags, SL_OPEN_TARGET_DIRECTORY))
+			return FLT_PREOP_SUCCESS_NO_CALLBACK;
+
+		//  Skip paging files.
+		if (FlagOn(data->Iopb->OperationFlags, SL_OPEN_PAGING_FILE))
+			return FLT_PREOP_SUCCESS_NO_CALLBACK;
+
+		//  Skip scanning DASD opens 
+		if (FlagOn(flt_objects->FileObject->Flags, FO_VOLUME_OPEN))
+			return FLT_PREOP_SUCCESS_NO_CALLBACK;
+
+		// Skip kernel mode
+		if (data->RequestorMode == KernelMode)
+		{
+			return FLT_PREOP_SUCCESS_NO_CALLBACK;
+		}
+
+		ULONG_PTR stack_low;
+		ULONG_PTR stack_high;
+		PFILE_OBJECT file_obj = data->Iopb->TargetFileObject;
+
+		IoGetStackLimits(&stack_low, &stack_high);
+		if (((ULONG_PTR)file_obj > stack_low) &&
+			((ULONG_PTR)file_obj < stack_high))
+		{
+			return FLT_PREOP_SUCCESS_NO_CALLBACK;
+		}
+
 		auto pid = PsGetCurrentProcessId();
         if (IsProtectedProcess(pid))
         {
@@ -177,8 +226,7 @@ namespace self_defense {
         }
 
         String<WCHAR> file_path(flt::GetFileFullPathName(data));
-		//DebugMessage("Create file: %ws\n", file_path.Data());
-        if (IsInProtectedDirectory(file_path) == false)
+        if (IsProtectedFile(file_path) == false)
         {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
@@ -188,14 +236,15 @@ namespace self_defense {
         DWORD create_options = data->Iopb->Parameters.Create.Options & 0x00FFFFFF;
 
         if (FlagOn(create_options, FILE_DELETE_ON_CLOSE)
-            || !FlagOn(create_disposition, FILE_OPEN)
+            || create_disposition != FILE_OPEN
             || FlagOn(desired_access, FILE_WRITE_DATA)
             || FlagOn(desired_access, FILE_APPEND_DATA)
+            || FlagOn(desired_access, DELETE)
             //|| FlagOn(desired_access, FILE_WRITE_EA)
             //|| FlagOn(desired_access, FILE_WRITE_ATTRIBUTES)
             )
         {
-            DebugMessage("Creation blocked, %ws, pid %d, process path %ws, desired_access 0x%x, create_disposition 0x%x, create_options %d", file_path.Data(), (int)PsGetCurrentProcessId(), GetProcessImageName(PsGetCurrentProcessId()).Data(), desired_access, create_disposition, create_options);
+            DebugMessage("Creation blocked, %ws, pid %llu, process path %ws, desired_access 0x%x, create_disposition 0x%x, create_options %d", file_path.Data(), (ull)PsGetCurrentProcessId(), GetProcessImageName(PsGetCurrentProcessId()).Data(), desired_access, create_disposition, create_options);
             data->IoStatus.Status = STATUS_ACCESS_DENIED;
             FltSetCallbackDataDirty(data);
             return FLT_PREOP_COMPLETE;
@@ -226,7 +275,7 @@ namespace self_defense {
 
         String<WCHAR> file_path(flt::GetFileFullPathName(data));
 		//DebugMessage("SetInformationFile: %ws", file_path.Data());
-        if (IsInProtectedDirectory(file_path) == false)
+        if (IsProtectedFile(file_path) == false)
         {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
@@ -240,7 +289,7 @@ namespace self_defense {
             data->Iopb->Parameters.SetFileInformation.FileInformationClass == FileEndOfFileInformation ||
             data->Iopb->Parameters.SetFileInformation.FileInformationClass == FileShortNameInformation)
         {
-            DebugMessage("SetInfo blocked, path %ws, pid %d, process path %ws, FileInformationClass %d", file_path.Data(), (int)PsGetCurrentProcessId(), GetProcessImageName(PsGetCurrentProcessId()).Data(), data->Iopb->Parameters.SetFileInformation.FileInformationClass);
+            DebugMessage("SetInfo blocked, path %ws, pid %llu, process path %ws, FileInformationClass %d", file_path.Data(), (ull)PsGetCurrentProcessId(), GetProcessImageName(PsGetCurrentProcessId()).Data(), data->Iopb->Parameters.SetFileInformation.FileInformationClass);
             data->IoStatus.Status = STATUS_ACCESS_DENIED;
             FltSetCallbackDataDirty(data);
             return FLT_PREOP_COMPLETE;
@@ -268,7 +317,7 @@ namespace self_defense {
             if (NT_SUCCESS(status))
             {
                 //DebugMessage("Rename file: %wZ", name_info->Name);
-                if (IsInProtectedDirectory(String<WCHAR>(name_info->Name))) {
+                if (IsProtectedFile(String<WCHAR>(name_info->Name))) {
                     DebugMessage("Rename blocked, path %ws, pid %d, process path %ws, FileInformationClass %d", file_path.Data(), (int)PsGetCurrentProcessId(), GetProcessImageName(PsGetCurrentProcessId()).Data(), data->Iopb->Parameters.SetFileInformation.FileInformationClass);
                     FltReleaseFileNameInformation(name_info);
                     data->IoStatus.Status = STATUS_ACCESS_DENIED;
@@ -319,135 +368,185 @@ namespace self_defense {
         auto it = kProcessMap->Find(target_pid);
         if (it != kProcessMap->End())
         {
-            // Lấy thời gian bắt đầu
-            LARGE_INTEGER curr_time;
-            KeQuerySystemTime(&curr_time);
+			// Lấy thời gian bắt đầu
+			LARGE_INTEGER curr_time;
+			KeQuerySystemTime(&curr_time);
 
-            // Tính sự khác biệt giữa hai lần lấy thời gian (sự khác biệt theo đơn vị 100 ns)
-            ULONG64 time_difference = curr_time.QuadPart - it->second.start_time.QuadPart;
+			// Tính sự khác biệt giữa hai lần lấy thời gian (sự khác biệt theo đơn vị 100 ns)
+			ULONG64 time_difference = curr_time.QuadPart - it->second.start_time.QuadPart;
 
-            // Kiểm tra xem thời gian có nhỏ hơn 0.5 giây (500 triệu ns)
-            if (time_difference < 5000000) // 5 triệu * 100 ns = 0.5 giây
-            {
-                return OB_PREOP_SUCCESS;
-            }
-        }
+			// Kiểm tra xem thời gian có nhỏ hơn 0.5 giây (500 triệu ns)
+			if (time_difference < 5000000) // 5 triệu * 100 ns = 0.5 giây
+			{
+				return OB_PREOP_SUCCESS;
+			}
+		}
 
-        // Kiểm tra loại đối tượng để xác định quyền cần sửa đổi
-        if (operation_information->ObjectType == *PsProcessType)
-        {
-            // Xóa quyền như mô tả của Windows và thêm quyền cụ thể
-            /*
-            operation_information->Parameters->CreateHandleInformation.DesiredAccess &=
+		// Kiểm tra loại đối tượng để xác định quyền cần sửa đổi
+		if (operation_information->ObjectType == *PsProcessType)
+		{
+			// Xóa quyền như mô tả của Windows và thêm quyền cụ thể
+			/*
+			operation_information->Parameters->CreateHandleInformation.DesiredAccess &=
 				~(DELETE | READ_CONTROL | WRITE_DAC | WRITE_OWNER | PROCESS_ALL_ACCESS | PROCESS_TERMINATE |
-                    PROCESS_CREATE_THREAD |
-                    PROCESS_SET_INFORMATION |
-                    PROCESS_VM_OPERATION | PROCESS_VM_WRITE);
-            */
+					PROCESS_CREATE_THREAD |
+					PROCESS_SET_INFORMATION |
+					PROCESS_VM_OPERATION | PROCESS_VM_WRITE);
+			*/
 			DWORD desired_access = operation_information->Parameters->CreateHandleInformation.DesiredAccess;
-            //DebugMessage("Desired access: %x", desired_access);
+			//DebugMessage("PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
 			if (desired_access & PROCESS_TERMINATE)
 			{
-                //DebugMessage("Terminate blocked, source %lld, target %lld", (size_t)source_pid, (size_t)target_pid);
-                desired_access &= ~PROCESS_TERMINATE;
+				DebugMessage("Terminate blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				desired_access &= ~PROCESS_TERMINATE;
 			}
-            if (desired_access & PROCESS_CREATE_THREAD)
-            {
-                //DebugMessage("Create thread blocked, source %lld, target %lld", (size_t)source_pid, (size_t)target_pid);
-                desired_access &= ~PROCESS_CREATE_THREAD;
-            }
+			if (desired_access & PROCESS_CREATE_THREAD)
+			{
+				DebugMessage("Create thread blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				desired_access &= ~PROCESS_CREATE_THREAD;
+			}
 			if (desired_access & PROCESS_SET_SESSIONID)
 			{
-				//DebugMessage("Set sessionid blocked, source %lld, target %lld", (size_t)source_pid, (size_t)target_pid);
+				DebugMessage("Set sessionid blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
 				desired_access &= ~PROCESS_SET_SESSIONID;
 			}
-            if (desired_access & PROCESS_VM_OPERATION)
-            {
-                //DebugMessage("VM operation blocked, source %lld, target %lld", (size_t)source_pid, (size_t)target_pid);
-                desired_access &= ~PROCESS_VM_OPERATION;
-            }
-            if (desired_access & PROCESS_VM_WRITE)
-            {
-                //DebugMessage("VM write blocked, source %lld, target %lld", (size_t)source_pid, (size_t)target_pid);
-                desired_access &= ~PROCESS_VM_WRITE;
-            }
-            if (desired_access & PROCESS_SET_INFORMATION)
-            {
-                //DebugMessage("Set information blocked, source %lld, target %lld", (size_t)source_pid, (size_t)target_pid);
-                desired_access &= ~PROCESS_SET_INFORMATION;
-            }
-            if (desired_access & DELETE)
-            {
-                //DebugMessage("Delete blocked, source %lld, target %lld", (size_t)source_pid, (size_t)target_pid);
-                desired_access &= ~DELETE;
-            }
+			if (desired_access & PROCESS_VM_OPERATION)
+			{
+				DebugMessage("VM operation blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				desired_access &= ~PROCESS_VM_OPERATION;
+			}
+			if (desired_access & PROCESS_VM_WRITE)
+			{
+				DebugMessage("VM write blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				desired_access &= ~PROCESS_VM_WRITE;
+			}
+			if (desired_access & PROCESS_SET_INFORMATION)
+			{
+				DebugMessage("Set information blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				desired_access &= ~PROCESS_SET_INFORMATION;
+			}
+			if (desired_access & DELETE)
+			{
+				DebugMessage("Delete blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				desired_access &= ~DELETE;
+			}
 			if (desired_access & WRITE_DAC)
 			{
-                //DebugMessage("Write DAC blocked, source %lld, target %lld", (size_t)source_pid, (size_t)target_pid);
+				DebugMessage("Write DAC blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
 				desired_access &= ~WRITE_DAC;
 			}
 			if (desired_access & WRITE_OWNER)
 			{
-                //DebugMessage("Write owner blocked, source %lld, target %lld", (size_t)source_pid, (size_t)target_pid);
+				DebugMessage("Write owner blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
 				desired_access &= ~WRITE_OWNER;
 			}
 			operation_information->Parameters->CreateHandleInformation.DesiredAccess = desired_access;
+		}
+		else if (operation_information->ObjectType == *PsThreadType)
+		{
+			// Xóa các quyền cần thiết đối với thread
+			operation_information->Parameters->CreateHandleInformation.DesiredAccess &=
+				~(THREAD_DIRECT_IMPERSONATION | THREAD_IMPERSONATE | THREAD_SET_CONTEXT |
+					THREAD_SET_INFORMATION | THREAD_SET_THREAD_TOKEN | THREAD_SUSPEND_RESUME |
+					THREAD_TERMINATE | WRITE_DAC | WRITE_OWNER);
+		}
+
+		return OB_PREOP_SUCCESS;
+	}
+
+	// Kiểm tra xem thư mục có nằm trong danh sách bảo vệ không
+	bool IsProtectedFile(const String<WCHAR>& path)
+	{
+		//DebugMessage("Checking file: %ws", path.Data());
+		kFileMutex.Lock();
+		bool is_protected = false;
+
+		for (int i = 0; i < kProtectedDirList->Size(); i++) {
+			const auto& protected_dir = kProtectedDirList->At(i);
+			/*
+			if (protected_dir.IsPrefixOf(path)) {
+				is_protected = true;
+				break;
+			}
+			*/
+			if (protected_dir.Size() < path.Size() && _wcsnicmp(protected_dir.Data(), path.Data(), protected_dir.Size()) == 0)
+			{
+				is_protected = true;
+			}
         }
-        else if (operation_information->ObjectType == *PsThreadType)
-        {
-            // Xóa các quyền cần thiết đối với thread
-            operation_information->Parameters->CreateHandleInformation.DesiredAccess &=
-                ~(THREAD_DIRECT_IMPERSONATION | THREAD_IMPERSONATE | THREAD_SET_CONTEXT |
-                    THREAD_SET_INFORMATION | THREAD_SET_THREAD_TOKEN | THREAD_SUSPEND_RESUME |
-                    THREAD_TERMINATE | WRITE_DAC | WRITE_OWNER);
-        }
 
-        return OB_PREOP_SUCCESS;
-    }
+		for (int i = 0; i < kProtectedFileList->Size(); i++) {
+			const auto& protected_file = kProtectedFileList->At(i);
+			/*
+			if (protected_file.IsPrefixOf(path) && path.IsPrefixOf(protected_file)) {
+				is_protected = true;
+				break;
+			}
+			*/
+			if (protected_file.Size() == path.Size() && _wcsnicmp(protected_file.Data(), path.Data(), protected_file.Size()) == 0)
+			{
+				is_protected = true;
+			}
+		}
 
-    // Kiểm tra xem thư mục có nằm trong danh sách bảo vệ không
-    bool IsInProtectedDirectory(const String<WCHAR>& path)
-    {
-        kDirMutex.Lock();
-        bool is_protected = false;
+        kFileMutex.Unlock();
 
-        for (int i = 0; i < kProtectedDirList->Size(); i++) {
-            const auto& protected_dir = kProtectedDirList->At(i);
-            if (protected_dir.IsPrefixOf(path)) {
-                is_protected = true;
-                break;
-            }
-        }
+		if (is_protected)
+		{
+			DebugMessage("File %ws is protected", path.Data());
+		}
+		else
+		{
+			//DebugMessage("File %ws is not protected", path.Data());
+		}
 
-        kDirMutex.Unlock();
         return is_protected;
     }
+
+	bool IsInProtectedFile(const String<WCHAR>& path)
+	{
+		return false;
+	}
 
     // Kiểm tra xem PID có thuộc process cần bảo vệ không
     bool IsProtectedProcess(HANDLE pid)
     {
         kProcessMapMutex.Lock();
+		DebugMessage("Checking pid %llu: %ws", (ull)pid, GetProcessImageName(pid).Data());
+
         auto it = kProcessMap->Find(pid);
         bool is_protected = false;
 
         if (it != kProcessMap->End())
         {
+			DebugMessage("PID %llu is in process map", (ull)pid);
             is_protected = it->second.is_protected; // lấy trạng thái bảo vệ từ cache
             if (is_protected == false)
             {
-                is_protected = IsInProtectedDirectory(it->second.process_path);
+                is_protected = IsProtectedFile(it->second.process_path);
             }
         }
         else
         {
+			DebugMessage("PID %llu is not in process map", (ull)pid);
+
             // Process không có trong cache, lấy thông tin mới
             String<WCHAR> process_path = GetProcessImageName(pid);
-            is_protected = IsInProtectedDirectory(process_path);
+            is_protected = IsProtectedFile(process_path);
 
             // Lưu vào cache
             kProcessMap->Insert(pid, { pid, process_path, is_protected, 0 });
         }
         kProcessMapMutex.Unlock();
+
+		if (is_protected)
+		{
+			DebugMessage("Pid %llu is protected", (ull)pid);
+		}
+		else
+		{
+			DebugMessage("Pid %llu is not protected", (ull)pid);
+		}
 
         return is_protected;
     }
@@ -543,21 +642,57 @@ namespace self_defense {
         return process_image_name;
     }
 
-    String<WCHAR> GetDefaultProtectedDir()
-    {
-        UNICODE_STRING protected_dir;
-        RtlInitUnicodeString(&protected_dir, L"\\??\\E:\\");
-        UNICODE_STRING protected_dir_device_path;
-        protected_dir_device_path.Length = 0;
-        protected_dir_device_path.MaximumLength = 1024 * sizeof(WCHAR);
-        protected_dir_device_path.Buffer = new WCHAR[1024];
-        NormalizeDevicePath(&protected_dir, &protected_dir_device_path);
-        String<WCHAR> protected_dir_device_path_str(protected_dir_device_path);
-        delete protected_dir_device_path.Buffer;
-        return protected_dir_device_path_str;
-    }
+	const WCHAR* kDevicePathDirList[] = {
+		L"\\??\\E:\\",
+		L"\\??\\C:\\Program Files\\VMware\\VMware Tools\\"
+	};
 
-    NTSTATUS ResolveSymbolicLink(PUNICODE_STRING Link, PUNICODE_STRING Resolved)
+	Vector<String<WCHAR>> GetDefaultProtectedDirs()
+    {
+		Vector<String<WCHAR>> protected_dirs;
+		for (int i = 0; i < sizeof(kDevicePathDirList) / sizeof(kDevicePathDirList[0]); ++i) {
+			UNICODE_STRING device_path_uni_str;
+			RtlInitUnicodeString(&device_path_uni_str, kDevicePathDirList[i]);
+			String<WCHAR> nomalized_path_str;
+			nomalized_path_str.Resize(1024);
+			UNICODE_STRING normalized_uni_str = { 0, nomalized_path_str.Size() * sizeof(WCHAR), nomalized_path_str.Data() };
+			NormalizeDevicePath(&device_path_uni_str, &normalized_uni_str);
+			nomalized_path_str.Resize(normalized_uni_str.Length / sizeof(WCHAR));
+
+			protected_dirs.PushBack(nomalized_path_str);
+
+			DebugMessage("Protected dir: %ws", nomalized_path_str.Data());
+
+		}
+		return protected_dirs;
+	}
+
+	const WCHAR* kDevicePathFileList[] = {
+		L"\\??\\C:\\Windows\\System32\\drivers\\SelfDefenseKernel.sys",
+		L"\\??\\C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys",
+		L"\\Device\\Harddisk0\\DR0"
+	};
+
+	Vector<String<WCHAR>> GetDefaultProtectedFiles()
+	{
+		Vector<String<WCHAR>> protected_files;
+		for (int i = 0; i < sizeof(kDevicePathFileList) / sizeof(kDevicePathFileList[0]); ++i) {
+			UNICODE_STRING device_path_uni_str;
+			RtlInitUnicodeString(&device_path_uni_str, kDevicePathFileList[i]);
+			String<WCHAR> nomalized_path_str;
+			nomalized_path_str.Resize(1024);
+			UNICODE_STRING normalized_uni_str = { 0, nomalized_path_str.Size() * sizeof(WCHAR), nomalized_path_str.Data() };
+			NormalizeDevicePath(&device_path_uni_str, &normalized_uni_str);
+			nomalized_path_str.Resize(normalized_uni_str.Length / sizeof(WCHAR));
+
+			protected_files.PushBack(nomalized_path_str);
+			DebugMessage("Protected file: %ws", nomalized_path_str.Data());
+
+		}
+		return protected_files;
+	}
+
+    NTSTATUS ResolveSymbolicLink(const PUNICODE_STRING& link, const PUNICODE_STRING& resolved)
     {
         OBJECT_ATTRIBUTES attribs;
         HANDLE hsymLink;
@@ -566,7 +701,7 @@ namespace self_defense {
 
         // Open symlink
 
-        InitializeObjectAttributes(&attribs, Link, OBJ_KERNEL_HANDLE, NULL, NULL);
+        InitializeObjectAttributes(&attribs, link, OBJ_KERNEL_HANDLE, NULL, NULL);
 
         status = ZwOpenSymbolicLinkObject(&hsymLink, GENERIC_READ, &attribs);
         if (!NT_SUCCESS(status))
@@ -574,7 +709,7 @@ namespace self_defense {
 
         // Query original name
 
-        status = ZwQuerySymbolicLinkObject(hsymLink, Resolved, &written);
+        status = ZwQuerySymbolicLinkObject(hsymLink, resolved, &written);
         ZwClose(hsymLink);
         if (!NT_SUCCESS(status))
             return status;
@@ -586,108 +721,108 @@ namespace self_defense {
     // Convertion template:
     //   \\??\\C:\\Windows -> \\Device\\HarddiskVolume1\\Windows
     //
-    NTSTATUS NormalizeDevicePath(PCUNICODE_STRING Path, PUNICODE_STRING Normalized)
+    NTSTATUS NormalizeDevicePath(const PCUNICODE_STRING& path, const PUNICODE_STRING& normalized)
     {
-        UNICODE_STRING globalPrefix, dvcPrefix, sysrootPrefix;
+        UNICODE_STRING global_prefix, dvc_prefix, sysroot_prefix;
         NTSTATUS status;
 
-        RtlInitUnicodeString(&globalPrefix, L"\\??\\");
-        RtlInitUnicodeString(&dvcPrefix, L"\\Device\\");
-        RtlInitUnicodeString(&sysrootPrefix, L"\\SystemRoot\\");
+        RtlInitUnicodeString(&global_prefix, L"\\??\\");
+        RtlInitUnicodeString(&dvc_prefix, L"\\Device\\");
+        RtlInitUnicodeString(&sysroot_prefix, L"\\SystemRoot\\");
 
-        if (RtlPrefixUnicodeString(&globalPrefix, Path, TRUE))
+        if (RtlPrefixUnicodeString(&global_prefix, path, TRUE))
         {
             OBJECT_ATTRIBUTES attribs;
-            UNICODE_STRING subPath;
-            HANDLE hsymLink;
+            UNICODE_STRING sub_Path;
+            HANDLE hsym_link;
             ULONG i, written, size;
 
-            subPath.Buffer = (PWCH)((PUCHAR)Path->Buffer + globalPrefix.Length);
-            subPath.Length = Path->Length - globalPrefix.Length;
+            sub_Path.Buffer = (PWCH)((PUCHAR)path->Buffer + global_prefix.Length);
+            sub_Path.Length = path->Length - global_prefix.Length;
 
-            for (i = 0; i < subPath.Length; i++)
+            for (i = 0; i < sub_Path.Length; i++)
             {
-                if (subPath.Buffer[i] == L'\\')
+                if (sub_Path.Buffer[i] == L'\\')
                 {
-                    subPath.Length = (USHORT)(i * sizeof(WCHAR));
+                    sub_Path.Length = (USHORT)(i * sizeof(WCHAR));
                     break;
                 }
             }
 
-            if (subPath.Length == 0)
+            if (sub_Path.Length == 0)
                 return STATUS_INVALID_PARAMETER_1;
 
-            subPath.Buffer = Path->Buffer;
-            subPath.Length += globalPrefix.Length;
-            subPath.MaximumLength = subPath.Length;
+            sub_Path.Buffer = path->Buffer;
+            sub_Path.Length += global_prefix.Length;
+            sub_Path.MaximumLength = sub_Path.Length;
 
             // Open symlink
 
-            InitializeObjectAttributes(&attribs, &subPath, OBJ_KERNEL_HANDLE, NULL, NULL);
+            InitializeObjectAttributes(&attribs, &sub_Path, OBJ_KERNEL_HANDLE, NULL, NULL);
 
-            status = ZwOpenSymbolicLinkObject(&hsymLink, GENERIC_READ, &attribs);
+            status = ZwOpenSymbolicLinkObject(&hsym_link, GENERIC_READ, &attribs);
             if (!NT_SUCCESS(status))
                 return status;
 
             // Query original name
 
-            status = ZwQuerySymbolicLinkObject(hsymLink, Normalized, &written);
-            ZwClose(hsymLink);
+            status = ZwQuerySymbolicLinkObject(hsym_link, normalized, &written);
+            ZwClose(hsym_link);
             if (!NT_SUCCESS(status))
                 return status;
 
             // Construct new variable
 
-            size = Path->Length - subPath.Length + Normalized->Length;
-            if (size > Normalized->MaximumLength)
+            size = path->Length - sub_Path.Length + normalized->Length;
+            if (size > normalized->MaximumLength)
                 return STATUS_BUFFER_OVERFLOW;
 
-            subPath.Buffer = (PWCH)((PUCHAR)Path->Buffer + subPath.Length);
-            subPath.Length = Path->Length - subPath.Length;
-            subPath.MaximumLength = subPath.Length;
+            sub_Path.Buffer = (PWCH)((PUCHAR)path->Buffer + sub_Path.Length);
+            sub_Path.Length = path->Length - sub_Path.Length;
+            sub_Path.MaximumLength = sub_Path.Length;
 
-            status = RtlAppendUnicodeStringToString(Normalized, &subPath);
+            status = RtlAppendUnicodeStringToString(normalized, &sub_Path);
             if (!NT_SUCCESS(status))
                 return status;
         }
-        else if (RtlPrefixUnicodeString(&dvcPrefix, Path, TRUE))
+        else if (RtlPrefixUnicodeString(&dvc_prefix, path, TRUE))
         {
-            Normalized->Length = 0;
-            status = RtlAppendUnicodeStringToString(Normalized, Path);
+            normalized->Length = 0;
+            status = RtlAppendUnicodeStringToString(normalized, path);
             if (!NT_SUCCESS(status))
                 return status;
         }
-        else if (RtlPrefixUnicodeString(&sysrootPrefix, Path, TRUE))
+        else if (RtlPrefixUnicodeString(&sysroot_prefix, path, TRUE))
         {
-            UNICODE_STRING subPath, resolvedLink, winDir;
+            UNICODE_STRING sub_path, resolved_link, win_dir;
             WCHAR buffer[64];
             SHORT i;
 
             // Open symlink
 
-            subPath.Buffer = sysrootPrefix.Buffer;
-            subPath.MaximumLength = subPath.Length = sysrootPrefix.Length - sizeof(WCHAR);
+            sub_path.Buffer = sysroot_prefix.Buffer;
+            sub_path.MaximumLength = sub_path.Length = sysroot_prefix.Length - sizeof(WCHAR);
 
-            resolvedLink.Buffer = buffer;
-            resolvedLink.Length = 0;
-            resolvedLink.MaximumLength = sizeof(buffer);
+            resolved_link.Buffer = buffer;
+            resolved_link.Length = 0;
+            resolved_link.MaximumLength = sizeof(buffer);
 
-            status = ResolveSymbolicLink(&subPath, &resolvedLink);
+            status = ResolveSymbolicLink(&sub_path, &resolved_link);
             if (!NT_SUCCESS(status))
                 return status;
 
             // \Device\Harddisk0\Partition0\Windows -> \Device\Harddisk0\Partition0
             // Win10: \Device\BootDevice\Windows -> \Device\BootDevice
 
-            winDir.Length = 0;
-            for (i = (resolvedLink.Length - sizeof(WCHAR)) / sizeof(WCHAR); i >= 0; i--)
+            win_dir.Length = 0;
+            for (i = (resolved_link.Length - sizeof(WCHAR)) / sizeof(WCHAR); i >= 0; i--)
             {
-                if (resolvedLink.Buffer[i] == L'\\')
+                if (resolved_link.Buffer[i] == L'\\')
                 {
-                    winDir.Buffer = resolvedLink.Buffer + i;
-                    winDir.Length = resolvedLink.Length - (i * sizeof(WCHAR));
-                    winDir.MaximumLength = winDir.Length;
-                    resolvedLink.Length = (i * sizeof(WCHAR));
+                    win_dir.Buffer = resolved_link.Buffer + i;
+                    win_dir.Length = resolved_link.Length - (i * sizeof(WCHAR));
+                    win_dir.MaximumLength = win_dir.Length;
+                    resolved_link.Length = (i * sizeof(WCHAR));
                     break;
                 }
             }
@@ -695,20 +830,20 @@ namespace self_defense {
             // \Device\Harddisk0\Partition0 -> \Device\HarddiskVolume1
             // Win10: \Device\BootDevice -> \Device\HarddiskVolume2
 
-            status = ResolveSymbolicLink(&resolvedLink, Normalized);
+            status = ResolveSymbolicLink(&resolved_link, normalized);
             if (!NT_SUCCESS(status))
                 return status;
 
             // Construct new variable
 
-            subPath.Buffer = (PWCHAR)((PCHAR)Path->Buffer + sysrootPrefix.Length - sizeof(WCHAR));
-            subPath.MaximumLength = subPath.Length = Path->Length - sysrootPrefix.Length + sizeof(WCHAR);
+            sub_path.Buffer = (PWCHAR)((PCHAR)path->Buffer + sysroot_prefix.Length - sizeof(WCHAR));
+            sub_path.MaximumLength = sub_path.Length = path->Length - sysroot_prefix.Length + sizeof(WCHAR);
 
-            status = RtlAppendUnicodeStringToString(Normalized, &winDir);
+            status = RtlAppendUnicodeStringToString(normalized, &win_dir);
             if (!NT_SUCCESS(status))
                 return status;
 
-            status = RtlAppendUnicodeStringToString(Normalized, &subPath);
+            status = RtlAppendUnicodeStringToString(normalized, &sub_path);
             if (!NT_SUCCESS(status))
                 return status;
         }

@@ -6,202 +6,202 @@
 
 CONST FLT_OPERATION_REGISTRATION kCallbacks[] = {
 
-	{ IRP_MJ_CREATE,
-	  0,
-	  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-	  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-	  /*
-		  { IRP_MJ_CREATE_NAMED_PIPE,
-			0,
-			(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-			(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-	  */
-		  { IRP_MJ_CLOSE,
-			0,
-			(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-			(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-			/*
-				{ IRP_MJ_READ,
-				  0,
-				  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-				  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-			*/
-				{ IRP_MJ_WRITE,
-				  0,
-				  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-				  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-				  /*
-					  { IRP_MJ_QUERY_INFORMATION,
-						0,
-						(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-						(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-				  */
-					  { IRP_MJ_SET_INFORMATION,
-						0,
-						(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-						(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-						/*
-							{ IRP_MJ_QUERY_EA,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_CREATE,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+/*
+    { IRP_MJ_CREATE_NAMED_PIPE,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+*/
+    { IRP_MJ_CLOSE,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+/*
+    { IRP_MJ_READ,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+*/
+    { IRP_MJ_WRITE,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+/*
+    { IRP_MJ_QUERY_INFORMATION,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+*/
+    { IRP_MJ_SET_INFORMATION,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+/*
+    { IRP_MJ_QUERY_EA,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_SET_EA,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_SET_EA,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_FLUSH_BUFFERS,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_FLUSH_BUFFERS,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_QUERY_VOLUME_INFORMATION,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_QUERY_VOLUME_INFORMATION,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_SET_VOLUME_INFORMATION,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_SET_VOLUME_INFORMATION,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_DIRECTORY_CONTROL,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_DIRECTORY_CONTROL,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_FILE_SYSTEM_CONTROL,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_FILE_SYSTEM_CONTROL,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_DEVICE_CONTROL,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_DEVICE_CONTROL,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_INTERNAL_DEVICE_CONTROL,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_INTERNAL_DEVICE_CONTROL,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_SHUTDOWN,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  NULL },                               //post operations not supported
+    { IRP_MJ_SHUTDOWN,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      NULL },                               //post operations not supported
 
-							{ IRP_MJ_LOCK_CONTROL,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_LOCK_CONTROL,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_CLEANUP,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_CLEANUP,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_CREATE_MAILSLOT,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_CREATE_MAILSLOT,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_QUERY_SECURITY,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_QUERY_SECURITY,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_SET_SECURITY,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_SET_SECURITY,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_QUERY_QUOTA,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_QUERY_QUOTA,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_SET_QUOTA,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_SET_QUOTA,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-							{ IRP_MJ_PNP,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-						*/
-							{ IRP_MJ_ACQUIRE_FOR_SECTION_SYNCHRONIZATION,
-							  0,
-							  (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-							  (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-							  /*
-								  { IRP_MJ_RELEASE_FOR_SECTION_SYNCHRONIZATION,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_PNP,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+*/
+    { IRP_MJ_ACQUIRE_FOR_SECTION_SYNCHRONIZATION,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+/*
+    { IRP_MJ_RELEASE_FOR_SECTION_SYNCHRONIZATION,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_ACQUIRE_FOR_MOD_WRITE,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_ACQUIRE_FOR_MOD_WRITE,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_RELEASE_FOR_MOD_WRITE,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_RELEASE_FOR_MOD_WRITE,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_ACQUIRE_FOR_CC_FLUSH,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_ACQUIRE_FOR_CC_FLUSH,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_RELEASE_FOR_CC_FLUSH,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_RELEASE_FOR_CC_FLUSH,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_FAST_IO_CHECK_IF_POSSIBLE,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_FAST_IO_CHECK_IF_POSSIBLE,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_NETWORK_QUERY_OPEN,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_NETWORK_QUERY_OPEN,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_MDL_READ,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_MDL_READ,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_MDL_READ_COMPLETE,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_MDL_READ_COMPLETE,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_PREPARE_MDL_WRITE,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_PREPARE_MDL_WRITE,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_MDL_WRITE_COMPLETE,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_MDL_WRITE_COMPLETE,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_VOLUME_MOUNT,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+    { IRP_MJ_VOLUME_MOUNT,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
 
-								  { IRP_MJ_VOLUME_DISMOUNT,
-									0,
-									(PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
-									(PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-							  */
-								  { IRP_MJ_OPERATION_END }
+    { IRP_MJ_VOLUME_DISMOUNT,
+      0,
+      (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
+      (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
+*/
+    { IRP_MJ_OPERATION_END }
 };
 
 
@@ -215,11 +215,11 @@ CONST FLT_CONTEXT_REGISTRATION kContexts[] = {
 //  This defines what we want to filter with FltMgr
 //
 
-CONST FLT_REGISTRATION FilterRegistration = {
+FLT_REGISTRATION kFilterRegistration = {
 
-	sizeof(FLT_REGISTRATION),         //  Size
+	sizeof(FLT_REGISTRATION),			//  Size
 	FLT_REGISTRATION_VERSION,           //  Version
-	0,                                  //  flags
+	0,									//  flags
 
 	kContexts,                               //  Context
 	kCallbacks,                          //  Operation callbacks
@@ -325,8 +325,11 @@ DriverEntry(
 	//  Register with FltMgr to tell it our callback routines
 	//
 
+	// Block all mandatory unload (sc stop, net stop, Win32 ControlService function)
+	kFilterRegistration.Flags = FLTFL_REGISTRATION_DO_NOT_SUPPORT_SERVICE_STOP;
+
 	status = FltRegisterFilter(driver_object,
-		&FilterRegistration,
+		&kFilterRegistration,
 		&kFilterHandle);
 
 	FLT_ASSERT(NT_SUCCESS(status));
@@ -355,7 +358,7 @@ DriverUnload(
 	PDRIVER_OBJECT driver_object
 )
 {
-	DebugMessage("%ws", __FUNCTIONW__);
+	DebugMessage("Driver unload callback routine");
 	reg::DrvUnload(driver_object);
 
 	DebugMessage("Successfully unloaded driver");
@@ -371,10 +374,17 @@ MiniFsUnload(
 
 	PAGED_CODE();
 
-	DebugMessage("%ws", __FUNCTIONW__);
-	reg::FltUnload();
+	NTSTATUS status = STATUS_SUCCESS;
+
+	status = reg::FltUnload();
+	if (status == STATUS_FLT_DO_NOT_DETACH)
+	{
+		DebugMessage("Do not unload: STATUS_FLT_DO_NOT_DETACH");
+		return STATUS_FLT_DO_NOT_DETACH;
+	}
 
 	DebugMessage("Successfully unloaded filter");
+
 	return STATUS_SUCCESS;
 }
 

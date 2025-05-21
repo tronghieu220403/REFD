@@ -92,7 +92,7 @@ namespace collector
 
         const auto& create_params = data->Iopb->Parameters.Create;
         ULONG options = create_params.Options;
-        ULONG create_disposition = options >> 24;
+		UINT8 create_disposition = options >> 24;
 
         DebugMessage("File %ws, create disposition %d", current_path.Data(), create_disposition);
 
@@ -147,7 +147,7 @@ namespace collector
 
         bool is_delete_on_close = FlagOn(create_params.Options, FILE_DELETE_ON_CLOSE);
         bool has_delete_access = create_params.SecurityContext->DesiredAccess & DELETE;
-        bool has_write_access = create_params.SecurityContext->DesiredAccess & FILE_WRITE_DATA;
+        bool has_write_access = create_params.SecurityContext->DesiredAccess & (FILE_WRITE_DATA | FILE_APPEND_DATA);
 
         if (!has_write_access && !is_delete_on_close && !has_delete_access)
         {

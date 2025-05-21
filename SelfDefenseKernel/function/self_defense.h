@@ -16,7 +16,7 @@ namespace self_defense {
     void DrvRegister();
     void DrvUnload();
     void FltRegister();
-    void FltUnload();
+	NTSTATUS FltUnload();
 
     // Các callback bảo vệ
     FLT_PREOP_CALLBACK_STATUS PreCreateFile(PFLT_CALLBACK_DATA Data, PCFLT_RELATED_OBJECTS FltObjects, PVOID* CompletionContext);
@@ -31,14 +31,16 @@ namespace self_defense {
     );
 
     // Các hàm trợ giúp
-    bool IsInProtectedDirectory(const String<WCHAR>& path);
+    bool IsProtectedFile(const String<WCHAR>& path);
+    bool IsInProtectedFile(const String<WCHAR>& path);
     bool IsProtectedProcess(HANDLE pid);
 
     String<WCHAR> GetProcessImageName(HANDLE pid);
-    String<WCHAR> GetDefaultProtectedDir();
+	Vector<String<WCHAR>> GetDefaultProtectedDirs();
+	Vector<String<WCHAR>> GetDefaultProtectedFiles();
 
-    NTSTATUS ResolveSymbolicLink(PUNICODE_STRING Link, PUNICODE_STRING Resolved);
-	NTSTATUS NormalizeDevicePath(PCUNICODE_STRING Path, PUNICODE_STRING Normalized);
+    NTSTATUS ResolveSymbolicLink(const PUNICODE_STRING& link, const PUNICODE_STRING& resolved);
+	NTSTATUS NormalizeDevicePath(const PCUNICODE_STRING& path, const PUNICODE_STRING& normalized);
 } // namespace self_defense
 
 #endif // SELF_DEFENSE_H

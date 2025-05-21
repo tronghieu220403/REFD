@@ -10,7 +10,7 @@
 
 constexpr uint8_t XOR_KEY = 0xFF;
 constexpr size_t JUNK_SIZE = 1024; // bytes rác cho test 4
-const std::wstring TEST_DIR = L"E:\\test";
+const std::wstring TEST_DIR = L"C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny";
 
 // --- Utility: XOR-encrypt buffer in-place ---
 void xor_encrypt(std::vector<uint8_t>& buf) {
