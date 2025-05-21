@@ -10,17 +10,17 @@ template <typename T>
 class InitializerList {
 private:
     const T* data_;
-    size_t size_;
+    ull size_;
 
 public:
     using iterator = const T*;
     using const_iterator = const T*;
 
-    InitializerList(const T* data, size_t size) : data_(data), size_(size) {}
+    InitializerList(const T* data, ull size) : data_(data), size_(size) {}
 
     const_iterator Begin() const { return data_; }
     const_iterator End() const { return data_ + size_; }
-    size_t Size() const { return size_; }
+    ull Size() const { return size_; }
 };
 
 // Set class definition
@@ -41,7 +41,7 @@ private:
 
     Node* root_;
     Node* nil_;  // Sentinel node for leaf nodes
-    size_t size_;
+    ull size_;
     Compare compare_;
 
     // Helper functions for Red-Black Tree operations
@@ -63,7 +63,7 @@ public:
     using value_type = Key;
     using key_compare = Compare;
     using value_compare = Compare;
-    using size_type = size_t;
+    using size_type = ull;
     using difference_type = ptrdiff_t;
     using reference = value_type&;
     using const_reference = const value_type&;
@@ -504,7 +504,7 @@ template <typename Key, typename Compare>
 void Set<Key, Compare>::Swap(Set& other) {
     Node* temp_root = root_;
     Node* temp_nil = nil_;
-    size_t temp_size = size_;
+    ull temp_size = size_;
     Compare temp_compare = compare_;
 
     root_ = other.root_;

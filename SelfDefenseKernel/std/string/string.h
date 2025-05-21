@@ -11,7 +11,7 @@ public:
 	// Default constructor
 	String();
 
-	explicit String(size_t size);
+	explicit String(ull size);
 
 	// Copy constructor
 	String(const String&);
@@ -62,22 +62,22 @@ public:
 	bool Empty() const;
 
 	// Returns size of allocated storate capacity
-	size_t Capacity() const;
+	ull Capacity() const;
 
 	// Requests a change in capacity
 	// reserve() will never decrase the capacity.
-	void Reserve(size_t new_size);
+	void Reserve(ull new_size);
 
 	// Changes the String's size.
 	// If the newsize is smaller, the last elements will be lost.
 	// Has a default value param for custom values when resizing.
-	void Resize(size_t new_size, T val = T());
+	void Resize(ull new_size, T val = T());
 
 	// Returns the size of the String (number of elements). 
-	size_t Size() const;
+	ull Size() const;
 
 	// Returns the maximum number of elements the String can hold
-	size_t MaxSize() const;
+	ull MaxSize() const;
 
 	// Reduces capcity to fit the size
 	void ShrinkToFit();
@@ -121,16 +121,16 @@ public:
 	/* ----- ELEMENT ACCESS ----- */
 
 	// Access elements with bounds checking
-	T& At(size_t n);
+	T& At(ull n);
 
 	// Access elements with bounds checking for constant Strings.
-	const T& At(size_t n) const;
+	const T& At(ull n) const;
 
 	// Access elements, no bounds checking
-	T& operator[](size_t i);
+	T& operator[](ull i);
 
 	// Access elements, no bounds checking
-	const T& operator[](size_t i) const;
+	const T& operator[](ull i) const;
 
 	// Returns a reference to the first element
 	T& Front();
@@ -166,7 +166,7 @@ public:
 
 	bool HasSuffix(const String<T>&);
 
-	size_t Find(const String<T>&) const;
+	ull Find(const String<T>&);
 
 	// Overloading the equal operator
 	bool operator==(const String<T>&);
@@ -183,13 +183,13 @@ public:
 	/*----------------------------*/
 
 protected:
-	T* Allocate(size_t);
+	T* Allocate(ull);
 	void Deallocate();
 
 private:
-	size_t	size_ = 0;		// Number of elements in String
+	ull	size_ = 0;		// Number of elements in String
 	T* elements_ = nullptr;	// Posize_ter to first element of String
-	size_t	space_ = 0;		// Total space used by String including
+	ull	space_ = 0;		// Total space used by String including
 						// elements and free space.
 };
 
@@ -244,10 +244,10 @@ inline String<T>::String()
 
 
 template<class T>
-inline String<T>::String(size_t size)
+inline String<T>::String(ull size)
 	: size_(size), elements_(Allocate(size)), space_(size)
 {
-	for (size_t index = 0; index < size_; ++index)
+	for (ull index = 0; index < size_; ++index)
 		elements_[index] = T();
 }
 
@@ -256,7 +256,7 @@ template<class T>
 inline String<T>::String(const String& str)
 	:size_(str.size_), elements_(Allocate(str.size_)), space_(str.size_)
 {
-	for (size_t index = 0; index < str.size_; ++index)
+	for (ull index = 0; index < str.size_; ++index)
 		elements_[index] = str.elements_[index];
 }
 
@@ -270,7 +270,7 @@ inline String<T>::String(const T* cstr)
 	size_ = cstr_size;
 	space_ = cstr_size;
 
-	for (size_t index = 0; index < cstr_size; ++index)
+	for (ull index = 0; index < cstr_size; ++index)
 		elements_[index] = cstr[index];
 }
 
@@ -335,17 +335,17 @@ inline String<T>& String<T>::operator=(const String<T>& str)
 template<class T>
 inline String<T>& String<T>::operator=(const T* cstr)
 {
-	size_t cstr_size = 0;
+	ull cstr_size = 0;
 	for (; cstr[cstr_size] != T(); ++cstr_size);
 
 	// Current String has enough space, so there- is no need for new allocation
 	if (cstr_size <= space_)
 	{
-		for (size_t index = 0; index < cstr_size; ++index)
+		for (ull index = 0; index < cstr_size; ++index)
 		{
 			elements_[index] = cstr[index];
 		}
-		for (size_t index = cstr_size; index < space_; ++index)
+		for (ull index = cstr_size; index < space_; ++index)
 		{
 			elements_[index] = T();
 		}
@@ -355,7 +355,7 @@ inline String<T>& String<T>::operator=(const T* cstr)
 
 	T* p = Allocate(cstr_size);
 
-	for (size_t index = 0; index < cstr_size; ++index)
+	for (ull index = 0; index < cstr_size; ++index)
 	{
 		p[index] = cstr[index];
 	}
@@ -444,19 +444,19 @@ inline bool String<T>::Empty() const
 }
 
 template<class T>
-inline size_t String<T>::Capacity() const
+inline ull String<T>::Capacity() const
 {
 	return space_;
 }
 
 template<class T>
-inline void String<T>::Reserve(size_t new_size)
+inline void String<T>::Reserve(ull new_size)
 {
 	if (new_size <= space_) return;
 
 	T* p = Allocate(new_size);
 
-	for (size_t i = 0; i < size_; ++i)
+	for (ull i = 0; i < size_; ++i)
 		p[i] = elements_[i];
 
 	Deallocate();
@@ -467,18 +467,18 @@ inline void String<T>::Reserve(size_t new_size)
 }
 
 template<class T>
-inline void String<T>::Resize(size_t new_size, T val)
+inline void String<T>::Resize(ull new_size, T val)
 {
 	Reserve(new_size);
 
-	for (size_t index = size_; index < new_size; ++index)
+	for (ull index = size_; index < new_size; ++index)
 		elements_[index] = T();
 
 	size_ = new_size;
 }
 
 template<class T>
-inline size_t String<T>::Size() const
+inline ull String<T>::Size() const
 {
 	return size_;
 }
@@ -488,7 +488,7 @@ inline size_t String<T>::Size() const
 template<class T>
 inline void String<T>::Clear()
 {
-	for (size_t index = 0; index < size_; ++index)
+	for (ull index = 0; index < size_; ++index)
 		elements_[index] = T();
 	space_ += size_;
 	size_ = 0;
@@ -513,7 +513,7 @@ inline void String<T>::Append(const String<T>& str)
 {
 	Reserve(max(str.Size(), size_) * 2);
 
-	for (size_t index = 0; index < str.Size(); ++index)
+	for (ull index = 0; index < str.Size(); ++index)
 		elements_[index + size_] = str[index];
 
 	size_ += str.Size();
@@ -535,12 +535,12 @@ inline String<T> String<T>::operator+(const String<T>& str)
 	res.Reserve(max(str.Size(), size_) * 2);
 	res.Resize(str.Size() + size_);
 
-	for (size_t index = 0; index < size_; ++index)
+	for (ull index = 0; index < size_; ++index)
 	{
 		res[index] = elements_[index];
 	}
 
-	for (size_t index = 0; index < str.Size(); ++index)
+	for (ull index = 0; index < str.Size(); ++index)
 	{
 		res[index + size_] = str[index];
 	}
@@ -550,25 +550,25 @@ inline String<T> String<T>::operator+(const String<T>& str)
 
 // Accessors
 template<class T>
-inline T& String<T>::At(size_t n)
+inline T& String<T>::At(ull n)
 {
 	return elements_[n];
 }
 
 template<class T>
-inline const T& String<T>::At(size_t n) const
+inline const T& String<T>::At(ull n) const
 {
 	return elements_[n];
 }
 
 template<class T>
-inline T& String<T>::operator[](size_t i)
+inline T& String<T>::operator[](ull i)
 {
 	return elements_[i];
 }
 
 template<class T>
-inline const T& String<T>::operator[](size_t i) const
+inline const T& String<T>::operator[](ull i) const
 {
 	return elements_[i];
 }
@@ -622,7 +622,7 @@ inline bool String<T>::IsPrefixOf(const String<T>& str) const
 		return false;
 	}
 
-	for (size_t i = 0; i < size_; ++i)
+	for (ull i = 0; i < size_; ++i)
 	{
 		if (elements_[i] != str.elements_[i])
 		{
@@ -646,7 +646,7 @@ inline bool String<T>::HasPrefix(const String<T>& str)
 		return false;
 	}
 
-	for (size_t i = 0; i < str.size_; ++i)
+	for (ull i = 0; i < str.size_; ++i)
 	{
 		if (elements_[i] != str.elements_[i])
 		{
@@ -670,7 +670,7 @@ inline bool String<T>::IsSuffixOf(const String<T>& str)
 		return false;
 	}
 
-	for (size_t i = 0; i < size_; ++i)
+	for (ull i = 0; i < size_; ++i)
 	{
 		if (elements_[i] != str.elements_[str.size_ - size_ + i])
 		{
@@ -694,7 +694,7 @@ inline bool String<T>::HasSuffix(const String<T>& str)
 		return false;
 	}
 
-	for (size_t i = 0; i < str.size_; ++i)
+	for (ull i = 0; i < str.size_; ++i)
 	{
 		if (elements_[i] != str.elements_[size_ - str.size_ + i])
 		{
@@ -706,16 +706,16 @@ inline bool String<T>::HasSuffix(const String<T>& str)
 }
 
 template<class T>
-inline size_t String<T>::Find(const String<T>& str) const
+inline ull String<T>::Find(const String<T>& str)
 {
 	if (size_ < str.size_)
 	{
-		return static_cast<size_t>(-1);
+		return ULL_MAX;
 	}
 
 	if (elements_ == NULL || str.elements_ == NULL)
 	{
-		return static_cast<size_t>(-1);
+		return ULL_MAX;
 	}
 
 	KMPMatcher<T> matcher(elements_, size_, str.elements_, str.size_);
@@ -736,7 +736,7 @@ inline bool String<T>::operator==(const String<T>& str)
 		return false;
 	}
 
-	for (size_t index = 0; index < size_; ++index)
+	for (ull index = 0; index < size_; ++index)
 	{
 		if (elements_[index] != str[index])
 		{
@@ -749,7 +749,7 @@ inline bool String<T>::operator==(const String<T>& str)
 }
 
 template<class T>
-inline T* String<T>::Allocate(size_t n)
+inline T* String<T>::Allocate(ull n)
 {
 	T* p = new T[n + 1];
 	p[n] = T();

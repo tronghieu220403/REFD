@@ -12,7 +12,7 @@
 #include <Ntstrsafe.h>
 #include <fltKernel.h>
 
-#define offsetof(st, m) ((size_t)(&((st *)0)->m))
+#define offsetof(st, m) ((ull)(&((st *)0)->m))
 
 namespace flt
 {
@@ -26,17 +26,17 @@ namespace flt
 	{
 	private:
 		PUCHAR file_info_addr_ = nullptr;
-		size_t next_entry_offset_rva_ = 0;
-		size_t file_name_rva_ = 0;
-		size_t file_name_length_rva_ = 0;
-		size_t file_attributes_rva_ = (size_t)-1;
+		ull next_entry_offset_rva_ = 0;
+		ull file_name_rva_ = 0;
+		ull file_name_length_rva_ = 0;
+		ull file_attributes_rva_ = ULL_MAX;
 	public:
 
 		FileInfoShort() = default;
 
-		FileInfoShort(PUCHAR base_va, size_t next_entry_offset_rva, size_t file_name_rva, size_t file_name_length_rva);
+		FileInfoShort(PUCHAR base_va, ull next_entry_offset_rva, ull file_name_rva, ull file_name_length_rva);
 
-		FileInfoShort(PUCHAR base_va, size_t next_entry_offset_rva, size_t file_name_rva, size_t file_name_length_rva, size_t file_attributes_rva);
+		FileInfoShort(PUCHAR base_va, ull next_entry_offset_rva, ull file_name_rva, ull file_name_length_rva, ull file_attributes_rva);
 
 		FileInfoShort(const FileInfoShort*, const PUCHAR);
 

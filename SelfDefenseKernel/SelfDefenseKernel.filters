@@ -19,12 +19,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Inf Include="SelfDefenseKernel.inf">
+    <Inf Include="AntiRansomKernel.inf">
       <Filter>Driver Files</Filter>
     </Inf>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="SelfDefenseKernel.rc">
+    <ResourceCompile Include="AntiRansomKernel.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

@@ -1,5 +1,5 @@
 ;;;
-;;; AntiRansomKernel
+;;; SelfDefenseKernel
 ;;;
 
 [Version]
@@ -11,7 +11,7 @@ Class       = "ActivityMonitor"             ;This is determined by the work this
 ClassGuid   = {b86dff51-a31e-4bac-b3cf-e8cfe75c9fc2}    ;This value is determined by the Class
 Provider    = %ManufacturerName%
 DriverVer   = 
-CatalogFile = AntiRansomKernel.cat
+CatalogFile = SelfDefenseKernel.cat
 PnpLockDown=1
 
 [DestinationDirs]
@@ -74,7 +74,7 @@ HKR,"Instances\"%Instance1.Name%,"Flags",0x00010001,%Instance1.Flags%
 %DriverName%.sys
 
 [SourceDisksFiles]
-AntiRansomKernel.sys = 1,,
+SelfDefenseKernel.sys = 1,,
 
 [SourceDisksNames]
 1 = %DiskId1%,,,
@@ -86,14 +86,14 @@ AntiRansomKernel.sys = 1,,
 [Strings]
 ; TODO - Add your manufacturer
 ManufacturerName        = "Template"
-ServiceDescription      = "AntiRansomKernel Mini-Filter Driver"
-ServiceName             = "AntiRansomKernel"
-DriverName              = "AntiRansomKernel"
-DiskId1                 = "AntiRansomKernel Device Installation Disk"
+ServiceDescription      = "SelfDefenseKernel Mini-Filter Driver"
+ServiceName             = "SelfDefenseKernel"
+DriverName              = "SelfDefenseKernel"
+DiskId1                 = "SelfDefenseKernel Device Installation Disk"
 
 ;Instances specific information.
-DefaultInstance         = "AntiRansomKernel Instance"
-Instance1.Name          = "AntiRansomKernel Instance"
+DefaultInstance         = "SelfDefenseKernel Instance"
+Instance1.Name          = "SelfDefenseKernel Instance"
 ; TODO - Change the altitude value, see https://msdn.microsoft.com/en-us/windows/hardware/drivers/ifs/load-order-groups-and-altitudes-for-minifilter-drivers
 Instance1.Altitude       = "365000"
 Instance1.Flags         = 0x0              ; Allow all attachments

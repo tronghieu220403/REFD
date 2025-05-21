@@ -1,20 +1,20 @@
 #include "memory.h"
 
-void* operator new(size_t n)
+void* operator new(ull n)
 {
     void* p;
     while ((p = krnl_std::Alloc(n)) == 0);
     return (p);
 }
 
-void* operator new[](size_t n)
+void* operator new[](ull n)
 {
     void* p;
     while ((p = krnl_std::Alloc(n)) == 0);
     return (p);
 }
 
-void operator delete(void* p, size_t n)
+void operator delete(void* p, ull n)
 {
     krnl_std::Free(p);
 }
@@ -24,27 +24,27 @@ void operator delete[](void* p)
     krnl_std::Free(p);
 }
 
-void operator delete[](void* p, size_t n)
+void operator delete[](void* p, ull n)
 {
     krnl_std::Free(p);
 }
 
-void SetUlongAt(size_t addr, ULONG value)
+void SetUlongAt(ull addr, ULONG value)
 {
     *(ULONG*)addr = value;
 }
 
-ULONG GetUlongAt(size_t addr)
+ULONG GetUlongAt(ull addr)
 {
     return *(ULONG*)addr;
 }
 
-size_t Rand()
+ull Rand()
 {
     LARGE_INTEGER seed;
     KeQueryTickCount(&seed);
-    seed.LowPart = (ULONG)(seed.LowPart ^ (size_t)PsGetCurrentThreadId() ^ (size_t)PsGetCurrentProcessId());
-    seed.HighPart = (ULONG)(seed.HighPart ^ (size_t)PsGetCurrentThreadId() ^ (size_t)PsGetCurrentProcessId());
+    seed.LowPart = (ULONG)(seed.LowPart ^ (ull)PsGetCurrentThreadId() ^ (ull)PsGetCurrentProcessId());
+    seed.HighPart = (ULONG)(seed.HighPart ^ (ull)PsGetCurrentThreadId() ^ (ull)PsGetCurrentProcessId());
     seed.LowPart = seed.LowPart ^ (seed.LowPart << 13);
     seed.LowPart = seed.LowPart ^ (seed.LowPart >> 17);
     seed.LowPart = seed.LowPart ^ (seed.LowPart << 5);

@@ -10,7 +10,7 @@ public:
 	// Default constructor
 	Vector();
 
-	explicit Vector(size_t s);
+	explicit Vector(ull s);
 
 	// Copy constructor
 	Vector(const Vector&);
@@ -54,22 +54,22 @@ public:
 	bool Empty() const;
 
 	// Returns size of allocated storate capacity
-	size_t Capacity() const;
+	ull Capacity() const;
 
 	// Requests a change in capacity
 	// reserve() will never decrase the capacity.
-	void Reserve(size_t new_size);
+	void Reserve(ull new_size);
 
 	// Changes the Vector's size.
 	// If the newsize is smaller, the last elements will be lost.
 	// Has a default value param for custom values when resizing.
-	void Resize(size_t new_size, T val = T());
+	void Resize(ull new_size, T val = T());
 
 	// Returns the size of the Vector (number of elements). 
-	size_t Size() const;
+	ull Size() const;
 
 	// Returns the maximum number of elements the Vector can hold
-	size_t MaxSize() const;
+	ull MaxSize() const;
 
 	// Reduces capcity to fit the size
 	void ShrinkToFit();
@@ -95,10 +95,10 @@ public:
 	// Append a vector to the back.
 	void Append(const Vector<T>& v);
 
-	bool Swap(size_t, size_t);
+	bool Swap(ull, ull);
 
-	bool Erase(size_t);
-	bool EraseUnordered(size_t);
+	bool Erase(ull);
+	bool EraseUnordered(ull);
 
 	// Add a vector to the back.
 	Vector<T>& operator+=(const Vector<T>&);
@@ -115,13 +115,13 @@ public:
 	/* ----- ELEMENT ACCESS ----- */
 
 	// Access elements with bounds checking for constant Vectors.
-	const T& At(size_t n) const;
+	const T& At(ull n) const;
 
 	// Access elements, no bounds checking
-	T& operator[](size_t i);
+	T& operator[](ull i);
 
 	// Access elements, no bounds checking
-	const T& operator[](size_t i) const;
+	const T& operator[](ull i) const;
 
 	// Returns a reference to the first element
 	T& Front();
@@ -154,14 +154,14 @@ public:
 	/*----------------------------*/
 
 protected:
-	T* Allocate(size_t);
+	T* Allocate(ull);
 	void Deallocate();
 	
 
 private:
-	size_t	size_;		// Number of elements in Vector
+	ull	size_;		// Number of elements in Vector
 	T*		elements_;	// Posize_ter to first element of Vector
-	size_t	space_;		// Total space used by Vector including
+	ull	space_;		// Total space used by Vector including
 						// elements and free space.
 };
 
@@ -215,10 +215,10 @@ inline Vector<T>::Vector()
 
 
 template<class T>
-inline Vector<T>::Vector(size_t s)
+inline Vector<T>::Vector(ull s)
 	:size_(s), elements_(Allocate(s)), space_(s)
 {
-	for (size_t index = 0; index < size_; ++index)
+	for (ull index = 0; index < size_; ++index)
 		elements_[index] = T();
 }
 
@@ -227,7 +227,7 @@ template<class T>
 inline Vector<T>::Vector(const Vector & v)
 	:size_(v.size_), elements_(Allocate(v.size_)), space_(v.size_)
 {
-	for (size_t index = 0; index < v.size_; ++index)
+	for (ull index = 0; index < v.size_; ++index)
 		elements_[index] = v.elements_[index];
 }
 
@@ -239,7 +239,7 @@ inline Vector<T>& Vector<T>::operator=(const Vector<T>& v)
 									// Current Vector has enough space, so there is no need for new allocation
 	if (v.size_ <= space_)
 	{
-		for (size_t index = 0; index < v.size_; ++index)
+		for (ull index = 0; index < v.size_; ++index)
 		{
 			elements_[index] = v.elements_[index];
 			size_ = v.size_;
@@ -249,7 +249,7 @@ inline Vector<T>& Vector<T>::operator=(const Vector<T>& v)
 
 	T* p = Allocate(v.size_);
 
-	for (size_t index = 0; index < v.size_; ++index)
+	for (ull index = 0; index < v.size_; ++index)
 		p[index] = v.elements_[index];
 
 	Deallocate();
@@ -314,19 +314,19 @@ inline bool Vector<T>::Empty() const
 }
 
 template<class T>
-inline size_t Vector<T>::Capacity() const
+inline ull Vector<T>::Capacity() const
 {
 	return space_;
 }
 
 template<class T>
-inline void Vector<T>::Reserve(size_t new_size)
+inline void Vector<T>::Reserve(ull new_size)
 {
 	if (new_size <= space_) return;
 
 	T* p = Allocate(new_size);
 
-	for (size_t i = 0; i < size_; ++i)
+	for (ull i = 0; i < size_; ++i)
 		p[i] = elements_[i];
 
 	Deallocate();
@@ -337,18 +337,18 @@ inline void Vector<T>::Reserve(size_t new_size)
 }
 
 template<class T>
-inline void Vector<T>::Resize(size_t new_size, T val)
+inline void Vector<T>::Resize(ull new_size, T val)
 {
 	Reserve(new_size);
 
-	for (size_t index = size_; index < new_size; ++index)
+	for (ull index = size_; index < new_size; ++index)
 		elements_[index] = T();
 
 	size_ = new_size;
 }
 
 template<class T>
-inline size_t Vector<T>::Size() const
+inline ull Vector<T>::Size() const
 {
 	return size_;
 }
@@ -358,7 +358,7 @@ inline size_t Vector<T>::Size() const
 template<class T>
 inline void Vector<T>::Clear()
 {
-	for (size_t index = 0; index < size_; ++index)
+	for (ull index = 0; index < size_; ++index)
 		elements_[index] = T();
 	space_ += size_;
 	size_ = 0;
@@ -397,7 +397,7 @@ inline void Vector<T>::Append(const Vector<T>& v)
 {
 	Reserve(max(v.Size(), size_) * 2);
 
-	for (size_t index = 0; index < v.Size(); ++index)
+	for (ull index = 0; index < v.Size(); ++index)
 		elements_[index + size_] = v[index];
 
 	size_ += v.Size();
@@ -405,7 +405,7 @@ inline void Vector<T>::Append(const Vector<T>& v)
 }
 
 template<typename T>
-inline bool Vector<T>::Swap(size_t i, size_t j)
+inline bool Vector<T>::Swap(ull i, ull j)
 {
 	if (i >= size_ || j >= size_)
 		return false;
@@ -416,7 +416,7 @@ inline bool Vector<T>::Swap(size_t i, size_t j)
 }
 
 template<typename T>
-inline bool Vector<T>::Erase(size_t i)
+inline bool Vector<T>::Erase(ull i)
 {
 	if (i >= size_)
 		return false;
@@ -427,7 +427,7 @@ inline bool Vector<T>::Erase(size_t i)
 		return true;
 	}
 	// Move all elements after i one position to the left
-	for (size_t index = i; index < size_ - 2; ++index)
+	for (ull index = i; index < size_ - 2; ++index)
 		elements_[index] = elements_[index + 1];
 	elements_[size_ - 1] = T();
 	--size_;
@@ -435,7 +435,7 @@ inline bool Vector<T>::Erase(size_t i)
 }
 
 template<typename T>
-inline bool Vector<T>::EraseUnordered(size_t i)
+inline bool Vector<T>::EraseUnordered(ull i)
 {
 	// If the index is out of bounds, return false
 	if (i >= size_)
@@ -469,12 +469,12 @@ inline Vector<T> Vector<T>::operator+(const Vector<T>& v)
 	res.Reserve(max(v.Size(), size_) * 2);
 	res.Resize(v.Size() + size_);
 
-	for (size_t index = 0; index < size_; ++index)
+	for (ull index = 0; index < size_; ++index)
 	{
 		res[index] = elements_[index];
 	}
 
-	for (size_t index = 0; index < v.Size(); ++index)
+	for (ull index = 0; index < v.Size(); ++index)
 	{
 		res[index + size_] = v[index];
 	}
@@ -486,19 +486,19 @@ inline Vector<T> Vector<T>::operator+(const Vector<T>& v)
 
 // Accessors
 template<class T>
-inline const T & Vector<T>::At(size_t n) const
+inline const T & Vector<T>::At(ull n) const
 {
 	return elements_[n];
 }
 
 template<class T>
-inline T & Vector<T>::operator[](size_t i)
+inline T & Vector<T>::operator[](ull i)
 {
 	return elements_[i];
 }
 
 template<class T>
-inline const T & Vector<T>::operator[](size_t i) const
+inline const T & Vector<T>::operator[](ull i) const
 {
 	return elements_[i];
 }
@@ -547,7 +547,7 @@ inline bool Vector<T>::operator==(const Vector<T>& v)
 		return false;
 	}
 
-	for (size_t index = 0; index < size_; ++index)
+	for (ull index = 0; index < size_; ++index)
 	{
 		if (elements_[index] != v[index])
 		{
@@ -566,7 +566,7 @@ inline bool Vector<T>::operator!=(const Vector<T>& v)
 		return true;
 	}
 
-	for (size_t index = 0; index < size_; ++index)
+	for (ull index = 0; index < size_; ++index)
 	{
 		if (elements_[index] != v[index])
 		{
@@ -578,7 +578,7 @@ inline bool Vector<T>::operator!=(const Vector<T>& v)
 }
 
 template<class T>
-inline T* Vector<T>::Allocate(size_t n)
+inline T* Vector<T>::Allocate(ull n)
 {
 	T* p = new T[n];
 	return p;

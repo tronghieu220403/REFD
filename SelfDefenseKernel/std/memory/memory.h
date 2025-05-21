@@ -1,6 +1,6 @@
 #pragma once
 
-typedef unsigned long long size_t;
+typedef unsigned long long ull;
 
 #include <ntifs.h>
 #include <ntdef.h>
@@ -14,38 +14,39 @@ typedef unsigned long long size_t;
 #define min(X, Y) (((X) < (Y)) ? (X) : (Y))
 
 #define INT_MAX 2147483647
+#define ULL_MAX 0xFFFFFFFFFFFFFFFF
 
-extern void* operator new(size_t);
-extern void* operator new[](size_t);
+extern void* operator new(ull);
+extern void* operator new[](ull);
 
-extern void operator delete(void*, size_t);
+extern void operator delete(void*, ull);
 
 extern void operator delete[](void*);
 
 template <class T>
-void MemCopy(T* dst, T* src, size_t len);
+void MemCopy(T* dst, T* src, ull len);
 
 template <class T>
-void ZeroMemory(T* dst, size_t len);
+void ZeroMemory(T* dst, ull len);
 
-size_t Rand();
+ull Rand();
 
 namespace krnl_std
 {
-    void* Alloc(size_t n);
+    void* Alloc(ull n);
 
     void Free(void* p);
 }
 
 template <class T>
-inline void MemCopy(T* dst, T* src, size_t len)
+inline void MemCopy(T* dst, T* src, ull len)
 {
     RtlCopyMemory(dst, src, len * sizeof(T));
     return;
 }
 
 template <class T>
-inline void ZeroMemory(T* dst, size_t len)
+inline void ZeroMemory(T* dst, ull len)
 {
     for (int i = 0; i < len; ++i)
     {
@@ -53,12 +54,12 @@ inline void ZeroMemory(T* dst, size_t len)
     }
 }
 
-void SetUlongAt(size_t addr, ULONG value);
-ULONG GetUlongAt(size_t addr);
+void SetUlongAt(ull addr, ULONG value);
+ULONG GetUlongAt(ull addr);
 
 namespace krnl_std
 {
-    inline void* Alloc(size_t n)
+    inline void* Alloc(ull n)
     {
         void* p = nullptr;
         p = ExAllocatePool2(POOL_FLAG_NON_PAGED, n, 0x22042003); // Windows 10 2004 above

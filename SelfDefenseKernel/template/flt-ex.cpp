@@ -113,7 +113,7 @@ namespace flt
 			return String<WCHAR>();
 		}
 		String<WCHAR> res;
-		PFLT_FILE_NAME_INFORMATION file_name_info;
+		PFLT_FILE_NAME_INFORMATION file_name_info = nullptr;
 		NTSTATUS status = FltGetFileNameInformation(data, FLT_FILE_NAME_NORMALIZED | FLT_FILE_NAME_QUERY_ALWAYS_ALLOW_CACHE_LOOKUP, &file_name_info);
 		if (status == STATUS_SUCCESS)
 		{
@@ -128,13 +128,13 @@ namespace flt
 		return res;
 	}
 
-	FileInfoShort::FileInfoShort(PUCHAR base_va, size_t next_entry_offset_rva, size_t file_name_rva, size_t file_name_length_rva, size_t file_attributes_rva)
+	FileInfoShort::FileInfoShort(PUCHAR base_va, ull next_entry_offset_rva, ull file_name_rva, ull file_name_length_rva, ull file_attributes_rva)
 		:file_info_addr_(base_va), next_entry_offset_rva_   (next_entry_offset_rva), file_name_rva_(file_name_rva), file_name_length_rva_(file_name_length_rva), file_attributes_rva_(file_attributes_rva)
 	{
 
 	}
 
-	FileInfoShort::FileInfoShort(PUCHAR base_va, size_t next_entry_offset_rva, size_t file_name_rva, size_t file_name_length_rva)
+	FileInfoShort::FileInfoShort(PUCHAR base_va, ull next_entry_offset_rva, ull file_name_rva, ull file_name_length_rva)
 		: file_info_addr_(base_va), next_entry_offset_rva_(next_entry_offset_rva), file_name_rva_(file_name_rva), file_name_length_rva_(file_name_length_rva)
 	{
 
@@ -167,7 +167,7 @@ namespace flt
 
 	ULONG FileInfoShort::GetFileAttributes() const
 	{
-		if (file_attributes_rva_ != -1)
+		if (file_attributes_rva_ != ULL_MAX)
 		{
 			return *(ULONG*)((PUCHAR)file_info_addr_ + file_attributes_rva_);
 		}
@@ -194,9 +194,9 @@ namespace flt
 		*(ULONG*)((PUCHAR)file_info_addr_ + next_entry_offset_rva_) = next_entry_val;
 	}
 
-	void FileInfoShort::SetFileName(PWCHAR file_name)
+	void FileInfoShort::SetFileName(PWCHAR current_path)
 	{
-		*(PWCHAR*)((PUCHAR)file_info_addr_ + file_name_rva_) = file_name;
+		*(PWCHAR*)((PUCHAR)file_info_addr_ + file_name_rva_) = current_path;
 	}
 
 	void FileInfoShort::SetFileNameLength(ULONG length)
@@ -206,7 +206,7 @@ namespace flt
 
 	void FileInfoShort::SetFileAttributes(ULONG file_attributes)
 	{
-		if (file_attributes_rva_ != -1)
+		if (file_attributes_rva_ != ULL_MAX)
 		{
 			*(ULONG*)((PUCHAR)file_info_addr_ + file_attributes_rva_) = file_attributes;
 		}

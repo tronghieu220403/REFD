@@ -23,7 +23,7 @@ private:
 
     Node* root_;
     Node* nil_;  // Sentinel node for leaf nodes
-    size_t size_;
+    ull size_;
     Compare compare_;
 
     // Helper functions for Red-Black Tree operations
@@ -57,7 +57,7 @@ public:
         }
     };
 
-    using size_type = size_t;
+    using size_type = ull;
     using difference_type = ptrdiff_t;
     using reference = value_type&;
     using const_reference = const value_type&;
@@ -296,7 +296,7 @@ typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::Size() const {
 
 template <typename Key, typename T, typename Compare>
 typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::MaxSize() const {
-    return static_cast<size_type>(-1) / sizeof(Node);
+    return static_cast<size_type>(ULL_MAX) / sizeof(Node);
 }
 
 // Element access
@@ -455,7 +455,7 @@ template <typename Key, typename T, typename Compare>
 void Map<Key, T, Compare>::Swap(Map& other) {
     Node* temp_root = root_;
     Node* temp_nil = nil_;
-    size_t temp_size = size_;
+    ull temp_size = size_;
     Compare temp_compare = compare_;
 
     root_ = other.root_;

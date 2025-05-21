@@ -13,7 +13,7 @@ namespace reg
 {
 	struct IrpMjFunc
 	{
-		size_t irp_mj_function_code = 0;
+		ull irp_mj_function_code = 0;
 		PFLT_PRE_OPERATION_CALLBACK pre_func = nullptr;
 		PFLT_POST_OPERATION_CALLBACK post_func = nullptr;
 	};
@@ -21,6 +21,7 @@ namespace reg
 	struct Context
 	{
 		Vector<FLT_PREOP_CALLBACK_STATUS>* status = nullptr;
+        Vector<PVOID>* completion_context = nullptr;
 	};
 
 	extern Vector<IrpMjFunc>* kFltFuncVector;

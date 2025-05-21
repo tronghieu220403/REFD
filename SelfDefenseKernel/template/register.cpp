@@ -17,7 +17,7 @@ namespace reg
 
 		//ioctl::DrvRegister(driver_object, registry_path);
 		self_defense::DrvRegister();
-		
+
 		return;
 	}
 
@@ -41,7 +41,7 @@ namespace reg
 		DebugMessage("MiniFilterRegister");
 
 		kFltFuncVector = new Vector<IrpMjFunc>();
-		
+
 		com::kComPort = new com::ComPort();
 
 		self_defense::FltRegister();
@@ -58,34 +58,40 @@ namespace reg
 	void FltUnload()
 	{
 		DebugMessage("%ws", __FUNCTIONW__);
+		DebugMessage("Closing com port");
 		com::kComPort->Close();
+		DebugMessage("Unregistering kFilterHandle");
 		FltUnregisterFilter(kFilterHandle);
 
+		DebugMessage("Unregistering filter");
 		self_defense::FltUnload();
 
+		DebugMessage("Free memory structures");
 		delete kFltFuncVector;
 		kFltFuncVector = nullptr;
+		delete com::kComPort;
+		com::kComPort = nullptr;
 
+		DebugMessage("Done %s", __FUNCTION__);
 		return;
 	}
 
 	Context* AllocCompletionContext()
 	{
-		// DebugMessage("AllocCompletionContext");
+		// DebugMessage("Alloccompletion_context");
 
 		Context* context = new Context();
 		context->status = new Vector<FLT_PREOP_CALLBACK_STATUS>(kFltFuncVector->Size());
-
+		context->completion_context = new Vector<PVOID>(kFltFuncVector->Size());
 		return context;
-
 	}
 
-	void DeallocCompletionContext(Context *context)
+	void DeallocCompletionContext(Context* context)
 	{
-		// DebugMessage("DeallocCompletionContext");
+		// DebugMessage("Dealloccompletion_context");
 
+		delete context->completion_context;
 		delete context->status;
-
 		delete context;
 	}
 

@@ -5,23 +5,23 @@ template <typename T>
 class KMPMatcher {
 private:
     T* text;
-    size_t text_size;
+    ull text_size;
     T* pattern;
-    size_t pattern_size;
-    size_t* lps;
+    ull pattern_size;
+    ull* lps;
 
     void ComputeLpsArray();
 
 public:
-    KMPMatcher(T* text, size_t text_size, T* pattern, size_t pattern_size);
+    KMPMatcher(T* text, ull text_size, T* pattern, ull pattern_size);
     ~KMPMatcher();
-    size_t KmpSearch();
+    ull KmpSearch();
 };
 
 template <typename T>
-inline KMPMatcher<T>::KMPMatcher(T* text, size_t text_size, T* pattern, size_t pattern_size)
+inline KMPMatcher<T>::KMPMatcher(T* text, ull text_size, T* pattern, ull pattern_size)
     : text(text), text_size(text_size), pattern(pattern), pattern_size(pattern_size) {
-    lps = new size_t[pattern_size];
+    lps = new ull[pattern_size];
     ComputeLpsArray();
 }
 
@@ -32,8 +32,8 @@ inline KMPMatcher<T>::~KMPMatcher() {
 
 template <typename T>
 inline void KMPMatcher<T>::ComputeLpsArray() {
-    size_t length = 0;
-    size_t i = 1;
+    ull length = 0;
+    ull i = 1;
     lps[0] = 0;
 
     while (i < pattern_size) {
@@ -55,9 +55,9 @@ inline void KMPMatcher<T>::ComputeLpsArray() {
 }
 
 template <typename T>
-inline size_t KMPMatcher<T>::KmpSearch() {
-    size_t i = 0; // index for text
-    size_t j = 0; // index for pattern
+inline ull KMPMatcher<T>::KmpSearch() {
+    ull i = 0; // index for text
+    ull j = 0; // index for pattern
 
     while (i < text_size) {
         if (pattern[j] == text[i]) {
@@ -78,7 +78,7 @@ inline size_t KMPMatcher<T>::KmpSearch() {
         }
     }
 
-    return static_cast<size_t>(-1); // Pattern not found
+    return ULL_MAX; // Pattern not found
 }
 
 

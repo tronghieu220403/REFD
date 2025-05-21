@@ -4,7 +4,8 @@
 
 #ifdef HIEU_DEBUG
 
-#define DebugMessage(x, ...) DbgPrintEx(0, 0, x, __VA_ARGS__)
+//#define DebugMessage(x, ...) DbgPrintEx(0, 0, x, __VA_ARGS__)
+#define DebugMessage(x, ...) DbgPrintEx(0, 0, "[SelfDefenseKernel] [%ws:%d] " x "\n", __FUNCTIONW__, __LINE__, __VA_ARGS__)
 
 #else 
 
