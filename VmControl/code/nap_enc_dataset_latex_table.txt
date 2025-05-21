@@ -1,0 +1,43 @@
+% \textbf{No.} & \textbf{Family} & \textbf{Modified} & \textbf{Unrecognized} & \textbf{Ratio} & \textbf{Null Ext} & \textbf{Ratio} & \textbf{Shannon} & \textbf{Ratio} & \textbf{Chi2} & \textbf{Ratio} \\
+1 & AvosLocker & 5000 & 5000 & \cellcolor{cyan!20} 100.00\% & 4882 & \cellcolor{cyan!20} 97.64\% & 4773 & 95.46\% & 4022 & 80.44\% \\
+2 & BadRabbit & 5000 & 4887 & 97.74\% & 3402 & 68.04\% & 4983 & \cellcolor{cyan!20} 99.66\% & 4948 & \cellcolor{cyan!20} 98.96\% \\
+3 & BlackBasta & 5000 & 4999 & \cellcolor{cyan!20} 99.98\% & 4837 & \cellcolor{cyan!20} 96.74\% & 1916 & 38.32\% & 0 & 0.00\% \\
+4 & BlackCat & 4991 & 4987 & \cellcolor{cyan!20} 99.92\% & 4848 & 97.13\% & 4975 & \cellcolor{cyan!20} 99.68\% & 4918 & 98.54\% \\
+5 & BlackMatter & 4998 & 4866 & \cellcolor{cyan!20} 97.36\% & 4846 & \cellcolor{cyan!20} 96.96\% & 4543 & 90.90\% & 2998 & 59.98\% \\
+6 & Cerber & 4998 & 0 & 0.00\% & 0 & 0.00\% & 4045 & \cellcolor{cyan!20} 80.93\% & 907 & \cellcolor{cyan!20} 18.15\% \\
+7 & Chimera & 5000 & 4998 & \cellcolor{cyan!20} 99.96\% & 4855 & 97.10\% & 4986 & \cellcolor{cyan!20} 99.72\% & 4946 & 98.92\% \\
+8 & Cl0p & 5000 & 4994 & \cellcolor{cyan!20} 99.88\% & 4851 & 97.02\% & 4917 & \cellcolor{cyan!20} 98.34\% & 4573 & 91.46\% \\
+9 & Conti & 5000 & 4997 & \cellcolor{cyan!20} 99.94\% & 4874 & \cellcolor{cyan!20} 97.48\% & 4799 & 95.98\% & 4134 & 82.68\% \\
+10 & CryptoLocker & 5000 & 4999 & \cellcolor{cyan!20} 99.98\% & 4831 & 96.62\% & 4985 & \cellcolor{cyan!20} 99.70\% & 4952 & 99.04\% \\
+11 & Cuba & 5000 & 5000 & \cellcolor{cyan!20} 100.00\% & 4999 & \cellcolor{cyan!20} 99.98\% & 4312 & 86.24\% & 268 & 5.36\% \\
+12 & Darkside & 5000 & 4999 & \cellcolor{cyan!20} 99.98\% & 4874 & 97.48\% & 4908 & \cellcolor{cyan!20} 98.16\% & 4613 & 92.26\% \\
+13 & Dharma & 5000 & 4942 & \cellcolor{cyan!20} 98.84\% & 4260 & 85.20\% & 4342 & \cellcolor{cyan!20} 86.84\% & 4024 & 80.48\% \\
+14 & GandCrab & 5000 & 4994 & \cellcolor{cyan!20} 99.88\% & 4865 & 97.30\% & 4957 & \cellcolor{cyan!20} 99.14\% & 4792 & 95.84\% \\
+15 & HelloKitty & 5000 & 4997 & \cellcolor{cyan!20} 99.94\% & 4833 & \cellcolor{cyan!20} 96.66\% & 2235 & 44.70\% & 63 & 1.26\% \\
+16 & Jigsaw & 5000 & 4947 & \cellcolor{cyan!20} 98.94\% & 4797 & 95.94\% & 4971 & \cellcolor{cyan!20} 99.42\% & 4904 & 98.08\% \\
+17 & Lockbit & 5000 & 4995 & \cellcolor{cyan!20} 99.90\% & 4831 & \cellcolor{cyan!20} 96.62\% & 4355 & 87.10\% & 3339 & 66.78\% \\
+18 & Lorenz & 5000 & 5000 & \cellcolor{cyan!20} 100.00\% & 4999 & \cellcolor{cyan!20} 99.98\% & 4983 & 99.66\% & 4952 & 99.04\% \\
+19 & Maze & 5000 & 4996 & \cellcolor{cyan!20} 99.92\% & 4853 & 97.06\% & 4984 & \cellcolor{cyan!20} 99.68\% & 4945 & 98.90\% \\
+20 & Medusa & 5000 & 5000 & \cellcolor{cyan!20} 100.00\% & 4905 & 98.10\% & 5000 & \cellcolor{cyan!20} 100.00\% & 4942 & 98.84\% \\
+21 & NetWalker & 5006 & 4999 & \cellcolor{cyan!20} 99.86\% & 4853 & \cellcolor{cyan!20} 96.94\% & 2235 & 44.65\% & 372 & 7.43\% \\
+22 & NotPetya & 5011 & 4823 & \cellcolor{cyan!20} 96.25\% & 4738 & \cellcolor{cyan!20} 94.55\% & 4184 & 83.50\% & 3799 & 75.81\% \\
+23 & Phobos & 5001 & 4939 & \cellcolor{cyan!20} 98.76\% & 4242 & 84.82\% & 4346 & \cellcolor{cyan!20} 86.90\% & 4284 & 85.66\% \\
+24 & REvil & 5006 & 5002 & \cellcolor{cyan!20} 99.92\% & 4861 & 97.10\% & 4989 & \cellcolor{cyan!20} 99.66\% & 4948 & 98.84\% \\
+25 & RansomEXX & 5000 & 5000 & \cellcolor{cyan!20} 100.00\% & 4946 & \cellcolor{cyan!20} 98.92\% & 3205 & 64.10\% & 704 & 14.08\% \\
+26 & Ryuk & 5001 & 4998 & \cellcolor{cyan!20} 99.94\% & 4865 & 97.28\% & 4986 & \cellcolor{cyan!20} 99.70\% & 4941 & 98.80\% \\
+27 & SunCrypt & 5000 & 4991 & \cellcolor{cyan!20} 99.82\% & 4843 & \cellcolor{cyan!20} 96.86\% & 2629 & 52.58\% & 774 & 15.48\% \\
+28 & TeslaCrypt & 5000 & 5000 & \cellcolor{cyan!20} 100.00\% & 5000 & \cellcolor{cyan!20} 100.00\% & 4974 & 99.48\% & 3795 & 75.90\% \\
+29 & WannaCry & 5000 & 5000 & \cellcolor{cyan!20} 100.00\% & 5000 & \cellcolor{cyan!20} 100.00\% & 4985 & 99.70\% & 4950 & 99.00\% \\
+30 & WastedLocker & 5000 & 4999 & \cellcolor{cyan!20} 99.98\% & 4864 & 97.28\% & 4983 & \cellcolor{cyan!20} 99.66\% & 4946 & 98.92\% \\
+\midrule
+\multicolumn{2}{l}{\textbf{Average}} & 5000.4 & 4811.6 & \cellcolor{cyan!30} 96.22\% & 4621.8 & \cellcolor{cyan!30} 92.43\% & 4382.8 & 87.65\% & 3558.4 & 71.16\% \\
+
+
+Total families: 30
+Total files: 150012
+Total unrecognized: 144348
+Total null ext: 138654
+Total shannon high: 131485
+Total chi2 low: 106753
+
+

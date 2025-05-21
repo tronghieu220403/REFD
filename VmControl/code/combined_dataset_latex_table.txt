@@ -1,0 +1,78 @@
+\textbf{No.} & \textbf{Family} & \textbf{Modified} & \textbf{Unrecognized} & \textbf{Ratio} & \textbf{Null Ext} & \textbf{Ratio} & \textbf{Shannon} & \textbf{Ratio} & \textbf{Chi2} & \textbf{Ratio} \\
+1 & 8Base & 4588 & 4390 & \cellcolor{green!50} 95.68\% & 3273 & \cellcolor{cyan!42} 71.34\% & 3101 & \cellcolor{cyan!34} 67.59\% & 3092 & \cellcolor{cyan!34} 67.39\% \\
+2 & Abyss & 3207 & 3207 & \cellcolor{green!64} 100.00\% & 3104 & \cellcolor{green!53} 96.79\% & 2974 & \cellcolor{green!42} 92.73\% & 2896 & \cellcolor{green!37} 90.30\% \\
+3 & Akira & 2254 & 2252 & \cellcolor{green!61} 99.91\% & 2183 & \cellcolor{green!53} 96.85\% & 1354 & \cellcolor{cyan!20} 60.07\% & 323 & \cellcolor{red!36} 14.33\% \\
+4 & Avaddon & 3381 & 3351 & \cellcolor{green!61} 99.11\% & 3315 & \cellcolor{green!58} 98.05\% & 3084 & \cellcolor{green!39} 91.22\% & 2298 & \cellcolor{cyan!34} 67.97\% \\
+5 & AvosLocker & 5000 & 5000 & \cellcolor{green!64} 100.00\% & 4882 & \cellcolor{green!55} 97.64\% & 4773 & \cellcolor{green!50} 95.46\% & 4022 & \cellcolor{green!20} 80.44\% \\
+6 & Babuk & 3381 & 2934 & \cellcolor{green!26} 86.78\% & 2845 & \cellcolor{green!20} 84.15\% & 1804 & \cellcolor{yellow!32} 53.36\% & 415 & \cellcolor{red!38} 12.27\% \\
+7 & BadRabbit & 5000 & 4887 & \cellcolor{green!55} 97.74\% & 3402 & \cellcolor{cyan!36} 68.04\% & 4983 & \cellcolor{green!61} 99.66\% & 4948 & \cellcolor{green!58} 98.96\% \\
+8 & BianLian & 2301 & 276 & \cellcolor{red!39} 11.99\% & 276 & \cellcolor{red!39} 11.99\% & 1749 & \cellcolor{cyan!52} 76.01\% & 1032 & \cellcolor{yellow!41} 44.85\% \\
+9 & Bitpaymer & 1127 & 1124 & \cellcolor{green!61} 99.73\% & 1086 & \cellcolor{green!53} 96.36\% & 1063 & \cellcolor{green!47} 94.32\% & 1116 & \cellcolor{green!61} 99.02\% \\
+10 & BlackBasta & 5000 & 4999 & \cellcolor{green!61} 99.98\% & 4837 & \cellcolor{green!53} 96.74\% & 1916 & \cellcolor{orange!32} 38.32\% & 0 & \cellcolor{red!50} 0.00\% \\
+11 & BlackCat & 4991 & 4987 & \cellcolor{green!61} 99.92\% & 4848 & \cellcolor{green!55} 97.13\% & 4975 & \cellcolor{green!61} 99.68\% & 4918 & \cellcolor{green!58} 98.54\% \\
+12 & BlackMatter & 8301 & 8142 & \cellcolor{green!58} 98.08\% & 8014 & \cellcolor{green!53} 96.54\% & 7393 & \cellcolor{green!34} 89.06\% & 5235 & \cellcolor{cyan!26} 63.06\% \\
+13 & Blackbasta & 3441 & 3400 & \cellcolor{green!58} 98.81\% & 3305 & \cellcolor{green!53} 96.05\% & 1905 & \cellcolor{yellow!30} 55.36\% & 447 & \cellcolor{red!38} 12.99\% \\
+14 & BlueSky & 3303 & 3251 & \cellcolor{green!58} 98.43\% & 3150 & \cellcolor{green!50} 95.37\% & 2795 & \cellcolor{green!20} 84.62\% & 1847 & \cellcolor{yellow!30} 55.92\% \\
+15 & Cactus & 3338 & 3116 & \cellcolor{green!45} 93.35\% & 3033 & \cellcolor{green!37} 90.86\% & 1720 & \cellcolor{yellow!34} 51.53\% & 540 & \cellcolor{red!34} 16.18\% \\
+16 & Cerber & 6811 & 110 & \cellcolor{red!49} 1.62\% & 110 & \cellcolor{red!49} 1.62\% & 5602 & \cellcolor{green!20} 82.25\% & 1939 & \cellcolor{orange!42} 28.47\% \\
+17 & Chaos & 2718 & 2295 & \cellcolor{green!20} 84.44\% & 0 & \cellcolor{red!50} 0.00\% & 0 & \cellcolor{red!50} 0.00\% & 0 & \cellcolor{red!50} 0.00\% \\
+18 & Chimera & 5000 & 4998 & \cellcolor{green!61} 99.96\% & 4855 & \cellcolor{green!55} 97.10\% & 4986 & \cellcolor{green!61} 99.72\% & 4946 & \cellcolor{green!58} 98.92\% \\
+19 & Cl0p & 8381 & 8372 & \cellcolor{green!61} 99.89\% & 8121 & \cellcolor{green!53} 96.90\% & 8022 & \cellcolor{green!50} 95.72\% & 7573 & \cellcolor{green!37} 90.36\% \\
+20 & Conti & 8381 & 8377 & \cellcolor{green!61} 99.95\% & 8154 & \cellcolor{green!55} 97.29\% & 7737 & \cellcolor{green!42} 92.32\% & 6362 & \cellcolor{cyan!50} 75.91\% \\
+21 & CryptoLocker & 5000 & 4999 & \cellcolor{green!61} 99.98\% & 4831 & \cellcolor{green!53} 96.62\% & 4985 & \cellcolor{green!61} 99.70\% & 4952 & \cellcolor{green!61} 99.04\% \\
+22 & Cuba & 5000 & 5000 & \cellcolor{green!64} 100.00\% & 4999 & \cellcolor{green!61} 99.98\% & 4312 & \cellcolor{green!26} 86.24\% & 268 & \cellcolor{red!45} 5.36\% \\
+23 & D0glun & 2948 & 2948 & \cellcolor{green!64} 100.00\% & 2840 & \cellcolor{green!53} 96.34\% & 2196 & \cellcolor{cyan!48} 74.49\% & 1480 & \cellcolor{yellow!35} 50.20\% \\
+24 & Darkside & 8303 & 8257 & \cellcolor{green!61} 99.45\% & 8046 & \cellcolor{green!53} 96.90\% & 7668 & \cellcolor{green!42} 92.35\% & 6441 & \cellcolor{cyan!54} 77.57\% \\
+25 & Dharma & 7340 & 7184 & \cellcolor{green!55} 97.87\% & 5938 & \cellcolor{green!20} 80.90\% & 5924 & \cellcolor{green!20} 80.71\% & 5471 & \cellcolor{cyan!48} 74.54\% \\
+26 & Eternity & 1323 & 1037 & \cellcolor{cyan!56} 78.38\% & 0 & \cellcolor{red!50} 0.00\% & 1286 & \cellcolor{green!55} 97.20\% & 1239 & \cellcolor{green!45} 93.65\% \\
+27 & Fog & 867 & 867 & \cellcolor{green!64} 100.00\% & 843 & \cellcolor{green!55} 97.23\% & 814 & \cellcolor{green!45} 93.89\% & 828 & \cellcolor{green!50} 95.50\% \\
+28 & GandCrab & 8342 & 8334 & \cellcolor{green!61} 99.90\% & 8109 & \cellcolor{green!55} 97.21\% & 8154 & \cellcolor{green!55} 97.75\% & 8096 & \cellcolor{green!55} 97.05\% \\
+29 & GoldenEye & 2373 & 2371 & \cellcolor{green!61} 99.92\% & 2305 & \cellcolor{green!55} 97.13\% & 2241 & \cellcolor{green!47} 94.44\% & 2336 & \cellcolor{green!58} 98.44\% \\
+30 & HelloKitty & 5000 & 4997 & \cellcolor{green!61} 99.94\% & 4833 & \cellcolor{green!53} 96.66\% & 2235 & \cellcolor{yellow!41} 44.70\% & 63 & \cellcolor{red!49} 1.26\% \\
+31 & Hermes & 3432 & 3402 & \cellcolor{green!61} 99.13\% & 3295 & \cellcolor{green!53} 96.01\% & 3179 & \cellcolor{green!42} 92.63\% & 3173 & \cellcolor{green!42} 92.45\% \\
+32 & Jigsaw & 6452 & 6399 & \cellcolor{green!61} 99.18\% & 6245 & \cellcolor{green!53} 96.79\% & 6337 & \cellcolor{green!58} 98.22\% & 6346 & \cellcolor{green!58} 98.36\% \\
+33 & Lockbit & 8303 & 8246 & \cellcolor{green!61} 99.31\% & 7996 & \cellcolor{green!53} 96.30\% & 7111 & \cellcolor{green!23} 85.64\% & 5162 & \cellcolor{cyan!24} 62.17\% \\
+34 & Locky & 2574 & 2572 & \cellcolor{green!61} 99.92\% & 2504 & \cellcolor{green!55} 97.28\% & 2451 & \cellcolor{green!50} 95.22\% & 2549 & \cellcolor{green!61} 99.03\% \\
+35 & Loki & 2254 & 2229 & \cellcolor{green!58} 98.89\% & 2173 & \cellcolor{green!53} 96.41\% & 1960 & \cellcolor{green!26} 86.96\% & 1729 & \cellcolor{cyan!52} 76.71\% \\
+36 & Lorenz & 5000 & 5000 & \cellcolor{green!64} 100.00\% & 4999 & \cellcolor{green!61} 99.98\% & 4983 & \cellcolor{green!61} 99.66\% & 4952 & \cellcolor{green!61} 99.04\% \\
+37 & LostTrust & 3666 & 3618 & \cellcolor{green!58} 98.69\% & 3323 & \cellcolor{green!37} 90.64\% & 3233 & \cellcolor{green!31} 88.19\% & 3280 & \cellcolor{green!34} 89.47\% \\
+38 & Lynx & 3381 & 3342 & \cellcolor{green!58} 98.85\% & 3255 & \cellcolor{green!53} 96.27\% & 2899 & \cellcolor{green!23} 85.74\% & 2225 & \cellcolor{cyan!30} 65.81\% \\
+39 & Makop & 3425 & 3389 & \cellcolor{green!58} 98.95\% & 3286 & \cellcolor{green!50} 95.94\% & 2988 & \cellcolor{green!28} 87.24\% & 2645 & \cellcolor{cyan!54} 77.23\% \\
+40 & Mallox & 3402 & 3402 & \cellcolor{green!64} 100.00\% & 3311 & \cellcolor{green!55} 97.33\% & 3220 & \cellcolor{green!47} 94.65\% & 3140 & \cellcolor{green!42} 92.30\% \\
+41 & Maze & 8441 & 8437 & \cellcolor{green!61} 99.95\% & 8206 & \cellcolor{green!55} 97.22\% & 8242 & \cellcolor{green!55} 97.64\% & 8357 & \cellcolor{green!61} 99.00\% \\
+42 & Medusa & 6127 & 6127 & \cellcolor{green!64} 100.00\% & 5941 & \cellcolor{green!53} 96.96\% & 6126 & \cellcolor{green!61} 99.98\% & 6049 & \cellcolor{green!58} 98.73\% \\
+43 & MountLocker & 3393 & 3392 & \cellcolor{green!61} 99.97\% & 3307 & \cellcolor{green!55} 97.47\% & 3210 & \cellcolor{green!47} 94.61\% & 3359 & \cellcolor{green!58} 99.00\% \\
+44 & Nefilim & 1088 & 1088 & \cellcolor{green!64} 100.00\% & 1053 & \cellcolor{green!53} 96.78\% & 942 & \cellcolor{green!26} 86.58\% & 766 & \cellcolor{cyan!40} 70.40\% \\
+45 & Nemty & 3381 & 3278 & \cellcolor{green!53} 96.95\% & 3193 & \cellcolor{green!47} 94.44\% & 2566 & \cellcolor{cyan!50} 75.89\% & 993 & \cellcolor{orange!41} 29.37\% \\
+46 & NetWalker & 5006 & 4999 & \cellcolor{green!61} 99.86\% & 4853 & \cellcolor{green!53} 96.94\% & 2235 & \cellcolor{yellow!41} 44.65\% & 372 & \cellcolor{red!43} 7.43\% \\
+47 & NotPetya & 5011 & 4823 & \cellcolor{green!53} 96.25\% & 4738 & \cellcolor{green!47} 94.55\% & 4184 & \cellcolor{green!20} 83.50\% & 3799 & \cellcolor{cyan!50} 75.81\% \\
+48 & Phobos & 9589 & 9327 & \cellcolor{green!55} 97.27\% & 7503 & \cellcolor{cyan!56} 78.25\% & 7446 & \cellcolor{cyan!54} 77.65\% & 7369 & \cellcolor{cyan!52} 76.85\% \\
+49 & Prince & 3381 & 3381 & \cellcolor{green!64} 100.00\% & 3332 & \cellcolor{green!58} 98.55\% & 1901 & \cellcolor{yellow!29} 56.23\% & 377 & \cellcolor{red!39} 11.15\% \\
+50 & REvil & 8309 & 8305 & \cellcolor{green!61} 99.95\% & 8076 & \cellcolor{green!55} 97.20\% & 8106 & \cellcolor{green!55} 97.56\% & 7485 & \cellcolor{green!37} 90.08\% \\
+51 & Ragnar & 1127 & 1127 & \cellcolor{green!64} 100.00\% & 1125 & \cellcolor{green!61} 99.82\% & 976 & \cellcolor{green!26} 86.60\% & 776 & \cellcolor{cyan!36} 68.86\% \\
+52 & RansomEXX & 5000 & 5000 & \cellcolor{green!64} 100.00\% & 4946 & \cellcolor{green!58} 98.92\% & 3205 & \cellcolor{cyan!28} 64.10\% & 704 & \cellcolor{red!36} 14.08\% \\
+53 & Razr & 1786 & 1786 & \cellcolor{green!64} 100.00\% & 1758 & \cellcolor{green!58} 98.43\% & 1672 & \cellcolor{green!45} 93.62\% & 1768 & \cellcolor{green!58} 98.99\% \\
+54 & Rhysida & 3342 & 3341 & \cellcolor{green!61} 99.97\% & 3224 & \cellcolor{green!53} 96.47\% & 2968 & \cellcolor{green!31} 88.81\% & 2356 & \cellcolor{cyan!40} 70.50\% \\
+55 & Ryuk & 8382 & 8379 & \cellcolor{green!61} 99.96\% & 8145 & \cellcolor{green!55} 97.17\% & 8183 & \cellcolor{green!55} 97.63\% & 8275 & \cellcolor{green!58} 98.72\% \\
+56 & Sage & 2718 & 2717 & \cellcolor{green!61} 99.96\% & 2645 & \cellcolor{green!55} 97.31\% & 2561 & \cellcolor{green!47} 94.22\% & 2596 & \cellcolor{green!50} 95.51\% \\
+57 & Sarcoma & 3342 & 3341 & \cellcolor{green!61} 99.97\% & 3241 & \cellcolor{green!53} 96.98\% & 3243 & \cellcolor{green!55} 97.04\% & 3107 & \cellcolor{green!42} 92.97\% \\
+58 & Spora & 1365 & 1364 & \cellcolor{green!61} 99.93\% & 1318 & \cellcolor{green!53} 96.56\% & 1356 & \cellcolor{green!61} 99.34\% & 1279 & \cellcolor{green!45} 93.70\% \\
+59 & SunCrypt & 5000 & 4991 & \cellcolor{green!61} 99.82\% & 4843 & \cellcolor{green!53} 96.86\% & 2629 & \cellcolor{yellow!33} 52.58\% & 774 & \cellcolor{red!35} 15.48\% \\
+60 & TeslaCrypt & 7289 & 7289 & \cellcolor{green!64} 100.00\% & 7289 & \cellcolor{green!64} 100.00\% & 7146 & \cellcolor{green!58} 98.04\% & 5796 & \cellcolor{cyan!58} 79.52\% \\
+61 & Thanos & 2373 & 2373 & \cellcolor{green!64} 100.00\% & 2313 & \cellcolor{green!55} 97.47\% & 2271 & \cellcolor{green!50} 95.70\% & 2307 & \cellcolor{green!55} 97.22\% \\
+62 & Trigona & 4680 & 4612 & \cellcolor{green!58} 98.55\% & 4493 & \cellcolor{green!53} 96.00\% & 3882 & \cellcolor{green!20} 82.95\% & 2012 & \cellcolor{yellow!43} 42.99\% \\
+63 & WannaCry & 5000 & 5000 & \cellcolor{green!64} 100.00\% & 5000 & \cellcolor{green!64} 100.00\% & 4985 & \cellcolor{green!61} 99.70\% & 4950 & \cellcolor{green!61} 99.00\% \\
+64 & WastedLocker & 5000 & 4999 & \cellcolor{green!61} 99.98\% & 4864 & \cellcolor{green!55} 97.28\% & 4983 & \cellcolor{green!61} 99.66\% & 4946 & \cellcolor{green!58} 98.92\% \\
+65 & XData & 3381 & 3380 & \cellcolor{green!61} 99.97\% & 3286 & \cellcolor{green!55} 97.19\% & 2772 & \cellcolor{green!20} 81.99\% & 2078 & \cellcolor{cyan!22} 61.46\% \\
+\midrule
+\multicolumn{2}{l}{\textbf{Average}} & 4489.2 & 4306.4 & \cellcolor{green!50} 95.93\% & 4071.0 & \cellcolor{green!37} 90.68\% & 3813.9 & \cellcolor{green!20} 84.96\% & 3122.7 & \cellcolor{cyan!38} 69.56\% \\
+
+
+Total families: 65
+Total files: 291800.0
+Total unrecognized: 279917.0
+Total null ext: 264616.0
+Total shannon high: 247902.0
+Total chi2 low: 202974.0
+
+

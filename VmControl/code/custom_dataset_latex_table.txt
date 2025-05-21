@@ -1,0 +1,63 @@
+% \textbf{No.} & \textbf{Family} & \textbf{Modified} & \textbf{Unrecognized} & \textbf{Ratio} & \textbf{Null Ext} & \textbf{Ratio} & \textbf{Shannon} & \textbf{Ratio} & \textbf{Chi2} & \textbf{Ratio} \\
+1 & 8Base & 4588 & 4390 & \cellcolor{cyan!20} 95.68\% & 3273 & \cellcolor{cyan!20} 71.34\% & 3101 & 67.59\% & 3092 & 67.39\% \\
+2 & Abyss & 3207 & 3207 & \cellcolor{cyan!20} 100.00\% & 3104 & \cellcolor{cyan!20} 96.79\% & 2974 & 92.73\% & 2896 & 90.30\% \\
+3 & Akira & 2254 & 2252 & \cellcolor{cyan!20} 99.91\% & 2183 & \cellcolor{cyan!20} 96.85\% & 1354 & 60.07\% & 323 & 14.33\% \\
+4 & Avaddon & 3381 & 3351 & \cellcolor{cyan!20} 99.11\% & 3315 & \cellcolor{cyan!20} 98.05\% & 3084 & 91.22\% & 2298 & 67.97\% \\
+5 & Babuk & 3381 & 2934 & \cellcolor{cyan!20} 86.78\% & 2845 & \cellcolor{cyan!20} 84.15\% & 1804 & 53.36\% & 415 & 12.27\% \\
+6 & BianLian & 2301 & 276 & 11.99\% & 276 & 11.99\% & 1749 & \cellcolor{cyan!20} 76.01\% & 1032 & \cellcolor{cyan!20} 44.85\% \\
+7 & Bitpaymer & 1127 & 1124 & \cellcolor{cyan!20} 99.73\% & 1086 & 96.36\% & 1063 & 94.32\% & 1116 & \cellcolor{cyan!20} 99.02\% \\
+8 & BlackMatter & 3303 & 3276 & \cellcolor{cyan!20} 99.18\% & 3168 & \cellcolor{cyan!20} 95.91\% & 2850 & 86.29\% & 2237 & 67.73\% \\
+9 & Blackbasta & 3441 & 3400 & \cellcolor{cyan!20} 98.81\% & 3305 & \cellcolor{cyan!20} 96.05\% & 1905 & 55.36\% & 447 & 12.99\% \\
+10 & BlueSky & 3303 & 3251 & \cellcolor{cyan!20} 98.43\% & 3150 & \cellcolor{cyan!20} 95.37\% & 2795 & 84.62\% & 1847 & 55.92\% \\
+11 & Cactus & 3338 & 3116 & \cellcolor{cyan!20} 93.35\% & 3033 & \cellcolor{cyan!20} 90.86\% & 1720 & 51.53\% & 540 & 16.18\% \\
+12 & Cerber & 1813 & 110 & 6.07\% & 110 & 6.07\% & 1557 & \cellcolor{cyan!20} 85.88\% & 1032 & \cellcolor{cyan!20} 56.92\% \\
+13 & Chaos & 2718 & 2295 & \cellcolor{cyan!20} 84.44\% & 0 & \cellcolor{cyan!20} 0.00\% & 0 & 0.00\% & 0 & 0.00\% \\
+14 & Cl0p & 3381 & 3378 & \cellcolor{cyan!20} 99.91\% & 3270 & \cellcolor{cyan!20} 96.72\% & 3105 & 91.84\% & 3000 & 88.73\% \\
+15 & Conti & 3381 & 3380 & \cellcolor{cyan!20} 99.97\% & 3280 & \cellcolor{cyan!20} 97.01\% & 2938 & 86.90\% & 2228 & 65.90\% \\
+16 & D0glun & 2948 & 2948 & \cellcolor{cyan!20} 100.00\% & 2840 & \cellcolor{cyan!20} 96.34\% & 2196 & 74.49\% & 1480 & 50.20\% \\
+17 & Darkside & 3303 & 3258 & \cellcolor{cyan!20} 98.64\% & 3172 & \cellcolor{cyan!20} 96.03\% & 2760 & 83.56\% & 1828 & 55.34\% \\
+18 & Dharma & 2340 & 2242 & \cellcolor{cyan!20} 95.81\% & 1678 & \cellcolor{cyan!20} 71.71\% & 1582 & 67.61\% & 1447 & 61.84\% \\
+19 & Eternity & 1323 & 1037 & 78.38\% & 0 & 0.00\% & 1286 & \cellcolor{cyan!20} 97.20\% & 1239 & \cellcolor{cyan!20} 93.65\% \\
+20 & Fog & 867 & 867 & \cellcolor{cyan!20} 100.00\% & 843 & \cellcolor{cyan!20} 97.23\% & 814 & 93.89\% & 828 & 95.50\% \\
+21 & GandCrab & 3342 & 3340 & \cellcolor{cyan!20} 99.94\% & 3244 & 97.07\% & 3197 & 95.66\% & 3304 & \cellcolor{cyan!20} 98.86\% \\
+22 & GoldenEye & 2373 & 2371 & \cellcolor{cyan!20} 99.92\% & 2305 & 97.13\% & 2241 & 94.44\% & 2336 & \cellcolor{cyan!20} 98.44\% \\
+23 & Hermes & 3432 & 3402 & \cellcolor{cyan!20} 99.13\% & 3295 & \cellcolor{cyan!20} 96.01\% & 3179 & 92.63\% & 3173 & 92.45\% \\
+24 & Jigsaw & 1452 & 1452 & \cellcolor{cyan!20} 100.00\% & 1448 & \cellcolor{cyan!20} 99.72\% & 1366 & 94.08\% & 1442 & 99.31\% \\
+25 & Lockbit & 3303 & 3251 & \cellcolor{cyan!20} 98.43\% & 3165 & \cellcolor{cyan!20} 95.82\% & 2756 & 83.44\% & 1823 & 55.19\% \\
+26 & Locky & 2574 & 2572 & \cellcolor{cyan!20} 99.92\% & 2504 & 97.28\% & 2451 & 95.22\% & 2549 & \cellcolor{cyan!20} 99.03\% \\
+27 & Loki & 2254 & 2229 & \cellcolor{cyan!20} 98.89\% & 2173 & \cellcolor{cyan!20} 96.41\% & 1960 & 86.96\% & 1729 & 76.71\% \\
+28 & LostTrust & 3666 & 3618 & \cellcolor{cyan!20} 98.69\% & 3323 & \cellcolor{cyan!20} 90.64\% & 3233 & 88.19\% & 3280 & 89.47\% \\
+29 & Lynx & 3381 & 3342 & \cellcolor{cyan!20} 98.85\% & 3255 & \cellcolor{cyan!20} 96.27\% & 2899 & 85.74\% & 2225 & 65.81\% \\
+30 & Makop & 3425 & 3389 & \cellcolor{cyan!20} 98.95\% & 3286 & \cellcolor{cyan!20} 95.94\% & 2988 & 87.24\% & 2645 & 77.23\% \\
+31 & Mallox & 3402 & 3402 & \cellcolor{cyan!20} 100.00\% & 3311 & \cellcolor{cyan!20} 97.33\% & 3220 & 94.65\% & 3140 & 92.30\% \\
+32 & Maze & 3441 & 3441 & \cellcolor{cyan!20} 100.00\% & 3353 & 97.44\% & 3258 & 94.68\% & 3412 & \cellcolor{cyan!20} 99.16\% \\
+33 & Medusa & 1127 & 1127 & \cellcolor{cyan!20} 100.00\% & 1036 & 91.93\% & 1126 & \cellcolor{cyan!20} 99.91\% & 1107 & 98.23\% \\
+34 & MountLocker & 3393 & 3392 & \cellcolor{cyan!20} 99.97\% & 3307 & 97.47\% & 3210 & 94.61\% & 3359 & \cellcolor{cyan!20} 99.00\% \\
+35 & Nefilim & 1088 & 1088 & \cellcolor{cyan!20} 100.00\% & 1053 & \cellcolor{cyan!20} 96.78\% & 942 & 86.58\% & 766 & 70.40\% \\
+36 & Nemty & 3381 & 3278 & \cellcolor{cyan!20} 96.95\% & 3193 & \cellcolor{cyan!20} 94.44\% & 2566 & 75.89\% & 993 & 29.37\% \\
+37 & Phobos & 4588 & 4388 & \cellcolor{cyan!20} 95.64\% & 3261 & \cellcolor{cyan!20} 71.08\% & 3100 & 67.57\% & 3085 & 67.24\% \\
+38 & Prince & 3381 & 3381 & \cellcolor{cyan!20} 100.00\% & 3332 & \cellcolor{cyan!20} 98.55\% & 1901 & 56.23\% & 377 & 11.15\% \\
+39 & REvil & 3303 & 3303 & \cellcolor{cyan!20} 100.00\% & 3215 & \cellcolor{cyan!20} 97.34\% & 3117 & 94.37\% & 2537 & 76.81\% \\
+40 & Ragnar & 1127 & 1127 & \cellcolor{cyan!20} 100.00\% & 1125 & \cellcolor{cyan!20} 99.82\% & 976 & 86.60\% & 776 & 68.86\% \\
+41 & Razr & 1786 & 1786 & \cellcolor{cyan!20} 100.00\% & 1758 & 98.43\% & 1672 & 93.62\% & 1768 & \cellcolor{cyan!20} 98.99\% \\
+42 & Rhysida & 3342 & 3341 & \cellcolor{cyan!20} 99.97\% & 3224 & \cellcolor{cyan!20} 96.47\% & 2968 & 88.81\% & 2356 & 70.50\% \\
+43 & Ryuk & 3381 & 3381 & \cellcolor{cyan!20} 100.00\% & 3280 & 97.01\% & 3197 & 94.56\% & 3334 & \cellcolor{cyan!20} 98.61\% \\
+44 & Sage & 2718 & 2717 & \cellcolor{cyan!20} 99.96\% & 2645 & \cellcolor{cyan!20} 97.31\% & 2561 & 94.22\% & 2596 & 95.51\% \\
+45 & Sarcoma & 3342 & 3341 & \cellcolor{cyan!20} 99.97\% & 3241 & 96.98\% & 3243 & \cellcolor{cyan!20} 97.04\% & 3107 & 92.97\% \\
+46 & Spora & 1365 & 1364 & \cellcolor{cyan!20} 99.93\% & 1318 & 96.56\% & 1356 & \cellcolor{cyan!20} 99.34\% & 1279 & 93.70\% \\
+47 & TeslaCrypt & 2289 & 2289 & \cellcolor{cyan!20} 100.00\% & 2289 & \cellcolor{cyan!20} 100.00\% & 2172 & 94.89\% & 2001 & 87.42\% \\
+48 & Thanos & 2373 & 2373 & \cellcolor{cyan!20} 100.00\% & 2313 & \cellcolor{cyan!20} 97.47\% & 2271 & 95.70\% & 2307 & 97.22\% \\
+49 & Trigona & 4680 & 4612 & \cellcolor{cyan!20} 98.55\% & 4493 & \cellcolor{cyan!20} 96.00\% & 3882 & 82.95\% & 2012 & 42.99\% \\
+50 & XData & 3381 & 3380 & \cellcolor{cyan!20} 99.97\% & 3286 & \cellcolor{cyan!20} 97.19\% & 2772 & 81.99\% & 2078 & 61.46\% \\
+\midrule
+\multicolumn{2}{l}{\textbf{Average}} & 2835.8 & 2711.4 & \cellcolor{cyan!30} 95.61\% & 2519.2 & \cellcolor{cyan!30} 88.84\% & 2328.3 & 82.11\% & 1924.4 & 67.86\% \\
+
+
+Total families: 50
+Total files: 141788
+Total unrecognized: 135569
+Total null ext: 125962
+Total shannon high: 116417
+Total chi2 low: 96221
+
+
