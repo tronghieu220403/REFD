@@ -60,10 +60,10 @@ sd_path = f'{git_path}\\SelfDefenseKernel'
 def init_env():
     print("Init env")
     try:
-        vm.copy_host_to_guest(f'{env_path}\\start_collector_driver.bat', 'E:\\start_collector_driver.bat')
-        vm.copy_host_to_guest(f'{env_path}\\stop_collector_driver.bat', 'E:\\stop_collector_driver.bat')
-        vm.copy_host_to_guest(f'{env_path}\\start_sd_driver.bat', 'E:\\start_sd_driver.bat')
-        vm.copy_host_to_guest(f'{env_path}\\stop_sd_driver.bat', 'E:\\stop_sd_driver.bat')
+        #vm.copy_host_to_guest(f'{env_path}\\start_collector_driver.bat', 'E:\\start_collector_driver.bat')
+        #vm.copy_host_to_guest(f'{env_path}\\stop_collector_driver.bat', 'E:\\stop_collector_driver.bat')
+        #vm.copy_host_to_guest(f'{env_path}\\start_sd_driver.bat', 'E:\\start_sd_driver.bat')
+        #vm.copy_host_to_guest(f'{env_path}\\stop_sd_driver.bat', 'E:\\stop_sd_driver.bat')
 
         pass
     except Exception as e:
@@ -91,9 +91,12 @@ def init_env():
     run_cmd('E:\\stop_collector_driver.bat')
     run_cmd('E:\\stop_sd_driver.bat')
 
+    run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
+    run_cmd("del /f E:\\ggez.txt")
+
     print("Delete files in C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny and E:\\backup")
     run_cmd("powershell -Command \"Remove-Item \'C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny\\*\' -Recurse -Force\"")
-    run_cmd("powershell -Command \"Remove-Item \'E:\\test\\*\' -Recurse -Force\"")
+    #run_cmd("powershell -Command \"Remove-Item \'E:\\test\\*\' -Recurse -Force\"")
     run_cmd("powershell -Command \"Remove-Item \'E:\\backup\\*\' -Recurse -Force\"")
 
     print("Copy files to C:\\Users\\hieu\\Downloads\\TestIo.exe")
@@ -106,7 +109,7 @@ def init_env():
     #run_cmd("E:\\TestIo.exe c")
     #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\test" "E:\\test" /E /I /Y')
     run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny" /E /I /Y')
-    run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "E:\\test" /E /I /Y')
+    #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "E:\\test" /E /I /Y')
 
     #vm.copy_host_to_guest(f'{env_path}\\TrIDLib.dll', 'E:\\hieunt210330\\TrIDLib.dll')
     #vm.copy_host_to_guest(f'{env_path}\\triddefs.trd', 'E:\\hieunt210330\\triddefs.trd')
@@ -134,8 +137,6 @@ def init_env():
 
     #os._exit(0)
     print("Start driver and service")
-    run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
-    run_cmd("del /f E:\\ggez.txt")
 
     run_cmd("E:\\start_sd_driver.bat")
     run_cmd("E:\\start_collector_driver.bat")
@@ -143,7 +144,7 @@ def init_env():
 
 init_env()
 
-time.sleep(5)
+#time.sleep(5)
 
 print("Start testing")
 
@@ -155,8 +156,8 @@ time.sleep(30)
 
 print("Test done")
 
-run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
-run_cmd("copy nul E:\\ggez.txt > nul")
+#run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
+#run_cmd("copy nul E:\\ggez.txt > nul")
 
-run_cmd('E:\\stop_collector_driver.bat')
-run_cmd('E:\\stop_sd_driver.bat')
+#run_cmd('E:\\stop_collector_driver.bat')
+#run_cmd('E:\\stop_sd_driver.bat')

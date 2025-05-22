@@ -38,26 +38,26 @@ namespace manager {
 		// Exceed 15 minutes then clear the global merged events and path hash map
 		if (elapsed.count() >= 15) {
 			last_evaluation_time = current_time;
-			PrintDebugW(L"Clear global merged events and path hash map");
+			//PrintDebugW(L"Clear global merged events and path hash map");
 			// Clear the global merged events and path hash map
 			global_merged_events_by_pid.clear();
 			global_path_hash_to_merged_index_by_pid.clear();
 		}
 
-		// Exceed 3 hour then clear the temp files
+		// Exceed 10 mins then clear the temp files
 		elapsed = std::chrono::duration_cast<std::chrono::minutes>(current_time - last_evaluation_time);
-		if (elapsed.count() >= 60 * 3) {
+		if (elapsed.count() >= 10) {
 			last_clear_tmp_time = current_time;
-			PrintDebugW(L"Clear temp files");
+			//PrintDebugW(L"Clear temp files");
 			ClearTmpFiles();
 		}
 
-		PrintDebugW(L"Start processing data queue");
+		//PrintDebugW(L"Start processing data queue");
 		std::queue<FileIoInfo> file_io_list;
 		kFileIoManager->LockMutex();
 		kFileIoManager->MoveQueue(file_io_list);
 		kFileIoManager->UnlockMutex();
-		PrintDebugW(L"Number of file I/O events: %d", file_io_list.size());
+		//PrintDebugW(L"Number of file I/O events: %d", file_io_list.size());
 		// If the event list is empty, return an empty queue
 
 		if (file_io_list.empty()) {
@@ -202,26 +202,39 @@ namespace manager {
 				}
 				if (EvaluateProcess(pid) == true)
 				{
-					PrintDebugW(L"Ransomware detected");
+					//PrintDebugW(L"Ransomware detected");
 				}
 			}
 		}
-		PrintDebugW(L"End processing data queue");
+		//PrintDebugW(L"End processing data queue");
 	}
 
 	void Evaluator::EvaluateProcesses()
 	{
-		PrintDebugW(L"Start evaluating processes");
+		//PrintDebugW(L"Start evaluating processes");
 
 		for (auto& pid_events : global_merged_events_by_pid) {
 			auto pid = pid_events.first;
+			kFileIoManager->LockMutex();
+			if (kFileIoManager->IsPidInWhiteList(pid) == true)
+			{
+				kFileIoManager->UnlockMutex();
+				continue;
+			}
 			EvaluateProcess(pid);
 		}
-		PrintDebugW(L"End evaluating processes");
+		//PrintDebugW(L"End evaluating processes");
 	}
 
 	bool Evaluator::AnalyzeEvent(FileIoInfo& event)
 	{
+		kFileIoManager->LockMutex();
+		if (kFileIoManager->IsPidInWhiteList(event.requestor_pid) == true)
+		{
+			kFileIoManager->UnlockMutex();
+			return false;
+		}
+		kFileIoManager->UnlockMutex();
 #ifdef _DEBUG
 		std::wstring paths_str = L"<";
 		for (const auto& path : event.path_list)
@@ -241,7 +254,7 @@ namespace manager {
 		int old_index = -1;
 		int new_index = -1;
 
-        PrintDebugW(L"Get old types");
+        //PrintDebugW(L"Get old types");
 		if (event.is_created == false && event.old_types.size() == 0) {
 			for (int i = 0; i < (int)event.path_list.size(); i++) {
 				if (event.backup_name_list[i].size() == 0)
@@ -260,7 +273,7 @@ namespace manager {
 			old_index = 0;
 		}
 
-        PrintDebugW(L"Get new types");
+        //PrintDebugW(L"Get new types");
 
 		if (event.new_types.size() == 0)
 		{
@@ -277,12 +290,12 @@ namespace manager {
 			if (new_index == -1)
 			{
 				//event.type_match = TYPE_NO_EVALUATION;
-				PrintDebugW(L"Skipped this event.");
+				//PrintDebugW(L"Skipped this event.");
 				return false;
 			}
 		}
 
-        PrintDebugW("End getting types");
+        //PrintDebugW("End getting types");
 
 		bool is_default_types_matched = false;
 		std::string ext;
@@ -295,7 +308,7 @@ namespace manager {
 		if (ext != "") {
 			const std::vector<std::string>& ext_accepted_types = type_iden::kExtensionMap[ext];
 			is_default_types_matched = type_iden::HasCommonType(ext_accepted_types, event.new_types);
-			PrintDebugW(L"is_default_types_matched: %d", is_default_types_matched);
+			//PrintDebugW(L"is_default_types_matched: %d", is_default_types_matched);
 		}
 		else
 		{
@@ -313,7 +326,7 @@ namespace manager {
 			{
 				is_types_matched_after_modified = type_iden::HasCommonType(event.old_types, event.new_types);
 			}
-			PrintDebugW(L"is_types_matched_after_modified: %d", is_types_matched_after_modified);
+			//PrintDebugW(L"is_types_matched_after_modified: %d", is_types_matched_after_modified);
 		}
 
 		if (ext == "" && event.is_created == true) {
@@ -364,6 +377,13 @@ namespace manager {
 
 	bool Evaluator::EvaluateProcess(ULONG pid)
 	{
+		kFileIoManager->LockMutex();
+		if (kFileIoManager->IsPidInWhiteList(pid) == true)
+		{
+            kFileIoManager->UnlockMutex();
+            return false;
+		}
+		kFileIoManager->UnlockMutex();
 		auto it = global_process_map.find(pid);
 		if (it == global_process_map.end())
 		{
@@ -378,7 +398,7 @@ namespace manager {
 			return false;
 		}
 
-		PrintDebugW(L"Start evaluating process, pid %d", pid);
+		//PrintDebugW(L"Start evaluating process, pid %d", pid);
 
 		bool overwrite_mismatch_inc = false;
 		bool created_write_null_count = false;
@@ -468,13 +488,13 @@ namespace manager {
 
 		if (overwrite_mismatch_inc == false && created_write_null_count == false)
 		{
-			PrintDebugW(L"Updating evaluation time", pid);
+			//PrintDebugW(L"Updating evaluation time", pid);
 			process_info.is_first_evaluation = false;
 			process_info.last_evaluation_time = std::chrono::steady_clock::now();
 		}
 		//process_info.last_index = events.size();
 	end_evaluate_process:
-		PrintDebugW("overwrite_count %d, overwrite_mismatch_count %d, deleted_count %d, created_write_count %d, true_deleted_count %d, created_write_null_count %d", process_info.overwrite_count, process_info.overwrite_mismatch_count, process_info.deleted_count, process_info.created_write_count, process_info.true_deleted_count, process_info.created_write_null_count);
+		PrintDebugW("PID %u, overwrite_count %d, overwrite_mismatch_count %d, deleted_count %d, created_write_count %d, true_deleted_count %d, created_write_null_count %d", pid, process_info.overwrite_count, process_info.overwrite_mismatch_count, process_info.deleted_count, process_info.created_write_count, process_info.true_deleted_count, process_info.created_write_null_count);
 
 		if (is_ransomware == true)
 		{
@@ -497,14 +517,18 @@ namespace manager {
 			}
 		}
 
-		PrintDebugW(L"End evaluating process, pid %d", pid);
+		//PrintDebugW(L"End evaluating process, pid %d", pid);
 		return is_ransomware;
 	}
 
 	bool Evaluator::DiscardEventByPid(ULONG issuing_pid)
 	{
+        bool is_ransomware = false;
+		kFileIoManager->LockMutex();
+		is_ransomware = kFileIoManager->IsPidInWhiteList(issuing_pid);
+        kFileIoManager->UnlockMutex();
 		if (issuing_pid == 0 || issuing_pid == (DWORD)(-1) || issuing_pid == 4
-			|| issuing_pid == kCurrentPid || kFileIoManager->IsPidInWhiteList(issuing_pid) == true)
+			|| issuing_pid == kCurrentPid || is_ransomware == true)
 		{
 			return true;
 		}

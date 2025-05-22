@@ -83,6 +83,8 @@ static void ServiceMain()
 	}
 	*/
 
+	debug::InitDebugLog();
+
 	manager::Init();
 
 	if (ulti::CreateDir(TEMP_DIR) == false)
@@ -111,6 +113,7 @@ static void ServiceMain()
 		}));
 
 	std::thread processing_thread([]() {
+        manager::ClearTmpFiles();
 		while (true)
 		{
 			manager::kEvaluator->LockMutex();

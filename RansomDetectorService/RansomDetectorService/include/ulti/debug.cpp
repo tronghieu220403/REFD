@@ -41,7 +41,6 @@ namespace debug {
 
 	void WriteDebugToFileW(const std::wstring& message)
 	{
-		std::lock_guard<std::mutex> lock(debug_mutex);
 		try {
 			if (log_file_handle == INVALID_HANDLE_VALUE || log_file_handle == 0)
 			{
@@ -53,14 +52,18 @@ namespace debug {
 			}
 			debug_count++;
 
-			std::wstring output = message;
-			if (message.empty() || message.back() != L'\n') {
-				output += L"\n";
-			}
+            size_t size = wcslen(message.c_str());
+
+            WCHAR* buffer = (WCHAR*)message.c_str();
+
+            if (size == 0 || buffer[size - 1] != L'\n') {
+                buffer[size] = L'\n';
+                size++;
+            }
 
 			DWORD bytes_written = 0;
-			WriteFile(log_file_handle, output.c_str(), output.size() * sizeof(wchar_t), &bytes_written, nullptr);
-			//FlushFileBuffers(log_file_handle);
+			WriteFile(log_file_handle, buffer, size * sizeof(wchar_t), &bytes_written, nullptr);
+			FlushFileBuffers(log_file_handle);
 
 			if (debug_count >= DEBUG_LOG_THRESHOLD) {
 				CleanupDebugLog();
@@ -107,7 +110,7 @@ namespace debug {
 
 			log.insert(0, time_str);
 			OutputDebugStringW(log.c_str());
-			//WriteDebugToFileW(log.c_str());
+			WriteDebugToFileW(log.c_str());
 		}
 
 		va_end(args);

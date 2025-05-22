@@ -225,14 +225,12 @@ int wmain(int argc, wchar_t* argv[]) {
             files.push_back(e.path().wstring());
         }
     }
-    /*
     for (auto& e : std::filesystem::recursive_directory_iterator(DOWNLOAD_DIR)) {
         if (e.is_regular_file())
         {
             files.push_back(e.path().wstring());
         }
     }
-    */
     if (files.empty()) {
         std::wcerr << L"No files in " << TEST_DIR << L"\n";
         return 0;

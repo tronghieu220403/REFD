@@ -265,8 +265,6 @@ namespace collector
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-        //DebugMessage("File %ws, instance %p, file object %p, pid %d", current_path.Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
-
         file::FileFlt f = file::FileFlt(current_path, flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject);
 
         if (!NT_SUCCESS(f.Open()))
@@ -293,7 +291,6 @@ namespace collector
         // If noncached paging I/O and not to the pagefile
         if (FlagOn(data->Iopb->IrpFlags, IRP_NOCACHE) && FlagOn(data->Iopb->IrpFlags, IRP_PAGING_IO))
         {
-            //DebugMessage("File: %ws, noncached paging I/O", current_path.Data());
             // We do not ignore kernel mode writes here because this is where memory-mapped writes occur.
             NTSTATUS status = FltGetFileContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
             if (!NT_SUCCESS(status))
@@ -322,6 +319,8 @@ namespace collector
 				return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
         }
+
+        DebugMessage("File %ws, instance %p, file object %p, pid %d", current_path.Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
         p_handle_context->is_modified = true;
 

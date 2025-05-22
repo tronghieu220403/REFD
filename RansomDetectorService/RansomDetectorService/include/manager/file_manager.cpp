@@ -40,22 +40,15 @@ namespace manager
 			return;
 		}
         FileIoInfo file_io_info;
-        /*
-        PrintDebugW(L"File I/O event before: requestor_pid: %d",
-            raw_file_io_info->requestor_pid);
-        PrintDebugW(L"File I/O event before: is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d",
-            (int)raw_file_io_info->is_modified,
-            (int)raw_file_io_info->is_deleted,
-            (int)raw_file_io_info->is_created,
-            (int)raw_file_io_info->is_renamed);
-        PrintDebugW(L"File I/O event before: current_path: %ws, new_path: %ws, backup_name: %ws", raw_file_io_info->current_path, raw_file_io_info->new_path, raw_file_io_info->backup_name);
+        
+        PrintDebugW(L"File I/O event before: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws, backup_name: %ws", raw_file_io_info->requestor_pid,(int)raw_file_io_info->is_modified, (int)raw_file_io_info->is_deleted, (int)raw_file_io_info->is_created, (int)raw_file_io_info->is_renamed, raw_file_io_info->current_path, raw_file_io_info->new_path, raw_file_io_info->backup_name);
+
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
         file_io_info.is_modified = raw_file_io_info->is_modified;
         file_io_info.is_deleted = raw_file_io_info->is_deleted;
         file_io_info.is_created = raw_file_io_info->is_created;
         file_io_info.is_renamed = raw_file_io_info->is_renamed;
         file_io_info.path_list.push_back(std::move(ulti::ToLower(manager::GetDosPath(raw_file_io_info->current_path))));
-        */
         std::wstring backup_name = raw_file_io_info->backup_name;
         if (backup_name.empty() && raw_file_io_info->is_modified == true)
         {
