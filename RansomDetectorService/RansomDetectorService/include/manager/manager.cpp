@@ -116,43 +116,41 @@ namespace manager {
 			for (int i = 0; i < (int)events.size(); ++i)
 			{
 				FileIoInfo& current_event = events[i];
-				bool merged = false;
 
 				// Only attempt to merge if the event is renamed
-				if (current_event.is_renamed) {
-					//PrintDebugW(L"Process %d: Renamed event", pid);
-					ull current_hash = manager::GetPathHash(current_event.path_list[0]);
+				ull current_hash = manager::GetPathHash(current_event.path_list[0]);
 
-					// Try to find the matching event based on the hash map
-					auto it = path_hash_to_merged_index.find(current_hash);
+				// Try to find the matching event based on the hash map
+				auto it = path_hash_to_merged_index.find(current_hash);
 
-					if (it != path_hash_to_merged_index.end())
-					{ // Begin to merge
-						//PrintDebugW(L"Process %d: Found matching event in hash map", pid);
+				if (it != path_hash_to_merged_index.end())
+				{	// Begin to merge
+					//PrintDebugW(L"Process %d: Found matching event in hash map", pid);
 
-						// If a match is found, merge the events
-						FileIoInfo& last_event = merged_events[it->second];
+					// If a match is found, merge the events
+					FileIoInfo& last_event = merged_events[it->second];
 
-						// Store the last_event flags
-						auto old_is_deleted = last_event.is_deleted;
-						auto old_is_created = last_event.is_created;
-						auto old_is_renamed = last_event.is_renamed;
-						auto old_is_modified = last_event.is_modified;
+					// Store the last_event flags
+					auto old_is_deleted = last_event.is_deleted;
+					auto old_is_created = last_event.is_created;
+					auto old_is_renamed = last_event.is_renamed;
+					auto old_is_modified = last_event.is_modified;
 
-						// Update the last_event with the current_event
-						last_event.is_modified |= current_event.is_modified;
+					// Update the last_event with the current_event
+					last_event.is_modified |= current_event.is_modified;
 
-						if (last_event.is_deleted == true && current_event.is_created == true) {
-							// File was deleted and then created again 
-							last_event.is_deleted = false;
-							last_event.is_created = false;
-						}
-						else {
-							last_event.is_deleted |= current_event.is_deleted;
-							last_event.is_created |= current_event.is_created;
-							last_event.is_renamed |= current_event.is_renamed;
-						}
-
+					if (last_event.is_deleted == true && current_event.is_created == true) {
+						// File was deleted and then created again 
+						last_event.is_deleted = false;
+						last_event.is_created = false;
+					}
+					else {
+						last_event.is_deleted |= current_event.is_deleted;
+						last_event.is_created |= current_event.is_created;
+						last_event.is_renamed |= current_event.is_renamed;
+					}
+					if (current_event.is_renamed) {
+						//PrintDebugW(L"Process %d: Renamed event", pid);
 						last_event.path_list.push_back(current_event.path_list.back());
 						last_event.backup_name_list.push_back(current_event.backup_name_list.back());
 						// Update the path hash map
@@ -160,30 +158,28 @@ namespace manager {
 						auto index = it->second;
 						path_hash_to_merged_index.erase(it);
 						path_hash_to_merged_index[new_path_hash] = index;
+					}
 
-						// Update the global process map
-						if (last_event.is_deleted == true && old_is_deleted == false)
+					// Update the global process map
+					if (last_event.is_deleted == true && old_is_deleted == false)
+					{
+						iterator_process_map->second.deleted_count += 1;
+					}
+					else if ((old_is_modified + old_is_created) < 2 && last_event.is_created == true && last_event.is_modified == true)
+					{
+						iterator_process_map->second.created_write_count += 1;
+						if (old_is_modified == true && old_is_created == false)
 						{
-							iterator_process_map->second.deleted_count += 1;
+							iterator_process_map->second.overwrite_count -= 1;
 						}
-						else if ((old_is_modified + old_is_created) < 2 && last_event.is_created == true && last_event.is_modified == true)
-						{
-							iterator_process_map->second.created_write_count += 1;
-							if (old_is_modified == true && old_is_created == false)
-							{
-								iterator_process_map->second.overwrite_count -= 1;
-							}
-						}
-						else if (last_event.is_modified == true && old_is_modified == false)
-						{
-							iterator_process_map->second.overwrite_count += 1;
-						}
-						merged = true;
+					}
+					else if (last_event.is_modified == true && old_is_modified == false)
+					{
+						iterator_process_map->second.overwrite_count += 1;
 					}
 				}
-
-				// If the event wasn't merged, add it as a new event
-				if (merged == false) {
+				else
+				{	// If the event wasn't merged, add it as a new event
 					merged_events.push_back(current_event);
 
 					// Update the path hash map
