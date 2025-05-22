@@ -248,11 +248,10 @@ namespace collector
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-
         String<WCHAR> current_path = flt::GetFileFullPathName(data);
         if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1)
         {
-            DebugMessage("File: %ws, size %llu is an error", current_path.Data(), current_path.Size());
+            //DebugMessage("File: %ws, size %llu is an error", current_path.Data(), current_path.Size());
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
@@ -284,12 +283,15 @@ namespace collector
         // If noncached paging I/O and not to the pagefile
         if (FlagOn(data->Iopb->IrpFlags, IRP_NOCACHE) && FlagOn(data->Iopb->IrpFlags, IRP_PAGING_IO))
         {
-            DebugMessage("File: %ws, noncached paging I/O", current_path.Data());
+            //DebugMessage("File: %ws, noncached paging I/O", current_path.Data());
             // We do not ignore kernel mode writes here because this is where memory-mapped writes occur.
             NTSTATUS status = FltGetFileContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
             if (!NT_SUCCESS(status))
             {
-                DebugMessage("FltGetFileContext failed: %x", status);
+				if (status != STATUS_NOT_FOUND)
+				{
+					DebugMessage("FltGetFileContext failed: %x", status);
+				}
                 return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
         }
@@ -297,15 +299,15 @@ namespace collector
         {
             if (data->RequestorMode == KernelMode)
             {
-                DebugMessage("File: %ws, kernel mode write", current_path.Data());
+                //DebugMessage("File: %ws, kernel mode write", current_path.Data());
                 return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
 
             NTSTATUS status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
             if (!NT_SUCCESS(status))
             {
-                DebugMessage("FltGetStreamHandleContext failed: %x", status);
-                return FLT_PREOP_SUCCESS_NO_CALLBACK;
+				if (status != STATUS_NOT_FOUND) { DebugMessage("FltGetStreamHandleContext failed: %x", status); }
+				return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
         }
 
@@ -346,11 +348,11 @@ namespace collector
         {
             FltDeleteContext(p_handle_context);
             FltReleaseContext(p_handle_context);
-            DebugMessage("FltDeleteFileContext: %p", p_handle_context);
+            //DebugMessage("FltDeleteFileContext: %p", p_handle_context);
         }
         else
         {
-            DebugMessage("FltReleaseContext success: %p", p_handle_context);
+            //DebugMessage("FltReleaseContext success: %p", p_handle_context);
             FltReleaseContext(p_handle_context);
         }
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
@@ -377,7 +379,7 @@ namespace collector
         status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
         if (!NT_SUCCESS(status))
         {
-            DebugMessage("FltGetStreamHandleContext failed: %x", status);
+            if (status != STATUS_NOT_FOUND) { DebugMessage("FltGetStreamHandleContext failed: %x", status); }
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
         
@@ -600,7 +602,7 @@ namespace collector
         NTSTATUS status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
         if (!NT_SUCCESS(status))
         {
-            //DebugMessage("FltGetStreamHandleContext failed: %x", status);
+            //if (status != STATUS_NOT_FOUND) { DebugMessage("FltGetStreamHandleContext failed: %x", status); }
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
         else

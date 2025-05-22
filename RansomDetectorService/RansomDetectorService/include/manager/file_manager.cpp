@@ -56,7 +56,7 @@ namespace manager
         file_io_info.path_list.push_back(std::move(ulti::ToLower(manager::GetDosPath(raw_file_io_info->current_path))));
 
         std::wstring backup_name = raw_file_io_info->backup_name;
-        if (backup_name.empty())
+        if (backup_name.empty() && raw_file_io_info->is_modified == true)
         {
             backup_name = std::to_wstring(GetPathHash(raw_file_io_info->current_path));
         }

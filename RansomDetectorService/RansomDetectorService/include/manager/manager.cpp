@@ -248,6 +248,10 @@ namespace manager {
         PrintDebugW(L"Get old types");
 		if (event.is_created == false && event.old_types.size() == 0) {
 			for (int i = 0; i < (int)event.path_list.size(); i++) {
+				if (event.backup_name_list[i].size() == 0)
+				{
+					continue;
+				}
 				auto backup_path = TEMP_DIR + event.backup_name_list[i];
 				if (FileExist(backup_path) == true)
 				{
