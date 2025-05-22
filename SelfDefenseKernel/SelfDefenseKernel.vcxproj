@@ -301,6 +301,7 @@
     <ClInclude Include="std\memory\sharedptr.h" />
     <ClInclude Include="std\set\set.h" />
     <ClInclude Include="std\string\string.h" />
+    <ClInclude Include="std\string\wstring.h" />
     <ClInclude Include="std\sync\mutex.h" />
     <ClInclude Include="std\ulti\def.h" />
     <ClInclude Include="std\vector\vector.h" />
@@ -317,6 +318,7 @@
     <ClCompile Include="function\self_defense.cpp" />
     <ClCompile Include="std\file\file.cpp" />
     <ClCompile Include="std\memory\memory.cpp" />
+    <ClCompile Include="std\string\wstring.cpp" />
     <ClCompile Include="std\sync\mutex.cpp" />
     <ClCompile Include="template\flt-ex.cpp" />
     <ClCompile Include="template\MiniFs.cpp" />

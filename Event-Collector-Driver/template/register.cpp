@@ -56,25 +56,30 @@ namespace reg
 		com::kComPort->Create();
 	}
 
-	void FltUnload()
+	NTSTATUS FltUnload()
 	{
-		DebugMessage("%ws", __FUNCTIONW__);
-        DebugMessage("Closing com port");
+		DebugMessage("Begin %ws", __FUNCTIONW__);
+
+		NTSTATUS status;
+		status = collector::FltUnload();
+		if (status == STATUS_FLT_DO_NOT_DETACH)
+		{
+			return status;
+		}
+
+		DebugMessage("Closing com port");
 		com::kComPort->Close();
-        DebugMessage("Unregistering kFilterHandle");
+		DebugMessage("Unregistering kFilterHandle");
 		FltUnregisterFilter(kFilterHandle);
 
-        DebugMessage("Unregistering filter");
-		collector::FltUnload();
-
-        DebugMessage("Free memory structures");
+		DebugMessage("Free memory structures");
 		delete kFltFuncVector;
 		kFltFuncVector = nullptr;
 		delete com::kComPort;
-        com::kComPort = nullptr;
+		com::kComPort = nullptr;
 
 		DebugMessage("Done %s", __FUNCTION__);
-		return;
+		return STATUS_SUCCESS;
 	}
 
 	Context* AllocCompletionContext()

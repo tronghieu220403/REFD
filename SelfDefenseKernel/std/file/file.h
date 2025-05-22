@@ -12,9 +12,7 @@ Write a class in Windows Kernel Driver that have the following operation on a fi
 
 namespace file
 {
-	ull IoGetFileSize(const WCHAR* file_path);
-
-    // SHOULD NOT USE INSIDE ANY MINIFILTER FUNCTION.
+    // SHOULD NOT USE INSIDE ANY MINIFILTER FUNCTION UNLESS NECCESSARY (for example access file on an another Harddisk).
     class ZwFile {
     private:
         String<WCHAR> file_path_;
@@ -65,6 +63,14 @@ namespace file
 
     protected:
     };
+
+	bool ZwIsFileExist(const String<WCHAR>& file_path_str);
+	ull IoGetFileSize(const WCHAR* file_path);
+
+	NTSTATUS ResolveSymbolicLink(const PUNICODE_STRING& link, const PUNICODE_STRING& resolved);
+	NTSTATUS NormalizeDevicePath(const PCUNICODE_STRING& path, const PUNICODE_STRING& normalized);
+	String<WCHAR> NormalizeDevicePath(const String<WCHAR>& path);
+
 }
 
 #endif // FILE_H

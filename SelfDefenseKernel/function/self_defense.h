@@ -4,11 +4,6 @@
 #include <fltKernel.h>
 #include "../../std/string/string.h"
 #include "../../std/vector/vector.h"
-#include "../../std/map/map.h"
-#include "../../std/sync/mutex.h"
-#include "../../template/register.h"
-#include "../../template/flt-ex.h"
-#include "query.h"
 
 namespace self_defense {
 
@@ -39,8 +34,6 @@ namespace self_defense {
 	Vector<String<WCHAR>> GetDefaultProtectedDirs();
 	Vector<String<WCHAR>> GetDefaultProtectedFiles();
 
-    NTSTATUS ResolveSymbolicLink(const PUNICODE_STRING& link, const PUNICODE_STRING& resolved);
-	NTSTATUS NormalizeDevicePath(const PCUNICODE_STRING& path, const PUNICODE_STRING& normalized);
 } // namespace self_defense
 
 #endif // SELF_DEFENSE_H

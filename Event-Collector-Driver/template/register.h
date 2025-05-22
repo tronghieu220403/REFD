@@ -39,7 +39,7 @@ namespace reg
 
 	void DrvUnload(PDRIVER_OBJECT driver_object);
 
-	void FltUnload();
+	NTSTATUS FltUnload();
 
 	Context* AllocCompletionContext();
 

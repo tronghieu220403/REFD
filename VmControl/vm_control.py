@@ -116,7 +116,7 @@ def init_env():
     vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.sys', 'E:\\SelfDefenseKernel.sys')
     #vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'E:\\SelfDefenseKernel.pdb')
     #vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'C:\\Windows\\System32\\drivers\\SelfDefenseKernel.pdb')
-    #os._exit(0)
+    os._exit(0)
     while True:
         try:
             vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\RansomDetectorService.exe')
@@ -142,7 +142,7 @@ init_env()
 
 print("Start testing")
 
-run_cmd("C:\\Users\\hieu\\Downloads\\TestIo.exe n 1")
+#run_cmd("C:\\Users\\hieu\\Downloads\\TestIo.exe n 1")
 
 print("Test stop")
 
@@ -151,5 +151,5 @@ print("Test stop")
 print("Test done")
 
 run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
-run_cmd('E:\\stop_collector_driver.bat')
+#run_cmd('E:\\stop_collector_driver.bat')
 run_cmd('E:\\stop_sd_driver.bat')

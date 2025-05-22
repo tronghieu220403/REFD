@@ -216,7 +216,7 @@ CONST FLT_CONTEXT_REGISTRATION kContexts[] = {
 //  This defines what we want to filter with FltMgr
 //
 
-CONST FLT_REGISTRATION kFilterRegistration = {
+FLT_REGISTRATION kFilterRegistration = {
 
     sizeof(FLT_REGISTRATION),         //  Size
     FLT_REGISTRATION_VERSION,           //  Version
@@ -325,6 +325,8 @@ DriverEntry (
     //
     //  Register with FltMgr to tell it our callback routines
     //
+	// Block all mandatory unload (sc stop, net stop, Win32 ControlService function)
+	kFilterRegistration.Flags = FLTFL_REGISTRATION_DO_NOT_SUPPORT_SERVICE_STOP;
 
     status = FltRegisterFilter( driver_object,
                                 &kFilterRegistration,
@@ -368,19 +370,26 @@ DriverUnload(
 }
 
 NTSTATUS
-MiniFsUnload (
-    _In_ FLT_FILTER_UNLOAD_FLAGS flags
-    )
+MiniFsUnload(
+	_In_ FLT_FILTER_UNLOAD_FLAGS flags
+)
 {
-    UNREFERENCED_PARAMETER( flags );
+	UNREFERENCED_PARAMETER(flags);
 
-    PAGED_CODE();
+	PAGED_CODE();
 
-    DebugMessage("%ws", __FUNCTIONW__);
-    reg::FltUnload();
+	NTSTATUS status = STATUS_SUCCESS;
 
-    DebugMessage("Successfully unloaded filter");
-    return STATUS_SUCCESS;
+	status = reg::FltUnload();
+	if (status == STATUS_FLT_DO_NOT_DETACH)
+	{
+		DebugMessage("Do not unload: STATUS_FLT_DO_NOT_DETACH");
+		return STATUS_FLT_DO_NOT_DETACH;
+	}
+
+	DebugMessage("Successfully unloaded filter");
+
+	return STATUS_SUCCESS;
 }
 
 FLT_PREOP_CALLBACK_STATUS

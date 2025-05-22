@@ -1,4 +1,10 @@
 ﻿#include "self_defense.h"
+#include "query.h"
+#include "../../std/map/map.h"
+#include "../../std/sync/mutex.h"
+#include "../../template/register.h"
+#include "../../template/flt-ex.h"
+#include "../../std/file/file.h"
 
 namespace self_defense {
 
@@ -116,9 +122,12 @@ namespace self_defense {
     NTSTATUS FltUnload()
     {
         DebugMessage("Begin %ws", __FUNCTIONW__);
+		UNICODE_STRING uni_str;
+		RtlInitUnicodeString(&uni_str, L"EventCollectorDriver");
 		HANDLE pid = PsGetCurrentProcessId();
 		if (pid == (HANDLE)4 || ExGetPreviousMode() == KernelMode)
 		{
+			FltUnloadFilter(&uni_str);
 			return STATUS_SUCCESS;
 		}
 		kProcessMapMutex.Lock();
@@ -126,6 +135,7 @@ namespace self_defense {
 		kProcessMapMutex.Unlock();
 		if (IsProtectedFile(process_path))
 		{
+			FltUnloadFilter(&uni_str);
 			return STATUS_SUCCESS;
 		}
 		return STATUS_FLT_DO_NOT_DETACH;
@@ -661,17 +671,16 @@ namespace self_defense {
     {
 		Vector<String<WCHAR>> protected_dirs;
 		for (int i = 0; i < sizeof(kDevicePathDirList) / sizeof(kDevicePathDirList[0]); ++i) {
-			UNICODE_STRING device_path_uni_str;
-			RtlInitUnicodeString(&device_path_uni_str, kDevicePathDirList[i]);
-			String<WCHAR> nomalized_path_str;
-			nomalized_path_str.Resize(1024);
-			UNICODE_STRING normalized_uni_str = { 0, nomalized_path_str.Size() * sizeof(WCHAR), nomalized_path_str.Data() };
-			NormalizeDevicePath(&device_path_uni_str, &normalized_uni_str);
-			nomalized_path_str.Resize(normalized_uni_str.Length / sizeof(WCHAR));
-
-			protected_dirs.PushBack(nomalized_path_str);
-
-			DebugMessage("Protected dir: %ws", nomalized_path_str.Data());
+			String<WCHAR> nomalized_path_str(file::NormalizeDevicePath(kDevicePathDirList[i]));
+			if (nomalized_path_str.Size() > 0)
+			{
+				protected_dirs.PushBack(nomalized_path_str);
+				DebugMessage("Protected dir: %ws", nomalized_path_str.Data());
+			}
+			else
+			{
+				DebugMessage("Failed to protect dir: %ws", nomalized_path_str.Data());
+			}
 
 		}
 		return protected_dirs;
@@ -687,181 +696,19 @@ namespace self_defense {
 	{
 		Vector<String<WCHAR>> protected_files;
 		for (int i = 0; i < sizeof(kDevicePathFileList) / sizeof(kDevicePathFileList[0]); ++i) {
-			UNICODE_STRING device_path_uni_str;
-			RtlInitUnicodeString(&device_path_uni_str, kDevicePathFileList[i]);
-			String<WCHAR> nomalized_path_str;
-			nomalized_path_str.Resize(1024);
-			UNICODE_STRING normalized_uni_str = { 0, nomalized_path_str.Size() * sizeof(WCHAR), nomalized_path_str.Data() };
-			NormalizeDevicePath(&device_path_uni_str, &normalized_uni_str);
-			nomalized_path_str.Resize(normalized_uni_str.Length / sizeof(WCHAR));
-
-			protected_files.PushBack(nomalized_path_str);
-			DebugMessage("Protected file: %ws", nomalized_path_str.Data());
-
+			String<WCHAR> nomalized_path_str(file::NormalizeDevicePath(kDevicePathFileList[i]));
+			if (nomalized_path_str.Size() > 0)
+			{
+				protected_files.PushBack(nomalized_path_str);
+				DebugMessage("Protected file: %ws", nomalized_path_str.Data());
+			}
+			else
+			{
+				DebugMessage("Failed to protect file: %ws", nomalized_path_str.Data());
+			}
 		}
 		return protected_files;
 	}
 
-    NTSTATUS ResolveSymbolicLink(const PUNICODE_STRING& link, const PUNICODE_STRING& resolved)
-    {
-        OBJECT_ATTRIBUTES attribs;
-        HANDLE hsymLink;
-        ULONG written;
-        NTSTATUS status = STATUS_SUCCESS;
 
-        // Open symlink
-
-        InitializeObjectAttributes(&attribs, link, OBJ_KERNEL_HANDLE, NULL, NULL);
-
-        status = ZwOpenSymbolicLinkObject(&hsymLink, GENERIC_READ, &attribs);
-        if (!NT_SUCCESS(status))
-            return status;
-
-        // Query original name
-
-        status = ZwQuerySymbolicLinkObject(hsymLink, resolved, &written);
-        ZwClose(hsymLink);
-        if (!NT_SUCCESS(status))
-            return status;
-
-        return status;
-    }
-
-    //
-    // Convertion template:
-    //   \\??\\C:\\Windows -> \\Device\\HarddiskVolume1\\Windows
-    //
-    NTSTATUS NormalizeDevicePath(const PCUNICODE_STRING& path, const PUNICODE_STRING& normalized)
-    {
-        UNICODE_STRING global_prefix, dvc_prefix, sysroot_prefix;
-        NTSTATUS status;
-
-        RtlInitUnicodeString(&global_prefix, L"\\??\\");
-        RtlInitUnicodeString(&dvc_prefix, L"\\Device\\");
-        RtlInitUnicodeString(&sysroot_prefix, L"\\SystemRoot\\");
-
-        if (RtlPrefixUnicodeString(&global_prefix, path, TRUE))
-        {
-            OBJECT_ATTRIBUTES attribs;
-            UNICODE_STRING sub_Path;
-            HANDLE hsym_link;
-            ULONG i, written, size;
-
-            sub_Path.Buffer = (PWCH)((PUCHAR)path->Buffer + global_prefix.Length);
-            sub_Path.Length = path->Length - global_prefix.Length;
-
-            for (i = 0; i < sub_Path.Length; i++)
-            {
-                if (sub_Path.Buffer[i] == L'\\')
-                {
-                    sub_Path.Length = (USHORT)(i * sizeof(WCHAR));
-                    break;
-                }
-            }
-
-            if (sub_Path.Length == 0)
-                return STATUS_INVALID_PARAMETER_1;
-
-            sub_Path.Buffer = path->Buffer;
-            sub_Path.Length += global_prefix.Length;
-            sub_Path.MaximumLength = sub_Path.Length;
-
-            // Open symlink
-
-            InitializeObjectAttributes(&attribs, &sub_Path, OBJ_KERNEL_HANDLE, NULL, NULL);
-
-            status = ZwOpenSymbolicLinkObject(&hsym_link, GENERIC_READ, &attribs);
-            if (!NT_SUCCESS(status))
-                return status;
-
-            // Query original name
-
-            status = ZwQuerySymbolicLinkObject(hsym_link, normalized, &written);
-            ZwClose(hsym_link);
-            if (!NT_SUCCESS(status))
-                return status;
-
-            // Construct new variable
-
-            size = path->Length - sub_Path.Length + normalized->Length;
-            if (size > normalized->MaximumLength)
-                return STATUS_BUFFER_OVERFLOW;
-
-            sub_Path.Buffer = (PWCH)((PUCHAR)path->Buffer + sub_Path.Length);
-            sub_Path.Length = path->Length - sub_Path.Length;
-            sub_Path.MaximumLength = sub_Path.Length;
-
-            status = RtlAppendUnicodeStringToString(normalized, &sub_Path);
-            if (!NT_SUCCESS(status))
-                return status;
-        }
-        else if (RtlPrefixUnicodeString(&dvc_prefix, path, TRUE))
-        {
-            normalized->Length = 0;
-            status = RtlAppendUnicodeStringToString(normalized, path);
-            if (!NT_SUCCESS(status))
-                return status;
-        }
-        else if (RtlPrefixUnicodeString(&sysroot_prefix, path, TRUE))
-        {
-            UNICODE_STRING sub_path, resolved_link, win_dir;
-            WCHAR buffer[64];
-            SHORT i;
-
-            // Open symlink
-
-            sub_path.Buffer = sysroot_prefix.Buffer;
-            sub_path.MaximumLength = sub_path.Length = sysroot_prefix.Length - sizeof(WCHAR);
-
-            resolved_link.Buffer = buffer;
-            resolved_link.Length = 0;
-            resolved_link.MaximumLength = sizeof(buffer);
-
-            status = ResolveSymbolicLink(&sub_path, &resolved_link);
-            if (!NT_SUCCESS(status))
-                return status;
-
-            // \Device\Harddisk0\Partition0\Windows -> \Device\Harddisk0\Partition0
-            // Win10: \Device\BootDevice\Windows -> \Device\BootDevice
-
-            win_dir.Length = 0;
-            for (i = (resolved_link.Length - sizeof(WCHAR)) / sizeof(WCHAR); i >= 0; i--)
-            {
-                if (resolved_link.Buffer[i] == L'\\')
-                {
-                    win_dir.Buffer = resolved_link.Buffer + i;
-                    win_dir.Length = resolved_link.Length - (i * sizeof(WCHAR));
-                    win_dir.MaximumLength = win_dir.Length;
-                    resolved_link.Length = (i * sizeof(WCHAR));
-                    break;
-                }
-            }
-
-            // \Device\Harddisk0\Partition0 -> \Device\HarddiskVolume1
-            // Win10: \Device\BootDevice -> \Device\HarddiskVolume2
-
-            status = ResolveSymbolicLink(&resolved_link, normalized);
-            if (!NT_SUCCESS(status))
-                return status;
-
-            // Construct new variable
-
-            sub_path.Buffer = (PWCHAR)((PCHAR)path->Buffer + sysroot_prefix.Length - sizeof(WCHAR));
-            sub_path.MaximumLength = sub_path.Length = path->Length - sysroot_prefix.Length + sizeof(WCHAR);
-
-            status = RtlAppendUnicodeStringToString(normalized, &win_dir);
-            if (!NT_SUCCESS(status))
-                return status;
-
-            status = RtlAppendUnicodeStringToString(normalized, &sub_path);
-            if (!NT_SUCCESS(status))
-                return status;
-        }
-        else
-        {
-            return STATUS_INVALID_PARAMETER;
-        }
-
-        return STATUS_SUCCESS;
-    }
 } // namespace self_defense

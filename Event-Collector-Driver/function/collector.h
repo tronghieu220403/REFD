@@ -28,7 +28,7 @@ namespace collector
     void DrvRegister();
     void DrvUnload();
     void FltRegister();
-    void FltUnload();
+	NTSTATUS FltUnload();
 
     FLT_PREOP_CALLBACK_STATUS PreFileCreate(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context);
     
