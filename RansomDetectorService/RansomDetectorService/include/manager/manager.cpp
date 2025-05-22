@@ -221,6 +221,7 @@ namespace manager {
 				kFileIoManager->UnlockMutex();
 				continue;
 			}
+            kFileIoManager->UnlockMutex();
 			EvaluateProcess(pid);
 		}
 		//PrintDebugW(L"End evaluating processes");

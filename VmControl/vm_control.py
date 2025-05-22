@@ -96,7 +96,7 @@ def init_env():
 
     print("Delete files in C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny and E:\\backup")
     run_cmd("powershell -Command \"Remove-Item \'C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny\\*\' -Recurse -Force\"")
-    #run_cmd("powershell -Command \"Remove-Item \'E:\\test\\*\' -Recurse -Force\"")
+    run_cmd("powershell -Command \"Remove-Item \'E:\\test\\*\' -Recurse -Force\"")
     run_cmd("powershell -Command \"Remove-Item \'E:\\backup\\*\' -Recurse -Force\"")
 
     print("Copy files to C:\\Users\\hieu\\Downloads\\TestIo.exe")
@@ -156,8 +156,8 @@ time.sleep(30)
 
 print("Test done")
 
-#run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
-#run_cmd("copy nul E:\\ggez.txt > nul")
+run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
+run_cmd("copy nul E:\\ggez.txt > nul")
 
-#run_cmd('E:\\stop_collector_driver.bat')
-#run_cmd('E:\\stop_sd_driver.bat')
+run_cmd('E:\\stop_collector_driver.bat')
+run_cmd('E:\\stop_sd_driver.bat')
