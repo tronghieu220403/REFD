@@ -5,7 +5,7 @@ namespace com
 	NTSTATUS ComPort::Create()
 	{
 		NTSTATUS status;
-		UNICODE_STRING name = RTL_CONSTANT_STRING(L"\\mf");
+		UNICODE_STRING name = RTL_CONSTANT_STRING(L"\\hieunt_selfdefensekernel_mf");
 
 		status = FltBuildDefaultSecurityDescriptor(&sec_des_, FLT_PORT_ALL_ACCESS);
 		if (NT_SUCCESS(status)) {
@@ -25,8 +25,13 @@ namespace com
 			}
 			else
 			{
+				DebugMessage("FltCreateCommunicationPort failed: %x", status);
 				ComPort::Close();
 			}
+		}
+		else
+		{
+			DebugMessage("FltBuildDefaultSecurityDescriptor failed: %x", status);
 		}
 		return status;
 	}
@@ -35,10 +40,11 @@ namespace com
 	{
 		if (client_port_ == nullptr)
 		{
+			//DebugMessage("client_port_ is null");
 			return STATUS_CONNECTION_INVALID;
 		}
 		LARGE_INTEGER timeout;
-		timeout.QuadPart = -50000000; // 5s
+		timeout.QuadPart = -150000000; // 15s
 		NTSTATUS status = FltSendMessage(p_filter_handle_,
 			&client_port_,
 			sender_buffer,
@@ -49,9 +55,11 @@ namespace com
 		);
 		if (status != STATUS_SUCCESS && status != 0x11)
 		{
+			//DebugMessage("SendMessage failed: %x", status);
 		}
 		else
 		{
+			//DebugMessage("SendMessage success: %x", status);
 			status = STATUS_SUCCESS;
 		}
 		return status;
@@ -82,7 +90,7 @@ namespace com
 
 		client_port_ = client_port;
 
-		// DebugMessage("Connected");
+		DebugMessage("ComPort::ConnectHandler connected, client port: %p", client_port_);
 
 		return STATUS_SUCCESS;
 	}
@@ -132,9 +140,7 @@ namespace com
 			return GetExceptionCode();
 		}
 
-		PCHAR msg = (char *)"kernel msg";
-		// DebugMessage("user msg is : % s \r\n", (PCHAR)input_buffer);
-
+		PCHAR msg = (char*)"";
 
 		RtlCopyMemory(&output_buffer, msg, sizeof(msg));
 
@@ -160,6 +166,5 @@ namespace com
 	{
 		return p_filter_handle_;
 	}
-
 
 }

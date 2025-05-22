@@ -31,6 +31,7 @@ def login_as_system():
     print("Logged as SYSTEM", flush=True)
 
 def run_cmd(cmd: str, wait: bool = True):
+    print("Run cmd: ", cmd)
     vm.proc_run("C:\\Windows\\System32\\cmd.exe", '/c "' + cmd + '"', wait)
 
 vm_path = r'C:\Users\hieunt118\Documents\Virtual Machines\Windows 10 x64 22h2\Windows 10 x64 22h2.vmx'
@@ -82,14 +83,17 @@ def init_env():
         pass
     print("Shut down services")
     run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
+    run_cmd("del /f E:\\ggez.txt")
     run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
+    run_cmd("copy nul E:\\ggez.txt > nul")
+
     #time.sleep(5)
     run_cmd('E:\\stop_collector_driver.bat')
     run_cmd('E:\\stop_sd_driver.bat')
 
     print("Delete files in C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny and E:\\backup")
-    #run_cmd("powershell -Command \"Remove-Item \'C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny\\*\' -Recurse -Force\"")
-    #run_cmd("powershell -Command \"Remove-Item \'E:\\test\\*\' -Recurse -Force\"")
+    run_cmd("powershell -Command \"Remove-Item \'C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny\\*\' -Recurse -Force\"")
+    run_cmd("powershell -Command \"Remove-Item \'E:\\test\\*\' -Recurse -Force\"")
     run_cmd("powershell -Command \"Remove-Item \'E:\\backup\\*\' -Recurse -Force\"")
 
     print("Copy files to C:\\Users\\hieu\\Downloads\\TestIo.exe")
@@ -101,22 +105,22 @@ def init_env():
         pass
     #run_cmd("E:\\TestIo.exe c")
     #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\test" "E:\\test" /E /I /Y')
-    #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny" /E /I /Y')
-    #run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "E:\\test" /E /I /Y')
+    run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny" /E /I /Y')
+    run_cmd(f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "E:\\test" /E /I /Y')
 
-    vm.copy_host_to_guest(f'{env_path}\\TrIDLib.dll', 'E:\\hieunt210330\\TrIDLib.dll')
-    vm.copy_host_to_guest(f'{env_path}\\triddefs.trd', 'E:\\hieunt210330\\triddefs.trd')
+    #vm.copy_host_to_guest(f'{env_path}\\TrIDLib.dll', 'E:\\hieunt210330\\TrIDLib.dll')
+    #vm.copy_host_to_guest(f'{env_path}\\triddefs.trd', 'E:\\hieunt210330\\triddefs.trd')
 
     print("Copy driver files to E:\\")
-    vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.inf', 'E:\\EventCollectorDriver.inf')
+    #vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.inf', 'E:\\EventCollectorDriver.inf')
     vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.sys', 'E:\\EventCollectorDriver.sys')
     #vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\EventCollectorDriver.pdb')
     #vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'C:\\Windows\\System32\\drivers\\EventCollectorDriver.pdb')
-    vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.inf', 'E:\\SelfDefenseKernel.inf')
+    #vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.inf', 'E:\\SelfDefenseKernel.inf')
     vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.sys', 'E:\\SelfDefenseKernel.sys')
     #vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'E:\\SelfDefenseKernel.pdb')
     #vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'C:\\Windows\\System32\\drivers\\SelfDefenseKernel.pdb')
-    os._exit(0)
+    #os._exit(0)
     while True:
         try:
             vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\RansomDetectorService.exe')
@@ -130,26 +134,29 @@ def init_env():
 
     #os._exit(0)
     print("Start driver and service")
+    run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
+    run_cmd("del /f E:\\ggez.txt")
 
     run_cmd("E:\\start_sd_driver.bat")
-    #time.sleep(3)
-    run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
     run_cmd("E:\\start_collector_driver.bat")
     run_cmd("E:\\hieunt210330\\RansomDetectorService.exe", False)
 
 init_env()
 
+time.sleep(5)
 
 print("Start testing")
 
-#run_cmd("C:\\Users\\hieu\\Downloads\\TestIo.exe n 1")
+run_cmd("C:\\Users\\hieu\\Downloads\\TestIo.exe n 2")
 
 print("Test stop")
 
-#time.sleep(30)
+time.sleep(30)
 
 print("Test done")
 
 run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
-#run_cmd('E:\\stop_collector_driver.bat')
+run_cmd("copy nul E:\\ggez.txt > nul")
+
+run_cmd('E:\\stop_collector_driver.bat')
 run_cmd('E:\\stop_sd_driver.bat')

@@ -539,19 +539,33 @@ namespace file
 		return STATUS_SUCCESS;
 	}
 
-	String<WCHAR> NormalizeDevicePath(const String<WCHAR>& path)
+	String<WCHAR> NormalizeDevicePathStr(const String<WCHAR>& path)
 	{
 		UNICODE_STRING path_uni_str = { path.Size() * sizeof(WCHAR), path.Size() * sizeof(WCHAR) , (PWCH)path.Data() };
 		String<WCHAR> normalized;
-		normalized.Resize(path.Size() * 2);
-		UNICODE_STRING normalized_uni_str = { normalized.Size() * sizeof(WCHAR), normalized.Size() * sizeof(WCHAR) , (PWCH)normalized.Data() };
-		if (NT_SUCCESS(NormalizeDevicePath(&path_uni_str, &normalized_uni_str)))
+		normalized.Resize(max(path.Size() * 2, 1024));
+		while (true)
 		{
-			normalized.Resize(wcsnlen(normalized.Data(), normalized.Size()));
-		}
-		else
-		{
-			normalized.Clear();
+			UNICODE_STRING normalized_uni_str = { normalized.Size() * sizeof(WCHAR), normalized.Size() * sizeof(WCHAR) , (PWCH)normalized.Data() };
+			NTSTATUS status = NormalizeDevicePath(&path_uni_str, &normalized_uni_str);
+			if (NT_SUCCESS(status))
+			{
+				normalized.Resize(wcsnlen(normalized.Data(), normalized.Size()));
+				break;
+			}
+			else if (status == STATUS_BUFFER_OVERFLOW && normalized.Size() <= 32767)
+            {
+                // Resize the buffer to twice its current size
+                DebugMessage("NormalizeDevicePath: STATUS_BUFFER_OVERFLOW, resizing buffer to %llu", normalized.Size() * 2);
+                normalized.Resize(normalized.Size() * 2);
+                continue;
+            }
+            else
+			{
+				DebugMessage("NormalizeDevicePath failed: %x", status);
+				normalized.Clear();
+				break;
+			}
 		}
 		return normalized;
 	}

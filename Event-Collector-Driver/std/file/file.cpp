@@ -3,39 +3,6 @@
 
 namespace file
 {
-	ull IoGetFileSize(const WCHAR* file_path)
-	{
-		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
-		{
-			return 0;
-		}
-		UNICODE_STRING uni_str;
-		OBJECT_ATTRIBUTES Obj;
-		HANDLE hFile;
-		NTSTATUS status;
-		IO_STATUS_BLOCK io_status;
-		FILE_STANDARD_INFORMATION file_std_info;
-
-		RtlInitUnicodeString(&uni_str, file_path);
-		InitializeObjectAttributes(&Obj, &uni_str, OBJ_KERNEL_HANDLE | OBJ_CASE_INSENSITIVE, NULL, NULL);
-		status = IoCreateFile(&hFile, FILE_READ_ATTRIBUTES, &Obj, &io_status, 0, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_DELETE | FILE_SHARE_WRITE, FILE_OPEN, FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0, CreateFileTypeNone, NULL, IO_NO_PARAMETER_CHECKING);
-		if (!NT_SUCCESS(status))
-		{
-			DebugMessage("IoCreateFile failed: %x", status);
-			return NULL;
-		}
-		status = ZwQueryInformationFile(hFile, &io_status, &file_std_info, sizeof(file_std_info), FileStandardInformation);
-		if (!NT_SUCCESS(status))
-		{
-			DebugMessage("ZwQueryInformationFile failed: %x", status);
-			ZwClose(hFile);
-			return NULL;
-		}
-		ZwClose(hFile);
-		return file_std_info.EndOfFile.QuadPart;
-
-	}
-
 	ZwFile::ZwFile(const String<WCHAR>& current_path) :
 		file_path_(current_path)
 	{
@@ -115,10 +82,10 @@ namespace file
 		{
 			return;
 		}
-        if (file_handle_ == nullptr)
-        {
-            return;
-        }
+		if (file_handle_ == nullptr)
+		{
+			return;
+		}
 		ZwClose(file_handle_);
 		file_handle_ = nullptr;
 	}
@@ -157,10 +124,9 @@ namespace file
 			is_open_ = true;
 			return true;
 		}
-		UNICODE_STRING uni_str;
+		UNICODE_STRING uni_str = { file_path_.Size() * sizeof(WCHAR), file_path_.Size() * sizeof(WCHAR), file_path_.Data() };
 		OBJECT_ATTRIBUTES obj_attr;
 		IO_STATUS_BLOCK io_status_block;
-		RtlInitUnicodeString(&uni_str, file_path_.Data());
 		InitializeObjectAttributes(&obj_attr, &uni_str, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
 		NTSTATUS status = FltCreateFileEx(p_filter_handle_, p_instance_, &file_handle_, &p_file_object_, FILE_GENERIC_READ | FILE_GENERIC_WRITE, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, create_disposition_, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0, IO_IGNORE_SHARE_ACCESS_CHECK);
 		if (NT_SUCCESS(status))
@@ -169,7 +135,7 @@ namespace file
 		}
 		else
 		{
-			DebugMessage("FltCreateFile %ws failed: %x", file_path_.Data(), status);
+			//DebugMessage("FltCreateFile %ws failed: %x", file_path_.Data(), status);
 			is_open_ = false;
 			file_handle_ = nullptr;
 			p_file_object_ = nullptr;
@@ -213,19 +179,19 @@ namespace file
 
 		// Word around to avoid STATUS_INVALID_OFFSET_ALIGNMENT (0xC0000474) error.
 		ull new_length;
-        PVOID new_buffer;
-        ull new_offset = offset / 4 * 4;
+		PVOID new_buffer;
+		ull new_offset = offset / 4 * 4;
 		if (new_offset < offset)
 		{
 			new_length = length + (offset - new_offset);
 			new_buffer = new UCHAR[new_length];
 		}
-        else
-        {
-            new_offset = offset;
-            new_length = length;
-            new_buffer = buffer;
-        }
+		else
+		{
+			new_offset = offset;
+			new_length = length;
+			new_buffer = buffer;
+		}
 
 		LARGE_INTEGER byte_offset;
 		byte_offset.QuadPart = new_offset;
@@ -236,7 +202,7 @@ namespace file
 		{
 			if (status == STATUS_END_OF_FILE)
 			{
-				DebugMessage("FltReadFile read %u bytes, exptected %llu bytes", bytes_read, new_length);
+				//DebugMessage("FltReadFile read %u bytes, exptected %llu bytes", bytes_read, new_length);
 				if (bytes_read == 0)
 				{
 					return 0;
@@ -244,12 +210,12 @@ namespace file
 			}
 			else
 			{
-				DebugMessage("FltReadFile failed: %x", status);
+				//DebugMessage("FltReadFile failed: %x", status);
 				return 0;
 			}
 		}
 
-        // Copy the data from new_buffer to the old buffer
+		// Copy the data from new_buffer to the old buffer
 		if (new_offset < offset)
 		{
 			memcpy(buffer, (PUCHAR)new_buffer + (offset - new_offset), bytes_read - (offset - new_offset));
@@ -273,7 +239,7 @@ namespace file
 		NTSTATUS status = FltWriteFile(p_instance_, p_file_object_, &byte_offset, (ULONG)length, buffer, NULL, &bytes_written, nullptr, nullptr);
 		if (!NT_SUCCESS(status))
 		{
-			DebugMessage("FltWriteFile failed: %x", status);
+			//DebugMessage("FltWriteFile failed: %x", status);
 			return false;
 		}
 		return NT_SUCCESS(status);
@@ -286,10 +252,9 @@ namespace file
 			return false;
 		}
 		HANDLE file_handle_tmp = nullptr;
-		UNICODE_STRING uni_str;
+		UNICODE_STRING uni_str = { file_path_.Size() * sizeof(WCHAR), file_path_.Size() * sizeof(WCHAR), file_path_.Data() };
 		OBJECT_ATTRIBUTES obj_attr;
 		IO_STATUS_BLOCK io_status_block = { 0 };
-		RtlInitUnicodeString(&uni_str, file_path_.Data());
 		InitializeObjectAttributes(&obj_attr, &uni_str, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
 		NTSTATUS status = FltCreateFile(p_filter_handle_, p_instance_, &file_handle_tmp, FILE_READ_ATTRIBUTES, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, FILE_OPEN, FILE_NON_DIRECTORY_FILE, NULL, 0, IO_IGNORE_SHARE_ACCESS_CHECK);
 		if (NT_SUCCESS(status))
@@ -297,7 +262,11 @@ namespace file
 			FltClose(file_handle_tmp);
 			return true;
 		}
-        DebugMessage("FltCreateFile %ws returned error: %x", file_path_.Data(), status);
+		else if (status == STATUS_SHARING_VIOLATION)
+		{
+			return true;
+		}
+		//DebugMessage("FltCreateFile %ws returned error: %x", file_path_.Data(), status);
 		return false;
 	}
 
@@ -305,12 +274,12 @@ namespace file
 	{
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
-			DebugMessage("KeGetCurrentIrql != PASSIVE_LEVEL");
+			//DebugMessage("KeGetCurrentIrql != PASSIVE_LEVEL");
 			return ULL_MAX;
 		}
 		if (is_open_ == false)
 		{
-			DebugMessage("File is not opened");
+			//DebugMessage("File is not opened");
 			return ULL_MAX;
 		}
 		NTSTATUS status;
@@ -343,6 +312,248 @@ namespace file
 	FileFlt::~FileFlt()
 	{
 		Close();
+	}
+
+	bool ZwIsFileExist(const String<WCHAR>& file_path_str)
+	{
+		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
+		{
+			return false;
+		}
+
+		HANDLE file_handle = nullptr;
+		UNICODE_STRING uni_str = { file_path_str.Size() * sizeof(WCHAR), file_path_str.Size() * sizeof(WCHAR), (PWCH)file_path_str.Data() };
+
+		OBJECT_ATTRIBUTES obj_attr;
+		InitializeObjectAttributes(&obj_attr, &uni_str, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
+
+		IO_STATUS_BLOCK io_status_block = { 0 };
+
+		NTSTATUS status = ZwCreateFile(&file_handle, FILE_READ_ATTRIBUTES, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, FILE_OPEN, FILE_NON_DIRECTORY_FILE, NULL, 0);
+
+		if (NT_SUCCESS(status))
+		{
+			ZwClose(file_handle);
+			return true;
+		}
+		else if (status == STATUS_SHARING_VIOLATION)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	ull IoGetFileSize(const WCHAR* file_path)
+	{
+		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
+		{
+			return 0;
+		}
+		UNICODE_STRING uni_str;
+		OBJECT_ATTRIBUTES obj;
+		HANDLE h_file;
+		NTSTATUS status;
+		IO_STATUS_BLOCK io_status;
+		FILE_STANDARD_INFORMATION file_std_info;
+
+		RtlInitUnicodeString(&uni_str, file_path);
+		InitializeObjectAttributes(&obj, &uni_str, OBJ_KERNEL_HANDLE | OBJ_CASE_INSENSITIVE, NULL, NULL);
+		status = IoCreateFile(&h_file, FILE_READ_ATTRIBUTES, &obj, &io_status, 0, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_READ | FILE_SHARE_DELETE | FILE_SHARE_WRITE, FILE_OPEN, FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0, CreateFileTypeNone, NULL, IO_NO_PARAMETER_CHECKING);
+		if (!NT_SUCCESS(status))
+		{
+			DebugMessage("IoCreateFile failed: %x", status);
+			return NULL;
+		}
+		status = ZwQueryInformationFile(h_file, &io_status, &file_std_info, sizeof(file_std_info), FileStandardInformation);
+		if (!NT_SUCCESS(status))
+		{
+			DebugMessage("ZwQueryInformationFile failed: %x", status);
+			ZwClose(h_file);
+			return NULL;
+		}
+		ZwClose(h_file);
+		return file_std_info.EndOfFile.QuadPart;
+	}
+
+	NTSTATUS ResolveSymbolicLink(const PUNICODE_STRING& link, const PUNICODE_STRING& resolved)
+	{
+		OBJECT_ATTRIBUTES attribs;
+		HANDLE hsymLink;
+		ULONG written;
+		NTSTATUS status = STATUS_SUCCESS;
+
+		// Open symlink
+
+		InitializeObjectAttributes(&attribs, link, OBJ_KERNEL_HANDLE, NULL, NULL);
+
+		status = ZwOpenSymbolicLinkObject(&hsymLink, GENERIC_READ, &attribs);
+		if (!NT_SUCCESS(status))
+			return status;
+
+		// Query original name
+
+		status = ZwQuerySymbolicLinkObject(hsymLink, resolved, &written);
+		ZwClose(hsymLink);
+		if (!NT_SUCCESS(status))
+			return status;
+
+		return status;
+	}
+
+	//
+	// Convertion template:
+	//   \\??\\C:\\Windows -> \\Device\\HarddiskVolume1\\Windows
+	//
+	NTSTATUS NormalizeDevicePath(const PCUNICODE_STRING& path, const PUNICODE_STRING& normalized)
+	{
+		UNICODE_STRING global_prefix, dvc_prefix, sysroot_prefix;
+		NTSTATUS status;
+
+		RtlInitUnicodeString(&global_prefix, L"\\??\\");
+		RtlInitUnicodeString(&dvc_prefix, L"\\Device\\");
+		RtlInitUnicodeString(&sysroot_prefix, L"\\SystemRoot\\");
+
+		if (RtlPrefixUnicodeString(&global_prefix, path, TRUE))
+		{
+			OBJECT_ATTRIBUTES attribs;
+			UNICODE_STRING sub_Path;
+			HANDLE hsym_link;
+			ULONG i, written, size;
+
+			sub_Path.Buffer = (PWCH)((PUCHAR)path->Buffer + global_prefix.Length);
+			sub_Path.Length = path->Length - global_prefix.Length;
+
+			for (i = 0; i < sub_Path.Length; i++)
+			{
+				if (sub_Path.Buffer[i] == L'\\')
+				{
+					sub_Path.Length = (USHORT)(i * sizeof(WCHAR));
+					break;
+				}
+			}
+
+			if (sub_Path.Length == 0)
+				return STATUS_INVALID_PARAMETER_1;
+
+			sub_Path.Buffer = path->Buffer;
+			sub_Path.Length += global_prefix.Length;
+			sub_Path.MaximumLength = sub_Path.Length;
+
+			// Open symlink
+
+			InitializeObjectAttributes(&attribs, &sub_Path, OBJ_KERNEL_HANDLE, NULL, NULL);
+
+			status = ZwOpenSymbolicLinkObject(&hsym_link, GENERIC_READ, &attribs);
+			if (!NT_SUCCESS(status))
+				return status;
+
+			// Query original name
+
+			status = ZwQuerySymbolicLinkObject(hsym_link, normalized, &written);
+			ZwClose(hsym_link);
+			if (!NT_SUCCESS(status))
+				return status;
+
+			// Construct new variable
+
+			size = path->Length - sub_Path.Length + normalized->Length;
+			if (size > normalized->MaximumLength)
+				return STATUS_BUFFER_OVERFLOW;
+
+			sub_Path.Buffer = (PWCH)((PUCHAR)path->Buffer + sub_Path.Length);
+			sub_Path.Length = path->Length - sub_Path.Length;
+			sub_Path.MaximumLength = sub_Path.Length;
+
+			status = RtlAppendUnicodeStringToString(normalized, &sub_Path);
+			if (!NT_SUCCESS(status))
+				return status;
+		}
+		else if (RtlPrefixUnicodeString(&dvc_prefix, path, TRUE))
+		{
+			normalized->Length = 0;
+			status = RtlAppendUnicodeStringToString(normalized, path);
+			if (!NT_SUCCESS(status))
+				return status;
+		}
+		else if (RtlPrefixUnicodeString(&sysroot_prefix, path, TRUE))
+		{
+			UNICODE_STRING sub_path, resolved_link, win_dir;
+			WCHAR buffer[64];
+			SHORT i;
+
+			// Open symlink
+
+			sub_path.Buffer = sysroot_prefix.Buffer;
+			sub_path.MaximumLength = sub_path.Length = sysroot_prefix.Length - sizeof(WCHAR);
+
+			resolved_link.Buffer = buffer;
+			resolved_link.Length = 0;
+			resolved_link.MaximumLength = sizeof(buffer);
+
+			status = ResolveSymbolicLink(&sub_path, &resolved_link);
+			if (!NT_SUCCESS(status))
+				return status;
+
+			// \Device\Harddisk0\Partition0\Windows -> \Device\Harddisk0\Partition0
+			// Win10: \Device\BootDevice\Windows -> \Device\BootDevice
+
+			win_dir.Length = 0;
+			for (i = (resolved_link.Length - sizeof(WCHAR)) / sizeof(WCHAR); i >= 0; i--)
+			{
+				if (resolved_link.Buffer[i] == L'\\')
+				{
+					win_dir.Buffer = resolved_link.Buffer + i;
+					win_dir.Length = resolved_link.Length - (i * sizeof(WCHAR));
+					win_dir.MaximumLength = win_dir.Length;
+					resolved_link.Length = (i * sizeof(WCHAR));
+					break;
+				}
+			}
+
+			// \Device\Harddisk0\Partition0 -> \Device\HarddiskVolume1
+			// Win10: \Device\BootDevice -> \Device\HarddiskVolume2
+
+			status = ResolveSymbolicLink(&resolved_link, normalized);
+			if (!NT_SUCCESS(status))
+				return status;
+
+			// Construct new variable
+
+			sub_path.Buffer = (PWCHAR)((PCHAR)path->Buffer + sysroot_prefix.Length - sizeof(WCHAR));
+			sub_path.MaximumLength = sub_path.Length = path->Length - sysroot_prefix.Length + sizeof(WCHAR);
+
+			status = RtlAppendUnicodeStringToString(normalized, &win_dir);
+			if (!NT_SUCCESS(status))
+				return status;
+
+			status = RtlAppendUnicodeStringToString(normalized, &sub_path);
+			if (!NT_SUCCESS(status))
+				return status;
+		}
+		else
+		{
+			return STATUS_INVALID_PARAMETER;
+		}
+
+		return STATUS_SUCCESS;
+	}
+
+	String<WCHAR> NormalizeDevicePathStr(const String<WCHAR>& path)
+	{
+		UNICODE_STRING path_uni_str = { path.Size() * sizeof(WCHAR), path.Size() * sizeof(WCHAR) , (PWCH)path.Data() };
+		String<WCHAR> normalized;
+		normalized.Resize(path.Size() * 2);
+		UNICODE_STRING normalized_uni_str = { normalized.Size() * sizeof(WCHAR), normalized.Size() * sizeof(WCHAR) , (PWCH)normalized.Data() };
+		if (NT_SUCCESS(NormalizeDevicePath(&path_uni_str, &normalized_uni_str)))
+		{
+			normalized.Resize(wcsnlen(normalized.Data(), normalized.Size()));
+		}
+		else
+		{
+			normalized.Clear();
+		}
+		return normalized;
 	}
 
 }

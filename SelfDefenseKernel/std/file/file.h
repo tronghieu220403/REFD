@@ -69,7 +69,7 @@ namespace file
 
 	NTSTATUS ResolveSymbolicLink(const PUNICODE_STRING& link, const PUNICODE_STRING& resolved);
 	NTSTATUS NormalizeDevicePath(const PCUNICODE_STRING& path, const PUNICODE_STRING& normalized);
-	String<WCHAR> NormalizeDevicePath(const String<WCHAR>& path);
+	String<WCHAR> NormalizeDevicePathStr(const String<WCHAR>& path);
 
 }
 

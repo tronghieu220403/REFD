@@ -51,8 +51,8 @@ namespace reg
 
 	void PostFltRegister()
 	{
-		com::kComPort->SetPfltFilter(kFilterHandle);
-		com::kComPort->Create();
+		//com::kComPort->SetPfltFilter(kFilterHandle);
+		//com::kComPort->Create();
 	}
 
 	NTSTATUS FltUnload()

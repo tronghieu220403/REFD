@@ -40,7 +40,7 @@ static void StartEventCollector()
 		HRESULT hr = com_port.Create(PORT_NAME);
 		if (FAILED(hr))
 		{
-			PrintDebugW(L"Failed to create communication port: %08X", hr);
+			//PrintDebugW(L"Failed to create communication port: %08X", hr);
 			Sleep(1000); // Retry after 1 second
 		}
 
@@ -181,6 +181,9 @@ static void RunService()
 
 		if (!StartServiceCtrlDispatcher(service_table)) {
 			PrintDebugW(L"StartServiceCtrlDispatcher failed");
+        }
+		else {
+			PrintDebugW(L"StartServiceCtrlDispatcher succeeded");
 		}
 	}
 
@@ -188,11 +191,12 @@ static void RunService()
 
 static void RunProgram()
 {
-#ifdef _DEBUG
-	ServiceMain();
-#else
+#ifndef _DEBUG
 	RunService();
 	//ServiceMain();
+#else
+	//RunService();
+	ServiceMain();
 #endif // _DEBUG
 }
 

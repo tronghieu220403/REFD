@@ -227,7 +227,7 @@ FLT_REGISTRATION kFilterRegistration = {
 	(PFLT_FILTER_UNLOAD_CALLBACK)MiniFsUnload,                                  //  MiniFilterUnload
 
 	(PFLT_INSTANCE_SETUP_CALLBACK)MiniFsInstanceSetup,                           //  InstanceSetup
-	(PFLT_INSTANCE_QUERY_TEARDOWN_CALLBACK)MiniFsInstanceQueryTeardown,         //  InstanceQueryTeardown
+	(PFLT_INSTANCE_QUERY_TEARDOWN_CALLBACK)MiniFsInstanceQueryTeardown,         //  InstanceQueryTeardown (called via FltDetachVolume, not FilterUnload)
 	(PFLT_INSTANCE_TEARDOWN_CALLBACK)MiniFsInstanceTeardownStart,               //  InstanceTeardownStart
 	(PFLT_INSTANCE_TEARDOWN_CALLBACK)MiniFsInstanceTeardownComplete,            //  InstanceTeardownComplete
 
@@ -308,7 +308,7 @@ DriverEntry(
 
 	UNREFERENCED_PARAMETER(registry_path);
 
-	DebugMessage("%ws", __FUNCTIONW__);
+	DebugMessage("SelfDefenseKernel");
 
 	DebugMessage("GetSystemRoutineAddresses");
 	GetSystemRoutineAddresses();

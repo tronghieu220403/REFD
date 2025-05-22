@@ -25,13 +25,13 @@ namespace com
 			}
 			else
 			{
-                DebugMessage("FltCreateCommunicationPort failed: %x", status);
+				DebugMessage("FltCreateCommunicationPort failed: %x", status);
 				ComPort::Close();
 			}
 		}
 		else
 		{
-            DebugMessage("FltBuildDefaultSecurityDescriptor failed: %x", status);
+			DebugMessage("FltBuildDefaultSecurityDescriptor failed: %x", status);
 		}
 		return status;
 	}
@@ -40,7 +40,7 @@ namespace com
 	{
 		if (client_port_ == nullptr)
 		{
-            DebugMessage("client_port_ is null");
+			//DebugMessage("client_port_ is null");
 			return STATUS_CONNECTION_INVALID;
 		}
 		LARGE_INTEGER timeout;
@@ -55,11 +55,11 @@ namespace com
 		);
 		if (status != STATUS_SUCCESS && status != 0x11)
 		{
-            DebugMessage("SendMessage failed: %x", status);
+			//DebugMessage("SendMessage failed: %x", status);
 		}
 		else
 		{
-            DebugMessage("SendMessage success: %x", status);
+			//DebugMessage("SendMessage success: %x", status);
 			status = STATUS_SUCCESS;
 		}
 		return status;
@@ -140,7 +140,7 @@ namespace com
 			return GetExceptionCode();
 		}
 
-		PCHAR msg = (char *)"kernel msg";
+		PCHAR msg = (char*)"";
 
 		RtlCopyMemory(&output_buffer, msg, sizeof(msg));
 

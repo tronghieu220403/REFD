@@ -12,9 +12,7 @@ Write a class in Windows Kernel Driver that have the following operation on a fi
 
 namespace file
 {
-	ull IoGetFileSize(const WCHAR* file_path);
-
-    // SHOULD NOT USE INSIDE ANY MINIFILTER FUNCTION.
+    // SHOULD NOT USE INSIDE ANY MINIFILTER FUNCTION UNLESS NECCESSARY (for example access file on an another Harddisk).
     class ZwFile {
     private:
         String<WCHAR> file_path_;
@@ -26,7 +24,7 @@ namespace file
 
         ull Read(PVOID buffer, ull length);
         ull Append(PVOID buffer, ull length);
-		ull Size();
+        ull Size();
 
         String<WCHAR> GetPath() const { return file_path_; }
         void Close();
@@ -43,7 +41,7 @@ namespace file
         PFLT_FILTER p_filter_handle_ = { 0 };
         PFLT_INSTANCE p_instance_ = { 0 };
         HANDLE file_handle_ = nullptr;
-		ULONG create_disposition_ = FILE_OPEN;
+        ULONG create_disposition_ = FILE_OPEN;
         bool is_open_ = false;
         bool pre_alloc_file_object_ = false; // if true, the caller must free the file object.
     public:
@@ -65,6 +63,14 @@ namespace file
 
     protected:
     };
+
+    bool ZwIsFileExist(const String<WCHAR>& file_path_str);
+    ull IoGetFileSize(const WCHAR* file_path);
+
+    NTSTATUS ResolveSymbolicLink(const PUNICODE_STRING& link, const PUNICODE_STRING& resolved);
+    NTSTATUS NormalizeDevicePath(const PCUNICODE_STRING& path, const PUNICODE_STRING& normalized);
+    String<WCHAR> NormalizeDevicePathStr(const String<WCHAR>& path);
+
 }
 
 #endif // FILE_H

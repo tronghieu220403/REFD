@@ -15,7 +15,7 @@ const std::wstring TEST_DIR = L"E:\\test";
 
 // --- Utility: XOR-encrypt buffer in-place ---
 void xor_encrypt(std::vector<uint8_t>& buf) {
-    //for (auto& b : buf) b ^= XOR_KEY;
+    for (auto& b : buf) b ^= XOR_KEY;
 }
 
 // --- Normal I/O (ReadFile/WriteFile) ---
@@ -100,8 +100,8 @@ bool write_mapping(const std::wstring& path,
             p[buf.size() + i] = dis(gen);
     }
     //FlushViewOfFile(p, totalSize);
-    //UnmapViewOfFile(p);
-    //CloseHandle(fm); CloseHandle(h);
+    UnmapViewOfFile(p);
+    CloseHandle(fm); CloseHandle(h);
     return true;
 }
 
@@ -225,13 +225,14 @@ int wmain(int argc, wchar_t* argv[]) {
             files.push_back(e.path().wstring());
         }
     }
+    /*
     for (auto& e : std::filesystem::recursive_directory_iterator(DOWNLOAD_DIR)) {
         if (e.is_regular_file())
         {
             files.push_back(e.path().wstring());
         }
     }
-
+    */
     if (files.empty()) {
         std::wcerr << L"No files in " << TEST_DIR << L"\n";
         return 0;

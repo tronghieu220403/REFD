@@ -512,23 +512,15 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
         collector::HANDLE_CONTEXT* handle_context = (collector::HANDLE_CONTEXT*)context;
         if (handle_context != nullptr)
         {
-            DebugMessage("FLT_STREAMHANDLE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
+            //DebugMessage("FLT_STREAMHANDLE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
             if (handle_context->is_modified + handle_context->is_deleted + handle_context->is_created + handle_context->is_renamed == 0)
             {
-                DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
+                //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
             }
-            DebugMessage("Sending event to user mode: requestor_pid: %d",
-                handle_context->requestor_pid);
-            DebugMessage("Sending event to user mode: is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d",
-                handle_context->is_modified,
-                handle_context->is_deleted,
-                handle_context->is_created,
-                handle_context->is_renamed);
-            DebugMessage("Sending event to user mode: current_path %ws, new_path %ws, backup_name %ws",
-                handle_context->current_path,
-                handle_context->new_path,
-                handle_context->backup_name);
+            //DebugMessage("Sending event to user mode: requestor_pid: %d", handle_context->requestor_pid);
+            //DebugMessage("Sending event to user mode: is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d", handle_context->is_modified, handle_context->is_deleted, handle_context->is_created, handle_context->is_renamed);
+            //DebugMessage("Sending event to user mode: current_path %ws, new_path %ws, backup_name %ws", handle_context->current_path, handle_context->new_path, handle_context->backup_name);
 
             com::kComPort->Send(handle_context, sizeof(collector::HANDLE_CONTEXT));
         }
@@ -538,27 +530,19 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
         collector::HANDLE_CONTEXT* handle_context = (collector::HANDLE_CONTEXT*)context;
         if (handle_context != nullptr)
         {
-            DebugMessage("FLT_FILE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
+            //DebugMessage("FLT_FILE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
             if (handle_context->is_modified + handle_context->is_deleted + handle_context->is_created + handle_context->is_renamed == 0)
             {
-                DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
+                //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
             }
-            DebugMessage("Sending event to user mode: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws",
-                handle_context->requestor_pid,
-                handle_context->is_modified,
-                handle_context->is_deleted,
-                handle_context->is_created,
-                handle_context->is_renamed,
-                handle_context->current_path,
-                handle_context->new_path
-            );
+            //DebugMessage("Sending event to user mode: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws", handle_context->requestor_pid, handle_context->is_modified, handle_context->is_deleted, handle_context->is_created, handle_context->is_renamed, handle_context->current_path, handle_context->new_path);
             com::kComPort->Send(handle_context, sizeof(collector::HANDLE_CONTEXT));
         }
     }
     else
     {
-        DebugMessage("Unknown context type: %d", context_type);
+        //DebugMessage("Unknown context type: %d", context_type);
     }
     return;
 }

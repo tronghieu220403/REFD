@@ -122,23 +122,17 @@ namespace self_defense {
     NTSTATUS FltUnload()
     {
         DebugMessage("Begin %ws", __FUNCTIONW__);
-		UNICODE_STRING uni_str;
-		RtlInitUnicodeString(&uni_str, L"EventCollectorDriver");
-		HANDLE pid = PsGetCurrentProcessId();
-		if (pid == (HANDLE)4 || ExGetPreviousMode() == KernelMode)
-		{
-			FltUnloadFilter(&uni_str);
-			return STATUS_SUCCESS;
-		}
-		kProcessMapMutex.Lock();
-		const String<WCHAR>& process_path = GetProcessImageName(pid);
-		kProcessMapMutex.Unlock();
-		if (IsProtectedFile(process_path))
-		{
-			FltUnloadFilter(&uni_str);
-			return STATUS_SUCCESS;
-		}
-		return STATUS_FLT_DO_NOT_DETACH;
+
+        String<WCHAR> file_path1(file::NormalizeDevicePathStr(L"\\??\\C:\\Users\\hieu\\Documents\\ggez.txt"));
+        String<WCHAR> file_path2(file::NormalizeDevicePathStr(L"\\??\\E:\\ggez.txt"));
+        if (file::ZwIsFileExist(file_path1) == true || file::ZwIsFileExist(file_path2) == true)
+        {
+            DebugMessage("Magic files exist, so we allow the driver to unload");
+            return STATUS_SUCCESS;
+        }
+        DebugMessage("STATUS_FLT_DO_NOT_DETACH");
+        return STATUS_FLT_DO_NOT_DETACH;
+
     }
 
     // Process notification callback
@@ -193,7 +187,7 @@ namespace self_defense {
         {
             // Process kết thúc, xóa khỏi cache
             kProcessMapMutex.Lock();
-            DebugMessage("%ws: termination, pid %llu, killer %llu, path %ws", __FUNCTIONW__, (ull)pid, (ull)PsGetCurrentProcessId(), GetProcessImageName(pid).Data());
+            DebugMessage("Termination, pid %llu, killer %llu, path %ws", (ull)pid, (ull)PsGetCurrentProcessId(), GetProcessImageName(pid).Data());
             kProcessMap->Erase(pid);
             kProcessMapMutex.Unlock();
         }
@@ -671,7 +665,7 @@ namespace self_defense {
     {
 		Vector<String<WCHAR>> protected_dirs;
 		for (int i = 0; i < sizeof(kDevicePathDirList) / sizeof(kDevicePathDirList[0]); ++i) {
-			String<WCHAR> nomalized_path_str(file::NormalizeDevicePath(kDevicePathDirList[i]));
+			String<WCHAR> nomalized_path_str(file::NormalizeDevicePathStr(kDevicePathDirList[i]));
 			if (nomalized_path_str.Size() > 0)
 			{
 				protected_dirs.PushBack(nomalized_path_str);
@@ -696,7 +690,7 @@ namespace self_defense {
 	{
 		Vector<String<WCHAR>> protected_files;
 		for (int i = 0; i < sizeof(kDevicePathFileList) / sizeof(kDevicePathFileList[0]); ++i) {
-			String<WCHAR> nomalized_path_str(file::NormalizeDevicePath(kDevicePathFileList[i]));
+			String<WCHAR> nomalized_path_str(file::NormalizeDevicePathStr(kDevicePathFileList[i]));
 			if (nomalized_path_str.Size() > 0)
 			{
 				protected_files.PushBack(nomalized_path_str);
