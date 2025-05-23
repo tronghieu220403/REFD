@@ -148,7 +148,7 @@ init_env()
 
 print("Start testing")
 
-run_cmd("C:\\Users\\hieu\\Downloads\\d24c1c9f8c5abd584f6e120c9c2e4cca\\d24c1c9f8c5abd584f6e120c9c2e4cca.exe")
+run_cmd("C:\\Users\\hieu\\Downloads\\muestra.zip\\muestra\\wetransfer-29ee54\\MsMpEng.exe")
 
 print("Test stop")
 

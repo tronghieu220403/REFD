@@ -112,56 +112,6 @@ def run_with_timeout(vm: VixVM, cmd: str, timeout=360):
         t.join()
         return 0
 
-def QuickCopyNapierGuestToHost(vm: VixVM, src: str, dst: str, f, dir_type: str = None):
-    """
-    Sao chép tập tin / thư mục từ guest sang host sử dụng VMware Shared Folders và robocopy.
-    
-    :param vm: Đối tượng VixVM đại diện cho VM.
-    :param src: Đường dẫn thư mục/tập tin trên Guest OS.
-    :param dst: Đường dẫn thư mục/tập tin trên Host OS.
-    """
-    try:
-        if "Documents" in src:
-            share_name = "Documents"
-        elif "Program Files" in src:
-            share_name = "Program Files"
-        elif "Desktop" in src:
-            share_name = "Desktop"
-        elif "Downloads" in src:
-            share_name = "Downloads"
-        try:
-            vm.share_remove(share_name)
-        except VixError:
-            pass
-        
-        try:
-            final_dst = dst + share_name + "\\"
-            print(f"Create folder {final_dst}", flush=True, file=f)
-            os.makedirs(final_dst, exist_ok=True)
-        except Exception as e:
-            print(f"Error: {e}", file=f)
-
-        try:
-            vm.add_shared_folder(share_name, final_dst, True)
-        except VixError as ex:
-            print(f"Lỗi khi thêm shared folder: {ex}", file=f)
-            #return
-
-        guest_share_path = f"\\\\vmware-host\\shared folders\\{dir_type}"
-        guest_share_path = guest_share_path[:-1] if guest_share_path[-1] == "\\" else guest_share_path
-        src = src[:-1] if src[-1] == "\\" else src
-        copy_cmd = f'robocopy "{src}" "{guest_share_path}" /E /Z /MT:6'
-        
-        print(f"Executing command: {copy_cmd}", file=f)
-        if run_with_timeout(vm, "C:\\Windows\\System32\\cmd.exe " + f'/c \"{copy_cmd}\"') == 1:
-            print(f"Command timed out: {copy_cmd}", file=f)
-        else: 
-            print(f"Command completed successfully: {copy_cmd}", file=f)
-        vm.share_remove(share_name)
-    
-    except VixError as ex:
-        print(f"Lỗi khi sao chép: {ex}")
-
 def ClearDirectory(directory_path: str):
     """
     Xóa toàn bộ file và thư mục con bên trong thư mục được chỉ định, nhưng giữ nguyên thư mục đó.
@@ -186,24 +136,13 @@ def evaluate_ransom(file_name: str, host_mal_dir: str, vm: VixVM, f):
     
     guest_download_dir = "C:\\Users\\hieu\\Downloads\\"
     guest_log_path = "E:\\hieunt20210330\\log.txt"
-    guest_napier_progfile_dir = "C:\\Program Files\\AAAANapierOne-tiny\\"
-    guest_napier_documents_dir = "C:\\Users\\hieu\\Documents\\AAAANapierOne-tiny\\"
-    guest_napier_desktop_dir = "C:\\Users\\hieu\\Desktop\\AAAANapierOne-tiny\\"
-    guest_napier_downloads_dir = "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny\\"
-    guest_calc_log_path = "E:\\hieunt20210330\\output.txt"
-    guest_etw_svc_path = "E:\\EtwService.exe"
-    guest_sd_bat_path = "E:\\start_driver.bat"
-
-    guest_turn_off_etw_path = "E:\\ETWShutDown.exe"
 
     print(f"Evaluating ransomware {file_name}", flush=True, file=f)
     guest_mal_path = guest_download_dir + file_name + ".exe"
-    host_log_name = host_mal_dir + "log_"
+    host_log_name = host_mal_dir + "log.txt"
     host_mal_path = host_mal_dir + file_name
-    host_encypted_dir = host_mal_dir + "encrypted\\"
 
-    if os.path.exists(host_encypted_dir + "Documents\\AAAANapierOne-tiny") or os.path.exists(host_encypted_dir + "Program Files\\AAAANapierOne-tiny"):
-        print(f"Ransomware {file_name} has been evaluated", flush=True, file=f)
+    if True == False:
         return
     try:
         # Back to previous snapshot
@@ -222,19 +161,10 @@ def evaluate_ransom(file_name: str, host_mal_dir: str, vm: VixVM, f):
         print(f"Copy malware file from host to guest: {host_mal_path} -> {guest_mal_path}", flush=True, file=f)
         vm.copy_host_to_guest(host_mal_path, guest_mal_path)
 
-        # Run EtwService
-        print("Run EtwService", flush=True, file=f)
-        vm.proc_run(guest_etw_svc_path, None, False) # not wait for EtwService to finish
-        time.sleep(1)
+        # TODO: Run self defense, SD and evaluator service
 
-        vm.share_enable(True)
 
-        login_as_hieu(vm, f)
-
-        print("Run SD", file=f)
-        vm.proc_run("C:\\Windows\\System32\\cmd.exe", '/c "' + guest_sd_bat_path + '"', True)
-        time.sleep(1)
-
+        # Run malware
         print("Run malware", flush=True, file=f)
         try:
             vm.proc_run(guest_mal_path, None, False) # not wait for malware to finish
@@ -249,62 +179,54 @@ def evaluate_ransom(file_name: str, host_mal_dir: str, vm: VixVM, f):
         login_as_system(vm, f)
         
         # Copy log file from guest to host
-        host1_log_path = host_log_name + "1.txt"
-        print(f"Copy log file from guest to host: {guest_log_path} -> {host1_log_path}", flush=True, file=f)
-        vm.copy_guest_to_host(guest_log_path, host1_log_path)
+        print(f"Copy log file from guest to host: {guest_log_path} -> {host_log_name}", flush=True, file=f)
+        vm.copy_guest_to_host(guest_log_path, host_log_name)
 
-        # Check if "NapierOne-tiny\\" exists at least X times in log file
-        print("Check if NapierOne-tiny exists at least X times in log file", flush=True, file=f)
-        guest_napier_dir_lower = str("AAAANapierOne-tiny").lower()
-        
-        def cnt_napier_one_tiny(log_path: str, guest_napier_dir_lower: str):
+        # Check if lines that have both "is_modified: 1" and \"AAAANapierOne-tiny\" exists at least X times in log file
+        print("Check if lines that have both \"is_modified: 1\" and \"AAAANapierOne-tiny\" exists at least X times in log file", flush=True, file=f)
+        guest_napier_dir_lower_str = str("apierOne").lower()
+        guest_is_modified_str = str("is_modified: 1").lower()
+
+        def cnt_napier_one_tiny(log_path: str, guest_napier_dir_lower_str: str, guest_is_modified_str: str):\
+            # TODO: Check if lines that have both "is_modified: 1" and \"AAAANapierOne-tiny\" exists at least X times in log file
+            '''
             with open(log_path, 'r', encoding='utf-16-le') as log_file:
                 log_data = log_file.read()
             return log_data.count(guest_napier_dir_lower)
+            '''
+            pass
         X = 20
-        cnt = cnt_napier_one_tiny(host1_log_path, guest_napier_dir_lower)
+        cnt = cnt_napier_one_tiny(host_log_name, guest_napier_dir_lower_str, guest_is_modified_str)
         if  cnt < X:
-            print(f"NapierOne-tiny not found enough in log file, appears {cnt} times", flush=True, file=f)
+            print(f"Not found enough modified files in log file, appears {cnt} times", flush=True, file=f)
             print(f"Malware is not work: {file_name}", flush=True, file=f)
             return
         else:
+            # TODO: If found found a line with "is ransomware" then break.
+            '''
             print(f"NapierOne-tiny found enough in log file, appears {cnt} times", flush=True, file=f)
-            last_cnt = cnt    
+            last_cnt = cnt
             for i in range(1, 15):
-                host_i_log_path = host_log_name + str(i + 1) + ".txt"
                 host_wait_min(vm, 4, f)
                 # Copy log file from guest to host
-                print(f"Copy log file from guest to host: {guest_log_path} -> {host_i_log_path}", flush=True, file=f)
-                vm.copy_guest_to_host(guest_log_path, host_i_log_path)
-                cnt = cnt_napier_one_tiny(host_i_log_path, guest_napier_dir_lower)
+                print(f"Copy log file from guest to host: {guest_log_path} -> {host_log_name}", flush=True, file=f)
+                vm.copy_guest_to_host(guest_log_path, host_log_name)
+                cnt = cnt_napier_one_tiny(host_log_name, guest_napier_dir_lower)
                 if cnt > last_cnt + X:
                     print(f"NapierOne-tiny found enough in log file, appears {cnt} times", flush=True, file=f)
                     last_cnt = cnt
                 else:
                     break
-
-            # Turn off EtwService and trucate dataset
+            '''
+            '''
+            # TODO: Turn off all drivers and services ?? Not nessary
             try:
-                print("Turn off EtwService", flush=True, file=f)
-                vm.proc_run(guest_turn_off_etw_path, None, True)
+                print("Turn off all drivers and services", flush=True, file=f)
                 time.sleep(1)
             except VixError as ex:
                 pass
-            
-            # Create dir to store encrypted files
-            try:
-                print(f"Create folder {host_encypted_dir}", flush=True, file=f)
-                os.makedirs(host_encypted_dir, exist_ok=True)
-            except Exception as e:
-                print(f"Error: {e}", file=f)
-
-            print("Get all encypted files in guest", flush=True, file=f)
-            ClearDirectory(host_encypted_dir)
-            QuickCopyNapierGuestToHost(vm, guest_napier_documents_dir, host_encypted_dir, f, "Documents")
-            QuickCopyNapierGuestToHost(vm, guest_napier_progfile_dir, host_encypted_dir, f, "Program Files")
-            QuickCopyNapierGuestToHost(vm, guest_napier_downloads_dir, host_encypted_dir, f, "Downloads")
-            QuickCopyNapierGuestToHost(vm, guest_napier_desktop_dir, host_encypted_dir, f, "Desktop")
-            vm.share_enable(False)
+            '''
+            vm.power_off()
             print("Done " + file_name, flush=True, file=f)
             return True
     except VixError as ex:
