@@ -222,7 +222,7 @@ namespace srv
 		service_status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
 		service_status.dwWin32ExitCode = NO_ERROR;
 		service_status.dwWaitHint = 0;
-		service_status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN | SERVICE_ACCEPT_STOP;
+		service_status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN;// | SERVICE_ACCEPT_STOP;
 
 		status_handle = RegisterServiceCtrlHandlerW(service_name, (LPHANDLER_FUNCTION)ServiceCtrlHandler);
 		if (status_handle == NULL)

@@ -658,7 +658,8 @@ namespace self_defense {
 
 	const WCHAR* kDevicePathDirList[] = {
 		L"\\??\\E:\\",
-		L"\\??\\C:\\Program Files\\VMware\\VMware Tools\\"
+		L"\\??\\C:\\Program Files\\VMware\\VMware Tools\\",
+		L"\\Device\\Harddisk0\\DR0",
 	};
 
 	Vector<String<WCHAR>> GetDefaultProtectedDirs()
@@ -682,8 +683,7 @@ namespace self_defense {
 
 	const WCHAR* kDevicePathFileList[] = {
 		L"\\??\\C:\\Windows\\System32\\drivers\\SelfDefenseKernel.sys",
-		L"\\??\\C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys",
-		L"\\Device\\Harddisk0\\DR0"
+		L"\\??\\C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys"
 	};
 
 	Vector<String<WCHAR>> GetDefaultProtectedFiles()

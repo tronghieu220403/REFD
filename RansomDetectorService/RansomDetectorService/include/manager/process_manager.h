@@ -22,5 +22,7 @@ namespace manager {
             std::chrono::steady_clock::now(); // force trigger immediately
         bool is_first_evaluation = true;
     };
+
+	bool KillProcessByPID(DWORD pid);
 }
 #endif  // PROCESS_MANAGER_H_

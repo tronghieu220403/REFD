@@ -133,7 +133,7 @@ static void ServiceMain()
 		{
 			auto start_time = std::chrono::high_resolution_clock::now();
 			manager::kEvaluator->LockMutex();
-			manager::kEvaluator->EvaluateProcesses();
+			//manager::kEvaluator->EvaluateProcesses();
 			manager::kEvaluator->UnlockMutex();
 			if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
 			{
