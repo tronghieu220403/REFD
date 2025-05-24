@@ -1,5 +1,6 @@
 #include "../template/MiniFs.h"
 #include "../com/comport/comport.h"
+#include "../std/string/wstring.h"
 //
 //  operation registration
 //

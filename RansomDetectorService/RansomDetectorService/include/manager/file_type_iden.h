@@ -7,7 +7,7 @@
 
 #include "../ulti/include.h"
 #include "../trid/trid_api.h"
-#define PRODUCT_PATH L"E:\\hieunt210330\\"
+#define PRODUCT_PATH L"E:\\hieunt210330\\hieunt210330\\"
 
 #define BelowTextThreshold(part, total) (part <= total * 97 / 100)
 

@@ -6,7 +6,7 @@
 #include "include.h"
 
 #define DEBUG_LOG_THRESHOLD 1000
-#define LOG_PATH L"E:\\hieunt210330\\log.txt"
+#define LOG_PATH L"E:\\hieunt210330\\hieunt210330\\log.txt"
 
 namespace debug {
 

@@ -38,7 +38,7 @@ namespace collector
         DebugMessage("Begin %ws", __FUNCTIONW__);
 
         String<WCHAR> file_path1(file::NormalizeDevicePathStr(L"\\??\\C:\\Users\\hieu\\Documents\\ggez.txt"));
-        String<WCHAR> file_path2(file::NormalizeDevicePathStr(L"\\??\\E:\\ggez.txt"));
+        String<WCHAR> file_path2(file::NormalizeDevicePathStr(L"\\??\\E:\\hieunt210330\\ggez.txt"));
         if (file::ZwIsFileExist(file_path1) == true || file::ZwIsFileExist(file_path2) == true)
         {
             DebugMessage("Magic files exist, so we allow the driver to unload");

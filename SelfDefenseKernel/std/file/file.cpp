@@ -442,7 +442,7 @@ namespace file
 
 			// Open symlink
 
-			InitializeObjectAttributes(&attribs, &sub_Path, OBJ_KERNEL_HANDLE, NULL, NULL);
+			InitializeObjectAttributes(&attribs, &sub_Path, OBJ_KERNEL_HANDLE | OBJ_CASE_INSENSITIVE, NULL, NULL);
 
 			status = ZwOpenSymbolicLinkObject(&hsym_link, GENERIC_READ, &attribs);
 			if (!NT_SUCCESS(status))

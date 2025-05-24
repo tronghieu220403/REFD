@@ -41,7 +41,7 @@ namespace manager
 		}
         FileIoInfo file_io_info;
         
-        //PrintDebugW(L"File I/O event before: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws, backup_name: %ws", raw_file_io_info->requestor_pid,(int)raw_file_io_info->is_modified, (int)raw_file_io_info->is_deleted, (int)raw_file_io_info->is_created, (int)raw_file_io_info->is_renamed, raw_file_io_info->current_path, raw_file_io_info->new_path, raw_file_io_info->backup_name);
+        PrintDebugW(L"File I/O event before: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws, backup_name: %ws", raw_file_io_info->requestor_pid,(int)raw_file_io_info->is_modified, (int)raw_file_io_info->is_deleted, (int)raw_file_io_info->is_created, (int)raw_file_io_info->is_renamed, raw_file_io_info->current_path, raw_file_io_info->new_path, raw_file_io_info->backup_name);
 
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
         file_io_info.is_modified = raw_file_io_info->is_modified;
@@ -85,7 +85,7 @@ namespace manager
                 std::wstring device_name = device_path;
                 kDosPath.insert({device_name, drive_str});
                 kNativePath.insert({ drive_str, device_name });
-                PrintDebugW(L"Cached: %ws -> %ws", device_name.c_str(), drive_str.c_str());
+                //PrintDebugW(L"Cached: %ws -> %ws", device_name.c_str(), drive_str.c_str());
             }
         }
     }

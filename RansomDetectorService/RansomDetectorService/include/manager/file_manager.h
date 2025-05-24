@@ -4,8 +4,8 @@
 #include "../ulti/support.h"
 #include "../ulti/debug.h"
 
-#define MAIN_DIR L"\\??\\E:\\"
-#define TEMP_DIR L"\\??\\E:\\backup\\"
+#define MAIN_DIR L"\\??\\E:\\hieunt210330"
+#define TEMP_DIR L"\\??\\E:\\hieunt210330\\backup\\"
 
 #define EVALUATATION_INTERVAL_MS 5000
 #define EVALUATATION_INTERVAL_SEC (EVALUATATION_INTERVAL_MS / 1000)

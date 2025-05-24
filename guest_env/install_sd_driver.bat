@@ -5,5 +5,4 @@ if %errorlevel% neq 0 (
 fltmc unload SelfDefenseKernel
 del /f C:\Windows\System32\drivers\SelfDefenseKernel.sys
 copy /y E:\hieunt210330\SelfDefenseKernel.sys C:\Windows\System32\drivers\SelfDefenseKernel.sys
-fltmc load SelfDefenseKernel
-sc query SelfDefenseKernel
+InfDefaultInstall.exe E:\hieunt210330\SelfDefenseKernel.inf

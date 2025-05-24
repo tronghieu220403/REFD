@@ -206,7 +206,7 @@ namespace type_iden
 		std::lock_guard<std::mutex> lock(m_mutex);
 		if (ulti::IsCurrentX86Process() == false)
 		{
-			PrintDebugW(L"Current process is not a x86 process");
+			//PrintDebugW(L"Current process is not a x86 process");
 			return false;
 		}
 		if (trid_api != nullptr)
@@ -222,7 +222,7 @@ namespace type_iden
 		{
 			if (trid_error_code == TRID_MISSING_LIBRARY)
 			{
-				PrintDebugW(L"TrIDLib.dll not found");
+				//PrintDebugW(L"TrIDLib.dll not found");
 			}
 			if (trid_api != nullptr)
 			{
@@ -238,22 +238,22 @@ namespace type_iden
 	std::vector<std::string> TrID::GetTypes(const fs::path& file_path)
 	{
 		std::lock_guard<std::mutex> lock(m_mutex);
-		PrintDebugW(L"Getting types of file: %ws", file_path.wstring().c_str());
+		//PrintDebugW(L"Getting types of file: %ws", file_path.wstring().c_str());
 		/*
 		if (issue_thread_id != GetCurrentThreadId())
 		{
-			PrintDebugW(L"TrID API is not thread-safe");
+			//PrintDebugW(L"TrID API is not thread-safe");
 			return {};
 		}
 		*/
 		if (trid_api == nullptr)
 		{
-			PrintDebugW(L"TrID API is not initialized");
+			//PrintDebugW(L"TrID API is not initialized");
 			return {};
 		}
 		if (file_path.empty())
 		{
-			PrintDebugW(L"File path is empty");
+			//PrintDebugW(L"File path is empty");
 			return {};
 		}
 		int ret;
@@ -298,19 +298,18 @@ namespace type_iden
 				*buf = 0;
 			}
 		}
-
 		// Read all bytes of the file
 		std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
 		if (file.is_open()) {
 			if (IsPrintableFile(file_path))
 			{
-				PrintDebugW(L"File %ws is a printable file", file_path.c_str());
+				//PrintDebugW(L"File %ws is a printable file", file_path.c_str());
 				types.push_back("txt");
 			}
 		}
 		else
 		{
-			//PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
+			////PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
 		}
 
 		if (types.size() == 0)
@@ -324,7 +323,7 @@ namespace type_iden
 			types_str += "\"" + type + "\", ";
 		}
 		types_str[types_str.size() - 2] = '>';
-		PrintDebugW(L"File types: %ws", ulti::StrToWstr(types_str).c_str());
+		//PrintDebugW(L"File types: %ws", ulti::StrToWstr(types_str).c_str());
 #endif // _DEBUG
 
 		return types;

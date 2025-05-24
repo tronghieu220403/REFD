@@ -19,7 +19,7 @@ namespace manager
 			return false;
 		}
 
-		std::cout << "Successfully terminated process with PID: " << pid << "\n";
+		//std::cout << "Successfully terminated process with PID: " << pid << "\n";
 		CloseHandle(hProcess);
 		return true;
 	}

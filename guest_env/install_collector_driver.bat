@@ -5,5 +5,4 @@ if %errorlevel% neq 0 (
 fltmc unload EventCollectorDriver
 del /f C:\Windows\System32\drivers\EventCollectorDriver.sys
 copy /y E:\hieunt210330\EventCollectorDriver.sys C:\Windows\System32\drivers\EventCollectorDriver.sys
-fltmc load EventCollectorDriver
-sc query EventCollectorDriver
+InfDefaultInstall.exe E:\hieunt210330\EventCollectorDriver.inf

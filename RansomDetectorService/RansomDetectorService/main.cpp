@@ -71,7 +71,7 @@ static void StartEventCollector()
 static void ServiceMain()
 {
 	PrintDebugW(L"ServiceMain, current pid %d", GetCurrentProcessId());
-#ifndef _DEBUG
+#ifdef _DEBUG
 	srv::InitServiceCtrlHandler(SERVICE_NAME);
 #endif // _DEBUG
 
@@ -132,6 +132,7 @@ static void ServiceMain()
 		while (true)
 		{
 			auto start_time = std::chrono::high_resolution_clock::now();
+			/*
 			manager::kEvaluator->LockMutex();
 			//manager::kEvaluator->EvaluateProcesses();
 			manager::kEvaluator->UnlockMutex();
@@ -140,6 +141,7 @@ static void ServiceMain()
 				PrintDebugW(L"ggez.txt detected, terminate service");
 				ExitProcess(0);
 			}
+			*/
 			auto end_time = std::chrono::high_resolution_clock::now();
 			DWORD duration = (DWORD)std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
 			DWORD sleep_ms = duration < (DWORD)EVALUATATION_INTERVAL_MS ? EVALUATATION_INTERVAL_MS - duration : 0;
@@ -194,7 +196,7 @@ static void RunService()
 
 static void RunProgram()
 {
-#ifndef _DEBUG
+#ifdef _DEBUG
 	RunService();
 	//ServiceMain();
 #else

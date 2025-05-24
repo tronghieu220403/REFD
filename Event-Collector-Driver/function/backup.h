@@ -7,7 +7,7 @@
 #include "../../template/flt-ex.h"
 #include "detector.h"
 
-#define BACKUP_PATH L"\\??\\E:\\Backup\\"
+#define BACKUP_PATH L"\\??\\E:\\hieunt210330\\backup\\"
 
 namespace backup
 {
