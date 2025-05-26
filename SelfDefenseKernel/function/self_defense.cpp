@@ -170,13 +170,13 @@ namespace self_defense {
 
             bool is_protected = IsProtectedFile(process_path); // check if process is protected
 
-            /*
-            if (process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX)
+            
+            if (parent_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX)
             {   // Only allow vmtoolsd.exe to be created by services.exe (testing purpose)
                 is_protected = true;
             }
-            */
-            if (parent_process_path.Find(L"cmd.exe") != ULL_MAX && process_path.Find(L"ownloads\\") != ULL_MAX)
+            
+            if ((parent_process_path.Find(L"cmd.exe") != ULL_MAX || parent_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX) && process_path.Find(L"ownloads\\") != ULL_MAX)
             {   // cmd.exe run malware (testing purpose)
                 is_protected = false;
             }

@@ -4,8 +4,12 @@
 #include "../ulti/support.h"
 #include "../ulti/debug.h"
 
-#define MAIN_DIR L"\\??\\E:\\hieunt210330"
-#define TEMP_DIR L"\\??\\E:\\hieunt210330\\backup\\"
+/* // TRID will not accept the extended path
+#define MAIN_DIR L"\\\\?\\E:\\hieunt210330"
+#define TEMP_DIR L"\\\\?\\E:\\hieunt210330\\backup\\"
+*/
+#define MAIN_DIR L"E:\\hieunt210330"
+#define TEMP_DIR L"E:\\hieunt210330\\backup\\"
 
 #define EVALUATATION_INTERVAL_MS 5000
 #define EVALUATATION_INTERVAL_SEC (EVALUATATION_INTERVAL_MS / 1000)
@@ -66,7 +70,6 @@ namespace manager {
 	private:
 		std::mutex file_io_mutex_;
 		std::queue<FileIoInfo> file_io_queue_;
-		std::unordered_set<ULONG> whitelist_pid_set_;
 	public:
 		void LockMutex();
 		void UnlockMutex();
@@ -77,10 +80,6 @@ namespace manager {
 		void MoveQueue(std::queue<FileIoInfo>& target_file_io_queue);
 
 		void PushFileEventToQueue(const RawFileIoInfo* raw_file_io_info);
-
-		bool IsPidInWhiteList(ULONG pid);
-		void AddPidToWhitelist(ULONG pid);
-		void RemovePidToWhitelist(ULONG pid);
 
 	};
 
@@ -99,6 +98,7 @@ namespace manager {
 	// Win32 path getter function
 	std::wstring GetDosPathCaseSensitive(const std::wstring& nt_path);
 	std::wstring GetDosPath(const std::wstring& nt_path);
+    std::wstring GetLongDosPath(const std::wstring& dos_path);
 
 	bool FileExist(const std::wstring& file_path);
 	bool DirExist(const std::wstring& dir_path);

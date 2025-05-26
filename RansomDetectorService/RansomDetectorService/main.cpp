@@ -36,21 +36,21 @@ static void StartEventCollector()
 			ExitProcess(0);
 		}
 
-		//PrintDebugW(L"Creating communication port %ws", PORT_NAME);
+		PrintDebugW(L"Creating communication port %ws", PORT_NAME);
 		HRESULT hr = com_port.Create(PORT_NAME);
 		if (FAILED(hr))
 		{
-			//PrintDebugW(L"Failed to create communication port: %08X", hr);
+			PrintDebugW(L"Failed to create communication port: %08X", hr);
 			Sleep(1000); // Retry after 1 second
 		}
 
 		while (true)
 		{
-			//PrintDebugW(L"Wait for a message from the communication port");
+			PrintDebugW(L"Wait for a message from the communication port");
 			hr = com_port.Get((PFILTER_MESSAGE_HEADER)buffer, buffer_size);
 			if (SUCCEEDED(hr))
 			{
-				//PrintDebugW(L"Received message from communication port");
+				PrintDebugW(L"Received message from communication port");
 				COMPORT_MESSAGE* msg = (COMPORT_MESSAGE*)buffer;
 				// Process the message
 				manager::RawFileIoInfo* raw_file_io_info = &msg->raw_file_io_info;
@@ -141,12 +141,14 @@ static void ServiceMain()
 				PrintDebugW(L"ggez.txt detected, terminate service");
 				ExitProcess(0);
 			}
-			*/
+			
 			auto end_time = std::chrono::high_resolution_clock::now();
 			DWORD duration = (DWORD)std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
 			DWORD sleep_ms = duration < (DWORD)EVALUATATION_INTERVAL_MS ? EVALUATATION_INTERVAL_MS - duration : 0;
 			PrintDebugW(L"Evaluation took %d ms, sleeping for %d ms", duration, sleep_ms);
 			Sleep(sleep_ms);
+			*/
+			Sleep(1000);
 		}
 		});
 	processing_thread.join();

@@ -135,7 +135,7 @@ namespace file
 		}
 		else
 		{
-			//DebugMessage("FltCreateFile %ws failed: %x", file_path_.Data(), status);
+			DebugMessage("FltCreateFile %ws failed: %x", file_path_.Data(), status);
 			is_open_ = false;
 			file_handle_ = nullptr;
 			p_file_object_ = nullptr;
@@ -202,7 +202,7 @@ namespace file
 		{
 			if (status == STATUS_END_OF_FILE)
 			{
-				//DebugMessage("FltReadFile read %u bytes, exptected %llu bytes", bytes_read, new_length);
+				DebugMessage("FltReadFile read %u bytes, exptected %llu bytes", bytes_read, new_length);
 				if (bytes_read == 0)
 				{
 					return 0;
@@ -210,7 +210,7 @@ namespace file
 			}
 			else
 			{
-				//DebugMessage("FltReadFile failed: %x", status);
+				DebugMessage("FltReadFile failed: %x", status);
 				return 0;
 			}
 		}
@@ -239,7 +239,7 @@ namespace file
 		NTSTATUS status = FltWriteFile(p_instance_, p_file_object_, &byte_offset, (ULONG)length, buffer, NULL, &bytes_written, nullptr, nullptr);
 		if (!NT_SUCCESS(status))
 		{
-			//DebugMessage("FltWriteFile failed: %x", status);
+			DebugMessage("FltWriteFile failed: %x", status);
 			return false;
 		}
 		return NT_SUCCESS(status);
@@ -274,12 +274,12 @@ namespace file
 	{
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
-			//DebugMessage("KeGetCurrentIrql != PASSIVE_LEVEL");
+			DebugMessage("KeGetCurrentIrql != PASSIVE_LEVEL");
 			return ULL_MAX;
 		}
 		if (is_open_ == false)
 		{
-			//DebugMessage("File is not opened");
+			DebugMessage("File is not opened");
 			return ULL_MAX;
 		}
 		NTSTATUS status;

@@ -43,6 +43,16 @@ namespace backup
             return false;
         }
 
+        if (file::ZwIsFileExist(backup_path))
+        {
+            DebugMessage("File %ws already exist", backup_path);
+            if (backup_path_len != nullptr)
+            {
+                *backup_path_len = wcsnlen(backup_path, backup_path_max_len);
+            }
+            return true;
+        }
+
         file::FileFlt src_file(file_path, p_filter_handle, p_instance, p_file_object);
         status = src_file.Open();
         if (!NT_SUCCESS(status))
@@ -90,7 +100,7 @@ namespace backup
         status = dst_file.Open();
         if (status == STATUS_OBJECT_NAME_COLLISION)
         {
-            //DebugMessage("File %ws already exist", backup_path);
+            DebugMessage("File %ws already exist", backup_path);
             goto backup_file_return_true;
         }
         else if (status == STATUS_INVALID_DEVICE_OBJECT_PARAMETER)
@@ -102,12 +112,12 @@ namespace backup
             status = zw_dst_file.Open(backup_path, FILE_CREATE);
             if (status == STATUS_OBJECT_NAME_COLLISION)
             {
-                //DebugMessage("File %ws already exist", backup_path);
+                DebugMessage("File %ws already exist", backup_path);
                 goto backup_file_return_true;
             }
             else if (!NT_SUCCESS(status))
             {
-                //DebugMessage("Open backup file %ws failed", backup_path);
+                DebugMessage("Open backup file %ws failed", backup_path);
                 return false;
             }
             if (zw_dst_file.Append(buffer, size_to_write) == false)
@@ -117,7 +127,7 @@ namespace backup
             }
             else
             {
-                //DebugMessage("Write file %ws success", backup_path);
+                DebugMessage("Write file %ws success", backup_path);
             }
         }
         else if (!NT_SUCCESS((status)))
@@ -127,8 +137,8 @@ namespace backup
         }
         else
         {
-            //DebugMessage("Open backup file %ws success", backup_path);
-            //DebugMessage("Write file %ws, size %lld", backup_path, size_to_write);
+            DebugMessage("Open backup file %ws success", backup_path);
+            DebugMessage("Write file %ws, size %lld", backup_path, size_to_write);
             if (dst_file.Append(buffer, size_to_write) == false)
             {
                 DebugMessage("Write file %ws failed", backup_path);

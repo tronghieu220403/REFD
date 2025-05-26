@@ -35,45 +35,27 @@ namespace manager
 
     void FileIoManager::PushFileEventToQueue(const RawFileIoInfo* raw_file_io_info)
     {
-		if (whitelist_pid_set_.find(raw_file_io_info->requestor_pid) != whitelist_pid_set_.end())
-		{
-			return;
-		}
         FileIoInfo file_io_info;
         
-        PrintDebugW(L"File I/O event before: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws, backup_name: %ws", raw_file_io_info->requestor_pid,(int)raw_file_io_info->is_modified, (int)raw_file_io_info->is_deleted, (int)raw_file_io_info->is_created, (int)raw_file_io_info->is_renamed, raw_file_io_info->current_path, raw_file_io_info->new_path, raw_file_io_info->backup_name);
+        PrintDebugW(L"File I/O event before: PID: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws, backup_name: %ws", raw_file_io_info->requestor_pid,(int)raw_file_io_info->is_modified, (int)raw_file_io_info->is_deleted, (int)raw_file_io_info->is_created, (int)raw_file_io_info->is_renamed, raw_file_io_info->current_path, raw_file_io_info->new_path, raw_file_io_info->backup_name);
 
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
         file_io_info.is_modified = raw_file_io_info->is_modified;
         file_io_info.is_deleted = raw_file_io_info->is_deleted;
         file_io_info.is_created = raw_file_io_info->is_created;
         file_io_info.is_renamed = raw_file_io_info->is_renamed;
-        file_io_info.path_list.push_back(std::move(ulti::ToLower(manager::GetDosPath(raw_file_io_info->current_path))));
+        file_io_info.path_list.push_back(std::move(ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->current_path)))));
         std::wstring backup_name = raw_file_io_info->backup_name;
         file_io_info.backup_name_list.push_back(TEMP_DIR + std::to_wstring(GetPathHash(raw_file_io_info->current_path)));
 
         if (raw_file_io_info->is_renamed == true)
         {
-            file_io_info.path_list.push_back(std::move(ulti::ToLower(manager::GetDosPath(raw_file_io_info->new_path))));
+            file_io_info.path_list.push_back(std::move(ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->new_path)))));
             file_io_info.backup_name_list.push_back(TEMP_DIR + std::to_wstring(GetPathHash(raw_file_io_info->new_path)));
         }
+
         file_io_queue_.push(std::move(file_io_info));
     }
-
-	bool FileIoManager::IsPidInWhiteList(ULONG pid)
-	{
-		return whitelist_pid_set_.find(pid) != whitelist_pid_set_.end();
-	}
-
-	void FileIoManager::AddPidToWhitelist(ULONG pid)
-	{
-		whitelist_pid_set_.insert(pid);
-	}
-
-	void FileIoManager::RemovePidToWhitelist(ULONG pid)
-	{
-		whitelist_pid_set_.erase(pid);
-	}
 
     void InitDosDeviceCache()
     {
@@ -85,7 +67,7 @@ namespace manager
                 std::wstring device_name = device_path;
                 kDosPath.insert({device_name, drive_str});
                 kNativePath.insert({ drive_str, device_name });
-                //PrintDebugW(L"Cached: %ws -> %ws", device_name.c_str(), drive_str.c_str());
+                PrintDebugW(L"Cached: %ws -> %ws", device_name.c_str(), drive_str.c_str());
             }
         }
     }
@@ -156,6 +138,25 @@ namespace manager
     std::wstring GetDosPath(const std::wstring& nt_path)
     {
         return ulti::ToLower(GetDosPathCaseSensitive(nt_path));
+    }
+
+    std::wstring GetLongDosPath(const std::wstring& dos_path)
+    {
+        if (dos_path.empty()) {
+            return std::wstring();
+        }
+        else if (dos_path.find(L'~') == std::wstring::npos)
+        {
+            return dos_path;
+        }
+        std::wstring long_path;
+        long_path.resize(32767);
+        DWORD result = GetLongPathNameW(dos_path.c_str(), &long_path[0], (DWORD)long_path.size());
+        long_path.resize(result);
+        if (result == 0 || result > 3767) {
+            return dos_path;
+        }
+        return long_path;
     }
 
     bool FileExist(const std::wstring& file_path)

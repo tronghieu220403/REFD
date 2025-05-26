@@ -87,7 +87,6 @@ def init_env():
         pass
 
     print("Delete log")
-    run_cmd("del /f E:\\hieunt210330\\hieunt210330\\log.txt")
     print("Shut down services")
     run_cmd("copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
     run_cmd("copy nul E:\\hieunt210330\\ggez.txt > nul")
@@ -96,6 +95,7 @@ def init_env():
     run_cmd('E:\\hieunt210330\\stop_collector_driver.bat')
     run_cmd('E:\\hieunt210330\\stop_sd_driver.bat')
 
+    run_cmd("del /f E:\\hieunt210330\\hieunt210330\\log.txt")
     run_cmd("del /f C:\\Users\\hieu\\Documents\\ggez.txt")
     run_cmd("del /f E:\\hieunt210330\\ggez.txt")
 

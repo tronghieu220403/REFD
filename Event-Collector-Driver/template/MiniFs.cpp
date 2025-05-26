@@ -518,9 +518,7 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
                 //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
             }
-            //DebugMessage("Sending event to user mode: requestor_pid: %d", handle_context->requestor_pid);
-            //DebugMessage("Sending event to user mode: is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d", handle_context->is_modified, handle_context->is_deleted, handle_context->is_created, handle_context->is_renamed);
-            //DebugMessage("Sending event to user mode: current_path %ws, new_path %ws, backup_name %ws", handle_context->current_path, handle_context->new_path, handle_context->backup_name);
+            //DebugMessage("Sending event to user mode: PID %d, is_modified %d, is_deleted %d, is_created %d, is_renamed %d, current_path %ws, new_path %ws", handle_context->requestor_pid, handle_context->is_modified, handle_context->is_deleted, handle_context->is_created, handle_context->is_renamed, handle_context->current_path, handle_context->new_path);
 
             com::kComPort->Send(handle_context, sizeof(collector::HANDLE_CONTEXT));
         }
@@ -536,7 +534,7 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
                 //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
             }
-            //DebugMessage("Sending event to user mode: requestor_pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws", handle_context->requestor_pid, handle_context->is_modified, handle_context->is_deleted, handle_context->is_created, handle_context->is_renamed, handle_context->current_path, handle_context->new_path);
+            //DebugMessage("Sending event to user mode: PID %d, is_modified %d, is_deleted %d, is_created %d, is_renamed %d, current_path %ws, new_path %ws", handle_context->requestor_pid, handle_context->is_modified, handle_context->is_deleted, handle_context->is_created, handle_context->is_renamed, handle_context->current_path, handle_context->new_path);
             com::kComPort->Send(handle_context, sizeof(collector::HANDLE_CONTEXT));
         }
     }
