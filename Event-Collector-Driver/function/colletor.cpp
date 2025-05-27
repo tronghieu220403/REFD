@@ -165,9 +165,6 @@ namespace collector
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
 
-        ULONG options = create_params.Options;
-        ULONG create_disposition = options & 0x000000ff;
-
         bool is_created = (data->IoStatus.Information == FILE_CREATED);
         // Not interested in new files without write access
         if (is_created && !has_write_access)
@@ -383,7 +380,14 @@ namespace collector
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-        //DebugMessage("File %ws, instance %p, file object %p, pid %d", flt::GetFileFullPathName(data).Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
+		String<WCHAR> current_path = flt::GetFileFullPathName(data);
+
+		if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1)
+		{
+			return FLT_PREOP_SUCCESS_NO_CALLBACK;
+		}
+
+        DebugMessage("File %ws, instance %p, file object %p, pid %d", current_path.Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
         PHANDLE_CONTEXT p_handle_context = nullptr;
 
@@ -402,9 +406,25 @@ namespace collector
 
         bool is_sensitive_info_class = true;
 
-        if (file_info_class == FileRenameInformation || file_info_class == FileRenameInformationEx)
-        {
-            //DebugMessage("FileRenameInformation");
+		file::FileFlt src_file(current_path.Data(), flt_objects->Filter, flt_objects->Instance, flt_objects->FileObject);
+		ull src_file_size = src_file.Size();
+		if (src_file_size == ULL_MAX)
+		{
+			DebugMessage("File %ws size is %llu", current_path.Data(), src_file_size);
+			return FLT_PREOP_SUCCESS_NO_CALLBACK;
+		}
+
+        if (file_info_class == FileRenameInformation 
+			|| file_info_class == FileRenameInformationEx)
+        { 
+			if (file_info_class == FileRenameInformation)
+			{
+				DebugMessage("FileRenameInformation %ws", p_handle_context->current_path);
+			}
+			else if (file_info_class == FileRenameInformationEx)
+			{
+				DebugMessage("FileRenameInformationEx %ws", p_handle_context->current_path);
+			}
 
             PFILE_RENAME_INFORMATION target_info = (PFILE_RENAME_INFORMATION)data->Iopb->Parameters.SetFileInformation.InfoBuffer;
             PFLT_FILE_NAME_INFORMATION name_info;
@@ -440,20 +460,57 @@ namespace collector
             }
             is_sensitive_info_class = false;
         }
-        else if (file_info_class == FileDispositionInformation || file_info_class == FileDispositionInformationEx)
+		else if (file_info_class == FileShortNameInformation)
+		{
+			DebugMessage("FileShortNameInformation %ws", p_handle_context->current_path);
+
+		}
+		else if (file_info_class == FileLinkInformation
+			|| file_info_class == FileLinkInformationEx)
+		{
+			if (file_info_class == FileLinkInformation)
+			{
+				DebugMessage("FileLinkInformation %ws", p_handle_context->current_path);
+			}
+			else if (file_info_class == FileLinkInformationEx)
+			{
+				DebugMessage("FileLinkInformationEx %ws", p_handle_context->current_path);
+			}
+		}
+        else if (file_info_class == FileDispositionInformation)
         {
-            //DebugMessage("FileDispositionInformation %ws", p_handle_context->current_path);
-            p_handle_context->is_deleted = true;
+			DebugMessage("FileDispositionInformation %ws", p_handle_context->current_path);
+			if (data->Iopb->Parameters.SetFileInformation.Length == sizeof(FILE_DISPOSITION_INFORMATION) &&
+				((PFILE_DISPOSITION_INFORMATION)data->Iopb->Parameters.SetFileInformation.InfoBuffer)->DeleteFile == TRUE)
+			{
+				p_handle_context->is_deleted = true;
+			}
             is_sensitive_info_class = true;
         }
+		else if (file_info_class == FileDispositionInformationEx)
+		{
+			DebugMessage("FileDispositionInformationEx %ws", p_handle_context->current_path);
+			if (data->Iopb->Parameters.SetFileInformation.Length == sizeof(PFILE_DISPOSITION_INFORMATION_EX))
+			{
+				auto disposition_flag = ((PFILE_DISPOSITION_INFORMATION_EX)data->Iopb->Parameters.SetFileInformation.InfoBuffer)->Flags;
+				if (FlagOn(disposition_flag, FILE_DISPOSITION_DELETE))
+				{
+					p_handle_context->is_deleted = true;
+				}
+			}
+		}
         else if (file_info_class == FileAllocationInformation)
         {
-            //DebugMessage("FileAllocationInformation %ws", p_handle_context->current_path);
+			ull alloc_size = ((PFILE_ALLOCATION_INFORMATION)(set_info_params.InfoBuffer))->AllocationSize.QuadPart;
+            DebugMessage("FileAllocationInformation,  %ws", p_handle_context->current_path);
             is_sensitive_info_class = true;
         }
-        else if (file_info_class == FileEndOfFileInformation)
+        else if (file_info_class == FileEndOfFileInformation
+			//|| file_info_class == FileEndOfFileInformationEx // there is a structure in the WDK version 10.0.19041.0 named PFILE_END_OF_FILE_INFORMATION_EX but we do not know anything about it corresponding file information class.
+			)
         {
-            //DebugMessage("FileAllocationInformation %ws", p_handle_context->current_path);
+			ull new_eof = ((PFILE_END_OF_FILE_INFORMATION)(set_info_params.InfoBuffer))->EndOfFile.QuadPart;
+            DebugMessage("FileEndOfFileInformation %ws", p_handle_context->current_path);
             is_sensitive_info_class = true;
         }
         else
