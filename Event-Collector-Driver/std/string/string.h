@@ -166,7 +166,7 @@ public:
 
 	bool HasSuffix(const String<T>&);
 
-	ull Find(const String<T>&);
+	ull Find(const String<T>&) const;
 
 	// Overloading the equal operator
 	bool operator==(const String<T>&);
@@ -275,7 +275,7 @@ inline String<T>::String(const T* cstr)
 }
 
 template<>
-inline String<WCHAR>::String(const UNICODE_STRING& uni_str)
+inline std::WString::String(const UNICODE_STRING& uni_str)
 {
 	size_ = uni_str.Length / sizeof(WCHAR);
 	elements_ = Allocate(size_);
@@ -287,9 +287,9 @@ inline String<WCHAR>::String(const UNICODE_STRING& uni_str)
 }
 
 template<>
-inline String<WCHAR>::String(const PUNICODE_STRING& p_uni_str)
+inline std::WString::String(const PUNICODE_STRING& p_uni_str)
 {
-	this->String<WCHAR>::String(*p_uni_str);
+	this->std::WString::String(*p_uni_str);
 }
 
 template<>
@@ -369,7 +369,7 @@ inline String<T>& String<T>::operator=(const T* cstr)
 }
 
 template<>
-inline String<WCHAR>& String<WCHAR>::operator=(const PUNICODE_STRING& uni_str)
+inline std::WString& std::WString::operator=(const PUNICODE_STRING& uni_str)
 {
 	Deallocate();
 	if (uni_str == nullptr)
@@ -706,7 +706,7 @@ inline bool String<T>::HasSuffix(const String<T>& str)
 }
 
 template<class T>
-inline ull String<T>::Find(const String<T>& str)
+inline ull String<T>::Find(const String<T>& str) const
 {
 	if (size_ < str.size_)
 	{

@@ -489,10 +489,10 @@ namespace collector
         }
 		else if (file_info_class == FileDispositionInformationEx)
 		{
-			DebugMessage("FileDispositionInformationEx %ws", p_handle_context->current_path);
 			if (data->Iopb->Parameters.SetFileInformation.Length == sizeof(PFILE_DISPOSITION_INFORMATION_EX))
 			{
-				auto disposition_flag = ((PFILE_DISPOSITION_INFORMATION_EX)data->Iopb->Parameters.SetFileInformation.InfoBuffer)->Flags;
+				DebugMessage("FileDispositionInformationEx %ws", p_handle_context->current_path);
+				const auto& disposition_flag = ((PFILE_DISPOSITION_INFORMATION_EX)data->Iopb->Parameters.SetFileInformation.InfoBuffer)->Flags;
 				if (FlagOn(disposition_flag, FILE_DISPOSITION_DELETE))
 				{
 					p_handle_context->is_deleted = true;
@@ -501,17 +501,23 @@ namespace collector
 		}
         else if (file_info_class == FileAllocationInformation)
         {
-			ull alloc_size = ((PFILE_ALLOCATION_INFORMATION)(set_info_params.InfoBuffer))->AllocationSize.QuadPart;
-            DebugMessage("FileAllocationInformation,  %ws", p_handle_context->current_path);
-            is_sensitive_info_class = true;
+			if (data->Iopb->Parameters.SetFileInformation.Length == sizeof(FILE_ALLOCATION_INFORMATION))
+			{
+				const auto& alloc_size = ((PFILE_ALLOCATION_INFORMATION)(set_info_params.InfoBuffer))->AllocationSize.QuadPart;
+				DebugMessage("FileAllocationInformation,  %ws", p_handle_context->current_path);
+				is_sensitive_info_class = true;
+			}
         }
         else if (file_info_class == FileEndOfFileInformation
 			//|| file_info_class == FileEndOfFileInformationEx // there is a structure in the WDK version 10.0.19041.0 named PFILE_END_OF_FILE_INFORMATION_EX but we do not know anything about it corresponding file information class.
 			)
         {
-			ull new_eof = ((PFILE_END_OF_FILE_INFORMATION)(set_info_params.InfoBuffer))->EndOfFile.QuadPart;
-            DebugMessage("FileEndOfFileInformation %ws", p_handle_context->current_path);
-            is_sensitive_info_class = true;
+			if (data->Iopb->Parameters.SetFileInformation.Length == sizeof(FILE_END_OF_FILE_INFORMATION))
+			{
+				const auto& new_eof = ((PFILE_END_OF_FILE_INFORMATION)(set_info_params.InfoBuffer))->EndOfFile.QuadPart;
+				DebugMessage("FileEndOfFileInformation %ws", p_handle_context->current_path);
+				is_sensitive_info_class = true;
+			}
         }
         else
         {
