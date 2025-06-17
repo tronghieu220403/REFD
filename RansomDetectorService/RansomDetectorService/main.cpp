@@ -20,6 +20,8 @@ struct COMPORT_MESSAGE
 	manager::RawFileIoInfo raw_file_io_info;
 };
 
+std::chrono::steady_clock::time_point last_process_time;
+
 static void StartEventCollector()
 {
 	// Create a communication port
@@ -46,11 +48,22 @@ static void StartEventCollector()
 
 		while (true)
 		{
-			PrintDebugW(L"Wait for a message from the communication port");
+            auto current_time = std::chrono::steady_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(current_time - last_process_time);
+			if (elapsed.count() >= 6) // Check every 6 seconds
+			{
+                //Sleep(100); // Sleep for 0.1 second before checking again
+				manager::kEvaluator->LockMutex();
+				manager::kEvaluator->ProcessDataQueue();
+				//last_process_time = std::chrono::steady_clock::now();
+				manager::kEvaluator->UnlockMutex();
+                last_process_time = current_time;
+			}
+			//PrintDebugW(L"Wait for a message from the communication port");
 			hr = com_port.Get((PFILTER_MESSAGE_HEADER)buffer, buffer_size);
 			if (SUCCEEDED(hr))
 			{
-				PrintDebugW(L"Received message from communication port");
+				//PrintDebugW(L"Received message from communication port");
 				COMPORT_MESSAGE* msg = (COMPORT_MESSAGE*)buffer;
 				// Process the message
 				manager::RawFileIoInfo* raw_file_io_info = &msg->raw_file_io_info;
@@ -61,7 +74,7 @@ static void StartEventCollector()
 			}
 			else
 			{
-				PrintDebugW(L"Failed to receive message: %08X", hr);
+				//PrintDebugW(L"Failed to receive message: %08X", hr);
 				break; // Exit the loop on failure
 			}
 		}
@@ -99,6 +112,8 @@ static void ServiceMain()
 		return;
 	}
 
+	auto last_process_time = std::chrono::steady_clock::now();
+
 	std::jthread collector_thread(([]() {
 		while (true)
 		{
@@ -112,12 +127,13 @@ static void ServiceMain()
 		}
 		}));
 
-	std::thread processing_thread([]() {
+	std::thread processing_thread([&last_process_time]() {
         manager::ClearTmpFiles();
 		while (true)
 		{
 			manager::kEvaluator->LockMutex();
 			manager::kEvaluator->ProcessDataQueue();
+            last_process_time = std::chrono::steady_clock::now();
 			manager::kEvaluator->UnlockMutex();
 			if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
 			{

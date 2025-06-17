@@ -68,9 +68,11 @@ namespace manager {
 
 	class FileIoManager {
 	private:
-		std::mutex file_io_mutex_;
 		std::queue<FileIoInfo> file_io_queue_;
 	public:
+		
+		std::mutex file_io_mutex_;
+
 		void LockMutex();
 		void UnlockMutex();
 

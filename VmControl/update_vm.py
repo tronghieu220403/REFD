@@ -268,7 +268,7 @@ if __name__ == "__main__":
     ransom_names = manager.list(sorted(os.listdir(host_root_mal_dir), key=str.lower, reverse=True))
     mutex = Lock()
 
-    n_processes = 8
+    n_processes = 14
     processes = []
     for i in range(n_processes):
         vm_path = f'D:\\VM\\Windows_10_test_ransom_{i}\\RansomTestWindows10.vmx'

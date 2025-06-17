@@ -259,19 +259,28 @@ namespace type_iden
 		int ret;
 		std::vector<std::string> types;
 
+        std::vector<char> buf(4096); // Buffer for TrID API results
+
 		trid_api->SubmitFileA(file_path.string().c_str());
 		ret = trid_api->Analyze();
 		if (ret)
 		{
+			ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
             //PrintDebugW(L"TrID analysis successful for file %ws, result code: %d", file_path.c_str(), ret);
-			char buf[512];
-			*buf = 0;
-			ret = trid_api->GetInfo(TRID_GET_RES_NUM, 0, buf);
+			ret = trid_api->GetInfo(TRID_GET_RES_NUM, 0, buf.data());
 			for (int i = ret + 1; i--;)
 			{
-				trid_api->GetInfo(TRID_GET_RES_FILETYPE, i, buf);
-				std::string type_str(buf);
-				if (*buf == 0)
+				ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
+				try
+				{
+					trid_api->GetInfo(TRID_GET_RES_FILETYPE, i, buf.data());
+				}
+				catch (...)
+				{
+					continue;
+				}
+				std::string type_str(buf.data());
+				if (type_str.size() == 0)
 				{
 					continue;
 				}
@@ -279,12 +288,20 @@ namespace type_iden
 				{
 					continue;
 				}
-				trid_api->GetInfo(TRID_GET_RES_FILEEXT, i, buf);
-                if (*buf == 0)
-                {
-                    continue;
-                }
-				std::string ext_str(buf);
+				ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
+				try
+				{
+					trid_api->GetInfo(TRID_GET_RES_FILEEXT, i, buf.data());
+				}
+				catch (...)
+				{
+					continue;
+				}
+				std::string ext_str(buf.data());
+				if (ext_str.size() == 0)
+				{
+					continue;
+				}
 
 				if (ext_str.size() > 0)
 				{
@@ -304,23 +321,30 @@ namespace type_iden
 						types.push_back(type_str);
 					}
 				}
-				*buf = 0;
 			}
 		}
 		else
 		{
 		}
 		// Read all bytes of the file
-		std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
-		if (file.is_open()) {
-			if (IsPrintableFile(file_path))
-			{
-				types.push_back("txt");
-			}
-		}
-		else
+		try
 		{
-			//PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
+			std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
+			if (file.is_open()) {
+				if (IsPrintableFile(file_path))
+				{
+					types.push_back("txt");
+				}
+			}
+			else
+			{
+				//PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
+			}
+            file.close();
+		}
+		catch (...)
+		{
+
 		}
 
 		if (types.size() == 0)

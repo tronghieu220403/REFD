@@ -44,7 +44,6 @@ namespace self_defense {
 		{
 			kProtectedDirList->PushBack(default_protected_dirs[i]);
 		}
-
 		kProtectedFileList = new Vector<String<WCHAR>>();
 		Vector<String<WCHAR>> default_protected_files = GetDefaultProtectedFiles();
 		for (int i = 0; i < default_protected_files.Size(); ++i)

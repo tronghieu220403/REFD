@@ -407,15 +407,17 @@ namespace manager {
 
 	bool Evaluator::EvaluateProcess(ULONG pid)
 	{
-		kFileIoManager->LockMutex();
+		//const std::lock_guard<std::mutex> lock(kFileIoManager->file_io_mutex_);
 		/*
+		kFileIoManager->LockMutex();
 		if (kFileIoManager->IsPidInWhiteList(pid) == true)
 		{
             kFileIoManager->UnlockMutex();
             return false;
 		}
-		*/
 		kFileIoManager->UnlockMutex();
+		*/
+
 		auto it = global_process_map.find(pid);
 		if (it == global_process_map.end())
 		{

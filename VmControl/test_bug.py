@@ -177,7 +177,7 @@ def evaluate_ransom(file_name: str, host_exe_path: str, host_report_path: str, v
         run_cmd(vm, "del /f E:\\hieunt210330\\hieunt210330\\log.txt")
         run_cmd(vm, "del /f C:\\Users\\hieu\\Documents\\ggez.txt")
         run_cmd(vm, "del /f E:\\hieunt210330\\ggez.txt")
-
+        
         from pathlib import Path
         git_path = str(Path.cwd().parent)
 
@@ -244,21 +244,34 @@ def evaluate_ransom(file_name: str, host_exe_path: str, host_report_path: str, v
         
         X = 20
         last_cnt = 0
-        for i in range(1, 3):
+        is_ransomware = False
+        for i in range(1, 20):
             print("Attempt " + str(i), flush=True)
             if i == 1:
-                #print("Wait for 5 minute", flush=True)
-                host_wait_min(vm, 5)
+                for _ in range(5):
+                    host_wait_min(vm, 1)
+                    if os.path.exists(host_log_name):
+                        os.remove(host_log_name)
+                    vm.copy_guest_to_host(guest_log_path, host_log_name)
+                    cnt, cnt1 = cnt_str(host_log_name, guest_is_modified_str)
+                    if (cnt1 > 0):
+                        print(f"Found a line with \"is ransomware\" in log file, appears {cnt1} times", flush=True)
+                        is_ransomware = True    
+                        break
+
             else:
-                #print("Wait for 3 minutes", flush=True)
-                host_wait_min(vm, 3)
-
-            # Copy log file from guest to host
-            if os.path.exists(host_log_name):
-                os.remove(host_log_name)
-            print(f"Copy log file from guest to host: {guest_log_path} -> {host_log_name}", flush=True)
-            vm.copy_guest_to_host(guest_log_path, host_log_name)
-
+                for _ in range(10):
+                    host_wait_min(vm, 1)
+                    if os.path.exists(host_log_name):
+                        os.remove(host_log_name)
+                    vm.copy_guest_to_host(guest_log_path, host_log_name)
+                    cnt, cnt1 = cnt_str(host_log_name, guest_is_modified_str)
+                    if (cnt1 > 0):
+                        print(f"Found a line with \"is ransomware\" in log file, appears {cnt1} times", flush=True)
+                        is_ransomware = True
+                        break
+            if is_ransomware == True:
+                break
             cnt, cnt1 = cnt_str(host_log_name, guest_is_modified_str)
             if (cnt1 > 0):
                 print(f"Found a line with \"is ransomware\" in log file, appears {cnt1} times", flush=True)
@@ -289,8 +302,11 @@ from multiprocessing import Process, Lock, Manager
 
 original_print = builtins.print
 
-host_root_mal_dir = "E:\\Graduation_Project\\test\\"
-host_root_log_dir = "E:\\Graduation_Project\\test_log\\"
+#host_root_mal_dir = "E:\\Graduation_Project\\test\\"
+#host_root_log_dir = "E:\\Graduation_Project\\test_log\\"
+
+host_root_mal_dir = "E:\\Graduation_Project\\combined\\"
+host_root_log_dir = ""
 
 def vm_process(vm_path: str, runtime_log: str, ransom_names, mutex):
     # Save original print
@@ -337,7 +353,8 @@ if __name__ == "__main__":
 
     # Sử dụng multiprocessing.Manager để chia sẻ danh sách giữa các tiến trình
     manager = Manager()
-    ransom_names = manager.list(sorted(os.listdir(host_root_mal_dir), key=str.lower, reverse=True))
+    #ransom_names = manager.list(sorted(os.listdir(host_root_mal_dir), key=str.lower, reverse=True))
+    ransom_names = manager.list(["0361e25d7f958c3e5f76eb62917004939f40c020e2303c97ab8be431199baa6f"])
     mutex = Lock()
 
     from multiprocessing import freeze_support

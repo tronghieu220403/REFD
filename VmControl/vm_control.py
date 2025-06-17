@@ -37,8 +37,8 @@ def run_cmd(cmd: str, wait: bool = True):
 vm_path = r'C:\Users\hieunt118\Documents\Virtual Machines\Windows 10 x64 22h2\Windows 10 x64 22h2.vmx'
 
 if os.path.exists(vm_path) == False:
-    vm_path = 'E:\\VM\\Windows_10_test_ransom_0\\RansomTestWindows10.vmx'
-    #vm_path = 'D:\\VM\\RansomTestWindows10\\RansomTestWindows10.vmx'
+    #vm_path = 'E:\\VM\\Windows_10_test_ransom_0\\RansomTestWindows10.vmx'
+    vm_path = 'E:\\VM\\Windows 10 and later x64\\Windows 10 and later x64.vmx'
 
 host = VixHost()
 vm = host.open_vm(vm_path)
@@ -63,12 +63,14 @@ sd_path = f'{git_path}\\SelfDefenseKernel'
 def init_env():
     print("Init env")
     try:
+        '''
         vm.copy_host_to_guest(f'{env_path}\\start_collector_driver.bat', 'E:\\hieunt210330\\start_collector_driver.bat')
         vm.copy_host_to_guest(f'{env_path}\\stop_collector_driver.bat', 'E:\\hieunt210330\\stop_collector_driver.bat')
         vm.copy_host_to_guest(f'{env_path}\\start_sd_driver.bat', 'E:\\hieunt210330\\start_sd_driver.bat')
         vm.copy_host_to_guest(f'{env_path}\\stop_sd_driver.bat', 'E:\\hieunt210330\\stop_sd_driver.bat')
         vm.copy_host_to_guest(f'{env_path}\\install_sd_driver.bat', 'E:\\hieunt210330\\install_sd_driver.bat')
         vm.copy_host_to_guest(f'{env_path}\\install_collector_driver.bat', 'E:\\hieunt210330\\install_collector_driver.bat')
+        '''
         pass
     except Exception as e:
         pass
@@ -120,6 +122,7 @@ def init_env():
     #vm.copy_host_to_guest(f'{env_path}\\triddefs.trd', 'E:\\hieunt210330\\hieunt210330\\triddefs.trd')
     
     print("Copy driver files to E:\\hieunt210330\\")
+    '''
     vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.inf', 'E:\\hieunt210330\\EventCollectorDriver.inf')
     vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.sys', 'E:\\hieunt210330\\EventCollectorDriver.sys')
     vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\hieunt210330\\EventCollectorDriver.pdb')
@@ -128,13 +131,13 @@ def init_env():
     vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.sys', 'E:\\hieunt210330\\SelfDefenseKernel.sys')
     vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'E:\\hieunt210330\\SelfDefenseKernel.pdb')
     vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'C:\\Windows\\System32\\drivers\\SelfDefenseKernel.pdb')
-    os._exit(0)
+    '''
+    #os._exit(0)
     while True:
         try:
             
             vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\hieunt210330\\RansomDetectorService.exe')
-            vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.pdb', 'E:\\hieunt210330\\hieunt210330\\RansomDetectorService.pdb')
-            
+            #vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.pdb', 'E:\\hieunt210330\\hieunt210330\\RansomDetectorService.pdb')
             pass
         except Exception as e:
             print("Error copying files, retrying...", e)
@@ -145,10 +148,10 @@ def init_env():
     #os._exit(0)
     print("Start driver and service")
     
-    run_cmd("E:\\hieunt210330\\start_sd_driver.bat")
+    #run_cmd("E:\\hieunt210330\\start_sd_driver.bat")
     run_cmd("E:\\hieunt210330\\start_collector_driver.bat")
     run_cmd("E:\\hieunt210330\\hieunt210330\\RansomDetectorService.exe", False)
-
+    #run_cmd("C:\\Users\\hieu\\Downloads\\Test.exe")
     #vm.power_off()
 init_env()
 
@@ -156,7 +159,7 @@ init_env()
 
 print("Start testing")
 
-run_cmd("")
+#run_cmd("")
 
 print("Test stop")
 

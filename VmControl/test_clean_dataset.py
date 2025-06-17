@@ -173,15 +173,10 @@ def evaluate_ransom(file_name: str, host_exe_path: str, host_report_path: str, v
     guest_download_dir = "C:\\Users\\hieu\\Downloads\\"
     guest_log_path = "E:\\hieunt210330\\hieunt210330\\log.txt"
 
-    print(f"Evaluating ransomware {file_name}", flush=True, file=f)
-    guest_mal_path = guest_download_dir + file_name + ".exe"
+    print(f"Evaluating clean file {file_name}", flush=True, file=f)
+    guest_clean_path = guest_download_dir + file_name
     host_log_name = host_report_path
-    host_mal_path = host_exe_path
-
-    if os.path.exists(host_log_name) == True:
-        if check_ransom_str(host_log_name) == True:
-            print("Done " + file_name, flush=True, file=f)
-            return True
+    host_clean_path = host_exe_path
     try:
         with open(host_log_name, 'w') as empty_file:
             pass
@@ -190,7 +185,7 @@ def evaluate_ransom(file_name: str, host_exe_path: str, host_report_path: str, v
         print("Revert to snapshot", flush=True, file=f)
         cur_snap = vm.snapshot_get_current()
         vm.snapshot_revert(cur_snap)
-
+        
         # Run VM
         print("Run VM", flush=True, file=f)
         if vm.power_state != VixVM.VIX_POWERSTATE_POWERED_ON:
@@ -198,105 +193,32 @@ def evaluate_ransom(file_name: str, host_exe_path: str, host_report_path: str, v
 
         login_as_system(vm, f)
 
-        '''
-        from pathlib import Path
-        git_path = str(Path.cwd().parent)
+        print(f"Copy clean file from host to guest: {host_clean_path} -> {guest_clean_path}", flush=True, file=f)
+        vm.copy_host_to_guest(host_clean_path, guest_clean_path)
 
-        env_path = f"{git_path}\\guest_env"
-        collector_path = f'{git_path}\\Event-Collector-Driver'
-        sd_path = f'{git_path}\\SelfDefenseKernel'
-
-        print("Copy driver files to E:\\hieunt210330\\")
-        vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.inf', 'E:\\hieunt210330\\EventCollectorDriver.inf')
-        vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.sys', 'E:\\hieunt210330\\EventCollectorDriver.sys')
-        vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\hieunt210330\\EventCollectorDriver.pdb')
-        vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'C:\\Windows\\System32\\drivers\\EventCollectorDriver.pdb')
-        vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.inf', 'E:\\hieunt210330\\SelfDefenseKernel.inf')
-        vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.sys', 'E:\\hieunt210330\\SelfDefenseKernel.sys')
-        vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'E:\\hieunt210330\\SelfDefenseKernel.pdb')
-        vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'C:\\Windows\\System32\\drivers\\SelfDefenseKernel.pdb')
-        while True:
-            try:
-                
-                vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\hieunt210330\\RansomDetectorService.exe')
-                vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.pdb', 'E:\\hieunt210330\\hieunt210330\\RansomDetectorService.pdb')
-                
-                pass
-            except Exception as e:
-                print("Error copying files, retrying...", e)
-                time.sleep(1)
-                continue
-            break
-        print("Start driver and service")
-        run_cmd(vm, "E:\\hieunt210330\\start_sd_driver.bat")
-        run_cmd(vm, "E:\\hieunt210330\\start_collector_driver.bat")
-        run_cmd(vm, "E:\\hieunt210330\\RansomDetectorService.exe", False)
-        run_cmd(vm, "sc start REFD")
-        os._exit(0)
-
-        time.sleep(2)
-        '''
-        # Copy malware file from host to guest
-        print(f"Copy malware file from host to guest: {host_mal_path} -> {guest_mal_path}", flush=True, file=f)
-        vm.copy_host_to_guest(host_mal_path, guest_mal_path)
-
-        # Run malware
-        print("Run malware", flush=True, file=f)
+        # Run clean file
+        print("Run clean file", flush=True, file=f)
         try:
-            vm.proc_run(guest_mal_path, None, False) # not wait for malware to finish
+            login_as_hieu(vm, f)
+            vm.proc_run(guest_clean_path, None, False) # not wait for clean file to finish
+            login_as_system(vm, f)
             pass
         except VixError as ex:
-            print(f"Malware is not compatible: {file_name}", flush=True, file=f)
-            print(f"Malware is not compatible: {file_name}", flush=True)
-            shutil.move("E:\\Graduation_Project\\combined\\" + file_name, "E:\\Graduation_Project\\combined_not_compatible\\" + file_name)
+            print(f"File is not compatible: {file_name}", flush=True, file=f)
+            print(f"File is not compatible: {file_name}", flush=True)
+            shutil.move("E:\\Graduation_Project\\clean_combined\\" + file_name, "E:\\Graduation_Project\\clean_combined_not_compatible\\" + file_name)
             return False
-        
-        guest_is_modified_str = str("is_modified: 1").lower()
 
-        X = 20
-        last_cnt = 0
-        is_ransomware = False
-        for i in range(1, 3):
-            print("Attempt " + str(i), flush=True, file=f)
-            if i == 1:
-                for _ in range(5):
-                    host_wait_min(vm, 1, f)
-                    if os.path.exists(host_log_name):
-                        os.remove(host_log_name)
-                    vm.copy_guest_to_host(guest_log_path, host_log_name)
-                    cnt, cnt1 = cnt_str(host_log_name, guest_is_modified_str)
-                    if (cnt1 > 0):
-                        is_ransomware = True    
-                        break
-
-            else:
-                for _ in range(max_run_time - 5):
-                    host_wait_min(vm, 1, f)
-                    if os.path.exists(host_log_name):
-                        os.remove(host_log_name)
-                    vm.copy_guest_to_host(guest_log_path, host_log_name)
-                    if check_ransom_str(host_log_name) == True:
-                        is_ransomware = True
-                        break
-            if is_ransomware == True:
-                break
-            cnt, cnt1 = cnt_str(host_log_name, guest_is_modified_str)
-            if (cnt1 > 0):
-                break
-            if i == 1 and cnt < X:
-                print(f"Not found enough modified files in log file, appears {cnt} times", flush=True, file=f)
-                print(f"Malware is not work: {file_name}", flush=True, file=f)
-                return False
-            if i != 1 and cnt > last_cnt + X:
-                print(f"\"is_modified: 1\" found enough in log file, appears {cnt} times", flush=True, file=f)
-                last_cnt = cnt
+        host_wait_min(vm, max_run_time, f)
+        '''
+        if os.path.exists(host_log_name):
+            os.remove(host_log_name)
+            pass
+        '''
+        vm.copy_guest_to_host(guest_log_path, host_log_name)
 
         vm.power_off()
         print("Done " + file_name, flush=True, file=f)
-
-        if check_ransom_str(host_log_name) == True:
-            print(f"Found a line with \"is ransomware\" in log file, appears {cnt1} times", flush=True, file=f)
-            return True            
 
         return False
     except VixError as ex:
@@ -314,10 +236,17 @@ from multiprocessing import Process, Lock, Manager
 
 original_print = builtins.print
 
-host_root_mal_dir = "E:\\Graduation_Project\\combined\\"
-host_root_log_dir = "E:\\Graduation_Project\\combined_log\\"
+def check_done(log_path: str):
+    if os.path.exists(log_path) == False:
+        return False
+    if os.path.getsize(log_path) == 0:
+        return False
+    return True
 
-def vm_process(vm_path: str, runtime_log: str, ransom_names, mutex, max_run_time):
+host_root_clean_dir = "E:\\Graduation_Project\\clean_combined\\"
+host_root_log_dir = "E:\\Graduation_Project\\clean_combined_log\\"
+
+def vm_process(vm_path: str, runtime_log: str, clean_names, mutex, max_run_time):
     # Save original print
     original_print = builtins.print
     host = VixHost()
@@ -335,39 +264,44 @@ def vm_process(vm_path: str, runtime_log: str, ransom_names, mutex, max_run_time
                     pass
                 break
             mutex.acquire()
-            print(f"len(ransom_names): {len(ransom_names)}")
-            if len(ransom_names) <= 0:
+            print(f"len(clean_names): {len(clean_names)}")
+            if len(clean_names) <= 0:
                 mutex.release()
                 break
-            ransom_name = ransom_names.pop()
-
+            clean_name = clean_names.pop()
             mutex.release()
-            
-            if check_ransom_str(host_root_log_dir + ransom_name + ".log") == True:
-                print(f"Ransomware has been found in: {host_root_log_dir + ransom_name + ".log"}", flush=True)
-                continue
+
+            log_path = host_root_log_dir + clean_name + ".log"
             
             print(file=f)
-            print(f"Processing ransomware name {ransom_name}", flush=True, file=f)
+            print(f"Processing clean file name {clean_name}", flush=True, file=f)
 
-            from pathlib import Path; ransom_name = Path(ransom_name).stem
+            from pathlib import Path; clean_name = Path(clean_name).name
 
-            ransom_path = host_root_mal_dir + ransom_name
-            log_path = host_root_log_dir + ransom_name + ".log"
+            if check_done(log_path) == True:
+                print(f"Clean file evaluated: {log_path}", flush=True, file=f)
+                print(f"Clean file evaluated: {log_path}", flush=True)
+                shutil.move("E:\\Graduation_Project\\clean_combined\\" + clean_name, "E:\\Graduation_Project\\clean_combined_done\\" + clean_name)
+                continue
+
+            clean_path = host_root_clean_dir + clean_name
 
             for _ in range(0, 1):
                 print(file=f)
-                print(f"Processing ransomware name {ransom_name}, attempt {_}", flush=True, file=f)
-                ret = evaluate_ransom(ransom_name, ransom_path, log_path, vm, f, max_run_time)
-                vm.power_off()
+                print(f"Processing clean file name {clean_name}, attempt {_}", flush=True, file=f)
+                ret = evaluate_ransom(clean_name, clean_path, log_path, vm, f, max_run_time)
+                try:
+                    vm.power_off()  
+                except Exception:
+                    pass
                 if ret == True:
                     break
                 elif ret == False:
-                    print(f"Cannot evaluate ransomware {ransom_name}\n", flush=True, file=f)
+                    print(f"Cannot evaluate clean file {clean_name}\n", flush=True, file=f)
                     if os.path.exists(log_path):
                         #os.remove(log_path)
                         pass
-                    time.sleep(5)
+                    #time.sleep(5)
                     continue
                     if os.path.exists(log_path) == False:
                         # Create an empty log fileQ
@@ -375,11 +309,11 @@ def vm_process(vm_path: str, runtime_log: str, ransom_names, mutex, max_run_time
                             pass
                     #break
                 elif ret == 2:
-                    print(f"Retrying {ransom_name}", flush=True, file=f)
+                    print(f"Retrying {clean_name}", flush=True, file=f)
                     if os.path.exists(log_path):
                         #os.remove(log_path)
                         pass
-                    time.sleep(5)
+                    #time.sleep(5)
                     continue
 
 if __name__ == "__main__":
@@ -390,40 +324,35 @@ if __name__ == "__main__":
     else:
         n_processes = 10
 
-    max_run_time = 20
+    max_run_time = 5
 
     while True:
-        file_list = os.listdir(host_root_mal_dir)
+        file_list = os.listdir(host_root_clean_dir)
+        if len(file_list) == 0 or file_list == None:
+            break
         random.shuffle(file_list)
 
         # Sử dụng multiprocessing.Manager để chia sẻ danh sách giữa các tiến trình
         manager = Manager()
-        ransom_names = manager.list(file_list)
+        clean_names = manager.list(file_list)
         mutex = Lock()
 
         from multiprocessing import freeze_support
         freeze_support()  # Optional nếu không đóng gói .exe, nhưng nên có
 
         manager = Manager()
-        ransom_names = manager.list(file_list)
+        clean_names = manager.list(file_list)
         mutex = Lock()
-
+        
         processes = []
         for i in range(n_processes):
             vm_path = f'D:\\VM\\Windows_10_test_ransom_{i}\\RansomTestWindows10.vmx'
-            runtime_log = f'runtime_log_{i}.txt'
-            processes.append(Process(target=vm_process, args=(vm_path, runtime_log, ransom_names, mutex, max_run_time)))
+            runtime_log = f'clean_runtime_log_{i}.txt'
+            processes.append(Process(target=vm_process, args=(vm_path, runtime_log, clean_names, mutex, max_run_time)))
             processes[i].start()
         for i in range(n_processes):
             processes[i].join()
-        time.sleep(10)
         #max_run_time += 5
         if os.path.exists("ggez.txt") == True:
             break
-
-'''
-4 thanos
-3 mountlocker
-1 blackbasta
-Đều làm VMWare Tools không chạy được
-'''
+        time.sleep(10)
