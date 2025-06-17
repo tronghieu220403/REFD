@@ -36,7 +36,7 @@ x_tick_labels = [f"{(i*5)//60} min" for i in x_ticks]
 
 # Vẽ và lưu ảnh
 plt.figure(figsize=(14, 6))
-plt.plot(df["Avg_ProcessorTime"], label="Avg % Processor Time")
+plt.plot(df["Avg_ProcessorTime"], label="Avg % Processor Time (4 cores)")
 plt.plot(df["Avg_WorkingSet_MB"], label="Avg Working Set (MB)")
 plt.plot(max_proc_idx, max_proc_time, 'ro', label="Max CPU")
 plt.plot(max_mem_idx, max_mem, 'o', color='orange', label="Max Mem")
