@@ -277,11 +277,13 @@ namespace file
 			DebugMessage("KeGetCurrentIrql != PASSIVE_LEVEL");
 			return ULL_MAX;
 		}
-		if (is_open_ == false)
+
+		if (is_open_ == false && pre_alloc_file_object_ == false)
 		{
 			DebugMessage("File is not opened");
 			return ULL_MAX;
 		}
+
 		NTSTATUS status;
 		LARGE_INTEGER li_file_size = { 0 };
 		if (NT_SUCCESS((status = FsRtlGetFileSize(p_file_object_, &li_file_size))))
