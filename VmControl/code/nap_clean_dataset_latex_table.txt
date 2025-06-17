@@ -1,0 +1,57 @@
+\textbf{No.} & \textbf{Ext.} & \textbf{Total} & \textbf{Rejected Ext.} & \textbf{Ratio} & \textbf{Null Ext.} & \textbf{Ratio} & \textbf{Shannon} & \textbf{Ratio} & \textbf{Chi2} & \textbf{Ratio} \\
+\midrule
+1 & 7Z & 15000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 15000 & \cellcolor{red!50} 100.00\% & 11470 & \cellcolor{orange!47} 76.47\% \\
+2 & APK & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 1146 & \cellcolor{cyan!43} 22.92\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+3 & BIN & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+4 & BMP & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 4 & \cellcolor{green!61.300000000000004} 0.08\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+5 & CSS & 4998 & 539 & \cellcolor{green!34.3} 10.78\% & 516 & \cellcolor{green!34.3} 10.32\% & 0 & \cellcolor{green!64.0} 0.00\% & 77 & \cellcolor{green!58.6} 1.54\% \\
+6 & CSV & 5000 & 13 & \cellcolor{green!61.300000000000004} 0.26\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+7 & DLL & 4994 & 1546 & \cellcolor{cyan!51} 30.96\% & 1514 & \cellcolor{cyan!51} 30.32\% & 769 & \cellcolor{green!20.8} 15.40\% & 28 & \cellcolor{green!61.300000000000004} 0.56\% \\
+8 & DOC & 15000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 509 & \cellcolor{green!53.2} 3.39\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+9 & DOCX & 15460 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 2339 & \cellcolor{green!20.8} 15.13\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+10 & DWG & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+11 & SO & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+12 & EPS & 10000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+13 & EPUB & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 3539 & \cellcolor{orange!41} 70.78\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+14 & EXE & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 269 & \cellcolor{green!47.800000000000004} 5.38\% & 4 & \cellcolor{green!61.300000000000004} 0.08\% \\
+15 & GIF & 10000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 1364 & \cellcolor{green!26.200000000000003} 13.64\% & 13 & \cellcolor{green!61.300000000000004} 0.13\% \\
+16 & GZ & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 5000 & \cellcolor{red!50} 100.00\% & 84 & \cellcolor{green!58.6} 1.68\% \\
+17 & HTML & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+18 & ICS & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+19 & JS & 5000 & 4 & \cellcolor{green!61.300000000000004} 0.08\% & 4 & \cellcolor{green!61.300000000000004} 0.08\% & 0 & \cellcolor{green!64.0} 0.00\% & 2 & \cellcolor{green!61.300000000000004} 0.04\% \\
+20 & JPG & 30000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 18162 & \cellcolor{orange!31} 60.54\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+21 & JSON & 5000 & 12 & \cellcolor{green!61.300000000000004} 0.24\% & 7 & \cellcolor{green!61.300000000000004} 0.14\% & 0 & \cellcolor{green!64.0} 0.00\% & 10 & \cellcolor{green!61.300000000000004} 0.20\% \\
+22 & MKV & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 3657 & \cellcolor{orange!44} 73.14\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+23 & MP3 & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 2478 & \cellcolor{yellow!35} 49.56\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+24 & MP4 & 10000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 5165 & \cellcolor{yellow!37} 51.65\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+25 & ODS & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 2644 & \cellcolor{yellow!38} 52.88\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+26 & OXPS & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 3808 & \cellcolor{orange!47} 76.16\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+27 & PDF & 14987 & 3197 & \cellcolor{cyan!42} 21.33\% & 3189 & \cellcolor{cyan!42} 21.28\% & 6720 & \cellcolor{yellow!30} 44.73\% & 31 & \cellcolor{green!61.300000000000004} 0.21\% \\
+28 & PNG & 30000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 27608 & \cellcolor{red!43} 92.03\% & 7 & \cellcolor{green!61.300000000000004} 0.02\% \\
+29 & PPT & 6313 & 12 & \cellcolor{green!61.300000000000004} 0.19\% & 0 & \cellcolor{green!64.0} 0.00\% & 1871 & \cellcolor{cyan!50} 29.64\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+30 & PPTX & 12643 & 108 & \cellcolor{green!61.300000000000004} 0.85\% & 108 & \cellcolor{green!61.300000000000004} 0.85\% & 7501 & \cellcolor{yellow!45} 59.33\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+31 & PS1 & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+32 & RAND & 10000 & 9727 & \cellcolor{red!48} 97.27\% & 9727 & \cellcolor{red!48} 97.27\% & 0 & \cellcolor{green!64.0} 0.00\% & 9905 & \cellcolor{red!50} 99.05\% \\
+33 & RAR & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 5000 & \cellcolor{red!50} 100.00\% & 126 & \cellcolor{green!55.900000000000006} 2.52\% \\
+34 & SVG & 10000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+35 & TAR & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 849 & \cellcolor{green!20} 16.98\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+36 & TIF & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 118 & \cellcolor{green!55.900000000000006} 2.36\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+37 & TXT & 5000 & 43 & \cellcolor{green!61.300000000000004} 0.86\% & 5 & \cellcolor{green!61.300000000000004} 0.10\% & 4 & \cellcolor{green!61.300000000000004} 0.08\% & 18 & \cellcolor{green!61.300000000000004} 0.36\% \\
+38 & XLS & 14999 & 3 & \cellcolor{green!61.300000000000004} 0.02\% & 0 & \cellcolor{green!64.0} 0.00\% & 45 & \cellcolor{green!61.300000000000004} 0.30\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+39 & XLSX & 15000 & 1 & \cellcolor{green!61.300000000000004} 0.01\% & 1 & \cellcolor{green!61.300000000000004} 0.01\% & 3434 & \cellcolor{cyan!43} 22.89\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+40 & XML & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% \\
+41 & ZIP & 30000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 29948 & \cellcolor{red!50} 99.83\% & 8089 & \cellcolor{cyan!47} 26.96\% \\
+42 & ZLIB & 5000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 5000 & \cellcolor{red!50} 100.00\% & 77 & \cellcolor{green!58.6} 1.54\% \\
+43 & WEBP & 45000 & 0 & \cellcolor{green!64.0} 0.00\% & 0 & \cellcolor{green!64.0} 0.00\% & 43321 & \cellcolor{red!47} 96.27\% & 13500 & \cellcolor{cyan!50} 30.00\% \\
+\midrule
+\multicolumn{2}{l}{\textbf{Average}} & 9869.6 & 353.6 & \cellcolor{green!53.2} 3.58\% & 350.5 & \cellcolor{green!53.2} 3.55\% & 4587.7 & \cellcolor{yellow!32} 46.48\% & 1010.3 & \cellcolor{green!34.3} 10.24\% \\
+
+
+Total families: 43
+Total files: 424394
+Total unrecognized: 15205
+Total null ext: 15071
+Total shannon high: 197272
+Total chi2 low: 43441
+
+

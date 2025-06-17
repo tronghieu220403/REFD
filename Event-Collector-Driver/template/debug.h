@@ -4,7 +4,8 @@
 
 #ifdef HIEU_DEBUG
 
-#define DebugMessage(x, ...) DbgPrintEx(0, 0, x, __VA_ARGS__)
+//#define DebugMessage(x, ...) DbgPrintEx(0, 0, x, __VA_ARGS__)
+#define DebugMessage(x, ...) DbgPrintEx(0, 0, "[EventCollectorDriver] [%s@%d:%s] " x "\n", __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
 
 #else 
 

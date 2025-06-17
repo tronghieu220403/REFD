@@ -5,7 +5,7 @@
 #include "../ulti/debug.h"
 #include "file_manager.h"
 
-#define INTERVAL_MINUTE_PROCESS_EVALUATION 1
+#define INTERVAL_SECONDS_PROCESS_EVALUATION 15
 
 namespace manager {
 
@@ -14,9 +14,15 @@ namespace manager {
         size_t deleted_count = 0;
         size_t created_write_count = 0;
         size_t overwrite_count = 0;
+        size_t overwrite_mismatch_count = 0;
+        size_t true_deleted_count = 0;
+        size_t created_write_null_count = 0;
+        size_t last_index = 0;
         std::chrono::steady_clock::time_point last_evaluation_time =
             std::chrono::steady_clock::now(); // force trigger immediately
         bool is_first_evaluation = true;
     };
+
+	bool KillProcessByPID(DWORD pid);
 }
 #endif  // PROCESS_MANAGER_H_

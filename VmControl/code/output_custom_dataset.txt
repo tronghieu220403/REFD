@@ -1,0 +1,364 @@
+File: 8Base.txt
+Total files: 4588
+Number of file with no ext detected: 3273
+No extension rate: 71.34%
+Number of file extensions mismatch content: 4486
+Mismatch rate: 97.78%
+
+File: Abyss.txt
+Total files: 3207
+Number of file with no ext detected: 3104
+No extension rate: 96.79%
+Number of file extensions mismatch content: 3207
+Mismatch rate: 100.00%
+
+File: Akira.txt
+Total files: 2254
+Number of file with no ext detected: 2183
+No extension rate: 96.85%
+Number of file extensions mismatch content: 2252
+Mismatch rate: 99.91%
+
+File: Avaddon.txt
+Total files: 3381
+Number of file with no ext detected: 3315
+No extension rate: 98.05%
+Number of file extensions mismatch content: 3351
+Mismatch rate: 99.11%
+
+File: Babuk.txt
+Total files: 3381
+Number of file with no ext detected: 2845
+No extension rate: 84.15%
+Number of file extensions mismatch content: 2934
+Mismatch rate: 86.78%
+
+File: BianLian.txt
+Total files: 2301
+Number of file with no ext detected: 276
+No extension rate: 11.99%
+Number of file extensions mismatch content: 276
+Mismatch rate: 11.99%
+
+File: Bitpaymer.txt
+Total files: 1127
+Number of file with no ext detected: 1086
+No extension rate: 96.36%
+Number of file extensions mismatch content: 1125
+Mismatch rate: 99.82%
+
+File: Blackbasta.txt
+Total files: 3441
+Number of file with no ext detected: 3305
+No extension rate: 96.05%
+Number of file extensions mismatch content: 3400
+Mismatch rate: 98.81%
+
+File: BlackMatter.txt
+Total files: 3303
+Number of file with no ext detected: 3168
+No extension rate: 95.91%
+Number of file extensions mismatch content: 3276
+Mismatch rate: 99.18%
+
+File: BlueSky.txt
+Total files: 3303
+Number of file with no ext detected: 3150
+No extension rate: 95.37%
+Number of file extensions mismatch content: 3251
+Mismatch rate: 98.43%
+
+File: Cactus.txt
+Total files: 3338
+Number of file with no ext detected: 3033
+No extension rate: 90.86%
+Number of file extensions mismatch content: 3117
+Mismatch rate: 93.38%
+
+File: Cerber.txt
+Total files: 1813
+Number of file with no ext detected: 110
+No extension rate: 6.07%
+Number of file extensions mismatch content: 110
+Mismatch rate: 6.07%
+
+File: Chaos.txt
+Total files: 2718
+Number of file with no ext detected: 0
+No extension rate: 0.00%
+Number of file extensions mismatch content: 2334
+Mismatch rate: 85.87%
+
+File: Cl0p.txt
+Total files: 3381
+Number of file with no ext detected: 3270
+No extension rate: 96.72%
+Number of file extensions mismatch content: 3378
+Mismatch rate: 99.91%
+
+File: Conti.txt
+Total files: 3381
+Number of file with no ext detected: 3280
+No extension rate: 97.01%
+Number of file extensions mismatch content: 3380
+Mismatch rate: 99.97%
+
+File: D0glun.txt
+Total files: 2948
+Number of file with no ext detected: 2840
+No extension rate: 96.34%
+Number of file extensions mismatch content: 2948
+Mismatch rate: 100.00%
+
+File: Darkside.txt
+Total files: 3303
+Number of file with no ext detected: 3172
+No extension rate: 96.03%
+Number of file extensions mismatch content: 3258
+Mismatch rate: 98.64%
+
+File: Dharma.txt
+Total files: 2340
+Number of file with no ext detected: 1678
+No extension rate: 71.71%
+Number of file extensions mismatch content: 2290
+Mismatch rate: 97.86%
+
+File: Eternity.txt
+Total files: 1323
+Number of file with no ext detected: 0
+No extension rate: 0.00%
+Number of file extensions mismatch content: 1193
+Mismatch rate: 90.17%
+
+File: Fog.txt
+Total files: 867
+Number of file with no ext detected: 843
+No extension rate: 97.23%
+Number of file extensions mismatch content: 867
+Mismatch rate: 100.00%
+
+File: GandCrab.txt
+Total files: 3342
+Number of file with no ext detected: 3244
+No extension rate: 97.07%
+Number of file extensions mismatch content: 3340
+Mismatch rate: 99.94%
+
+File: GoldenEye.txt
+Total files: 2373
+Number of file with no ext detected: 2305
+No extension rate: 97.13%
+Number of file extensions mismatch content: 2371
+Mismatch rate: 99.92%
+
+File: Hermes.txt
+Total files: 3432
+Number of file with no ext detected: 3295
+No extension rate: 96.01%
+Number of file extensions mismatch content: 3402
+Mismatch rate: 99.13%
+
+File: Jigsaw.txt
+Total files: 1452
+Number of file with no ext detected: 1448
+No extension rate: 99.72%
+Number of file extensions mismatch content: 1452
+Mismatch rate: 100.00%
+
+File: Lockbit.txt
+Total files: 3303
+Number of file with no ext detected: 3165
+No extension rate: 95.82%
+Number of file extensions mismatch content: 3251
+Mismatch rate: 98.43%
+
+File: Locky.txt
+Total files: 2574
+Number of file with no ext detected: 2504
+No extension rate: 97.28%
+Number of file extensions mismatch content: 2572
+Mismatch rate: 99.92%
+
+File: Loki.txt
+Total files: 2254
+Number of file with no ext detected: 2173
+No extension rate: 96.41%
+Number of file extensions mismatch content: 2229
+Mismatch rate: 98.89%
+
+File: LostTrust.txt
+Total files: 3666
+Number of file with no ext detected: 3323
+No extension rate: 90.64%
+Number of file extensions mismatch content: 3624
+Mismatch rate: 98.85%
+
+File: Lynx.txt
+Total files: 3381
+Number of file with no ext detected: 3255
+No extension rate: 96.27%
+Number of file extensions mismatch content: 3343
+Mismatch rate: 98.88%
+
+File: Makop.txt
+Total files: 3425
+Number of file with no ext detected: 3286
+No extension rate: 95.94%
+Number of file extensions mismatch content: 3389
+Mismatch rate: 98.95%
+
+File: Mallox.txt
+Total files: 3402
+Number of file with no ext detected: 3311
+No extension rate: 97.33%
+Number of file extensions mismatch content: 3402
+Mismatch rate: 100.00%
+
+File: Maze.txt
+Total files: 3441
+Number of file with no ext detected: 3353
+No extension rate: 97.44%
+Number of file extensions mismatch content: 3441
+Mismatch rate: 100.00%
+
+File: Medusa.txt
+Total files: 1127
+Number of file with no ext detected: 1036
+No extension rate: 91.93%
+Number of file extensions mismatch content: 1127
+Mismatch rate: 100.00%
+
+File: MountLocker.txt
+Total files: 3393
+Number of file with no ext detected: 3307
+No extension rate: 97.47%
+Number of file extensions mismatch content: 3392
+Mismatch rate: 99.97%
+
+File: Nefilim.txt
+Total files: 1088
+Number of file with no ext detected: 1053
+No extension rate: 96.78%
+Number of file extensions mismatch content: 1088
+Mismatch rate: 100.00%
+
+File: Nemty.txt
+Total files: 3381
+Number of file with no ext detected: 3193
+No extension rate: 94.44%
+Number of file extensions mismatch content: 3278
+Mismatch rate: 96.95%
+
+File: Phobos.txt
+Total files: 4588
+Number of file with no ext detected: 3261
+No extension rate: 71.08%
+Number of file extensions mismatch content: 4484
+Mismatch rate: 97.73%
+
+File: Prince.txt
+Total files: 3381
+Number of file with no ext detected: 3332
+No extension rate: 98.55%
+Number of file extensions mismatch content: 3381
+Mismatch rate: 100.00%
+
+File: Ragnar.txt
+Total files: 1127
+Number of file with no ext detected: 1125
+No extension rate: 99.82%
+Number of file extensions mismatch content: 1127
+Mismatch rate: 100.00%
+
+File: Razr.txt
+Total files: 1786
+Number of file with no ext detected: 1758
+No extension rate: 98.43%
+Number of file extensions mismatch content: 1786
+Mismatch rate: 100.00%
+
+File: REvil.txt
+Total files: 3303
+Number of file with no ext detected: 3215
+No extension rate: 97.34%
+Number of file extensions mismatch content: 3303
+Mismatch rate: 100.00%
+
+File: Rhysida.txt
+Total files: 3342
+Number of file with no ext detected: 3224
+No extension rate: 96.47%
+Number of file extensions mismatch content: 3341
+Mismatch rate: 99.97%
+
+File: Ryuk.txt
+Total files: 3381
+Number of file with no ext detected: 3280
+No extension rate: 97.01%
+Number of file extensions mismatch content: 3381
+Mismatch rate: 100.00%
+
+File: Sage.txt
+Total files: 2718
+Number of file with no ext detected: 2645
+No extension rate: 97.31%
+Number of file extensions mismatch content: 2717
+Mismatch rate: 99.96%
+
+File: Sarcoma.txt
+Total files: 3342
+Number of file with no ext detected: 3241
+No extension rate: 96.98%
+Number of file extensions mismatch content: 3341
+Mismatch rate: 99.97%
+
+File: Spora.txt
+Total files: 1365
+Number of file with no ext detected: 1318
+No extension rate: 96.56%
+Number of file extensions mismatch content: 1364
+Mismatch rate: 99.93%
+
+File: TeslaCrypt.txt
+Total files: 2289
+Number of file with no ext detected: 2289
+No extension rate: 100.00%
+Number of file extensions mismatch content: 2289
+Mismatch rate: 100.00%
+
+File: Thanos.txt
+Total files: 2373
+Number of file with no ext detected: 2313
+No extension rate: 97.47%
+Number of file extensions mismatch content: 2373
+Mismatch rate: 100.00%
+
+File: Trigona.txt
+Total files: 4680
+Number of file with no ext detected: 4493
+No extension rate: 96.00%
+Number of file extensions mismatch content: 4612
+Mismatch rate: 98.55%
+
+File: XData.txt
+Total files: 3381
+Number of file with no ext detected: 3286
+No extension rate: 97.19%
+Number of file extensions mismatch content: 3380
+Mismatch rate: 99.97%
+
+
+8Base & Abyss & Akira & Avaddon \\
+Babuk & BianLian & Bitpaymer & BlackMatter \\
+Blackbasta & BlueSky & Cactus & Cerber \\
+Chaos & Cl0p & Conti & D0glun \\
+Darkside & Dharma & Eternity & Fog \\
+GandCrab & GoldenEye & Hermes & Jigsaw \\
+Lockbit & Locky & Loki & LostTrust \\
+Lynx & Makop & Mallox & Maze \\
+Medusa & MountLocker & Nefilim & Nemty \\
+Phobos & Prince & REvil & Ragnar \\
+Razr & Rhysida & Ryuk & Sage \\
+Sarcoma & Spora & TeslaCrypt & Thanos \\
+Trigona & XData

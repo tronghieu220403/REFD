@@ -9,7 +9,7 @@
 
 namespace ulti
 {
-    std::wstring StrToWStr(const std::string& str);
+    std::wstring StrToWstr(const std::string& str);
     std::string WstrToStr(const std::wstring& wstr);
     std::string CharVectorToString(const std::vector<char>& v);
     std::vector<char> StringToVectorChar(const std::string& s);

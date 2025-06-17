@@ -1,0 +1,3240 @@
+[2025:06:04 08:25:02]
+[2025:06:04 08:25:02] Processing clean file name logagent.exe
+[2025:06:04 08:25:02]
+[2025:06:04 08:25:02] Processing clean file name logagent.exe, attempt 0
+[2025:06:04 08:25:02] Evaluating clean file logagent.exe
+[2025:06:04 08:25:02] Revert to snapshot
+[2025:06:04 08:25:17] Run VM
+[2025:06:04 08:25:17] Login as SYSTEM
+[2025:06:04 08:25:17] Logged as SYSTEM
+[2025:06:04 08:25:17] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\logagent.exe -> C:\Users\hieu\Downloads\logagent.exe
+[2025:06:04 08:25:20] Run clean file
+[2025:06:04 08:25:20] Login as hieu
+[2025:06:04 08:25:20] Logged as hieu
+[2025:06:04 08:25:21] Login as SYSTEM
+[2025:06:04 08:25:21] Logged as SYSTEM
+[2025:06:04 08:25:21] Waiting for 10 minutes
+[2025:06:04 08:36:21] Something went wrong :( VixError #3016: VMware Tools are not running in the guest
+[2025:06:04 08:36:21] Retrying logagent.exe
+[2025:06:04 08:36:21]
+[2025:06:04 08:36:21] Processing clean file name TeamViewer_Setup.exe
+[2025:06:04 08:36:21]
+[2025:06:04 08:36:21] Processing clean file name TeamViewer_Setup.exe, attempt 0
+[2025:06:04 08:36:21] Evaluating clean file TeamViewer_Setup.exe
+[2025:06:04 08:36:21] Revert to snapshot
+[2025:06:04 08:36:28] Run VM
+[2025:06:04 08:36:28] Login as SYSTEM
+[2025:06:04 08:36:28] Logged as SYSTEM
+[2025:06:04 08:36:28] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\TeamViewer_Setup.exe -> C:\Users\hieu\Downloads\TeamViewer_Setup.exe
+[2025:06:04 08:36:31] Run clean file
+[2025:06:04 08:36:31] Login as hieu
+[2025:06:04 08:36:31] Logged as hieu
+[2025:06:04 08:36:32] Login as SYSTEM
+[2025:06:04 08:36:32] Logged as SYSTEM
+[2025:06:04 08:36:32] Waiting for 10 minutes
+[2025:06:04 08:46:34] Done TeamViewer_Setup.exe
+[2025:06:04 12:35:02]
+[2025:06:04 12:35:02] Processing clean file name ManageWirelessNetworks.exe
+[2025:06:04 12:35:02]
+[2025:06:04 12:35:02] Processing clean file name ManageWirelessNetworks.exe, attempt 0
+[2025:06:04 12:35:02] Evaluating clean file ManageWirelessNetworks.exe
+[2025:06:04 12:35:02] Revert to snapshot
+[2025:06:04 12:35:07] Run VM
+[2025:06:04 12:35:08] Login as SYSTEM
+[2025:06:04 12:35:08] Logged as SYSTEM
+[2025:06:04 12:35:08] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ManageWirelessNetworks.exe -> C:\Users\hieu\Downloads\ManageWirelessNetworks.exe
+[2025:06:04 12:35:08] Run clean file
+[2025:06:04 12:35:08] Login as hieu
+[2025:06:04 12:35:09] Logged as hieu
+[2025:06:04 12:35:09] Login as SYSTEM
+[2025:06:04 12:35:09] Logged as SYSTEM
+[2025:06:04 12:35:09] Waiting for 5 minutes
+[2025:06:04 12:40:12] Done ManageWirelessNetworks.exe
+[2025:06:04 12:40:12] Cannot evaluate clean file ManageWirelessNetworks.exe
+
+[2025:06:04 12:40:12]
+[2025:06:04 12:40:12] Processing clean file name LastActivityView.exe
+[2025:06:04 12:40:12]
+[2025:06:04 12:40:12] Processing clean file name LastActivityView.exe, attempt 0
+[2025:06:04 12:40:12] Evaluating clean file LastActivityView.exe
+[2025:06:04 12:40:12] Revert to snapshot
+[2025:06:04 12:40:33] Run VM
+[2025:06:04 12:40:33] Login as SYSTEM
+[2025:06:04 12:40:33] Logged as SYSTEM
+[2025:06:04 12:40:33] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\LastActivityView.exe -> C:\Users\hieu\Downloads\LastActivityView.exe
+[2025:06:04 12:40:33] Run clean file
+[2025:06:04 12:40:33] Login as hieu
+[2025:06:04 12:40:34] Logged as hieu
+[2025:06:04 12:40:34] File is not compatible: LastActivityView.exe
+[2025:06:04 12:40:35] Cannot evaluate clean file LastActivityView.exe
+
+[2025:06:04 12:40:35]
+[2025:06:04 12:40:35] Processing clean file name ProjectInvinciblePortable_2.10_English.paf.exe
+[2025:06:04 12:40:35]
+[2025:06:04 12:40:35] Processing clean file name ProjectInvinciblePortable_2.10_English.paf.exe, attempt 0
+[2025:06:04 12:40:35] Evaluating clean file ProjectInvinciblePortable_2.10_English.paf.exe
+[2025:06:04 12:40:35] Revert to snapshot
+[2025:06:04 12:41:18] Run VM
+[2025:06:04 12:41:18] Login as SYSTEM
+[2025:06:04 12:41:19] Logged as SYSTEM
+[2025:06:04 12:41:19] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ProjectInvinciblePortable_2.10_English.paf.exe -> C:\Users\hieu\Downloads\ProjectInvinciblePortable_2.10_English.paf.exe
+[2025:06:04 12:41:21] Run clean file
+[2025:06:04 12:41:21] Login as hieu
+[2025:06:04 12:41:21] Logged as hieu
+[2025:06:04 12:41:21] Login as SYSTEM
+[2025:06:04 12:41:21] Logged as SYSTEM
+[2025:06:04 12:41:21] Waiting for 5 minutes
+[2025:06:04 12:46:25] Done ProjectInvinciblePortable_2.10_English.paf.exe
+[2025:06:04 12:46:25] Cannot evaluate clean file ProjectInvinciblePortable_2.10_English.paf.exe
+
+[2025:06:04 12:46:25]
+[2025:06:04 12:46:25] Processing clean file name OOBENetworkConnectionFlow.exe
+[2025:06:04 12:46:25]
+[2025:06:04 12:46:25] Processing clean file name OOBENetworkConnectionFlow.exe, attempt 0
+[2025:06:04 12:46:25] Evaluating clean file OOBENetworkConnectionFlow.exe
+[2025:06:04 12:46:25] Revert to snapshot
+[2025:06:04 12:46:51] Run VM
+[2025:06:04 12:46:51] Login as SYSTEM
+[2025:06:04 12:46:52] Logged as SYSTEM
+[2025:06:04 12:46:52] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\OOBENetworkConnectionFlow.exe -> C:\Users\hieu\Downloads\OOBENetworkConnectionFlow.exe
+[2025:06:04 12:46:52] Run clean file
+[2025:06:04 12:46:52] Login as hieu
+[2025:06:04 12:46:52] Logged as hieu
+[2025:06:04 12:46:53] Login as SYSTEM
+[2025:06:04 12:46:53] Logged as SYSTEM
+[2025:06:04 12:46:53] Waiting for 5 minutes
+[2025:06:04 12:51:55] Done OOBENetworkConnectionFlow.exe
+[2025:06:04 12:51:55] Cannot evaluate clean file OOBENetworkConnectionFlow.exe
+
+[2025:06:04 12:51:55]
+[2025:06:04 12:51:55] Processing clean file name CertEnrollCtrl.exe
+[2025:06:04 12:51:55]
+[2025:06:04 12:51:55] Processing clean file name CertEnrollCtrl.exe, attempt 0
+[2025:06:04 12:51:55] Evaluating clean file CertEnrollCtrl.exe
+[2025:06:04 12:51:55] Revert to snapshot
+[2025:06:04 12:52:27] Run VM
+[2025:06:04 12:52:27] Login as SYSTEM
+[2025:06:04 12:52:27] Logged as SYSTEM
+[2025:06:04 12:52:27] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\CertEnrollCtrl.exe -> C:\Users\hieu\Downloads\CertEnrollCtrl.exe
+[2025:06:04 12:52:28] Run clean file
+[2025:06:04 12:52:28] Login as hieu
+[2025:06:04 12:52:28] Logged as hieu
+[2025:06:04 12:52:28] Login as SYSTEM
+[2025:06:04 12:52:29] Logged as SYSTEM
+[2025:06:04 12:52:29] Waiting for 5 minutes
+[2025:06:04 12:57:31] Done CertEnrollCtrl.exe
+[2025:06:04 12:57:31] Cannot evaluate clean file CertEnrollCtrl.exe
+
+[2025:06:04 12:57:31]
+[2025:06:04 12:57:31] Processing clean file name GeekUninstallerPortable_1.4.9.151.paf.exe
+[2025:06:04 12:57:31]
+[2025:06:04 12:57:31] Processing clean file name GeekUninstallerPortable_1.4.9.151.paf.exe, attempt 0
+[2025:06:04 12:57:31] Evaluating clean file GeekUninstallerPortable_1.4.9.151.paf.exe
+[2025:06:04 12:57:31] Revert to snapshot
+[2025:06:04 12:57:54] Run VM
+[2025:06:04 12:57:54] Login as SYSTEM
+[2025:06:04 12:57:54] Logged as SYSTEM
+[2025:06:04 12:57:54] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\GeekUninstallerPortable_1.4.9.151.paf.exe -> C:\Users\hieu\Downloads\GeekUninstallerPortable_1.4.9.151.paf.exe
+[2025:06:04 12:57:57] Run clean file
+[2025:06:04 12:57:57] Login as hieu
+[2025:06:04 12:57:57] Logged as hieu
+[2025:06:04 12:57:57] Login as SYSTEM
+[2025:06:04 12:57:57] Logged as SYSTEM
+[2025:06:04 12:57:57] Waiting for 5 minutes
+[2025:06:04 13:03:01] Done GeekUninstallerPortable_1.4.9.151.paf.exe
+[2025:06:04 13:03:01] Cannot evaluate clean file GeekUninstallerPortable_1.4.9.151.paf.exe
+
+[2025:06:04 13:03:01]
+[2025:06:04 13:03:01] Processing clean file name BRCPositivePayInstaller.exe
+[2025:06:04 13:03:01]
+[2025:06:04 13:03:01] Processing clean file name BRCPositivePayInstaller.exe, attempt 0
+[2025:06:04 13:03:01] Evaluating clean file BRCPositivePayInstaller.exe
+[2025:06:04 13:03:01] Revert to snapshot
+[2025:06:04 13:03:34] Run VM
+[2025:06:04 13:03:34] Login as SYSTEM
+[2025:06:04 13:03:35] Logged as SYSTEM
+[2025:06:04 13:03:35] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\BRCPositivePayInstaller.exe -> C:\Users\hieu\Downloads\BRCPositivePayInstaller.exe
+[2025:06:04 13:03:37] Run clean file
+[2025:06:04 13:03:37] Login as hieu
+[2025:06:04 13:03:37] Logged as hieu
+[2025:06:04 13:03:38] File is not compatible: BRCPositivePayInstaller.exe
+[2025:06:04 13:03:39] Cannot evaluate clean file BRCPositivePayInstaller.exe
+
+[2025:06:04 13:03:39]
+[2025:06:04 13:03:39] Processing clean file name AppVClient.exe
+[2025:06:04 13:03:39]
+[2025:06:04 13:03:39] Processing clean file name AppVClient.exe, attempt 0
+[2025:06:04 13:03:39] Evaluating clean file AppVClient.exe
+[2025:06:04 13:03:39] Revert to snapshot
+[2025:06:04 13:04:12] Run VM
+[2025:06:04 13:04:12] Login as SYSTEM
+[2025:06:04 13:04:13] Logged as SYSTEM
+[2025:06:04 13:04:13] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\AppVClient.exe -> C:\Users\hieu\Downloads\AppVClient.exe
+[2025:06:04 13:04:13] Run clean file
+[2025:06:04 13:04:13] Login as hieu
+[2025:06:04 13:04:14] Logged as hieu
+[2025:06:04 13:04:14] Login as SYSTEM
+[2025:06:04 13:04:14] Logged as SYSTEM
+[2025:06:04 13:04:14] Waiting for 5 minutes
+[2025:06:04 13:09:18] Done AppVClient.exe
+[2025:06:04 13:09:18] Cannot evaluate clean file AppVClient.exe
+
+[2025:06:04 13:09:18]
+[2025:06:04 13:09:18] Processing clean file name rdpv.exe
+[2025:06:04 13:09:18]
+[2025:06:04 13:09:18] Processing clean file name rdpv.exe, attempt 0
+[2025:06:04 13:09:18] Evaluating clean file rdpv.exe
+[2025:06:04 13:09:18] Revert to snapshot
+[2025:06:04 13:09:54] Run VM
+[2025:06:04 13:09:54] Login as SYSTEM
+[2025:06:04 13:09:54] Logged as SYSTEM
+[2025:06:04 13:09:54] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\rdpv.exe -> C:\Users\hieu\Downloads\rdpv.exe
+[2025:06:04 13:09:55] Run clean file
+[2025:06:04 13:09:55] Login as hieu
+[2025:06:04 13:09:55] File is not compatible: rdpv.exe
+[2025:06:04 13:09:56] Cannot evaluate clean file rdpv.exe
+
+[2025:06:04 13:09:56]
+[2025:06:04 13:09:56] Processing clean file name fvenotify.exe
+[2025:06:04 13:09:56]
+[2025:06:04 13:09:56] Processing clean file name fvenotify.exe, attempt 0
+[2025:06:04 13:09:56] Evaluating clean file fvenotify.exe
+[2025:06:04 13:09:56] Revert to snapshot
+[2025:06:04 13:10:26] Run VM
+[2025:06:04 13:10:26] Login as SYSTEM
+[2025:06:04 13:10:27] Logged as SYSTEM
+[2025:06:04 13:10:27] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\fvenotify.exe -> C:\Users\hieu\Downloads\fvenotify.exe
+[2025:06:04 13:10:27] Run clean file
+[2025:06:04 13:10:27] Login as hieu
+[2025:06:04 13:10:28] Logged as hieu
+[2025:06:04 13:10:28] Login as SYSTEM
+[2025:06:04 13:10:28] Logged as SYSTEM
+[2025:06:04 13:10:28] Waiting for 5 minutes
+[2025:06:04 13:15:31] Done fvenotify.exe
+[2025:06:04 13:15:31] Cannot evaluate clean file fvenotify.exe
+
+[2025:06:04 13:15:31]
+[2025:06:04 13:15:31] Processing clean file name RMActivate_ssp_isv.exe
+[2025:06:04 13:15:31]
+[2025:06:04 13:15:31] Processing clean file name RMActivate_ssp_isv.exe, attempt 0
+[2025:06:04 13:15:31] Evaluating clean file RMActivate_ssp_isv.exe
+[2025:06:04 13:15:31] Revert to snapshot
+[2025:06:04 13:16:12] Run VM
+[2025:06:04 13:16:12] Login as SYSTEM
+[2025:06:04 13:16:12] Logged as SYSTEM
+[2025:06:04 13:16:12] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\RMActivate_ssp_isv.exe -> C:\Users\hieu\Downloads\RMActivate_ssp_isv.exe
+[2025:06:04 13:16:13] Run clean file
+[2025:06:04 13:16:13] Login as hieu
+[2025:06:04 13:16:14] Logged as hieu
+[2025:06:04 13:16:14] Login as SYSTEM
+[2025:06:04 13:16:14] Logged as SYSTEM
+[2025:06:04 13:16:14] Waiting for 5 minutes
+[2025:06:04 13:21:17] Done RMActivate_ssp_isv.exe
+[2025:06:04 13:21:17] Cannot evaluate clean file RMActivate_ssp_isv.exe
+
+[2025:06:04 13:21:17]
+[2025:06:04 13:21:17] Processing clean file name IniTranslatorPortable_1.9.0.52_Rev_2.paf.exe
+[2025:06:04 13:21:17]
+[2025:06:04 13:21:17] Processing clean file name IniTranslatorPortable_1.9.0.52_Rev_2.paf.exe, attempt 0
+[2025:06:04 13:21:17] Evaluating clean file IniTranslatorPortable_1.9.0.52_Rev_2.paf.exe
+[2025:06:04 13:21:17] Revert to snapshot
+[2025:06:04 13:21:38] Run VM
+[2025:06:04 13:21:38] Login as SYSTEM
+[2025:06:04 13:21:38] Logged as SYSTEM
+[2025:06:04 13:21:38] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\IniTranslatorPortable_1.9.0.52_Rev_2.paf.exe -> C:\Users\hieu\Downloads\IniTranslatorPortable_1.9.0.52_Rev_2.paf.exe
+[2025:06:04 13:21:43] Run clean file
+[2025:06:04 13:21:43] Login as hieu
+[2025:06:04 13:21:43] Logged as hieu
+[2025:06:04 13:21:43] Login as SYSTEM
+[2025:06:04 13:21:43] Logged as SYSTEM
+[2025:06:04 13:21:43] Waiting for 5 minutes
+[2025:06:04 13:26:46] Done IniTranslatorPortable_1.9.0.52_Rev_2.paf.exe
+[2025:06:04 13:26:46] Cannot evaluate clean file IniTranslatorPortable_1.9.0.52_Rev_2.paf.exe
+
+[2025:06:04 13:26:46]
+[2025:06:04 13:26:46] Processing clean file name SystemSettingsRemoveDevice.exe
+[2025:06:04 13:26:46]
+[2025:06:04 13:26:46] Processing clean file name SystemSettingsRemoveDevice.exe, attempt 0
+[2025:06:04 13:26:46] Evaluating clean file SystemSettingsRemoveDevice.exe
+[2025:06:04 13:26:46] Revert to snapshot
+[2025:06:04 13:27:35] Run VM
+[2025:06:04 13:27:35] Login as SYSTEM
+[2025:06:04 13:27:35] Logged as SYSTEM
+[2025:06:04 13:27:35] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SystemSettingsRemoveDevice.exe -> C:\Users\hieu\Downloads\SystemSettingsRemoveDevice.exe
+[2025:06:04 13:27:36] Run clean file
+[2025:06:04 13:27:36] Login as hieu
+[2025:06:04 13:27:36] Logged as hieu
+[2025:06:04 13:27:37] File is not compatible: SystemSettingsRemoveDevice.exe
+[2025:06:04 13:27:38] Cannot evaluate clean file SystemSettingsRemoveDevice.exe
+
+[2025:06:04 13:27:38]
+[2025:06:04 13:27:38] Processing clean file name NK2Edit.exe
+[2025:06:04 13:27:38]
+[2025:06:04 13:27:38] Processing clean file name NK2Edit.exe, attempt 0
+[2025:06:04 13:27:38] Evaluating clean file NK2Edit.exe
+[2025:06:04 13:27:38] Revert to snapshot
+[2025:06:04 13:28:26] Run VM
+[2025:06:04 13:28:26] Login as SYSTEM
+[2025:06:04 13:28:26] Logged as SYSTEM
+[2025:06:04 13:28:26] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\NK2Edit.exe -> C:\Users\hieu\Downloads\NK2Edit.exe
+[2025:06:04 13:28:26] Run clean file
+[2025:06:04 13:28:26] Login as hieu
+[2025:06:04 13:28:26] File is not compatible: NK2Edit.exe
+[2025:06:04 13:28:27] Cannot evaluate clean file NK2Edit.exe
+
+[2025:06:04 13:28:27]
+[2025:06:04 13:28:27] Processing clean file name taskhostw.exe
+[2025:06:04 13:28:27]
+[2025:06:04 13:28:27] Processing clean file name taskhostw.exe, attempt 0
+[2025:06:04 13:28:27] Evaluating clean file taskhostw.exe
+[2025:06:04 13:28:27] Revert to snapshot
+[2025:06:04 13:29:10] Run VM
+[2025:06:04 13:29:10] Login as SYSTEM
+[2025:06:04 13:29:10] Logged as SYSTEM
+[2025:06:04 13:29:10] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\taskhostw.exe -> C:\Users\hieu\Downloads\taskhostw.exe
+[2025:06:04 13:29:11] Run clean file
+[2025:06:04 13:29:11] Login as hieu
+[2025:06:04 13:29:11] Logged as hieu
+[2025:06:04 13:29:12] Login as SYSTEM
+[2025:06:04 13:29:12] Logged as SYSTEM
+[2025:06:04 13:29:12] Waiting for 5 minutes
+[2025:06:04 13:34:15] Done taskhostw.exe
+[2025:06:04 13:34:15] Cannot evaluate clean file taskhostw.exe
+
+[2025:06:04 13:34:15]
+[2025:06:04 13:34:15] Processing clean file name AppCrashView.exe
+[2025:06:04 13:34:15]
+[2025:06:04 13:34:15] Processing clean file name AppCrashView.exe, attempt 0
+[2025:06:04 13:34:15] Evaluating clean file AppCrashView.exe
+[2025:06:04 13:34:15] Revert to snapshot
+[2025:06:04 13:34:57] Run VM
+[2025:06:04 13:34:57] Login as SYSTEM
+[2025:06:04 13:34:58] Logged as SYSTEM
+[2025:06:04 13:34:58] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\AppCrashView.exe -> C:\Users\hieu\Downloads\AppCrashView.exe
+[2025:06:04 13:34:59] Run clean file
+[2025:06:04 13:34:59] Login as hieu
+[2025:06:04 13:34:59] Logged as hieu
+[2025:06:04 13:34:59] Login as SYSTEM
+[2025:06:04 13:34:59] Logged as SYSTEM
+[2025:06:04 13:34:59] Waiting for 5 minutes
+[2025:06:04 13:40:24] Something went wrong :( VixError #3016: VMware Tools are not running in the guest
+[2025:06:04 13:40:26] Retrying AppCrashView.exe
+[2025:06:04 13:40:26] Clean file evaluated: E:\Graduation_Project\clean_combined_log\TeamViewer_Setup.exe.log
+[2025:06:04 13:40:26]
+[2025:06:04 13:40:26] Processing clean file name BitLockerDeviceEncryption.exe
+[2025:06:04 13:40:26]
+[2025:06:04 13:40:26] Processing clean file name BitLockerDeviceEncryption.exe, attempt 0
+[2025:06:04 13:40:26] Evaluating clean file BitLockerDeviceEncryption.exe
+[2025:06:04 13:40:26] Revert to snapshot
+[2025:06:04 13:41:13] Run VM
+[2025:06:04 13:41:13] Login as SYSTEM
+[2025:06:04 13:41:13] Logged as SYSTEM
+[2025:06:04 13:41:13] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\BitLockerDeviceEncryption.exe -> C:\Users\hieu\Downloads\BitLockerDeviceEncryption.exe
+[2025:06:04 13:41:13] Run clean file
+[2025:06:04 13:41:13] Login as hieu
+[2025:06:04 13:41:14] Logged as hieu
+[2025:06:04 13:41:14] File is not compatible: BitLockerDeviceEncryption.exe
+[2025:06:04 13:41:15] Cannot evaluate clean file BitLockerDeviceEncryption.exe
+
+[2025:06:04 13:41:15]
+[2025:06:04 13:41:15] Processing clean file name ProduKey.exe
+[2025:06:04 13:41:15]
+[2025:06:04 13:41:15] Processing clean file name ProduKey.exe, attempt 0
+[2025:06:04 13:41:15] Evaluating clean file ProduKey.exe
+[2025:06:04 13:41:15] Revert to snapshot
+[2025:06:04 13:41:50] Run VM
+[2025:06:04 13:41:50] Login as SYSTEM
+[2025:06:04 13:41:51] Logged as SYSTEM
+[2025:06:04 13:41:51] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ProduKey.exe -> C:\Users\hieu\Downloads\ProduKey.exe
+[2025:06:04 13:41:52] Run clean file
+[2025:06:04 13:41:52] Login as hieu
+[2025:06:04 13:41:52] Logged as hieu
+[2025:06:04 13:41:52] Login as SYSTEM
+[2025:06:04 13:41:52] Logged as SYSTEM
+[2025:06:04 13:41:52] Waiting for 5 minutes
+[2025:06:04 13:46:56] Done ProduKey.exe
+[2025:06:04 13:46:56] Cannot evaluate clean file ProduKey.exe
+
+[2025:06:04 13:46:56]
+[2025:06:04 13:46:56] Processing clean file name SecurityHealthService.exe
+[2025:06:04 13:46:56]
+[2025:06:04 13:46:56] Processing clean file name SecurityHealthService.exe, attempt 0
+[2025:06:04 13:46:56] Evaluating clean file SecurityHealthService.exe
+[2025:06:04 13:46:56] Revert to snapshot
+[2025:06:04 13:47:41] Run VM
+[2025:06:04 13:47:41] Login as SYSTEM
+[2025:06:04 13:47:41] Logged as SYSTEM
+[2025:06:04 13:47:41] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SecurityHealthService.exe -> C:\Users\hieu\Downloads\SecurityHealthService.exe
+[2025:06:04 13:47:42] Run clean file
+[2025:06:04 13:47:42] Login as hieu
+[2025:06:04 13:47:42] File is not compatible: SecurityHealthService.exe
+[2025:06:04 13:47:43] Cannot evaluate clean file SecurityHealthService.exe
+
+[2025:06:04 13:47:43]
+[2025:06:04 13:47:43] Processing clean file name fc.exe
+[2025:06:04 13:47:43]
+[2025:06:04 13:47:43] Processing clean file name fc.exe, attempt 0
+[2025:06:04 13:47:43] Evaluating clean file fc.exe
+[2025:06:04 13:47:43] Revert to snapshot
+[2025:06:04 13:48:10] Run VM
+[2025:06:04 13:48:10] Login as SYSTEM
+[2025:06:04 13:48:11] Logged as SYSTEM
+[2025:06:04 13:48:11] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\fc.exe -> C:\Users\hieu\Downloads\fc.exe
+[2025:06:04 13:48:11] Run clean file
+[2025:06:04 13:48:11] Login as hieu
+[2025:06:04 13:48:11] Logged as hieu
+[2025:06:04 13:48:11] Login as SYSTEM
+[2025:06:04 13:48:11] Logged as SYSTEM
+[2025:06:04 13:48:11] Waiting for 5 minutes
+[2025:06:04 13:53:13] Done fc.exe
+[2025:06:04 13:53:13] Cannot evaluate clean file fc.exe
+
+[2025:06:04 13:53:13]
+[2025:06:04 13:53:13] Processing clean file name SSD-ZPortable_16.09.09b_English.paf.exe
+[2025:06:04 13:53:13]
+[2025:06:04 13:53:13] Processing clean file name SSD-ZPortable_16.09.09b_English.paf.exe, attempt 0
+[2025:06:04 13:53:13] Evaluating clean file SSD-ZPortable_16.09.09b_English.paf.exe
+[2025:06:04 13:53:13] Revert to snapshot
+[2025:06:04 13:54:06] Run VM
+[2025:06:04 13:54:06] Login as SYSTEM
+[2025:06:04 13:54:07] Logged as SYSTEM
+[2025:06:04 13:54:07] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SSD-ZPortable_16.09.09b_English.paf.exe -> C:\Users\hieu\Downloads\SSD-ZPortable_16.09.09b_English.paf.exe
+[2025:06:04 13:54:08] Run clean file
+[2025:06:04 13:54:08] Login as hieu
+[2025:06:04 13:54:08] Logged as hieu
+[2025:06:04 13:54:09] Login as SYSTEM
+[2025:06:04 13:54:09] Logged as SYSTEM
+[2025:06:04 13:54:09] Waiting for 5 minutes
+[2025:06:04 13:59:12] Done SSD-ZPortable_16.09.09b_English.paf.exe
+[2025:06:04 13:59:12] Cannot evaluate clean file SSD-ZPortable_16.09.09b_English.paf.exe
+
+[2025:06:04 13:59:12]
+[2025:06:04 13:59:12] Processing clean file name OnlyStopWatch_x64.exe
+[2025:06:04 13:59:12]
+[2025:06:04 13:59:12] Processing clean file name OnlyStopWatch_x64.exe, attempt 0
+[2025:06:04 13:59:12] Evaluating clean file OnlyStopWatch_x64.exe
+[2025:06:04 13:59:12] Revert to snapshot
+[2025:06:04 13:59:55] Run VM
+[2025:06:04 13:59:55] Login as SYSTEM
+[2025:06:04 13:59:56] Logged as SYSTEM
+[2025:06:04 13:59:56] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\OnlyStopWatch_x64.exe -> C:\Users\hieu\Downloads\OnlyStopWatch_x64.exe
+[2025:06:04 13:59:57] Run clean file
+[2025:06:04 13:59:57] Login as hieu
+[2025:06:04 13:59:57] Logged as hieu
+[2025:06:04 13:59:57] Login as SYSTEM
+[2025:06:04 13:59:57] Logged as SYSTEM
+[2025:06:04 13:59:57] Waiting for 5 minutes
+[2025:06:04 14:05:01] Done OnlyStopWatch_x64.exe
+[2025:06:04 14:05:01] Cannot evaluate clean file OnlyStopWatch_x64.exe
+
+[2025:06:04 14:05:01]
+[2025:06:04 14:05:01] Processing clean file name write.exe
+[2025:06:04 14:05:01]
+[2025:06:04 14:05:01] Processing clean file name write.exe, attempt 0
+[2025:06:04 14:05:01] Evaluating clean file write.exe
+[2025:06:04 14:05:01] Revert to snapshot
+[2025:06:04 14:05:40] Run VM
+[2025:06:04 14:05:40] Login as SYSTEM
+[2025:06:04 14:05:40] Logged as SYSTEM
+[2025:06:04 14:05:40] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\write.exe -> C:\Users\hieu\Downloads\write.exe
+[2025:06:04 14:05:40] Run clean file
+[2025:06:04 14:05:40] Login as hieu
+[2025:06:04 14:05:41] Logged as hieu
+[2025:06:04 14:05:41] Login as SYSTEM
+[2025:06:04 14:05:41] Logged as SYSTEM
+[2025:06:04 14:05:41] Waiting for 5 minutes
+[2025:06:04 14:10:44] Done write.exe
+[2025:06:04 14:10:44] Cannot evaluate clean file write.exe
+
+[2025:06:04 14:10:44]
+[2025:06:04 14:10:44] Processing clean file name MDEServer.exe
+[2025:06:04 14:10:44]
+[2025:06:04 14:10:44] Processing clean file name MDEServer.exe, attempt 0
+[2025:06:04 14:10:44] Evaluating clean file MDEServer.exe
+[2025:06:04 14:10:44] Revert to snapshot
+[2025:06:04 14:11:23] Run VM
+[2025:06:04 14:11:23] Login as SYSTEM
+[2025:06:04 14:11:24] Logged as SYSTEM
+[2025:06:04 14:11:24] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\MDEServer.exe -> C:\Users\hieu\Downloads\MDEServer.exe
+[2025:06:04 14:11:24] Run clean file
+[2025:06:04 14:11:24] Login as hieu
+[2025:06:04 14:11:24] Logged as hieu
+[2025:06:04 14:11:25] Login as SYSTEM
+[2025:06:04 14:11:25] Logged as SYSTEM
+[2025:06:04 14:11:25] Waiting for 5 minutes
+[2025:06:04 14:16:28] Done MDEServer.exe
+[2025:06:04 14:16:28] Cannot evaluate clean file MDEServer.exe
+
+[2025:06:04 14:16:28]
+[2025:06:04 14:16:28] Processing clean file name LiveContactsView.exe
+[2025:06:04 14:16:28]
+[2025:06:04 14:16:28] Processing clean file name LiveContactsView.exe, attempt 0
+[2025:06:04 14:16:28] Evaluating clean file LiveContactsView.exe
+[2025:06:04 14:16:28] Revert to snapshot
+[2025:06:04 14:17:25] Run VM
+[2025:06:04 14:17:25] Login as SYSTEM
+[2025:06:04 14:17:25] Logged as SYSTEM
+[2025:06:04 14:17:25] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\LiveContactsView.exe -> C:\Users\hieu\Downloads\LiveContactsView.exe
+[2025:06:04 14:17:26] Run clean file
+[2025:06:04 14:17:26] Login as hieu
+[2025:06:04 14:17:26] Logged as hieu
+[2025:06:04 14:17:27] Login as SYSTEM
+[2025:06:04 14:17:27] Logged as SYSTEM
+[2025:06:04 14:17:27] Waiting for 5 minutes
+[2025:06:04 14:22:30] Done LiveContactsView.exe
+[2025:06:04 14:22:30] Cannot evaluate clean file LiveContactsView.exe
+
+[2025:06:04 14:22:30]
+[2025:06:04 14:22:30] Processing clean file name SteamSetup.exe
+[2025:06:04 14:22:30]
+[2025:06:04 14:22:30] Processing clean file name SteamSetup.exe, attempt 0
+[2025:06:04 14:22:30] Evaluating clean file SteamSetup.exe
+[2025:06:04 14:22:30] Revert to snapshot
+[2025:06:04 14:22:59] Run VM
+[2025:06:04 14:22:59] Login as SYSTEM
+[2025:06:04 14:23:00] Logged as SYSTEM
+[2025:06:04 14:23:00] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SteamSetup.exe -> C:\Users\hieu\Downloads\SteamSetup.exe
+[2025:06:04 14:23:01] Run clean file
+[2025:06:04 14:23:01] Login as hieu
+[2025:06:04 14:23:01] Logged as hieu
+[2025:06:04 14:23:02] File is not compatible: SteamSetup.exe
+[2025:06:04 14:23:03] Cannot evaluate clean file SteamSetup.exe
+
+[2025:06:04 14:23:03]
+[2025:06:04 14:23:03] Processing clean file name TabTip32.exe
+[2025:06:04 14:23:03]
+[2025:06:04 14:23:03] Processing clean file name TabTip32.exe, attempt 0
+[2025:06:04 14:23:03] Evaluating clean file TabTip32.exe
+[2025:06:04 14:23:03] Revert to snapshot
+[2025:06:04 14:23:34] Run VM
+[2025:06:04 14:23:34] Login as SYSTEM
+[2025:06:04 14:23:34] Logged as SYSTEM
+[2025:06:04 14:23:34] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\TabTip32.exe -> C:\Users\hieu\Downloads\TabTip32.exe
+[2025:06:04 14:23:35] Run clean file
+[2025:06:04 14:23:35] Login as hieu
+[2025:06:04 14:23:35] Logged as hieu
+[2025:06:04 14:23:36] File is not compatible: TabTip32.exe
+[2025:06:04 14:23:37] Cannot evaluate clean file TabTip32.exe
+
+[2025:06:04 14:23:37]
+[2025:06:04 14:23:37] Processing clean file name dispdiag.exe
+[2025:06:04 14:23:37]
+[2025:06:04 14:23:37] Processing clean file name dispdiag.exe, attempt 0
+[2025:06:04 14:23:37] Evaluating clean file dispdiag.exe
+[2025:06:04 14:23:37] Revert to snapshot
+[2025:06:04 14:24:09] Run VM
+[2025:06:04 14:24:09] Login as SYSTEM
+[2025:06:04 14:24:10] Logged as SYSTEM
+[2025:06:04 14:24:10] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\dispdiag.exe -> C:\Users\hieu\Downloads\dispdiag.exe
+[2025:06:04 14:24:10] Run clean file
+[2025:06:04 14:24:10] Login as hieu
+[2025:06:04 14:24:10] Logged as hieu
+[2025:06:04 14:24:11] Login as SYSTEM
+[2025:06:04 14:24:11] Logged as SYSTEM
+[2025:06:04 14:24:11] Waiting for 5 minutes
+[2025:06:04 14:29:14] Done dispdiag.exe
+[2025:06:04 14:29:14] Cannot evaluate clean file dispdiag.exe
+
+[2025:06:04 14:29:14]
+[2025:06:04 14:29:14] Processing clean file name ssh-keygen.exe
+[2025:06:04 14:29:14]
+[2025:06:04 14:29:14] Processing clean file name ssh-keygen.exe, attempt 0
+[2025:06:04 14:29:14] Evaluating clean file ssh-keygen.exe
+[2025:06:04 14:29:14] Revert to snapshot
+[2025:06:04 14:29:57] Run VM
+[2025:06:04 14:29:57] Login as SYSTEM
+[2025:06:04 14:29:58] Logged as SYSTEM
+[2025:06:04 14:29:58] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ssh-keygen.exe -> C:\Users\hieu\Downloads\ssh-keygen.exe
+[2025:06:04 14:29:59] Run clean file
+[2025:06:04 14:29:59] Login as hieu
+[2025:06:04 14:30:00] Logged as hieu
+[2025:06:04 14:30:00] Login as SYSTEM
+[2025:06:04 14:30:01] Logged as SYSTEM
+[2025:06:04 14:30:01] Waiting for 5 minutes
+[2025:06:04 14:35:03] Done ssh-keygen.exe
+[2025:06:04 14:35:03] Cannot evaluate clean file ssh-keygen.exe
+
+[2025:06:04 14:35:03]
+[2025:06:04 14:35:03] Processing clean file name PaulStretchPortable_2.2-2_Rev_2_English.paf.exe
+[2025:06:04 14:35:03]
+[2025:06:04 14:35:03] Processing clean file name PaulStretchPortable_2.2-2_Rev_2_English.paf.exe, attempt 0
+[2025:06:04 14:35:03] Evaluating clean file PaulStretchPortable_2.2-2_Rev_2_English.paf.exe
+[2025:06:04 14:35:03] Revert to snapshot
+[2025:06:04 14:35:42] Run VM
+[2025:06:04 14:35:42] Login as SYSTEM
+[2025:06:04 14:35:42] Logged as SYSTEM
+[2025:06:04 14:35:42] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\PaulStretchPortable_2.2-2_Rev_2_English.paf.exe -> C:\Users\hieu\Downloads\PaulStretchPortable_2.2-2_Rev_2_English.paf.exe
+[2025:06:04 14:35:44] Run clean file
+[2025:06:04 14:35:44] Login as hieu
+[2025:06:04 14:35:44] Logged as hieu
+[2025:06:04 14:35:44] Login as SYSTEM
+[2025:06:04 14:35:45] Logged as SYSTEM
+[2025:06:04 14:35:45] Waiting for 5 minutes
+[2025:06:04 14:40:48] Done PaulStretchPortable_2.2-2_Rev_2_English.paf.exe
+[2025:06:04 14:40:48] Cannot evaluate clean file PaulStretchPortable_2.2-2_Rev_2_English.paf.exe
+
+[2025:06:04 14:40:48]
+[2025:06:04 14:40:48] Processing clean file name ieinstal.exe
+[2025:06:04 14:40:48]
+[2025:06:04 14:40:48] Processing clean file name ieinstal.exe, attempt 0
+[2025:06:04 14:40:48] Evaluating clean file ieinstal.exe
+[2025:06:04 14:40:48] Revert to snapshot
+[2025:06:04 14:41:25] Run VM
+[2025:06:04 14:41:25] Login as SYSTEM
+[2025:06:04 14:41:26] Logged as SYSTEM
+[2025:06:04 14:41:26] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ieinstal.exe -> C:\Users\hieu\Downloads\ieinstal.exe
+[2025:06:04 14:41:27] Run clean file
+[2025:06:04 14:41:27] Login as hieu
+[2025:06:04 14:41:27] Logged as hieu
+[2025:06:04 14:41:28] Login as SYSTEM
+[2025:06:04 14:41:28] Logged as SYSTEM
+[2025:06:04 14:41:28] Waiting for 5 minutes
+[2025:06:04 14:46:31] Done ieinstal.exe
+[2025:06:04 14:46:31] Cannot evaluate clean file ieinstal.exe
+
+[2025:06:04 14:46:31]
+[2025:06:04 14:46:31] Processing clean file name DriverView.exe
+[2025:06:04 14:46:31]
+[2025:06:04 14:46:31] Processing clean file name DriverView.exe, attempt 0
+[2025:06:04 14:46:31] Evaluating clean file DriverView.exe
+[2025:06:04 14:46:31] Revert to snapshot
+[2025:06:04 14:47:09] Run VM
+[2025:06:04 14:47:09] Login as SYSTEM
+[2025:06:04 14:47:09] Logged as SYSTEM
+[2025:06:04 14:47:09] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\DriverView.exe -> C:\Users\hieu\Downloads\DriverView.exe
+[2025:06:04 14:47:10] Run clean file
+[2025:06:04 14:47:10] Login as hieu
+[2025:06:04 14:47:10] Logged as hieu
+[2025:06:04 14:47:11] Login as SYSTEM
+[2025:06:04 14:47:11] Logged as SYSTEM
+[2025:06:04 14:47:11] Waiting for 5 minutes
+[2025:06:04 14:52:14] Done DriverView.exe
+[2025:06:04 14:52:14] Cannot evaluate clean file DriverView.exe
+
+[2025:06:04 14:52:14]
+[2025:06:04 14:52:14] Processing clean file name JavaPortableLauncher_6.0.paf.exe
+[2025:06:04 14:52:14]
+[2025:06:04 14:52:14] Processing clean file name JavaPortableLauncher_6.0.paf.exe, attempt 0
+[2025:06:04 14:52:14] Evaluating clean file JavaPortableLauncher_6.0.paf.exe
+[2025:06:04 14:52:14] Revert to snapshot
+[2025:06:04 14:52:49] Run VM
+[2025:06:04 14:52:49] Login as SYSTEM
+[2025:06:04 14:52:50] Logged as SYSTEM
+[2025:06:04 14:52:50] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\JavaPortableLauncher_6.0.paf.exe -> C:\Users\hieu\Downloads\JavaPortableLauncher_6.0.paf.exe
+[2025:06:04 14:52:51] Run clean file
+[2025:06:04 14:52:51] Login as hieu
+[2025:06:04 14:52:51] Logged as hieu
+[2025:06:04 14:52:51] Login as SYSTEM
+[2025:06:04 14:52:52] Logged as SYSTEM
+[2025:06:04 14:52:52] Waiting for 5 minutes
+[2025:06:04 14:57:55] Done JavaPortableLauncher_6.0.paf.exe
+[2025:06:04 14:57:55] Cannot evaluate clean file JavaPortableLauncher_6.0.paf.exe
+
+[2025:06:04 14:57:55]
+[2025:06:04 14:57:55] Processing clean file name DontPanicPortable_3.1.0.paf.exe
+[2025:06:04 14:57:55]
+[2025:06:04 14:57:55] Processing clean file name DontPanicPortable_3.1.0.paf.exe, attempt 0
+[2025:06:04 14:57:55] Evaluating clean file DontPanicPortable_3.1.0.paf.exe
+[2025:06:04 14:57:55] Revert to snapshot
+[2025:06:04 14:58:32] Run VM
+[2025:06:04 14:58:32] Login as SYSTEM
+[2025:06:04 14:58:33] Logged as SYSTEM
+[2025:06:04 14:58:33] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\DontPanicPortable_3.1.0.paf.exe -> C:\Users\hieu\Downloads\DontPanicPortable_3.1.0.paf.exe
+[2025:06:04 14:58:35] Run clean file
+[2025:06:04 14:58:35] Login as hieu
+[2025:06:04 14:58:35] Logged as hieu
+[2025:06:04 14:58:36] Login as SYSTEM
+[2025:06:04 14:58:36] Logged as SYSTEM
+[2025:06:04 14:58:36] Waiting for 5 minutes
+[2025:06:04 15:03:40] Done DontPanicPortable_3.1.0.paf.exe
+[2025:06:04 15:03:40] Cannot evaluate clean file DontPanicPortable_3.1.0.paf.exe
+
+[2025:06:04 15:03:40]
+[2025:06:04 15:03:40] Processing clean file name SensorDataService.exe
+[2025:06:04 15:03:40]
+[2025:06:04 15:03:40] Processing clean file name SensorDataService.exe, attempt 0
+[2025:06:04 15:03:40] Evaluating clean file SensorDataService.exe
+[2025:06:04 15:03:40] Revert to snapshot
+[2025:06:04 15:04:15] Run VM
+[2025:06:04 15:04:15] Login as SYSTEM
+[2025:06:04 15:04:15] Logged as SYSTEM
+[2025:06:04 15:04:15] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SensorDataService.exe -> C:\Users\hieu\Downloads\SensorDataService.exe
+[2025:06:04 15:04:17] Run clean file
+[2025:06:04 15:04:17] Login as hieu
+[2025:06:04 15:04:17] Logged as hieu
+[2025:06:04 15:04:17] Login as SYSTEM
+[2025:06:04 15:04:17] Logged as SYSTEM
+[2025:06:04 15:04:17] Waiting for 5 minutes
+[2025:06:04 15:09:21] Done SensorDataService.exe
+[2025:06:04 15:09:21] Cannot evaluate clean file SensorDataService.exe
+
+[2025:06:04 15:09:21]
+[2025:06:04 15:09:21] Processing clean file name dotNETInspectorPortable_1.5.0_English.paf.exe
+[2025:06:04 15:09:21]
+[2025:06:04 15:09:21] Processing clean file name dotNETInspectorPortable_1.5.0_English.paf.exe, attempt 0
+[2025:06:04 15:09:21] Evaluating clean file dotNETInspectorPortable_1.5.0_English.paf.exe
+[2025:06:04 15:09:21] Revert to snapshot
+[2025:06:04 15:09:58] Run VM
+[2025:06:04 15:09:58] Login as SYSTEM
+[2025:06:04 15:09:59] Logged as SYSTEM
+[2025:06:04 15:09:59] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\dotNETInspectorPortable_1.5.0_English.paf.exe -> C:\Users\hieu\Downloads\dotNETInspectorPortable_1.5.0_English.paf.exe
+[2025:06:04 15:10:02] Run clean file
+[2025:06:04 15:10:02] Login as hieu
+[2025:06:04 15:10:02] Logged as hieu
+[2025:06:04 15:10:02] Login as SYSTEM
+[2025:06:04 15:10:02] Logged as SYSTEM
+[2025:06:04 15:10:02] Waiting for 5 minutes
+[2025:06:04 15:15:05] Done dotNETInspectorPortable_1.5.0_English.paf.exe
+[2025:06:04 15:15:05] Cannot evaluate clean file dotNETInspectorPortable_1.5.0_English.paf.exe
+
+[2025:06:04 15:15:05]
+[2025:06:04 15:15:05] Processing clean file name WFS.exe
+[2025:06:04 15:15:05]
+[2025:06:04 15:15:05] Processing clean file name WFS.exe, attempt 0
+[2025:06:04 15:15:05] Evaluating clean file WFS.exe
+[2025:06:04 15:15:05] Revert to snapshot
+[2025:06:04 15:15:48] Run VM
+[2025:06:04 15:15:48] Login as SYSTEM
+[2025:06:04 15:15:49] Logged as SYSTEM
+[2025:06:04 15:15:49] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\WFS.exe -> C:\Users\hieu\Downloads\WFS.exe
+[2025:06:04 15:15:50] Run clean file
+[2025:06:04 15:15:50] Login as hieu
+[2025:06:04 15:15:50] Logged as hieu
+[2025:06:04 15:15:50] Login as SYSTEM
+[2025:06:04 15:15:51] Logged as SYSTEM
+[2025:06:04 15:15:51] Waiting for 5 minutes
+[2025:06:04 15:20:54] Done WFS.exe
+[2025:06:04 15:20:54] Cannot evaluate clean file WFS.exe
+
+[2025:06:04 15:20:54]
+[2025:06:04 15:20:54] Processing clean file name GreenfishIconEditorProPortable_3.6.paf.exe
+[2025:06:04 15:20:54]
+[2025:06:04 15:20:54] Processing clean file name GreenfishIconEditorProPortable_3.6.paf.exe, attempt 0
+[2025:06:04 15:20:54] Evaluating clean file GreenfishIconEditorProPortable_3.6.paf.exe
+[2025:06:04 15:20:54] Revert to snapshot
+[2025:06:04 15:21:36] Run VM
+[2025:06:04 15:21:36] Login as SYSTEM
+[2025:06:04 15:21:36] Logged as SYSTEM
+[2025:06:04 15:21:36] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\GreenfishIconEditorProPortable_3.6.paf.exe -> C:\Users\hieu\Downloads\GreenfishIconEditorProPortable_3.6.paf.exe
+[2025:06:04 15:21:40] Run clean file
+[2025:06:04 15:21:40] Login as hieu
+[2025:06:04 15:21:40] Logged as hieu
+[2025:06:04 15:21:40] Login as SYSTEM
+[2025:06:04 15:21:40] Logged as SYSTEM
+[2025:06:04 15:21:40] Waiting for 5 minutes
+[2025:06:04 15:26:43] Done GreenfishIconEditorProPortable_3.6.paf.exe
+[2025:06:04 15:26:43] Cannot evaluate clean file GreenfishIconEditorProPortable_3.6.paf.exe
+
+[2025:06:04 15:26:43]
+[2025:06:04 15:26:43] Processing clean file name MicrosoftEdgeDevTools.exe
+[2025:06:04 15:26:43]
+[2025:06:04 15:26:43] Processing clean file name MicrosoftEdgeDevTools.exe, attempt 0
+[2025:06:04 15:26:43] Evaluating clean file MicrosoftEdgeDevTools.exe
+[2025:06:04 15:26:43] Revert to snapshot
+[2025:06:04 15:27:21] Run VM
+[2025:06:04 15:27:21] Login as SYSTEM
+[2025:06:04 15:27:21] Logged as SYSTEM
+[2025:06:04 15:27:21] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\MicrosoftEdgeDevTools.exe -> C:\Users\hieu\Downloads\MicrosoftEdgeDevTools.exe
+[2025:06:04 15:27:21] Run clean file
+[2025:06:04 15:27:21] Login as hieu
+[2025:06:04 15:27:21] File is not compatible: MicrosoftEdgeDevTools.exe
+[2025:06:04 15:27:23] Cannot evaluate clean file MicrosoftEdgeDevTools.exe
+
+[2025:06:04 15:27:23]
+[2025:06:04 15:27:23] Processing clean file name SideSlide_v5.73_Setup.exe
+[2025:06:04 15:27:23]
+[2025:06:04 15:27:23] Processing clean file name SideSlide_v5.73_Setup.exe, attempt 0
+[2025:06:04 15:27:23] Evaluating clean file SideSlide_v5.73_Setup.exe
+[2025:06:04 15:27:23] Revert to snapshot
+[2025:06:04 15:28:00] Run VM
+[2025:06:04 15:28:00] Login as SYSTEM
+[2025:06:04 15:28:00] Logged as SYSTEM
+[2025:06:04 15:28:00] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SideSlide_v5.73_Setup.exe -> C:\Users\hieu\Downloads\SideSlide_v5.73_Setup.exe
+[2025:06:04 15:28:01] Run clean file
+[2025:06:04 15:28:01] Login as hieu
+[2025:06:04 15:28:02] Logged as hieu
+[2025:06:04 15:28:02] Login as SYSTEM
+[2025:06:04 15:28:03] Logged as SYSTEM
+[2025:06:04 15:28:03] Waiting for 5 minutes
+[2025:06:04 15:33:06] Done SideSlide_v5.73_Setup.exe
+[2025:06:04 15:33:06] Cannot evaluate clean file SideSlide_v5.73_Setup.exe
+
+[2025:06:04 15:33:06]
+[2025:06:04 15:33:06] Processing clean file name RegFileExport.exe
+[2025:06:04 15:33:06]
+[2025:06:04 15:33:06] Processing clean file name RegFileExport.exe, attempt 0
+[2025:06:04 15:33:06] Evaluating clean file RegFileExport.exe
+[2025:06:04 15:33:06] Revert to snapshot
+[2025:06:04 15:33:57] Run VM
+[2025:06:04 15:33:57] Login as SYSTEM
+[2025:06:04 15:33:58] Logged as SYSTEM
+[2025:06:04 15:33:58] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\RegFileExport.exe -> C:\Users\hieu\Downloads\RegFileExport.exe
+[2025:06:04 15:33:58] Run clean file
+[2025:06:04 15:33:58] Login as hieu
+[2025:06:04 15:33:58] Logged as hieu
+[2025:06:04 15:33:58] Login as SYSTEM
+[2025:06:04 15:33:59] Logged as SYSTEM
+[2025:06:04 15:33:59] Waiting for 5 minutes
+[2025:06:04 15:39:02] Done RegFileExport.exe
+[2025:06:04 15:39:02] Cannot evaluate clean file RegFileExport.exe
+
+[2025:06:04 15:39:02]
+[2025:06:04 15:39:02] Processing clean file name AuditShD.exe
+[2025:06:04 15:39:02]
+[2025:06:04 15:39:02] Processing clean file name AuditShD.exe, attempt 0
+[2025:06:04 15:39:02] Evaluating clean file AuditShD.exe
+[2025:06:04 15:39:02] Revert to snapshot
+[2025:06:04 15:39:45] Run VM
+[2025:06:04 15:39:45] Login as SYSTEM
+[2025:06:04 15:39:46] Logged as SYSTEM
+[2025:06:04 15:39:46] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\AuditShD.exe -> C:\Users\hieu\Downloads\AuditShD.exe
+[2025:06:04 15:39:46] Run clean file
+[2025:06:04 15:39:46] Login as hieu
+[2025:06:04 15:39:46] File is not compatible: AuditShD.exe
+[2025:06:04 15:39:48] Cannot evaluate clean file AuditShD.exe
+
+[2025:06:04 15:39:48]
+[2025:06:04 15:39:48] Processing clean file name dmclient.exe
+[2025:06:04 15:39:48]
+[2025:06:04 15:39:48] Processing clean file name dmclient.exe, attempt 0
+[2025:06:04 15:39:48] Evaluating clean file dmclient.exe
+[2025:06:04 15:39:48] Revert to snapshot
+[2025:06:04 15:40:27] Run VM
+[2025:06:04 15:40:27] Login as SYSTEM
+[2025:06:04 15:40:27] Logged as SYSTEM
+[2025:06:04 15:40:27] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\dmclient.exe -> C:\Users\hieu\Downloads\dmclient.exe
+[2025:06:04 15:40:28] Run clean file
+[2025:06:04 15:40:28] Login as hieu
+[2025:06:04 15:40:28] Logged as hieu
+[2025:06:04 15:40:29] Login as SYSTEM
+[2025:06:04 15:40:29] Logged as SYSTEM
+[2025:06:04 15:40:29] Waiting for 5 minutes
+[2025:06:04 15:45:33] Done dmclient.exe
+[2025:06:04 15:45:33] Cannot evaluate clean file dmclient.exe
+
+[2025:06:04 15:45:33]
+[2025:06:04 15:45:33] Processing clean file name KCleanerPortable_3.8.3.113.paf.exe
+[2025:06:04 15:45:33]
+[2025:06:04 15:45:33] Processing clean file name KCleanerPortable_3.8.3.113.paf.exe, attempt 0
+[2025:06:04 15:45:33] Evaluating clean file KCleanerPortable_3.8.3.113.paf.exe
+[2025:06:04 15:45:33] Revert to snapshot
+[2025:06:04 15:45:56] Run VM
+[2025:06:04 15:45:56] Login as SYSTEM
+[2025:06:04 15:45:56] Logged as SYSTEM
+[2025:06:04 15:45:56] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\KCleanerPortable_3.8.3.113.paf.exe -> C:\Users\hieu\Downloads\KCleanerPortable_3.8.3.113.paf.exe
+[2025:06:04 15:46:00] Run clean file
+[2025:06:04 15:46:00] Login as hieu
+[2025:06:04 15:46:00] Logged as hieu
+[2025:06:04 15:46:01] Login as SYSTEM
+[2025:06:04 15:46:01] Logged as SYSTEM
+[2025:06:04 15:46:01] Waiting for 5 minutes
+[2025:06:04 15:51:04] Done KCleanerPortable_3.8.3.113.paf.exe
+[2025:06:04 15:51:04] Cannot evaluate clean file KCleanerPortable_3.8.3.113.paf.exe
+
+[2025:06:04 15:51:04]
+[2025:06:04 15:51:04] Processing clean file name setup_WatchDOG.exe
+[2025:06:04 15:51:04]
+[2025:06:04 15:51:04] Processing clean file name setup_WatchDOG.exe, attempt 0
+[2025:06:04 15:51:04] Evaluating clean file setup_WatchDOG.exe
+[2025:06:04 15:51:04] Revert to snapshot
+[2025:06:04 15:51:46] Run VM
+[2025:06:04 15:51:46] Login as SYSTEM
+[2025:06:04 15:51:46] Logged as SYSTEM
+[2025:06:04 15:51:46] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\setup_WatchDOG.exe -> C:\Users\hieu\Downloads\setup_WatchDOG.exe
+[2025:06:04 15:51:48] Run clean file
+[2025:06:04 15:51:48] Login as hieu
+[2025:06:04 15:51:48] Logged as hieu
+[2025:06:04 15:51:49] File is not compatible: setup_WatchDOG.exe
+[2025:06:04 15:51:50] Cannot evaluate clean file setup_WatchDOG.exe
+
+[2025:06:04 15:51:50]
+[2025:06:04 15:51:50] Processing clean file name mobsync.exe
+[2025:06:04 15:51:50]
+[2025:06:04 15:51:50] Processing clean file name mobsync.exe, attempt 0
+[2025:06:04 15:51:50] Evaluating clean file mobsync.exe
+[2025:06:04 15:51:50] Revert to snapshot
+[2025:06:04 15:52:18] Run VM
+[2025:06:04 15:52:18] Login as SYSTEM
+[2025:06:04 15:52:18] Logged as SYSTEM
+[2025:06:04 15:52:18] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\mobsync.exe -> C:\Users\hieu\Downloads\mobsync.exe
+[2025:06:04 15:52:19] Run clean file
+[2025:06:04 15:52:19] Login as hieu
+[2025:06:04 15:52:19] Logged as hieu
+[2025:06:04 15:52:19] Login as SYSTEM
+[2025:06:04 15:52:19] Logged as SYSTEM
+[2025:06:04 15:52:19] Waiting for 5 minutes
+[2025:06:04 15:57:22] Done mobsync.exe
+[2025:06:04 15:57:22] Cannot evaluate clean file mobsync.exe
+
+[2025:06:04 15:57:22]
+[2025:06:04 15:57:22] Processing clean file name pwlauncher.exe
+[2025:06:04 15:57:22]
+[2025:06:04 15:57:22] Processing clean file name pwlauncher.exe, attempt 0
+[2025:06:04 15:57:22] Evaluating clean file pwlauncher.exe
+[2025:06:04 15:57:22] Revert to snapshot
+[2025:06:04 15:57:56] Run VM
+[2025:06:04 15:57:56] Login as SYSTEM
+[2025:06:04 15:57:57] Logged as SYSTEM
+[2025:06:04 15:57:57] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\pwlauncher.exe -> C:\Users\hieu\Downloads\pwlauncher.exe
+[2025:06:04 15:57:57] Run clean file
+[2025:06:04 15:57:57] Login as hieu
+[2025:06:04 15:57:57] File is not compatible: pwlauncher.exe
+[2025:06:04 15:57:58] Cannot evaluate clean file pwlauncher.exe
+
+[2025:06:04 15:57:58]
+[2025:06:04 15:57:58] Processing clean file name SimpleCodeGenerator.exe
+[2025:06:04 15:57:58]
+[2025:06:04 15:57:58] Processing clean file name SimpleCodeGenerator.exe, attempt 0
+[2025:06:04 15:57:58] Evaluating clean file SimpleCodeGenerator.exe
+[2025:06:04 15:57:58] Revert to snapshot
+[2025:06:04 15:58:32] Run VM
+[2025:06:04 15:58:32] Login as SYSTEM
+[2025:06:04 15:58:33] Logged as SYSTEM
+[2025:06:04 15:58:33] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SimpleCodeGenerator.exe -> C:\Users\hieu\Downloads\SimpleCodeGenerator.exe
+[2025:06:04 15:58:33] Run clean file
+[2025:06:04 15:58:33] Login as hieu
+[2025:06:04 15:58:33] Logged as hieu
+[2025:06:04 15:58:33] Login as SYSTEM
+[2025:06:04 15:58:33] Logged as SYSTEM
+[2025:06:04 15:58:33] Waiting for 5 minutes
+[2025:06:04 16:03:36] Done SimpleCodeGenerator.exe
+[2025:06:04 16:03:36] Cannot evaluate clean file SimpleCodeGenerator.exe
+
+[2025:06:04 16:03:36]
+[2025:06:04 16:03:36] Processing clean file name OpenWith.exe
+[2025:06:04 16:03:36]
+[2025:06:04 16:03:36] Processing clean file name OpenWith.exe, attempt 0
+[2025:06:04 16:03:36] Evaluating clean file OpenWith.exe
+[2025:06:04 16:03:36] Revert to snapshot
+[2025:06:04 16:04:12] Run VM
+[2025:06:04 16:04:12] Login as SYSTEM
+[2025:06:04 16:04:12] Logged as SYSTEM
+[2025:06:04 16:04:12] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\OpenWith.exe -> C:\Users\hieu\Downloads\OpenWith.exe
+[2025:06:04 16:04:13] Run clean file
+[2025:06:04 16:04:13] Login as hieu
+[2025:06:04 16:04:13] File is not compatible: OpenWith.exe
+[2025:06:04 16:04:14] Cannot evaluate clean file OpenWith.exe
+
+[2025:06:04 16:04:14]
+[2025:06:04 16:04:14] Processing clean file name runonce.exe
+[2025:06:04 16:04:14]
+[2025:06:04 16:04:14] Processing clean file name runonce.exe, attempt 0
+[2025:06:04 16:04:14] Evaluating clean file runonce.exe
+[2025:06:04 16:04:14] Revert to snapshot
+[2025:06:04 16:04:31] Run VM
+[2025:06:04 16:04:31] Login as SYSTEM
+[2025:06:04 16:04:32] Logged as SYSTEM
+[2025:06:04 16:04:32] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\runonce.exe -> C:\Users\hieu\Downloads\runonce.exe
+[2025:06:04 16:04:32] Run clean file
+[2025:06:04 16:04:32] Login as hieu
+[2025:06:04 16:04:33] Logged as hieu
+[2025:06:04 16:04:33] Login as SYSTEM
+[2025:06:04 16:04:33] Logged as SYSTEM
+[2025:06:04 16:04:33] Waiting for 5 minutes
+[2025:06:04 16:09:36] Done runonce.exe
+[2025:06:04 16:09:36] Cannot evaluate clean file runonce.exe
+
+[2025:06:04 16:09:36]
+[2025:06:04 16:09:36] Processing clean file name RemoteAppLifetimeManager.exe
+[2025:06:04 16:09:36]
+[2025:06:04 16:09:36] Processing clean file name RemoteAppLifetimeManager.exe, attempt 0
+[2025:06:04 16:09:36] Evaluating clean file RemoteAppLifetimeManager.exe
+[2025:06:04 16:09:36] Revert to snapshot
+[2025:06:04 16:10:11] Run VM
+[2025:06:04 16:10:11] Login as SYSTEM
+[2025:06:04 16:10:12] Logged as SYSTEM
+[2025:06:04 16:10:12] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\RemoteAppLifetimeManager.exe -> C:\Users\hieu\Downloads\RemoteAppLifetimeManager.exe
+[2025:06:04 16:10:12] Run clean file
+[2025:06:04 16:10:12] Login as hieu
+[2025:06:04 16:10:13] Logged as hieu
+[2025:06:04 16:10:13] Login as SYSTEM
+[2025:06:04 16:10:13] Logged as SYSTEM
+[2025:06:04 16:10:13] Waiting for 5 minutes
+[2025:06:04 16:15:16] Done RemoteAppLifetimeManager.exe
+[2025:06:04 16:15:16] Cannot evaluate clean file RemoteAppLifetimeManager.exe
+
+[2025:06:04 16:15:16]
+[2025:06:04 16:15:16] Processing clean file name nslookup.exe
+[2025:06:04 16:15:16]
+[2025:06:04 16:15:16] Processing clean file name nslookup.exe, attempt 0
+[2025:06:04 16:15:16] Evaluating clean file nslookup.exe
+[2025:06:04 16:15:16] Revert to snapshot
+[2025:06:04 16:15:42] Run VM
+[2025:06:04 16:15:42] Login as SYSTEM
+[2025:06:04 16:15:43] Logged as SYSTEM
+[2025:06:04 16:15:43] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\nslookup.exe -> C:\Users\hieu\Downloads\nslookup.exe
+[2025:06:04 16:15:43] Run clean file
+[2025:06:04 16:15:43] Login as hieu
+[2025:06:04 16:15:43] Logged as hieu
+[2025:06:04 16:15:43] Login as SYSTEM
+[2025:06:04 16:15:43] Logged as SYSTEM
+[2025:06:04 16:15:43] Waiting for 5 minutes
+[2025:06:04 16:20:47] Done nslookup.exe
+[2025:06:04 16:20:47] Cannot evaluate clean file nslookup.exe
+
+[2025:06:04 16:20:47]
+[2025:06:04 16:20:47] Processing clean file name iecv.exe
+[2025:06:04 16:20:47]
+[2025:06:04 16:20:47] Processing clean file name iecv.exe, attempt 0
+[2025:06:04 16:20:47] Evaluating clean file iecv.exe
+[2025:06:04 16:20:47] Revert to snapshot
+[2025:06:04 16:21:20] Run VM
+[2025:06:04 16:21:20] Login as SYSTEM
+[2025:06:04 16:21:20] Logged as SYSTEM
+[2025:06:04 16:21:20] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\iecv.exe -> C:\Users\hieu\Downloads\iecv.exe
+[2025:06:04 16:21:21] Run clean file
+[2025:06:04 16:21:21] Login as hieu
+[2025:06:04 16:21:21] Logged as hieu
+[2025:06:04 16:21:22] Login as SYSTEM
+[2025:06:04 16:21:22] Logged as SYSTEM
+[2025:06:04 16:21:22] Waiting for 5 minutes
+[2025:06:04 16:26:26] Done iecv.exe
+[2025:06:04 16:26:26] Cannot evaluate clean file iecv.exe
+
+[2025:06:04 16:26:26]
+[2025:06:04 16:26:26] Processing clean file name logman.exe
+[2025:06:04 16:26:26]
+[2025:06:04 16:26:26] Processing clean file name logman.exe, attempt 0
+[2025:06:04 16:26:26] Evaluating clean file logman.exe
+[2025:06:04 16:26:26] Revert to snapshot
+[2025:06:04 16:26:55] Run VM
+[2025:06:04 16:26:55] Login as SYSTEM
+[2025:06:04 16:26:56] Logged as SYSTEM
+[2025:06:04 16:26:56] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\logman.exe -> C:\Users\hieu\Downloads\logman.exe
+[2025:06:04 16:26:56] Run clean file
+[2025:06:04 16:26:56] Login as hieu
+[2025:06:04 16:26:56] File is not compatible: logman.exe
+[2025:06:04 16:26:57] Cannot evaluate clean file logman.exe
+
+[2025:06:04 16:26:57]
+[2025:06:04 16:26:57] Processing clean file name regedit.exe
+[2025:06:04 16:26:57]
+[2025:06:04 16:26:57] Processing clean file name regedit.exe, attempt 0
+[2025:06:04 16:26:57] Evaluating clean file regedit.exe
+[2025:06:04 16:26:57] Revert to snapshot
+[2025:06:04 16:27:44] Run VM
+[2025:06:04 16:27:44] Login as SYSTEM
+[2025:06:04 16:27:44] Logged as SYSTEM
+[2025:06:04 16:27:44] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\regedit.exe -> C:\Users\hieu\Downloads\regedit.exe
+[2025:06:04 16:27:45] Run clean file
+[2025:06:04 16:27:45] Login as hieu
+[2025:06:04 16:27:45] Logged as hieu
+[2025:06:04 16:27:45] File is not compatible: regedit.exe
+[2025:06:04 16:27:46] Cannot evaluate clean file regedit.exe
+
+[2025:06:04 16:27:46]
+[2025:06:04 16:27:46] Processing clean file name AgentService.exe
+[2025:06:04 16:27:46]
+[2025:06:04 16:27:46] Processing clean file name AgentService.exe, attempt 0
+[2025:06:04 16:27:46] Evaluating clean file AgentService.exe
+[2025:06:04 16:27:46] Revert to snapshot
+[2025:06:04 16:28:32] Run VM
+[2025:06:04 16:28:32] Login as SYSTEM
+[2025:06:04 16:28:32] Logged as SYSTEM
+[2025:06:04 16:28:32] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\AgentService.exe -> C:\Users\hieu\Downloads\AgentService.exe
+[2025:06:04 16:28:33] Run clean file
+[2025:06:04 16:28:33] Login as hieu
+[2025:06:04 16:28:34] Logged as hieu
+[2025:06:04 16:28:34] Login as SYSTEM
+[2025:06:04 16:28:34] Logged as SYSTEM
+[2025:06:04 16:28:34] Waiting for 5 minutes
+[2025:06:04 16:33:37] Done AgentService.exe
+[2025:06:04 16:33:37] Cannot evaluate clean file AgentService.exe
+
+[2025:06:04 16:33:37]
+[2025:06:04 16:33:37] Processing clean file name sysprep.exe
+[2025:06:04 16:33:37]
+[2025:06:04 16:33:37] Processing clean file name sysprep.exe, attempt 0
+[2025:06:04 16:33:37] Evaluating clean file sysprep.exe
+[2025:06:04 16:33:37] Revert to snapshot
+[2025:06:04 16:34:26] Run VM
+[2025:06:04 16:34:26] Login as SYSTEM
+[2025:06:04 16:34:27] Logged as SYSTEM
+[2025:06:04 16:34:27] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\sysprep.exe -> C:\Users\hieu\Downloads\sysprep.exe
+[2025:06:04 16:34:28] Run clean file
+[2025:06:04 16:34:28] Login as hieu
+[2025:06:04 16:34:29] Logged as hieu
+[2025:06:04 16:34:29] File is not compatible: sysprep.exe
+[2025:06:04 16:34:30] Cannot evaluate clean file sysprep.exe
+
+[2025:06:04 16:34:30]
+[2025:06:04 16:34:30] Processing clean file name TSTheme.exe
+[2025:06:04 16:34:30]
+[2025:06:04 16:34:30] Processing clean file name TSTheme.exe, attempt 0
+[2025:06:04 16:34:30] Evaluating clean file TSTheme.exe
+[2025:06:04 16:34:30] Revert to snapshot
+[2025:06:04 16:35:12] Run VM
+[2025:06:04 16:35:12] Login as SYSTEM
+[2025:06:04 16:35:13] Logged as SYSTEM
+[2025:06:04 16:35:13] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\TSTheme.exe -> C:\Users\hieu\Downloads\TSTheme.exe
+[2025:06:04 16:35:13] Run clean file
+[2025:06:04 16:35:13] Login as hieu
+[2025:06:04 16:35:13] File is not compatible: TSTheme.exe
+[2025:06:04 16:35:14] Cannot evaluate clean file TSTheme.exe
+
+[2025:06:04 16:35:14]
+[2025:06:04 16:35:14] Processing clean file name OutlookAttachView.exe
+[2025:06:04 16:35:14]
+[2025:06:04 16:35:14] Processing clean file name OutlookAttachView.exe, attempt 0
+[2025:06:04 16:35:14] Evaluating clean file OutlookAttachView.exe
+[2025:06:04 16:35:14] Revert to snapshot
+[2025:06:04 16:35:57] Run VM
+[2025:06:04 16:35:57] Login as SYSTEM
+[2025:06:04 16:35:57] Logged as SYSTEM
+[2025:06:04 16:35:57] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\OutlookAttachView.exe -> C:\Users\hieu\Downloads\OutlookAttachView.exe
+[2025:06:04 16:35:58] Run clean file
+[2025:06:04 16:35:58] Login as hieu
+[2025:06:04 16:35:58] Logged as hieu
+[2025:06:04 16:35:58] Login as SYSTEM
+[2025:06:04 16:35:59] Logged as SYSTEM
+[2025:06:04 16:35:59] Waiting for 5 minutes
+[2025:06:04 16:41:03] Done OutlookAttachView.exe
+[2025:06:04 16:41:03] Cannot evaluate clean file OutlookAttachView.exe
+
+[2025:06:04 16:41:03]
+[2025:06:04 16:41:03] Processing clean file name setupcl.exe
+[2025:06:04 16:41:03]
+[2025:06:04 16:41:03] Processing clean file name setupcl.exe, attempt 0
+[2025:06:04 16:41:03] Evaluating clean file setupcl.exe
+[2025:06:04 16:41:03] Revert to snapshot
+[2025:06:04 16:41:40] Run VM
+[2025:06:04 16:41:40] Login as SYSTEM
+[2025:06:04 16:41:41] Logged as SYSTEM
+[2025:06:04 16:41:41] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\setupcl.exe -> C:\Users\hieu\Downloads\setupcl.exe
+[2025:06:04 16:41:41] Run clean file
+[2025:06:04 16:41:41] Login as hieu
+[2025:06:04 16:41:42] Logged as hieu
+[2025:06:04 16:41:43] File is not compatible: setupcl.exe
+[2025:06:04 16:41:44] Cannot evaluate clean file setupcl.exe
+
+[2025:06:04 16:41:44]
+[2025:06:04 16:41:44] Processing clean file name tyt2022setup.exe
+[2025:06:04 16:41:44]
+[2025:06:04 16:41:44] Processing clean file name tyt2022setup.exe, attempt 0
+[2025:06:04 16:41:44] Evaluating clean file tyt2022setup.exe
+[2025:06:04 16:41:44] Revert to snapshot
+[2025:06:04 16:42:13] Run VM
+[2025:06:04 16:42:13] Login as SYSTEM
+[2025:06:04 16:42:14] Logged as SYSTEM
+[2025:06:04 16:42:14] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\tyt2022setup.exe -> C:\Users\hieu\Downloads\tyt2022setup.exe
+[2025:06:04 16:42:18] Run clean file
+[2025:06:04 16:42:18] Login as hieu
+[2025:06:04 16:42:18] Logged as hieu
+[2025:06:04 16:42:18] Login as SYSTEM
+[2025:06:04 16:42:19] Logged as SYSTEM
+[2025:06:04 16:42:19] Waiting for 5 minutes
+[2025:06:04 16:47:22] Done tyt2022setup.exe
+[2025:06:04 16:47:22] Cannot evaluate clean file tyt2022setup.exe
+
+[2025:06:04 16:47:22]
+[2025:06:04 16:47:22] Processing clean file name PerceptionSimulationDevice.exe
+[2025:06:04 16:47:22]
+[2025:06:04 16:47:22] Processing clean file name PerceptionSimulationDevice.exe, attempt 0
+[2025:06:04 16:47:22] Evaluating clean file PerceptionSimulationDevice.exe
+[2025:06:04 16:47:22] Revert to snapshot
+[2025:06:04 16:47:55] Run VM
+[2025:06:04 16:47:55] Login as SYSTEM
+[2025:06:04 16:47:56] Logged as SYSTEM
+[2025:06:04 16:47:56] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\PerceptionSimulationDevice.exe -> C:\Users\hieu\Downloads\PerceptionSimulationDevice.exe
+[2025:06:04 16:47:56] Run clean file
+[2025:06:04 16:47:56] Login as hieu
+[2025:06:04 16:47:56] Logged as hieu
+[2025:06:04 16:47:56] File is not compatible: PerceptionSimulationDevice.exe
+[2025:06:04 16:47:57] Cannot evaluate clean file PerceptionSimulationDevice.exe
+
+[2025:06:04 16:47:57]
+[2025:06:04 16:47:57] Processing clean file name dllexp.exe
+[2025:06:04 16:47:57]
+[2025:06:04 16:47:57] Processing clean file name dllexp.exe, attempt 0
+[2025:06:04 16:47:57] Evaluating clean file dllexp.exe
+[2025:06:04 16:47:57] Revert to snapshot
+[2025:06:04 16:48:24] Run VM
+[2025:06:04 16:48:24] Login as SYSTEM
+[2025:06:04 16:48:25] Logged as SYSTEM
+[2025:06:04 16:48:25] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\dllexp.exe -> C:\Users\hieu\Downloads\dllexp.exe
+[2025:06:04 16:48:26] Run clean file
+[2025:06:04 16:48:26] Login as hieu
+[2025:06:04 16:48:26] Logged as hieu
+[2025:06:04 16:48:27] Login as SYSTEM
+[2025:06:04 16:48:27] Logged as SYSTEM
+[2025:06:04 16:48:27] Waiting for 5 minutes
+[2025:06:04 16:53:29] Done dllexp.exe
+[2025:06:04 16:53:29] Cannot evaluate clean file dllexp.exe
+
+[2025:06:04 16:53:29]
+[2025:06:04 16:53:29] Processing clean file name RobloxPlayerLauncher.exe
+[2025:06:04 16:53:29]
+[2025:06:04 16:53:29] Processing clean file name RobloxPlayerLauncher.exe, attempt 0
+[2025:06:04 16:53:29] Evaluating clean file RobloxPlayerLauncher.exe
+[2025:06:04 16:53:29] Revert to snapshot
+[2025:06:04 16:54:07] Run VM
+[2025:06:04 16:54:07] Login as SYSTEM
+[2025:06:04 16:54:07] Logged as SYSTEM
+[2025:06:04 16:54:07] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\RobloxPlayerLauncher.exe -> C:\Users\hieu\Downloads\RobloxPlayerLauncher.exe
+[2025:06:04 16:54:08] Run clean file
+[2025:06:04 16:54:08] Login as hieu
+[2025:06:04 16:54:08] Logged as hieu
+[2025:06:04 16:54:08] Login as SYSTEM
+[2025:06:04 16:54:09] Logged as SYSTEM
+[2025:06:04 16:54:09] Waiting for 5 minutes
+[2025:06:04 16:59:12] Done RobloxPlayerLauncher.exe
+[2025:06:04 16:59:12] Cannot evaluate clean file RobloxPlayerLauncher.exe
+
+[2025:06:04 16:59:12]
+[2025:06:04 16:59:12] Processing clean file name rufus-3.3p.exe
+[2025:06:04 16:59:12]
+[2025:06:04 16:59:12] Processing clean file name rufus-3.3p.exe, attempt 0
+[2025:06:04 16:59:12] Evaluating clean file rufus-3.3p.exe
+[2025:06:04 16:59:12] Revert to snapshot
+[2025:06:04 16:59:44] Run VM
+[2025:06:04 16:59:44] Login as SYSTEM
+[2025:06:04 16:59:45] Logged as SYSTEM
+[2025:06:04 16:59:45] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\rufus-3.3p.exe -> C:\Users\hieu\Downloads\rufus-3.3p.exe
+[2025:06:04 16:59:46] Run clean file
+[2025:06:04 16:59:46] Login as hieu
+[2025:06:04 16:59:46] Logged as hieu
+[2025:06:04 16:59:46] File is not compatible: rufus-3.3p.exe
+[2025:06:04 16:59:48] Cannot evaluate clean file rufus-3.3p.exe
+
+[2025:06:04 16:59:48]
+[2025:06:04 16:59:48] Processing clean file name msfeedssync.exe
+[2025:06:04 16:59:48]
+[2025:06:04 16:59:48] Processing clean file name msfeedssync.exe, attempt 0
+[2025:06:04 16:59:48] Evaluating clean file msfeedssync.exe
+[2025:06:04 16:59:48] Revert to snapshot
+[2025:06:04 16:59:59] Run VM
+[2025:06:04 16:59:59] Login as SYSTEM
+[2025:06:04 16:59:59] Logged as SYSTEM
+[2025:06:04 16:59:59] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\msfeedssync.exe -> C:\Users\hieu\Downloads\msfeedssync.exe
+[2025:06:04 17:00:00] Run clean file
+[2025:06:04 17:00:00] Login as hieu
+[2025:06:04 17:00:00] Logged as hieu
+[2025:06:04 17:00:01] Login as SYSTEM
+[2025:06:04 17:00:01] Logged as SYSTEM
+[2025:06:04 17:00:01] Waiting for 5 minutes
+[2025:06:04 17:05:05] Done msfeedssync.exe
+[2025:06:04 17:05:05] Cannot evaluate clean file msfeedssync.exe
+
+[2025:06:04 17:05:05]
+[2025:06:04 17:05:05] Processing clean file name query.exe
+[2025:06:04 17:05:05]
+[2025:06:04 17:05:05] Processing clean file name query.exe, attempt 0
+[2025:06:04 17:05:05] Evaluating clean file query.exe
+[2025:06:04 17:05:05] Revert to snapshot
+[2025:06:04 17:05:29] Run VM
+[2025:06:04 17:05:29] Login as SYSTEM
+[2025:06:04 17:05:30] Logged as SYSTEM
+[2025:06:04 17:05:30] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\query.exe -> C:\Users\hieu\Downloads\query.exe
+[2025:06:04 17:05:30] Run clean file
+[2025:06:04 17:05:30] Login as hieu
+[2025:06:04 17:05:30] Logged as hieu
+[2025:06:04 17:05:30] Login as SYSTEM
+[2025:06:04 17:05:31] Logged as SYSTEM
+[2025:06:04 17:05:31] Waiting for 5 minutes
+[2025:06:04 17:10:33] Done query.exe
+[2025:06:04 17:10:33] Cannot evaluate clean file query.exe
+
+[2025:06:04 17:10:33]
+[2025:06:04 17:10:33] Processing clean file name SyncHost.exe
+[2025:06:04 17:10:33]
+[2025:06:04 17:10:33] Processing clean file name SyncHost.exe, attempt 0
+[2025:06:04 17:10:33] Evaluating clean file SyncHost.exe
+[2025:06:04 17:10:33] Revert to snapshot
+[2025:06:04 17:11:28] Run VM
+[2025:06:04 17:11:28] Login as SYSTEM
+[2025:06:04 17:11:28] Logged as SYSTEM
+[2025:06:04 17:11:28] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SyncHost.exe -> C:\Users\hieu\Downloads\SyncHost.exe
+[2025:06:04 17:11:29] Run clean file
+[2025:06:04 17:11:29] Login as hieu
+[2025:06:04 17:11:29] Logged as hieu
+[2025:06:04 17:11:29] Login as SYSTEM
+[2025:06:04 17:11:30] Logged as SYSTEM
+[2025:06:04 17:11:30] Waiting for 5 minutes
+[2025:06:04 17:16:34] Done SyncHost.exe
+[2025:06:04 17:16:34] Cannot evaluate clean file SyncHost.exe
+
+[2025:06:04 17:16:34]
+[2025:06:04 17:16:34] Processing clean file name setup_multitimer.exe
+[2025:06:04 17:16:34]
+[2025:06:04 17:16:34] Processing clean file name setup_multitimer.exe, attempt 0
+[2025:06:04 17:16:34] Evaluating clean file setup_multitimer.exe
+[2025:06:04 17:16:34] Revert to snapshot
+[2025:06:04 17:17:11] Run VM
+[2025:06:04 17:17:11] Login as SYSTEM
+[2025:06:04 17:17:12] Logged as SYSTEM
+[2025:06:04 17:17:12] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\setup_multitimer.exe -> C:\Users\hieu\Downloads\setup_multitimer.exe
+[2025:06:04 17:17:17] Run clean file
+[2025:06:04 17:17:17] Login as hieu
+[2025:06:04 17:17:17] Logged as hieu
+[2025:06:04 17:17:17] Login as SYSTEM
+[2025:06:04 17:17:17] Logged as SYSTEM
+[2025:06:04 17:17:17] Waiting for 5 minutes
+[2025:06:04 17:22:20] Done setup_multitimer.exe
+[2025:06:04 17:22:20] Cannot evaluate clean file setup_multitimer.exe
+
+[2025:06:04 17:22:20]
+[2025:06:04 17:22:20] Processing clean file name HostedNetworkStarter.exe
+[2025:06:04 17:22:20]
+[2025:06:04 17:22:20] Processing clean file name HostedNetworkStarter.exe, attempt 0
+[2025:06:04 17:22:20] Evaluating clean file HostedNetworkStarter.exe
+[2025:06:04 17:22:20] Revert to snapshot
+[2025:06:04 17:22:56] Run VM
+[2025:06:04 17:22:56] Login as SYSTEM
+[2025:06:04 17:22:56] Logged as SYSTEM
+[2025:06:04 17:22:56] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\HostedNetworkStarter.exe -> C:\Users\hieu\Downloads\HostedNetworkStarter.exe
+[2025:06:04 17:22:58] Run clean file
+[2025:06:04 17:22:58] Login as hieu
+[2025:06:04 17:22:58] Logged as hieu
+[2025:06:04 17:22:59] File is not compatible: HostedNetworkStarter.exe
+[2025:06:04 17:23:00] Cannot evaluate clean file HostedNetworkStarter.exe
+
+[2025:06:04 17:23:00]
+[2025:06:04 17:23:00] Processing clean file name MyEventViewer.exe
+[2025:06:04 17:23:00]
+[2025:06:04 17:23:00] Processing clean file name MyEventViewer.exe, attempt 0
+[2025:06:04 17:23:00] Evaluating clean file MyEventViewer.exe
+[2025:06:04 17:23:00] Revert to snapshot
+[2025:06:04 17:23:32] Run VM
+[2025:06:04 17:23:32] Login as SYSTEM
+[2025:06:04 17:23:33] Logged as SYSTEM
+[2025:06:04 17:23:33] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\MyEventViewer.exe -> C:\Users\hieu\Downloads\MyEventViewer.exe
+[2025:06:04 17:23:33] Run clean file
+[2025:06:04 17:23:33] Login as hieu
+[2025:06:04 17:23:33] Logged as hieu
+[2025:06:04 17:23:34] File is not compatible: MyEventViewer.exe
+[2025:06:04 17:23:36] Cannot evaluate clean file MyEventViewer.exe
+
+[2025:06:04 17:23:36]
+[2025:06:04 17:23:36] Processing clean file name wmplayer.exe
+[2025:06:04 17:23:36]
+[2025:06:04 17:23:36] Processing clean file name wmplayer.exe, attempt 0
+[2025:06:04 17:23:36] Evaluating clean file wmplayer.exe
+[2025:06:04 17:23:36] Revert to snapshot
+[2025:06:04 17:24:05] Run VM
+[2025:06:04 17:24:05] Login as SYSTEM
+[2025:06:04 17:24:05] Logged as SYSTEM
+[2025:06:04 17:24:05] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\wmplayer.exe -> C:\Users\hieu\Downloads\wmplayer.exe
+[2025:06:04 17:24:06] Run clean file
+[2025:06:04 17:24:06] Login as hieu
+[2025:06:04 17:24:06] Logged as hieu
+[2025:06:04 17:24:07] Login as SYSTEM
+[2025:06:04 17:24:07] Logged as SYSTEM
+[2025:06:04 17:24:07] Waiting for 5 minutes
+[2025:06:04 17:29:10] Done wmplayer.exe
+[2025:06:04 17:29:10] Cannot evaluate clean file wmplayer.exe
+
+[2025:06:04 17:29:10]
+[2025:06:04 17:29:10] Processing clean file name dllhost.exe
+[2025:06:04 17:29:10]
+[2025:06:04 17:29:10] Processing clean file name dllhost.exe, attempt 0
+[2025:06:04 17:29:10] Evaluating clean file dllhost.exe
+[2025:06:04 17:29:10] Revert to snapshot
+[2025:06:04 17:29:50] Run VM
+[2025:06:04 17:29:50] Login as SYSTEM
+[2025:06:04 17:29:50] Logged as SYSTEM
+[2025:06:04 17:29:50] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\dllhost.exe -> C:\Users\hieu\Downloads\dllhost.exe
+[2025:06:04 17:29:51] Run clean file
+[2025:06:04 17:29:51] Login as hieu
+[2025:06:04 17:29:51] Logged as hieu
+[2025:06:04 17:29:52] Login as SYSTEM
+[2025:06:04 17:29:52] Logged as SYSTEM
+[2025:06:04 17:29:52] Waiting for 5 minutes
+[2025:06:04 17:34:56] Done dllhost.exe
+[2025:06:04 17:34:56] Cannot evaluate clean file dllhost.exe
+
+[2025:06:04 17:34:56]
+[2025:06:04 17:34:56] Processing clean file name regedt32.exe
+[2025:06:04 17:34:56]
+[2025:06:04 17:34:56] Processing clean file name regedt32.exe, attempt 0
+[2025:06:04 17:34:56] Evaluating clean file regedt32.exe
+[2025:06:04 17:34:56] Revert to snapshot
+[2025:06:04 17:35:31] Run VM
+[2025:06:04 17:35:31] Login as SYSTEM
+[2025:06:04 17:35:32] Logged as SYSTEM
+[2025:06:04 17:35:32] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\regedt32.exe -> C:\Users\hieu\Downloads\regedt32.exe
+[2025:06:04 17:35:32] Run clean file
+[2025:06:04 17:35:32] Login as hieu
+[2025:06:04 17:35:32] File is not compatible: regedt32.exe
+[2025:06:04 17:35:34] Cannot evaluate clean file regedt32.exe
+
+[2025:06:04 17:35:34]
+[2025:06:04 17:35:34] Processing clean file name dplaysvr.exe
+[2025:06:04 17:35:34]
+[2025:06:04 17:35:34] Processing clean file name dplaysvr.exe, attempt 0
+[2025:06:04 17:35:34] Evaluating clean file dplaysvr.exe
+[2025:06:04 17:35:34] Revert to snapshot
+[2025:06:04 17:36:19] Run VM
+[2025:06:04 17:36:19] Login as SYSTEM
+[2025:06:04 17:36:19] Logged as SYSTEM
+[2025:06:04 17:36:19] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\dplaysvr.exe -> C:\Users\hieu\Downloads\dplaysvr.exe
+[2025:06:04 17:36:20] Run clean file
+[2025:06:04 17:36:20] Login as hieu
+[2025:06:04 17:36:20] File is not compatible: dplaysvr.exe
+[2025:06:04 17:36:21] Cannot evaluate clean file dplaysvr.exe
+
+[2025:06:04 17:36:21]
+[2025:06:04 17:36:21] Processing clean file name AppAudioConfig.exe
+[2025:06:04 17:36:21]
+[2025:06:04 17:36:21] Processing clean file name AppAudioConfig.exe, attempt 0
+[2025:06:04 17:36:21] Evaluating clean file AppAudioConfig.exe
+[2025:06:04 17:36:21] Revert to snapshot
+[2025:06:04 17:36:54] Run VM
+[2025:06:04 17:36:54] Login as SYSTEM
+[2025:06:04 17:36:54] Logged as SYSTEM
+[2025:06:04 17:36:54] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\AppAudioConfig.exe -> C:\Users\hieu\Downloads\AppAudioConfig.exe
+[2025:06:04 17:36:55] Run clean file
+[2025:06:04 17:36:55] Login as hieu
+[2025:06:04 17:36:55] Logged as hieu
+[2025:06:04 17:36:55] Login as SYSTEM
+[2025:06:04 17:36:55] Logged as SYSTEM
+[2025:06:04 17:36:55] Waiting for 5 minutes
+[2025:06:04 17:41:58] Done AppAudioConfig.exe
+[2025:06:04 17:41:58] Cannot evaluate clean file AppAudioConfig.exe
+
+[2025:06:04 17:41:58]
+[2025:06:04 17:41:58] Processing clean file name winrs.exe
+[2025:06:04 17:41:58]
+[2025:06:04 17:41:58] Processing clean file name winrs.exe, attempt 0
+[2025:06:04 17:41:58] Evaluating clean file winrs.exe
+[2025:06:04 17:41:58] Revert to snapshot
+[2025:06:04 17:42:21] Run VM
+[2025:06:04 17:42:21] Login as SYSTEM
+[2025:06:04 17:42:21] Logged as SYSTEM
+[2025:06:04 17:42:21] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\winrs.exe -> C:\Users\hieu\Downloads\winrs.exe
+[2025:06:04 17:42:21] Run clean file
+[2025:06:04 17:42:21] Login as hieu
+[2025:06:04 17:42:21] File is not compatible: winrs.exe
+[2025:06:04 17:42:22] Cannot evaluate clean file winrs.exe
+
+[2025:06:04 17:42:22]
+[2025:06:04 17:42:22] Processing clean file name Typelightsetup.exe
+[2025:06:04 17:42:22]
+[2025:06:04 17:42:22] Processing clean file name Typelightsetup.exe, attempt 0
+[2025:06:04 17:42:22] Evaluating clean file Typelightsetup.exe
+[2025:06:04 17:42:22] Revert to snapshot
+[2025:06:04 17:42:51] Run VM
+[2025:06:04 17:42:51] Login as SYSTEM
+[2025:06:04 17:42:52] Logged as SYSTEM
+[2025:06:04 17:42:52] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\Typelightsetup.exe -> C:\Users\hieu\Downloads\Typelightsetup.exe
+[2025:06:04 17:42:54] Run clean file
+[2025:06:04 17:42:54] Login as hieu
+[2025:06:04 17:42:55] Logged as hieu
+[2025:06:04 17:42:55] Login as SYSTEM
+[2025:06:04 17:42:55] Logged as SYSTEM
+[2025:06:04 17:42:55] Waiting for 5 minutes
+[2025:06:04 17:47:57] Done Typelightsetup.exe
+[2025:06:04 17:47:57] Cannot evaluate clean file Typelightsetup.exe
+
+[2025:06:04 17:47:57]
+[2025:06:04 17:47:57] Processing clean file name WSCollect.exe
+[2025:06:04 17:47:57]
+[2025:06:04 17:47:57] Processing clean file name WSCollect.exe, attempt 0
+[2025:06:04 17:47:57] Evaluating clean file WSCollect.exe
+[2025:06:04 17:47:57] Revert to snapshot
+[2025:06:04 17:48:43] Run VM
+[2025:06:04 17:48:43] Login as SYSTEM
+[2025:06:04 17:48:44] Logged as SYSTEM
+[2025:06:04 17:48:44] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\WSCollect.exe -> C:\Users\hieu\Downloads\WSCollect.exe
+[2025:06:04 17:48:44] Run clean file
+[2025:06:04 17:48:44] Login as hieu
+[2025:06:04 17:48:44] File is not compatible: WSCollect.exe
+[2025:06:04 17:48:45] Cannot evaluate clean file WSCollect.exe
+
+[2025:06:04 17:48:45]
+[2025:06:04 17:48:45] Processing clean file name AppNetworkCounter.exe
+[2025:06:04 17:48:45]
+[2025:06:04 17:48:45] Processing clean file name AppNetworkCounter.exe, attempt 0
+[2025:06:04 17:48:45] Evaluating clean file AppNetworkCounter.exe
+[2025:06:04 17:48:45] Revert to snapshot
+[2025:06:04 17:49:05] Run VM
+[2025:06:04 17:49:05] Login as SYSTEM
+[2025:06:04 17:49:06] Logged as SYSTEM
+[2025:06:04 17:49:06] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\AppNetworkCounter.exe -> C:\Users\hieu\Downloads\AppNetworkCounter.exe
+[2025:06:04 17:49:06] Run clean file
+[2025:06:04 17:49:06] Login as hieu
+[2025:06:04 17:49:06] Logged as hieu
+[2025:06:04 17:49:07] File is not compatible: AppNetworkCounter.exe
+[2025:06:04 17:49:07] Cannot evaluate clean file AppNetworkCounter.exe
+
+[2025:06:04 17:49:07]
+[2025:06:04 17:49:07] Processing clean file name VideoCacheView.exe
+[2025:06:04 17:49:07]
+[2025:06:04 17:49:07] Processing clean file name VideoCacheView.exe, attempt 0
+[2025:06:04 17:49:07] Evaluating clean file VideoCacheView.exe
+[2025:06:04 17:49:07] Revert to snapshot
+[2025:06:04 17:49:45] Run VM
+[2025:06:04 17:49:45] Login as SYSTEM
+[2025:06:04 17:49:45] Logged as SYSTEM
+[2025:06:04 17:49:45] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\VideoCacheView.exe -> C:\Users\hieu\Downloads\VideoCacheView.exe
+[2025:06:04 17:49:46] Run clean file
+[2025:06:04 17:49:46] Login as hieu
+[2025:06:04 17:49:46] Logged as hieu
+[2025:06:04 17:49:46] Login as SYSTEM
+[2025:06:04 17:49:47] Logged as SYSTEM
+[2025:06:04 17:49:47] Waiting for 5 minutes
+[2025:06:04 17:54:50] Done VideoCacheView.exe
+[2025:06:04 17:54:50] Cannot evaluate clean file VideoCacheView.exe
+
+[2025:06:04 17:54:50]
+[2025:06:04 17:54:50] Processing clean file name refsutil.exe
+[2025:06:04 17:54:50]
+[2025:06:04 17:54:50] Processing clean file name refsutil.exe, attempt 0
+[2025:06:04 17:54:50] Evaluating clean file refsutil.exe
+[2025:06:04 17:54:50] Revert to snapshot
+[2025:06:04 17:55:36] Run VM
+[2025:06:04 17:55:36] Login as SYSTEM
+[2025:06:04 17:55:36] Logged as SYSTEM
+[2025:06:04 17:55:36] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\refsutil.exe -> C:\Users\hieu\Downloads\refsutil.exe
+[2025:06:04 17:55:37] Run clean file
+[2025:06:04 17:55:37] Login as hieu
+[2025:06:04 17:55:37] Logged as hieu
+[2025:06:04 17:55:38] Login as SYSTEM
+[2025:06:04 17:55:38] Logged as SYSTEM
+[2025:06:04 17:55:38] Waiting for 5 minutes
+[2025:06:04 18:00:41] Done refsutil.exe
+[2025:06:04 18:00:41] Cannot evaluate clean file refsutil.exe
+
+[2025:06:04 18:00:41]
+[2025:06:04 18:00:41] Processing clean file name dmcfghost.exe
+[2025:06:04 18:00:41]
+[2025:06:04 18:00:41] Processing clean file name dmcfghost.exe, attempt 0
+[2025:06:04 18:00:41] Evaluating clean file dmcfghost.exe
+[2025:06:04 18:00:41] Revert to snapshot
+[2025:06:04 18:01:16] Run VM
+[2025:06:04 18:01:16] Login as SYSTEM
+[2025:06:04 18:01:17] Logged as SYSTEM
+[2025:06:04 18:01:17] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\dmcfghost.exe -> C:\Users\hieu\Downloads\dmcfghost.exe
+[2025:06:04 18:01:17] Run clean file
+[2025:06:04 18:01:17] Login as hieu
+[2025:06:04 18:01:18] Logged as hieu
+[2025:06:04 18:01:18] Login as SYSTEM
+[2025:06:04 18:01:18] Logged as SYSTEM
+[2025:06:04 18:01:18] Waiting for 5 minutes
+[2025:06:04 18:06:21] Done dmcfghost.exe
+[2025:06:04 18:06:21] Cannot evaluate clean file dmcfghost.exe
+
+[2025:06:04 18:06:21]
+[2025:06:04 18:06:21] Processing clean file name qprocess.exe
+[2025:06:04 18:06:21]
+[2025:06:04 18:06:21] Processing clean file name qprocess.exe, attempt 0
+[2025:06:04 18:06:21] Evaluating clean file qprocess.exe
+[2025:06:04 18:06:21] Revert to snapshot
+[2025:06:04 18:07:19] Run VM
+[2025:06:04 18:07:19] Login as SYSTEM
+[2025:06:04 18:07:20] Logged as SYSTEM
+[2025:06:04 18:07:20] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\qprocess.exe -> C:\Users\hieu\Downloads\qprocess.exe
+[2025:06:04 18:07:20] Run clean file
+[2025:06:04 18:07:20] Login as hieu
+[2025:06:04 18:07:21] Logged as hieu
+[2025:06:04 18:07:21] Login as SYSTEM
+[2025:06:04 18:07:22] Logged as SYSTEM
+[2025:06:04 18:07:22] Waiting for 5 minutes
+[2025:06:04 18:12:25] Done qprocess.exe
+[2025:06:04 18:12:25] Cannot evaluate clean file qprocess.exe
+
+[2025:06:04 18:12:25]
+[2025:06:04 18:12:25] Processing clean file name SynkronPortable_1.6.2_Rev_2.paf.exe
+[2025:06:04 18:12:25]
+[2025:06:04 18:12:25] Processing clean file name SynkronPortable_1.6.2_Rev_2.paf.exe, attempt 0
+[2025:06:04 18:12:25] Evaluating clean file SynkronPortable_1.6.2_Rev_2.paf.exe
+[2025:06:04 18:12:25] Revert to snapshot
+[2025:06:04 18:13:01] Run VM
+[2025:06:04 18:13:01] Login as SYSTEM
+[2025:06:04 18:13:02] Logged as SYSTEM
+[2025:06:04 18:13:02] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SynkronPortable_1.6.2_Rev_2.paf.exe -> C:\Users\hieu\Downloads\SynkronPortable_1.6.2_Rev_2.paf.exe
+[2025:06:04 18:13:06] Run clean file
+[2025:06:04 18:13:06] Login as hieu
+[2025:06:04 18:13:06] Logged as hieu
+[2025:06:04 18:13:06] Login as SYSTEM
+[2025:06:04 18:13:06] Logged as SYSTEM
+[2025:06:04 18:13:06] Waiting for 5 minutes
+[2025:06:04 18:18:10] Done SynkronPortable_1.6.2_Rev_2.paf.exe
+[2025:06:04 18:18:10] Cannot evaluate clean file SynkronPortable_1.6.2_Rev_2.paf.exe
+
+[2025:06:04 18:18:10]
+[2025:06:04 18:18:10] Processing clean file name nfopad181.exe
+[2025:06:04 18:18:10]
+[2025:06:04 18:18:10] Processing clean file name nfopad181.exe, attempt 0
+[2025:06:04 18:18:10] Evaluating clean file nfopad181.exe
+[2025:06:04 18:18:10] Revert to snapshot
+[2025:06:04 18:18:55] Run VM
+[2025:06:04 18:18:55] Login as SYSTEM
+[2025:06:04 18:18:56] Logged as SYSTEM
+[2025:06:04 18:18:56] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\nfopad181.exe -> C:\Users\hieu\Downloads\nfopad181.exe
+[2025:06:04 18:18:57] Run clean file
+[2025:06:04 18:18:57] Login as hieu
+[2025:06:04 18:18:57] Logged as hieu
+[2025:06:04 18:18:58] File is not compatible: nfopad181.exe
+[2025:06:04 18:18:59] Cannot evaluate clean file nfopad181.exe
+
+[2025:06:04 18:18:59]
+[2025:06:04 18:18:59] Processing clean file name quickassist.exe
+[2025:06:04 18:18:59]
+[2025:06:04 18:18:59] Processing clean file name quickassist.exe, attempt 0
+[2025:06:04 18:18:59] Evaluating clean file quickassist.exe
+[2025:06:04 18:18:59] Revert to snapshot
+[2025:06:04 18:19:47] Run VM
+[2025:06:04 18:19:47] Login as SYSTEM
+[2025:06:04 18:19:47] Logged as SYSTEM
+[2025:06:04 18:19:47] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\quickassist.exe -> C:\Users\hieu\Downloads\quickassist.exe
+[2025:06:04 18:19:48] Run clean file
+[2025:06:04 18:19:48] Login as hieu
+[2025:06:04 18:19:48] Logged as hieu
+[2025:06:04 18:19:49] File is not compatible: quickassist.exe
+[2025:06:04 18:19:50] Cannot evaluate clean file quickassist.exe
+
+[2025:06:04 18:19:50]
+[2025:06:04 18:19:50] Processing clean file name specPortable_1.32_Update_1_online.paf.exe
+[2025:06:04 18:19:50]
+[2025:06:04 18:19:50] Processing clean file name specPortable_1.32_Update_1_online.paf.exe, attempt 0
+[2025:06:04 18:19:50] Evaluating clean file specPortable_1.32_Update_1_online.paf.exe
+[2025:06:04 18:19:50] Revert to snapshot
+[2025:06:04 18:20:16] Run VM
+[2025:06:04 18:20:16] Login as SYSTEM
+[2025:06:04 18:20:16] Logged as SYSTEM
+[2025:06:04 18:20:16] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\specPortable_1.32_Update_1_online.paf.exe -> C:\Users\hieu\Downloads\specPortable_1.32_Update_1_online.paf.exe
+[2025:06:04 18:20:17] Run clean file
+[2025:06:04 18:20:17] Login as hieu
+[2025:06:04 18:20:18] Logged as hieu
+[2025:06:04 18:20:18] Login as SYSTEM
+[2025:06:04 18:20:18] Logged as SYSTEM
+[2025:06:04 18:20:18] Waiting for 5 minutes
+[2025:06:04 18:25:21] Done specPortable_1.32_Update_1_online.paf.exe
+[2025:06:04 18:25:21] Cannot evaluate clean file specPortable_1.32_Update_1_online.paf.exe
+
+[2025:06:04 18:25:21] Clean file evaluated: E:\Graduation_Project\clean_combined_log\RonsEditor_2022.07.22.1402_setup.exe.log
+[2025:06:04 18:25:21]
+[2025:06:04 18:25:21] Processing clean file name IPInfoOffline.exe
+[2025:06:04 18:25:21]
+[2025:06:04 18:25:21] Processing clean file name IPInfoOffline.exe, attempt 0
+[2025:06:04 18:25:21] Evaluating clean file IPInfoOffline.exe
+[2025:06:04 18:25:21] Revert to snapshot
+[2025:06:04 18:25:52] Run VM
+[2025:06:04 18:25:52] Login as SYSTEM
+[2025:06:04 18:25:53] Logged as SYSTEM
+[2025:06:04 18:25:53] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\IPInfoOffline.exe -> C:\Users\hieu\Downloads\IPInfoOffline.exe
+[2025:06:04 18:25:54] Run clean file
+[2025:06:04 18:25:54] Login as hieu
+[2025:06:04 18:25:55] Logged as hieu
+[2025:06:04 18:25:55] Login as SYSTEM
+[2025:06:04 18:25:55] Logged as SYSTEM
+[2025:06:04 18:25:55] Waiting for 5 minutes
+[2025:06:04 18:30:58] Done IPInfoOffline.exe
+[2025:06:04 18:30:58] Cannot evaluate clean file IPInfoOffline.exe
+
+[2025:06:04 18:30:58]
+[2025:06:04 18:30:58] Processing clean file name Free_Chess.exe
+[2025:06:04 18:30:58]
+[2025:06:04 18:30:58] Processing clean file name Free_Chess.exe, attempt 0
+[2025:06:04 18:30:58] Evaluating clean file Free_Chess.exe
+[2025:06:04 18:30:58] Revert to snapshot
+[2025:06:04 18:31:35] Run VM
+[2025:06:04 18:31:35] Login as SYSTEM
+[2025:06:04 18:31:36] Logged as SYSTEM
+[2025:06:04 18:31:36] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\Free_Chess.exe -> C:\Users\hieu\Downloads\Free_Chess.exe
+[2025:06:04 18:31:38] Run clean file
+[2025:06:04 18:31:38] Login as hieu
+[2025:06:04 18:31:39] Logged as hieu
+[2025:06:04 18:31:39] File is not compatible: Free_Chess.exe
+[2025:06:04 18:31:41] Cannot evaluate clean file Free_Chess.exe
+
+[2025:06:04 18:31:41]
+[2025:06:04 18:31:41] Processing clean file name CompPkgSrv.exe
+[2025:06:04 18:31:41]
+[2025:06:04 18:31:41] Processing clean file name CompPkgSrv.exe, attempt 0
+[2025:06:04 18:31:41] Evaluating clean file CompPkgSrv.exe
+[2025:06:04 18:31:41] Revert to snapshot
+[2025:06:04 18:32:11] Run VM
+[2025:06:04 18:32:11] Login as SYSTEM
+[2025:06:04 18:32:12] Logged as SYSTEM
+[2025:06:04 18:32:12] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\CompPkgSrv.exe -> C:\Users\hieu\Downloads\CompPkgSrv.exe
+[2025:06:04 18:32:12] Run clean file
+[2025:06:04 18:32:12] Login as hieu
+[2025:06:04 18:32:12] Logged as hieu
+[2025:06:04 18:32:13] Login as SYSTEM
+[2025:06:04 18:32:13] Logged as SYSTEM
+[2025:06:04 18:32:13] Waiting for 5 minutes
+[2025:06:04 18:37:16] Done CompPkgSrv.exe
+[2025:06:04 18:37:16] Cannot evaluate clean file CompPkgSrv.exe
+
+[2025:06:04 18:37:16]
+[2025:06:04 18:37:16] Processing clean file name TreeSizeFreePortable_4.53.paf.exe
+[2025:06:04 18:37:16]
+[2025:06:04 18:37:16] Processing clean file name TreeSizeFreePortable_4.53.paf.exe, attempt 0
+[2025:06:04 18:37:16] Evaluating clean file TreeSizeFreePortable_4.53.paf.exe
+[2025:06:04 18:37:16] Revert to snapshot
+[2025:06:04 18:37:51] Run VM
+[2025:06:04 18:37:51] Login as SYSTEM
+[2025:06:04 18:37:51] Logged as SYSTEM
+[2025:06:04 18:37:51] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\TreeSizeFreePortable_4.53.paf.exe -> C:\Users\hieu\Downloads\TreeSizeFreePortable_4.53.paf.exe
+[2025:06:04 18:38:00] Run clean file
+[2025:06:04 18:38:00] Login as hieu
+[2025:06:04 18:38:00] Logged as hieu
+[2025:06:04 18:38:00] Login as SYSTEM
+[2025:06:04 18:38:00] Logged as SYSTEM
+[2025:06:04 18:38:00] Waiting for 5 minutes
+[2025:06:04 18:43:04] Done TreeSizeFreePortable_4.53.paf.exe
+[2025:06:04 18:43:04] Cannot evaluate clean file TreeSizeFreePortable_4.53.paf.exe
+
+[2025:06:04 18:43:04]
+[2025:06:04 18:43:04] Processing clean file name CloudNotifications.exe
+[2025:06:04 18:43:04]
+[2025:06:04 18:43:04] Processing clean file name CloudNotifications.exe, attempt 0
+[2025:06:04 18:43:04] Evaluating clean file CloudNotifications.exe
+[2025:06:04 18:43:04] Revert to snapshot
+[2025:06:04 18:43:41] Run VM
+[2025:06:04 18:43:41] Login as SYSTEM
+[2025:06:04 18:43:41] Logged as SYSTEM
+[2025:06:04 18:43:41] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\CloudNotifications.exe -> C:\Users\hieu\Downloads\CloudNotifications.exe
+[2025:06:04 18:43:42] Run clean file
+[2025:06:04 18:43:42] Login as hieu
+[2025:06:04 18:43:42] Logged as hieu
+[2025:06:04 18:43:43] Login as SYSTEM
+[2025:06:04 18:43:43] Logged as SYSTEM
+[2025:06:04 18:43:43] Waiting for 5 minutes
+[2025:06:04 18:48:46] Done CloudNotifications.exe
+[2025:06:04 18:48:46] Cannot evaluate clean file CloudNotifications.exe
+
+[2025:06:04 18:48:46]
+[2025:06:04 18:48:46] Processing clean file name mweather.exe
+[2025:06:04 18:48:46]
+[2025:06:04 18:48:46] Processing clean file name mweather.exe, attempt 0
+[2025:06:04 18:48:46] Evaluating clean file mweather.exe
+[2025:06:04 18:48:46] Revert to snapshot
+[2025:06:04 18:49:26] Run VM
+[2025:06:04 18:49:26] Login as SYSTEM
+[2025:06:04 18:49:26] Logged as SYSTEM
+[2025:06:04 18:49:26] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\mweather.exe -> C:\Users\hieu\Downloads\mweather.exe
+[2025:06:04 18:49:27] Run clean file
+[2025:06:04 18:49:27] Login as hieu
+[2025:06:04 18:49:27] Logged as hieu
+[2025:06:04 18:49:27] Login as SYSTEM
+[2025:06:04 18:49:27] Logged as SYSTEM
+[2025:06:04 18:49:27] Waiting for 5 minutes
+[2025:06:04 18:54:30] Done mweather.exe
+[2025:06:04 18:54:30] Cannot evaluate clean file mweather.exe
+
+[2025:06:04 18:54:30]
+[2025:06:04 18:54:30] Processing clean file name SpecialFoldersView.exe
+[2025:06:04 18:54:30]
+[2025:06:04 18:54:30] Processing clean file name SpecialFoldersView.exe, attempt 0
+[2025:06:04 18:54:30] Evaluating clean file SpecialFoldersView.exe
+[2025:06:04 18:54:30] Revert to snapshot
+[2025:06:04 18:55:13] Run VM
+[2025:06:04 18:55:13] Login as SYSTEM
+[2025:06:04 18:55:14] Logged as SYSTEM
+[2025:06:04 18:55:14] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SpecialFoldersView.exe -> C:\Users\hieu\Downloads\SpecialFoldersView.exe
+[2025:06:04 18:55:14] Run clean file
+[2025:06:04 18:55:14] Login as hieu
+[2025:06:04 18:55:14] Logged as hieu
+[2025:06:04 18:55:14] Login as SYSTEM
+[2025:06:04 18:55:14] Logged as SYSTEM
+[2025:06:04 18:55:14] Waiting for 5 minutes
+[2025:06:04 19:00:18] Done SpecialFoldersView.exe
+[2025:06:04 19:00:18] Cannot evaluate clean file SpecialFoldersView.exe
+
+[2025:06:04 19:00:18]
+[2025:06:04 19:00:18] Processing clean file name usf.exe
+[2025:06:04 19:00:18]
+[2025:06:04 19:00:18] Processing clean file name usf.exe, attempt 0
+[2025:06:04 19:00:18] Evaluating clean file usf.exe
+[2025:06:04 19:00:18] Revert to snapshot
+[2025:06:04 19:00:55] Run VM
+[2025:06:04 19:00:55] Login as SYSTEM
+[2025:06:04 19:00:55] Logged as SYSTEM
+[2025:06:04 19:00:55] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\usf.exe -> C:\Users\hieu\Downloads\usf.exe
+[2025:06:04 19:00:58] Run clean file
+[2025:06:04 19:00:58] Login as hieu
+[2025:06:04 19:00:58] Logged as hieu
+[2025:06:04 19:00:58] Login as SYSTEM
+[2025:06:04 19:00:58] Logged as SYSTEM
+[2025:06:04 19:00:58] Waiting for 5 minutes
+[2025:06:04 19:06:02] Done usf.exe
+[2025:06:04 19:06:02] Cannot evaluate clean file usf.exe
+
+[2025:06:04 19:06:02]
+[2025:06:04 19:06:02] Processing clean file name NetHost.exe
+[2025:06:04 19:06:02]
+[2025:06:04 19:06:02] Processing clean file name NetHost.exe, attempt 0
+[2025:06:04 19:06:02] Evaluating clean file NetHost.exe
+[2025:06:04 19:06:02] Revert to snapshot
+[2025:06:04 19:06:35] Run VM
+[2025:06:04 19:06:35] Login as SYSTEM
+[2025:06:04 19:06:36] Logged as SYSTEM
+[2025:06:04 19:06:36] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\NetHost.exe -> C:\Users\hieu\Downloads\NetHost.exe
+[2025:06:04 19:06:36] Run clean file
+[2025:06:04 19:06:36] Login as hieu
+[2025:06:04 19:06:36] Logged as hieu
+[2025:06:04 19:06:37] Login as SYSTEM
+[2025:06:04 19:06:37] Logged as SYSTEM
+[2025:06:04 19:06:37] Waiting for 5 minutes
+[2025:06:04 19:11:41] Done NetHost.exe
+[2025:06:04 19:11:41] Cannot evaluate clean file NetHost.exe
+
+[2025:06:04 19:11:41]
+[2025:06:04 19:11:41] Processing clean file name sdbinst.exe
+[2025:06:04 19:11:41]
+[2025:06:04 19:11:41] Processing clean file name sdbinst.exe, attempt 0
+[2025:06:04 19:11:41] Evaluating clean file sdbinst.exe
+[2025:06:04 19:11:41] Revert to snapshot
+[2025:06:04 19:12:28] Run VM
+[2025:06:04 19:12:28] Login as SYSTEM
+[2025:06:04 19:12:28] Logged as SYSTEM
+[2025:06:04 19:12:28] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\sdbinst.exe -> C:\Users\hieu\Downloads\sdbinst.exe
+[2025:06:04 19:12:29] Run clean file
+[2025:06:04 19:12:29] Login as hieu
+[2025:06:04 19:12:29] File is not compatible: sdbinst.exe
+[2025:06:04 19:12:31] Cannot evaluate clean file sdbinst.exe
+
+[2025:06:04 19:12:31]
+[2025:06:04 19:12:31] Processing clean file name IMESEARCH.EXE
+[2025:06:04 19:12:31]
+[2025:06:04 19:12:31] Processing clean file name IMESEARCH.EXE, attempt 0
+[2025:06:04 19:12:31] Evaluating clean file IMESEARCH.EXE
+[2025:06:04 19:12:31] Revert to snapshot
+[2025:06:04 19:13:04] Run VM
+[2025:06:04 19:13:04] Login as SYSTEM
+[2025:06:04 19:13:04] Logged as SYSTEM
+[2025:06:04 19:13:04] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\IMESEARCH.EXE -> C:\Users\hieu\Downloads\IMESEARCH.EXE
+[2025:06:04 19:13:05] Run clean file
+[2025:06:04 19:13:05] Login as hieu
+[2025:06:04 19:13:05] Logged as hieu
+[2025:06:04 19:13:06] Login as SYSTEM
+[2025:06:04 19:13:06] Logged as SYSTEM
+[2025:06:04 19:13:06] Waiting for 5 minutes
+[2025:06:04 19:18:09] Done IMESEARCH.EXE
+[2025:06:04 19:18:09] Cannot evaluate clean file IMESEARCH.EXE
+
+[2025:06:04 19:18:09]
+[2025:06:04 19:18:09] Processing clean file name SkypeLogView.exe
+[2025:06:04 19:18:09]
+[2025:06:04 19:18:09] Processing clean file name SkypeLogView.exe, attempt 0
+[2025:06:04 19:18:09] Evaluating clean file SkypeLogView.exe
+[2025:06:04 19:18:09] Revert to snapshot
+[2025:06:04 19:18:45] Run VM
+[2025:06:04 19:18:45] Login as SYSTEM
+[2025:06:04 19:18:46] Logged as SYSTEM
+[2025:06:04 19:18:46] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SkypeLogView.exe -> C:\Users\hieu\Downloads\SkypeLogView.exe
+[2025:06:04 19:18:46] Run clean file
+[2025:06:04 19:18:46] Login as hieu
+[2025:06:04 19:18:46] File is not compatible: SkypeLogView.exe
+[2025:06:04 19:18:47] Cannot evaluate clean file SkypeLogView.exe
+
+[2025:06:04 19:18:47]
+[2025:06:04 19:18:47] Processing clean file name nbtstat.exe
+[2025:06:04 19:18:47]
+[2025:06:04 19:18:47] Processing clean file name nbtstat.exe, attempt 0
+[2025:06:04 19:18:47] Evaluating clean file nbtstat.exe
+[2025:06:04 19:18:47] Revert to snapshot
+[2025:06:04 19:19:17] Run VM
+[2025:06:04 19:19:17] Login as SYSTEM
+[2025:06:04 19:19:18] Logged as SYSTEM
+[2025:06:04 19:19:18] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\nbtstat.exe -> C:\Users\hieu\Downloads\nbtstat.exe
+[2025:06:04 19:19:18] Run clean file
+[2025:06:04 19:19:18] Login as hieu
+[2025:06:04 19:19:19] Logged as hieu
+[2025:06:04 19:19:19] Login as SYSTEM
+[2025:06:04 19:19:19] Logged as SYSTEM
+[2025:06:04 19:19:19] Waiting for 5 minutes
+[2025:06:04 19:24:23] Done nbtstat.exe
+[2025:06:04 19:24:23] Cannot evaluate clean file nbtstat.exe
+
+[2025:06:04 19:24:23]
+[2025:06:04 19:24:23] Processing clean file name WallpaperHost.exe
+[2025:06:04 19:24:23]
+[2025:06:04 19:24:23] Processing clean file name WallpaperHost.exe, attempt 0
+[2025:06:04 19:24:23] Evaluating clean file WallpaperHost.exe
+[2025:06:04 19:24:23] Revert to snapshot
+[2025:06:04 19:24:50] Run VM
+[2025:06:04 19:24:50] Login as SYSTEM
+[2025:06:04 19:24:51] Logged as SYSTEM
+[2025:06:04 19:24:51] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\WallpaperHost.exe -> C:\Users\hieu\Downloads\WallpaperHost.exe
+[2025:06:04 19:24:51] Run clean file
+[2025:06:04 19:24:51] Login as hieu
+[2025:06:04 19:24:51] File is not compatible: WallpaperHost.exe
+[2025:06:04 19:24:52] Cannot evaluate clean file WallpaperHost.exe
+
+[2025:06:04 19:24:52]
+[2025:06:04 19:24:52] Processing clean file name WinMgmt.exe
+[2025:06:04 19:24:52]
+[2025:06:04 19:24:52] Processing clean file name WinMgmt.exe, attempt 0
+[2025:06:04 19:24:52] Evaluating clean file WinMgmt.exe
+[2025:06:04 19:24:52] Revert to snapshot
+[2025:06:04 19:25:25] Run VM
+[2025:06:04 19:25:25] Login as SYSTEM
+[2025:06:04 19:25:25] Logged as SYSTEM
+[2025:06:04 19:25:25] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\WinMgmt.exe -> C:\Users\hieu\Downloads\WinMgmt.exe
+[2025:06:04 19:25:26] Run clean file
+[2025:06:04 19:25:26] Login as hieu
+[2025:06:04 19:25:26] Logged as hieu
+[2025:06:04 19:25:26] Login as SYSTEM
+[2025:06:04 19:25:26] Logged as SYSTEM
+[2025:06:04 19:25:26] Waiting for 5 minutes
+[2025:06:04 19:30:31] Done WinMgmt.exe
+[2025:06:04 19:30:31] Cannot evaluate clean file WinMgmt.exe
+
+[2025:06:04 19:30:31]
+[2025:06:04 19:30:31] Processing clean file name RegistryChangesView.exe
+[2025:06:04 19:30:31]
+[2025:06:04 19:30:31] Processing clean file name RegistryChangesView.exe, attempt 0
+[2025:06:04 19:30:31] Evaluating clean file RegistryChangesView.exe
+[2025:06:04 19:30:31] Revert to snapshot
+[2025:06:04 19:31:10] Run VM
+[2025:06:04 19:31:10] Login as SYSTEM
+[2025:06:04 19:31:10] Logged as SYSTEM
+[2025:06:04 19:31:10] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\RegistryChangesView.exe -> C:\Users\hieu\Downloads\RegistryChangesView.exe
+[2025:06:04 19:31:11] Run clean file
+[2025:06:04 19:31:11] Login as hieu
+[2025:06:04 19:31:11] Logged as hieu
+[2025:06:04 19:31:12] File is not compatible: RegistryChangesView.exe
+[2025:06:04 19:31:13] Cannot evaluate clean file RegistryChangesView.exe
+
+[2025:06:04 19:31:13]
+[2025:06:04 19:31:13] Processing clean file name RecentFilesView.exe
+[2025:06:04 19:31:13]
+[2025:06:04 19:31:13] Processing clean file name RecentFilesView.exe, attempt 0
+[2025:06:04 19:31:13] Evaluating clean file RecentFilesView.exe
+[2025:06:04 19:31:13] Revert to snapshot
+[2025:06:04 19:31:46] Run VM
+[2025:06:04 19:31:46] Login as SYSTEM
+[2025:06:04 19:31:47] Logged as SYSTEM
+[2025:06:04 19:31:47] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\RecentFilesView.exe -> C:\Users\hieu\Downloads\RecentFilesView.exe
+[2025:06:04 19:31:47] Run clean file
+[2025:06:04 19:31:47] Login as hieu
+[2025:06:04 19:31:47] File is not compatible: RecentFilesView.exe
+[2025:06:04 19:31:48] Cannot evaluate clean file RecentFilesView.exe
+
+[2025:06:04 19:31:48]
+[2025:06:04 19:31:48] Processing clean file name TiFileFetcher.exe
+[2025:06:04 19:31:48]
+[2025:06:04 19:31:48] Processing clean file name TiFileFetcher.exe, attempt 0
+[2025:06:04 19:31:48] Evaluating clean file TiFileFetcher.exe
+[2025:06:04 19:31:48] Revert to snapshot
+[2025:06:04 19:32:19] Run VM
+[2025:06:04 19:32:19] Login as SYSTEM
+[2025:06:04 19:32:19] Logged as SYSTEM
+[2025:06:04 19:32:19] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\TiFileFetcher.exe -> C:\Users\hieu\Downloads\TiFileFetcher.exe
+[2025:06:04 19:32:20] Run clean file
+[2025:06:04 19:32:20] Login as hieu
+[2025:06:04 19:32:20] Logged as hieu
+[2025:06:04 19:32:20] Login as SYSTEM
+[2025:06:04 19:32:21] Logged as SYSTEM
+[2025:06:04 19:32:21] Waiting for 5 minutes
+[2025:06:04 19:37:25] Done TiFileFetcher.exe
+[2025:06:04 19:37:25] Cannot evaluate clean file TiFileFetcher.exe
+
+[2025:06:04 19:37:25]
+[2025:06:04 19:37:25] Processing clean file name eventcreate.exe
+[2025:06:04 19:37:25]
+[2025:06:04 19:37:25] Processing clean file name eventcreate.exe, attempt 0
+[2025:06:04 19:37:25] Evaluating clean file eventcreate.exe
+[2025:06:04 19:37:25] Revert to snapshot
+[2025:06:04 19:37:59] Run VM
+[2025:06:04 19:37:59] Login as SYSTEM
+[2025:06:04 19:38:00] Logged as SYSTEM
+[2025:06:04 19:38:00] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\eventcreate.exe -> C:\Users\hieu\Downloads\eventcreate.exe
+[2025:06:04 19:38:00] Run clean file
+[2025:06:04 19:38:00] Login as hieu
+[2025:06:04 19:38:00] Logged as hieu
+[2025:06:04 19:38:01] Login as SYSTEM
+[2025:06:04 19:38:01] Logged as SYSTEM
+[2025:06:04 19:38:01] Waiting for 5 minutes
+[2025:06:04 19:43:04] Done eventcreate.exe
+[2025:06:04 19:43:04] Cannot evaluate clean file eventcreate.exe
+
+[2025:06:04 19:43:04]
+[2025:06:04 19:43:04] Processing clean file name ie4uinit.exe
+[2025:06:04 19:43:04]
+[2025:06:04 19:43:04] Processing clean file name ie4uinit.exe, attempt 0
+[2025:06:04 19:43:04] Evaluating clean file ie4uinit.exe
+[2025:06:04 19:43:04] Revert to snapshot
+[2025:06:04 19:43:45] Run VM
+[2025:06:04 19:43:45] Login as SYSTEM
+[2025:06:04 19:43:46] Logged as SYSTEM
+[2025:06:04 19:43:46] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ie4uinit.exe -> C:\Users\hieu\Downloads\ie4uinit.exe
+[2025:06:04 19:43:46] Run clean file
+[2025:06:04 19:43:46] Login as hieu
+[2025:06:04 19:43:47] Logged as hieu
+[2025:06:04 19:43:47] Login as SYSTEM
+[2025:06:04 19:43:48] Logged as SYSTEM
+[2025:06:04 19:43:48] Waiting for 5 minutes
+[2025:06:04 19:48:51] Done ie4uinit.exe
+[2025:06:04 19:48:51] Cannot evaluate clean file ie4uinit.exe
+
+[2025:06:04 19:48:51]
+[2025:06:04 19:48:51] Processing clean file name Sdcb.exe
+[2025:06:04 19:48:51]
+[2025:06:04 19:48:51] Processing clean file name Sdcb.exe, attempt 0
+[2025:06:04 19:48:51] Evaluating clean file Sdcb.exe
+[2025:06:04 19:48:51] Revert to snapshot
+[2025:06:04 19:49:36] Run VM
+[2025:06:04 19:49:36] Login as SYSTEM
+[2025:06:04 19:49:36] Logged as SYSTEM
+[2025:06:04 19:49:36] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\Sdcb.exe -> C:\Users\hieu\Downloads\Sdcb.exe
+[2025:06:04 19:49:39] Run clean file
+[2025:06:04 19:49:39] Login as hieu
+[2025:06:04 19:49:39] Logged as hieu
+[2025:06:04 19:49:39] File is not compatible: Sdcb.exe
+[2025:06:04 19:49:41] Cannot evaluate clean file Sdcb.exe
+
+[2025:06:04 19:49:41]
+[2025:06:04 19:49:41] Processing clean file name EncryptedRegView.exe
+[2025:06:04 19:49:41]
+[2025:06:04 19:49:41] Processing clean file name EncryptedRegView.exe, attempt 0
+[2025:06:04 19:49:41] Evaluating clean file EncryptedRegView.exe
+[2025:06:04 19:49:41] Revert to snapshot
+[2025:06:04 19:50:14] Run VM
+[2025:06:04 19:50:14] Login as SYSTEM
+[2025:06:04 19:50:15] Logged as SYSTEM
+[2025:06:04 19:50:15] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\EncryptedRegView.exe -> C:\Users\hieu\Downloads\EncryptedRegView.exe
+[2025:06:04 19:50:15] Run clean file
+[2025:06:04 19:50:15] Login as hieu
+[2025:06:04 19:50:15] Logged as hieu
+[2025:06:04 19:50:16] Login as SYSTEM
+[2025:06:04 19:50:16] Logged as SYSTEM
+[2025:06:04 19:50:16] Waiting for 5 minutes
+[2025:06:04 19:55:19] Done EncryptedRegView.exe
+[2025:06:04 19:55:19] Cannot evaluate clean file EncryptedRegView.exe
+
+[2025:06:04 19:55:19]
+[2025:06:04 19:55:19] Processing clean file name ZoomIt64.exe
+[2025:06:04 19:55:19]
+[2025:06:04 19:55:19] Processing clean file name ZoomIt64.exe, attempt 0
+[2025:06:04 19:55:19] Evaluating clean file ZoomIt64.exe
+[2025:06:04 19:55:19] Revert to snapshot
+[2025:06:04 19:56:10] Run VM
+[2025:06:04 19:56:10] Login as SYSTEM
+[2025:06:04 19:56:10] Logged as SYSTEM
+[2025:06:04 19:56:10] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ZoomIt64.exe -> C:\Users\hieu\Downloads\ZoomIt64.exe
+[2025:06:04 19:56:11] Run clean file
+[2025:06:04 19:56:11] Login as hieu
+[2025:06:04 19:56:11] Logged as hieu
+[2025:06:04 19:56:12] Login as SYSTEM
+[2025:06:04 19:56:13] Logged as SYSTEM
+[2025:06:04 19:56:13] Waiting for 5 minutes
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\PaulStretchPortable_2.2-2_Rev_2_English.paf.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\wabmig.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\IMEWDBLD.EXE.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\FlashCookiesView.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\PnPUnattend.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\TCPSVCS.EXE.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\perfmon.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\SpeedyFoxPortable_2.0.30_Rev_2_English.paf.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\PingInfoView.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\taskhostw.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\ByteCodeGenerator.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\SpaceAgent.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\InstaMonitr-Free.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\ChtIME.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\OutlookAttachView.exe.log
+[2025:06:04 21:51:46] Clean file evaluated: E:\Graduation_Project\clean_combined_log\NisSrv.exe.log
+[2025:06:04 21:51:46]
+[2025:06:04 21:51:46] Processing clean file name charmap.exe
+[2025:06:04 21:51:46]
+[2025:06:04 21:51:46] Processing clean file name charmap.exe, attempt 0
+[2025:06:04 21:51:46] Evaluating clean file charmap.exe
+[2025:06:04 21:51:46] Revert to snapshot
+[2025:06:04 21:51:48] Something went wrong :( VixError #1: Unknown error
+[2025:06:04 21:51:48] Retrying charmap.exe
+[2025:06:04 21:51:48] Clean file evaluated: E:\Graduation_Project\clean_combined_log\lpksetup.exe.log
+[2025:06:04 21:51:48] Clean file evaluated: E:\Graduation_Project\clean_combined_log\BrutalChessPortable_0.5.2.2_English.paf.exe.log
+[2025:06:04 21:51:48] Clean file evaluated: E:\Graduation_Project\clean_combined_log\sdiagnhost.exe.log
+[2025:06:04 21:51:48] Clean file evaluated: E:\Graduation_Project\clean_combined_log\provtool.exe.log
+[2025:06:04 21:51:48]
+[2025:06:04 21:51:48] Processing clean file name DOSBoxPortable_0.74.3.paf.exe
+[2025:06:04 21:51:48]
+[2025:06:04 21:51:48] Processing clean file name DOSBoxPortable_0.74.3.paf.exe, attempt 0
+[2025:06:04 21:51:48] Evaluating clean file DOSBoxPortable_0.74.3.paf.exe
+[2025:06:04 21:51:48] Revert to snapshot
+[2025:06:04 21:54:19]
+[2025:06:04 21:54:19] Processing clean file name AssignedAccessLockApp.exe
+[2025:06:04 21:54:19]
+[2025:06:04 21:54:19] Processing clean file name AssignedAccessLockApp.exe, attempt 0
+[2025:06:04 21:54:19] Evaluating clean file AssignedAccessLockApp.exe
+[2025:06:04 21:54:19] Revert to snapshot
+[2025:06:04 21:54:34] Run VM
+[2025:06:04 21:54:34] Login as SYSTEM
+[2025:06:04 21:54:37] Logged as SYSTEM
+[2025:06:04 21:54:37] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\AssignedAccessLockApp.exe -> C:\Users\hieu\Downloads\AssignedAccessLockApp.exe
+[2025:06:04 21:54:38] Run clean file
+[2025:06:04 21:54:38] Login as hieu
+[2025:06:04 21:54:39] Logged as hieu
+[2025:06:04 21:54:40] Login as SYSTEM
+[2025:06:04 21:54:41] Logged as SYSTEM
+[2025:06:04 21:54:41] Waiting for 5 minutes
+[2025:06:04 21:59:44] Done AssignedAccessLockApp.exe
+[2025:06:04 21:59:44] Cannot evaluate clean file AssignedAccessLockApp.exe
+
+[2025:06:04 21:59:44] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WindowsInternal.ComposableShell.Experiences.TextInput.InputApp.exe.log
+[2025:06:04 21:59:44] Clean file evaluated: E:\Graduation_Project\clean_combined_log\MigRegDB.exe.log
+[2025:06:04 21:59:44] Clean file evaluated: E:\Graduation_Project\clean_combined_log\winrar.exe.log
+[2025:06:04 21:59:44] Clean file evaluated: E:\Graduation_Project\clean_combined_log\dllhost.exe.log
+[2025:06:04 21:59:44] Clean file evaluated: E:\Graduation_Project\clean_combined_log\MicrosoftPdfReader.exe.log
+[2025:06:04 21:59:44] Clean file evaluated: E:\Graduation_Project\clean_combined_log\MobileFileSearch.exe.log
+[2025:06:04 21:59:44] Clean file evaluated: E:\Graduation_Project\clean_combined_log\Locator.exe.log
+[2025:06:04 21:59:44] Clean file evaluated: E:\Graduation_Project\clean_combined_log\Dism.exe.log
+[2025:06:04 21:59:44]
+[2025:06:04 21:59:44] Processing clean file name ESEDatabaseView.exe
+[2025:06:04 21:59:44]
+[2025:06:04 21:59:44] Processing clean file name ESEDatabaseView.exe, attempt 0
+[2025:06:04 21:59:44] Evaluating clean file ESEDatabaseView.exe
+[2025:06:04 21:59:44] Revert to snapshot
+[2025:06:04 21:59:55] Run VM
+[2025:06:04 21:59:55] Login as SYSTEM
+[2025:06:04 21:59:56] Logged as SYSTEM
+[2025:06:04 21:59:56] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ESEDatabaseView.exe -> C:\Users\hieu\Downloads\ESEDatabaseView.exe
+[2025:06:04 21:59:57] Run clean file
+[2025:06:04 21:59:57] Login as hieu
+[2025:06:04 21:59:57] File is not compatible: ESEDatabaseView.exe
+[2025:06:04 21:59:58] Cannot evaluate clean file ESEDatabaseView.exe
+
+[2025:06:04 21:59:58] Clean file evaluated: E:\Graduation_Project\clean_combined_log\volumouse.exe.log
+[2025:06:04 21:59:58] Clean file evaluated: E:\Graduation_Project\clean_combined_log\OfflineRegistryView.exe.log
+[2025:06:04 21:59:58] Clean file evaluated: E:\Graduation_Project\clean_combined_log\RegDllView.exe.log
+[2025:06:04 21:59:58] Clean file evaluated: E:\Graduation_Project\clean_combined_log\EhStorAuthn.exe.log
+[2025:06:04 21:59:58] Clean file evaluated: E:\Graduation_Project\clean_combined_log\PATHPING.EXE.log
+[2025:06:04 21:59:58] Clean file evaluated: E:\Graduation_Project\clean_combined_log\wermgr.exe.log
+[2025:06:04 21:59:58] Clean file evaluated: E:\Graduation_Project\clean_combined_log\Narrator.exe.log
+[2025:06:04 21:59:58] Clean file evaluated: E:\Graduation_Project\clean_combined_log\NetHost.exe.log
+[2025:06:04 21:59:58]
+[2025:06:04 21:59:58] Processing clean file name relog.exe
+[2025:06:04 21:59:58]
+[2025:06:04 21:59:58] Processing clean file name relog.exe, attempt 0
+[2025:06:04 21:59:58] Evaluating clean file relog.exe
+[2025:06:04 21:59:58] Revert to snapshot
+[2025:06:04 22:00:15] Run VM
+[2025:06:04 22:00:15] Login as SYSTEM
+[2025:06:04 22:00:18] Logged as SYSTEM
+[2025:06:04 22:00:18] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\relog.exe -> C:\Users\hieu\Downloads\relog.exe
+[2025:06:04 22:00:19] Run clean file
+[2025:06:04 22:00:19] Login as hieu
+[2025:06:04 22:00:20] Logged as hieu
+[2025:06:04 22:00:21] Login as SYSTEM
+[2025:06:04 22:00:21] Logged as SYSTEM
+[2025:06:04 22:00:21] Waiting for 5 minutes
+[2025:06:04 22:05:24] Done relog.exe
+[2025:06:04 22:05:24] Cannot evaluate clean file relog.exe
+
+[2025:06:05 00:43:34] Clean file evaluated: E:\Graduation_Project\clean_combined_log\mtppk12.exe.log
+[2025:06:05 00:43:34]
+[2025:06:05 00:43:34] Processing clean file name WifiHistoryView.exe
+[2025:06:05 00:43:34]
+[2025:06:05 00:43:34] Processing clean file name WifiHistoryView.exe, attempt 0
+[2025:06:05 00:43:34] Evaluating clean file WifiHistoryView.exe
+[2025:06:05 00:43:34] Revert to snapshot
+[2025:06:05 00:43:45] Run VM
+[2025:06:05 00:43:45] Login as SYSTEM
+[2025:06:05 00:43:45] Logged as SYSTEM
+[2025:06:05 00:43:45] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\WifiHistoryView.exe -> C:\Users\hieu\Downloads\WifiHistoryView.exe
+[2025:06:05 00:43:46] Run clean file
+[2025:06:05 00:43:46] Login as hieu
+[2025:06:05 00:43:46] Logged as hieu
+[2025:06:05 00:43:46] Login as SYSTEM
+[2025:06:05 00:43:46] Logged as SYSTEM
+[2025:06:05 00:43:46] Waiting for 5 minutes
+[2025:06:05 00:48:50] Done WifiHistoryView.exe
+[2025:06:05 00:48:50] Cannot evaluate clean file WifiHistoryView.exe
+
+[2025:06:05 00:48:50]
+[2025:06:05 00:48:50] Processing clean file name ZoomIt64.exe
+[2025:06:05 00:48:50]
+[2025:06:05 00:48:50] Processing clean file name ZoomIt64.exe, attempt 0
+[2025:06:05 00:48:50] Evaluating clean file ZoomIt64.exe
+[2025:06:05 00:48:50] Revert to snapshot
+[2025:06:05 00:49:21] Run VM
+[2025:06:05 00:49:21] Login as SYSTEM
+[2025:06:05 00:49:21] Logged as SYSTEM
+[2025:06:05 00:49:21] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ZoomIt64.exe -> C:\Users\hieu\Downloads\ZoomIt64.exe
+[2025:06:05 00:49:22] Run clean file
+[2025:06:05 00:49:22] Login as hieu
+[2025:06:05 00:49:23] Logged as hieu
+[2025:06:05 00:49:23] Login as SYSTEM
+[2025:06:05 00:49:24] Logged as SYSTEM
+[2025:06:05 00:49:24] Waiting for 5 minutes
+[2025:06:05 00:54:27] Done ZoomIt64.exe
+[2025:06:05 00:54:27] Cannot evaluate clean file ZoomIt64.exe
+
+[2025:06:05 00:54:27]
+[2025:06:05 00:54:27] Processing clean file name EventLogChannelsView.exe
+[2025:06:05 00:54:27]
+[2025:06:05 00:54:27] Processing clean file name EventLogChannelsView.exe, attempt 0
+[2025:06:05 00:54:27] Evaluating clean file EventLogChannelsView.exe
+[2025:06:05 00:54:27] Revert to snapshot
+[2025:06:05 00:54:57] Run VM
+[2025:06:05 00:54:57] Login as SYSTEM
+[2025:06:05 00:54:58] Logged as SYSTEM
+[2025:06:05 00:54:58] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\EventLogChannelsView.exe -> C:\Users\hieu\Downloads\EventLogChannelsView.exe
+[2025:06:05 00:54:58] Run clean file
+[2025:06:05 00:54:58] Login as hieu
+[2025:06:05 00:54:58] File is not compatible: EventLogChannelsView.exe
+[2025:06:05 00:54:59] Cannot evaluate clean file EventLogChannelsView.exe
+
+[2025:06:05 00:54:59]
+[2025:06:05 00:54:59] Processing clean file name Fondue.exe
+[2025:06:05 00:54:59]
+[2025:06:05 00:54:59] Processing clean file name Fondue.exe, attempt 0
+[2025:06:05 00:54:59] Evaluating clean file Fondue.exe
+[2025:06:05 00:54:59] Revert to snapshot
+[2025:06:05 00:55:30] Run VM
+[2025:06:05 00:55:30] Login as SYSTEM
+[2025:06:05 00:55:31] Logged as SYSTEM
+[2025:06:05 00:55:31] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\Fondue.exe -> C:\Users\hieu\Downloads\Fondue.exe
+[2025:06:05 00:55:31] Run clean file
+[2025:06:05 00:55:31] Login as hieu
+[2025:06:05 00:55:31] Logged as hieu
+[2025:06:05 00:55:32] Login as SYSTEM
+[2025:06:05 00:55:32] Logged as SYSTEM
+[2025:06:05 00:55:32] Waiting for 5 minutes
+[2025:06:05 01:00:34] Done Fondue.exe
+[2025:06:05 01:00:34] Cannot evaluate clean file Fondue.exe
+
+[2025:06:05 01:00:34] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WPDShextAutoplay.exe.log
+[2025:06:05 01:00:34] Clean file evaluated: E:\Graduation_Project\clean_combined_log\fltMC.exe.log
+[2025:06:05 01:00:34] Clean file evaluated: E:\Graduation_Project\clean_combined_log\faview.exe.log
+[2025:06:05 01:00:34] Clean file evaluated: E:\Graduation_Project\clean_combined_log\TeamViewer_Setup.exe.log
+[2025:06:05 01:00:34] Clean file evaluated: E:\Graduation_Project\clean_combined_log\GDIView.exe.log
+[2025:06:05 01:00:34] Clean file evaluated: E:\Graduation_Project\clean_combined_log\IPNeighborsView.exe.log
+[2025:06:05 01:00:34] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WirelessNetView.exe.log
+[2025:06:05 01:00:34]
+[2025:06:05 01:00:34] Processing clean file name PackageInspector.exe
+[2025:06:05 01:00:34]
+[2025:06:05 01:00:34] Processing clean file name PackageInspector.exe, attempt 0
+[2025:06:05 01:00:34] Evaluating clean file PackageInspector.exe
+[2025:06:05 01:00:34] Revert to snapshot
+[2025:06:05 01:01:09] Run VM
+[2025:06:05 01:01:09] Login as SYSTEM
+[2025:06:05 01:01:10] Logged as SYSTEM
+[2025:06:05 01:01:10] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\PackageInspector.exe -> C:\Users\hieu\Downloads\PackageInspector.exe
+[2025:06:05 01:01:10] Run clean file
+[2025:06:05 01:01:10] Login as hieu
+[2025:06:05 01:01:10] File is not compatible: PackageInspector.exe
+[2025:06:05 01:01:11] Cannot evaluate clean file PackageInspector.exe
+
+[2025:06:05 01:01:11] Clean file evaluated: E:\Graduation_Project\clean_combined_log\finger.exe.log
+[2025:06:05 01:01:11]
+[2025:06:05 01:01:11] Processing clean file name wimserv.exe
+[2025:06:05 01:01:11]
+[2025:06:05 01:01:11] Processing clean file name wimserv.exe, attempt 0
+[2025:06:05 01:01:11] Evaluating clean file wimserv.exe
+[2025:06:05 01:01:11] Revert to snapshot
+[2025:06:05 01:01:33] Run VM
+[2025:06:05 01:01:33] Login as SYSTEM
+[2025:06:05 01:01:33] Logged as SYSTEM
+[2025:06:05 01:01:33] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\wimserv.exe -> C:\Users\hieu\Downloads\wimserv.exe
+[2025:06:05 01:01:34] Run clean file
+[2025:06:05 01:01:34] Login as hieu
+[2025:06:05 01:01:34] Logged as hieu
+[2025:06:05 01:01:34] Login as SYSTEM
+[2025:06:05 01:01:35] Logged as SYSTEM
+[2025:06:05 01:01:35] Waiting for 5 minutes
+[2025:06:05 01:10:08] Done wimserv.exe
+[2025:06:05 01:10:08] Cannot evaluate clean file wimserv.exe
+
+[2025:06:05 01:10:08] Clean file evaluated: E:\Graduation_Project\clean_combined_log\serviwin.exe.log
+[2025:06:05 01:10:08] Clean file evaluated: E:\Graduation_Project\clean_combined_log\dllhst3g.exe.log
+[2025:06:05 01:10:08]
+[2025:06:05 01:10:08] Processing clean file name Microsoft.ECApp.exe
+[2025:06:05 01:10:08]
+[2025:06:05 01:10:08] Processing clean file name Microsoft.ECApp.exe, attempt 0
+[2025:06:05 01:10:08] Evaluating clean file Microsoft.ECApp.exe
+[2025:06:05 01:10:08] Revert to snapshot
+[2025:06:05 01:10:39] Run VM
+[2025:06:05 01:10:39] Login as SYSTEM
+[2025:06:05 01:10:39] Logged as SYSTEM
+[2025:06:05 01:10:39] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\Microsoft.ECApp.exe -> C:\Users\hieu\Downloads\Microsoft.ECApp.exe
+[2025:06:05 01:10:40] Run clean file
+[2025:06:05 01:10:40] Login as hieu
+[2025:06:05 01:10:40] Logged as hieu
+[2025:06:05 01:10:40] Login as SYSTEM
+[2025:06:05 01:10:41] Logged as SYSTEM
+[2025:06:05 01:10:41] Waiting for 5 minutes
+[2025:06:05 01:15:53] Something went wrong :( VixError #3016: VMware Tools are not running in the guest
+[2025:06:05 01:15:55] Retrying Microsoft.ECApp.exe
+[2025:06:05 01:15:55]
+[2025:06:05 01:15:55] Processing clean file name taskkill.exe
+[2025:06:05 01:15:55]
+[2025:06:05 01:15:55] Processing clean file name taskkill.exe, attempt 0
+[2025:06:05 01:15:55] Evaluating clean file taskkill.exe
+[2025:06:05 01:15:55] Revert to snapshot
+[2025:06:05 01:16:22] Run VM
+[2025:06:05 01:16:22] Login as SYSTEM
+[2025:06:05 01:16:23] Logged as SYSTEM
+[2025:06:05 01:16:23] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\taskkill.exe -> C:\Users\hieu\Downloads\taskkill.exe
+[2025:06:05 01:16:23] Run clean file
+[2025:06:05 01:16:23] Login as hieu
+[2025:06:05 01:16:23] Logged as hieu
+[2025:06:05 01:16:23] Login as SYSTEM
+[2025:06:05 01:16:23] Logged as SYSTEM
+[2025:06:05 01:16:23] Waiting for 5 minutes
+[2025:06:05 01:21:28] Done taskkill.exe
+[2025:06:05 01:21:28] Cannot evaluate clean file taskkill.exe
+
+[2025:06:05 01:21:28]
+[2025:06:05 01:21:28] Processing clean file name PasswordOnWakeSettingFlyout.exe
+[2025:06:05 01:21:28]
+[2025:06:05 01:21:28] Processing clean file name PasswordOnWakeSettingFlyout.exe, attempt 0
+[2025:06:05 01:21:28] Evaluating clean file PasswordOnWakeSettingFlyout.exe
+[2025:06:05 01:21:28] Revert to snapshot
+[2025:06:05 01:21:59] Run VM
+[2025:06:05 01:21:59] Login as SYSTEM
+[2025:06:05 01:21:59] Logged as SYSTEM
+[2025:06:05 01:21:59] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\PasswordOnWakeSettingFlyout.exe -> C:\Users\hieu\Downloads\PasswordOnWakeSettingFlyout.exe
+[2025:06:05 01:22:00] Run clean file
+[2025:06:05 01:22:00] Login as hieu
+[2025:06:05 01:22:00] File is not compatible: PasswordOnWakeSettingFlyout.exe
+[2025:06:05 01:22:02] Cannot evaluate clean file PasswordOnWakeSettingFlyout.exe
+
+[2025:06:05 01:22:02]
+[2025:06:05 01:22:02] Processing clean file name bootcfg.exe
+[2025:06:05 01:22:02]
+[2025:06:05 01:22:02] Processing clean file name bootcfg.exe, attempt 0
+[2025:06:05 01:22:02] Evaluating clean file bootcfg.exe
+[2025:06:05 01:22:02] Revert to snapshot
+[2025:06:05 01:22:39] Run VM
+[2025:06:05 01:22:39] Login as SYSTEM
+[2025:06:05 01:22:40] Logged as SYSTEM
+[2025:06:05 01:22:40] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\bootcfg.exe -> C:\Users\hieu\Downloads\bootcfg.exe
+[2025:06:05 01:22:40] Run clean file
+[2025:06:05 01:22:40] Login as hieu
+[2025:06:05 01:22:40] Logged as hieu
+[2025:06:05 01:22:41] Login as SYSTEM
+[2025:06:05 01:22:41] Logged as SYSTEM
+[2025:06:05 01:22:41] Waiting for 5 minutes
+[2025:06:05 01:27:45] Done bootcfg.exe
+[2025:06:05 01:27:45] Cannot evaluate clean file bootcfg.exe
+
+[2025:06:05 01:27:45] Clean file evaluated: E:\Graduation_Project\clean_combined_log\FreeFileSyncPortable_6.2.paf.exe.log
+[2025:06:05 01:27:45] Clean file evaluated: E:\Graduation_Project\clean_combined_log\mavinject.exe.log
+[2025:06:05 01:27:45] Clean file evaluated: E:\Graduation_Project\clean_combined_log\logframer_31_setup.exe.log
+[2025:06:05 01:27:45] Clean file evaluated: E:\Graduation_Project\clean_combined_log\wermgr.exe.log
+[2025:06:05 01:27:45] Clean file evaluated: E:\Graduation_Project\clean_combined_log\tnp631se_uni.exe.log
+[2025:06:05 01:27:45] Clean file evaluated: E:\Graduation_Project\clean_combined_log\shman.exe.log
+[2025:06:05 01:27:45]
+[2025:06:05 01:27:45] Processing clean file name manage-bde.exe
+[2025:06:05 01:27:45]
+[2025:06:05 01:27:45] Processing clean file name manage-bde.exe, attempt 0
+[2025:06:05 01:27:45] Evaluating clean file manage-bde.exe
+[2025:06:05 01:27:45] Revert to snapshot
+[2025:06:05 01:28:04] Run VM
+[2025:06:05 01:28:04] Login as SYSTEM
+[2025:06:05 01:28:04] Logged as SYSTEM
+[2025:06:05 01:28:04] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\manage-bde.exe -> C:\Users\hieu\Downloads\manage-bde.exe
+[2025:06:05 01:28:05] Run clean file
+[2025:06:05 01:28:05] Login as hieu
+[2025:06:05 01:28:05] Logged as hieu
+[2025:06:05 01:28:05] Login as SYSTEM
+[2025:06:05 01:28:06] Logged as SYSTEM
+[2025:06:05 01:28:06] Waiting for 5 minutes
+[2025:06:05 01:33:09] Done manage-bde.exe
+[2025:06:05 01:33:09] Cannot evaluate clean file manage-bde.exe
+
+[2025:06:05 01:33:09] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WUDFHost.exe.log
+[2025:06:05 01:33:09]
+[2025:06:05 01:33:09] Processing clean file name SrTasks.exe
+[2025:06:05 01:33:09]
+[2025:06:05 01:33:09] Processing clean file name SrTasks.exe, attempt 0
+[2025:06:05 01:33:09] Evaluating clean file SrTasks.exe
+[2025:06:05 01:33:09] Revert to snapshot
+[2025:06:05 01:33:51] Run VM
+[2025:06:05 01:33:51] Login as SYSTEM
+[2025:06:05 01:33:52] Logged as SYSTEM
+[2025:06:05 01:33:52] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SrTasks.exe -> C:\Users\hieu\Downloads\SrTasks.exe
+[2025:06:05 01:33:52] Run clean file
+[2025:06:05 01:33:52] Login as hieu
+[2025:06:05 01:33:53] Logged as hieu
+[2025:06:05 01:33:53] Login as SYSTEM
+[2025:06:05 01:33:53] Logged as SYSTEM
+[2025:06:05 01:33:53] Waiting for 5 minutes
+[2025:06:05 01:38:57] Done SrTasks.exe
+[2025:06:05 01:38:57] Cannot evaluate clean file SrTasks.exe
+
+[2025:06:05 01:38:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\ResourcesExtract.exe.log
+[2025:06:05 01:38:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\omadmclient.exe.log
+[2025:06:05 01:38:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\LocationNotificationWindows.exe.log
+[2025:06:05 01:38:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\DebugViewPortable_4.90_Release_2_English_online.paf.exe.log
+[2025:06:05 01:38:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\MsMpEng.exe.log
+[2025:06:05 01:38:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\srdelayed.exe.log
+[2025:06:05 01:38:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\YUMIPortable_2.0.9.4_English.paf.exe.log
+[2025:06:05 01:38:57]
+[2025:06:05 01:38:57] Processing clean file name IMEPADSV.EXE
+[2025:06:05 01:38:57]
+[2025:06:05 01:38:57] Processing clean file name IMEPADSV.EXE, attempt 0
+[2025:06:05 01:38:57] Evaluating clean file IMEPADSV.EXE
+[2025:06:05 01:38:57] Revert to snapshot
+[2025:06:05 01:39:26] Run VM
+[2025:06:05 01:39:26] Login as SYSTEM
+[2025:06:05 01:39:27] Logged as SYSTEM
+[2025:06:05 01:39:27] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\IMEPADSV.EXE -> C:\Users\hieu\Downloads\IMEPADSV.EXE
+[2025:06:05 01:39:27] Run clean file
+[2025:06:05 01:39:27] Login as hieu
+[2025:06:05 01:39:28] Logged as hieu
+[2025:06:05 01:39:28] Login as SYSTEM
+[2025:06:05 01:39:28] Logged as SYSTEM
+[2025:06:05 01:39:28] Waiting for 5 minutes
+[2025:06:05 01:44:31] Done IMEPADSV.EXE
+[2025:06:05 01:44:31] Cannot evaluate clean file IMEPADSV.EXE
+
+[2025:06:05 01:44:31]
+[2025:06:05 01:44:31] Processing clean file name wpr.exe
+[2025:06:05 01:44:31]
+[2025:06:05 01:44:31] Processing clean file name wpr.exe, attempt 0
+[2025:06:05 01:44:31] Evaluating clean file wpr.exe
+[2025:06:05 01:44:31] Revert to snapshot
+[2025:06:05 01:44:51] Run VM
+[2025:06:05 01:44:51] Login as SYSTEM
+[2025:06:05 01:44:51] Logged as SYSTEM
+[2025:06:05 01:44:51] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\wpr.exe -> C:\Users\hieu\Downloads\wpr.exe
+[2025:06:05 01:44:52] Run clean file
+[2025:06:05 01:44:52] Login as hieu
+[2025:06:05 01:44:52] Logged as hieu
+[2025:06:05 01:44:52] Login as SYSTEM
+[2025:06:05 01:44:52] Logged as SYSTEM
+[2025:06:05 01:44:52] Waiting for 5 minutes
+[2025:06:05 01:49:56] Done wpr.exe
+[2025:06:05 01:49:56] Cannot evaluate clean file wpr.exe
+
+[2025:06:05 01:49:56] Clean file evaluated: E:\Graduation_Project\clean_combined_log\setup_SuperFinderXT.exe.log
+[2025:06:05 01:49:56]
+[2025:06:05 01:49:56] Processing clean file name dxgiadaptercache.exe
+[2025:06:05 01:49:56]
+[2025:06:05 01:49:56] Processing clean file name dxgiadaptercache.exe, attempt 0
+[2025:06:05 01:49:56] Evaluating clean file dxgiadaptercache.exe
+[2025:06:05 01:49:56] Revert to snapshot
+[2025:06:05 01:50:24] Run VM
+[2025:06:05 01:50:24] Login as SYSTEM
+[2025:06:05 01:50:24] Logged as SYSTEM
+[2025:06:05 01:50:24] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\dxgiadaptercache.exe -> C:\Users\hieu\Downloads\dxgiadaptercache.exe
+[2025:06:05 01:50:25] Run clean file
+[2025:06:05 01:50:25] Login as hieu
+[2025:06:05 01:50:25] Logged as hieu
+[2025:06:05 01:50:25] Login as SYSTEM
+[2025:06:05 01:50:25] Logged as SYSTEM
+[2025:06:05 01:50:25] Waiting for 5 minutes
+[2025:06:05 01:55:29] Done dxgiadaptercache.exe
+[2025:06:05 01:55:29] Cannot evaluate clean file dxgiadaptercache.exe
+
+[2025:06:05 01:55:29]
+[2025:06:05 01:55:29] Processing clean file name wmprph.exe
+[2025:06:05 01:55:29]
+[2025:06:05 01:55:29] Processing clean file name wmprph.exe, attempt 0
+[2025:06:05 01:55:29] Evaluating clean file wmprph.exe
+[2025:06:05 01:55:29] Revert to snapshot
+[2025:06:05 01:55:57] Run VM
+[2025:06:05 01:55:57] Login as SYSTEM
+[2025:06:05 01:55:58] Logged as SYSTEM
+[2025:06:05 01:55:58] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\wmprph.exe -> C:\Users\hieu\Downloads\wmprph.exe
+[2025:06:05 01:55:58] Run clean file
+[2025:06:05 01:55:58] Login as hieu
+[2025:06:05 01:55:59] Logged as hieu
+[2025:06:05 01:55:59] Login as SYSTEM
+[2025:06:05 01:55:59] Logged as SYSTEM
+[2025:06:05 01:55:59] Waiting for 5 minutes
+[2025:06:05 02:01:04] Done wmprph.exe
+[2025:06:05 02:01:04] Cannot evaluate clean file wmprph.exe
+
+[2025:06:05 02:01:04] Clean file evaluated: E:\Graduation_Project\clean_combined_log\wmpnscfg.exe.log
+[2025:06:05 02:01:04] Clean file evaluated: E:\Graduation_Project\clean_combined_log\net1.exe.log
+[2025:06:05 02:01:04]
+[2025:06:05 02:01:04] Processing clean file name chkntfs.exe
+[2025:06:05 02:01:04]
+[2025:06:05 02:01:04] Processing clean file name chkntfs.exe, attempt 0
+[2025:06:05 02:01:04] Evaluating clean file chkntfs.exe
+[2025:06:05 02:01:04] Revert to snapshot
+[2025:06:05 02:01:41] Run VM
+[2025:06:05 02:01:41] Login as SYSTEM
+[2025:06:05 02:01:41] Logged as SYSTEM
+[2025:06:05 02:01:41] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\chkntfs.exe -> C:\Users\hieu\Downloads\chkntfs.exe
+[2025:06:05 02:01:41] Run clean file
+[2025:06:05 02:01:41] Login as hieu
+[2025:06:05 02:01:41] File is not compatible: chkntfs.exe
+[2025:06:05 02:01:43] Cannot evaluate clean file chkntfs.exe
+
+[2025:06:05 02:01:43] Clean file evaluated: E:\Graduation_Project\clean_combined_log\DesktopOK.exe.log
+[2025:06:05 02:01:43] Clean file evaluated: E:\Graduation_Project\clean_combined_log\CompatTelRunner.exe.log
+[2025:06:05 02:01:43] Clean file evaluated: E:\Graduation_Project\clean_combined_log\systray.exe.log
+[2025:06:05 02:01:43] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WMIADAP.exe.log
+[2025:06:05 02:01:43] Clean file evaluated: E:\Graduation_Project\clean_combined_log\FXSSVC.exe.log
+[2025:06:05 02:01:43] Clean file evaluated: E:\Graduation_Project\clean_combined_log\BitLockerWizardElev.exe.log
+[2025:06:05 02:01:43] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WirelessConnectionInfo.exe.log
+[2025:06:05 02:01:43] Clean file evaluated: E:\Graduation_Project\clean_combined_log\rktools.exe.log
+[2025:06:05 02:01:43]
+[2025:06:05 02:01:43] Processing clean file name PinEnrollmentBroker.exe
+[2025:06:05 02:01:43]
+[2025:06:05 02:01:43] Processing clean file name PinEnrollmentBroker.exe, attempt 0
+[2025:06:05 02:01:43] Evaluating clean file PinEnrollmentBroker.exe
+[2025:06:05 02:01:43] Revert to snapshot
+[2025:06:05 02:02:15] Run VM
+[2025:06:05 02:02:15] Login as SYSTEM
+[2025:06:05 02:02:16] Logged as SYSTEM
+[2025:06:05 02:02:16] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\PinEnrollmentBroker.exe -> C:\Users\hieu\Downloads\PinEnrollmentBroker.exe
+[2025:06:05 02:02:16] Run clean file
+[2025:06:05 02:02:16] Login as hieu
+[2025:06:05 02:02:16] File is not compatible: PinEnrollmentBroker.exe
+[2025:06:05 02:02:17] Cannot evaluate clean file PinEnrollmentBroker.exe
+
+[2025:06:05 02:02:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\SystemPropertiesRemote.exe.log
+[2025:06:05 02:02:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\windeploy.exe.log
+[2025:06:05 02:02:17]
+[2025:06:05 02:02:17] Processing clean file name bfsvc.exe
+[2025:06:05 02:02:17]
+[2025:06:05 02:02:17] Processing clean file name bfsvc.exe, attempt 0
+[2025:06:05 02:02:17] Evaluating clean file bfsvc.exe
+[2025:06:05 02:02:17] Revert to snapshot
+[2025:06:05 02:02:52] Run VM
+[2025:06:05 02:02:52] Login as SYSTEM
+[2025:06:05 02:02:53] Logged as SYSTEM
+[2025:06:05 02:02:53] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\bfsvc.exe -> C:\Users\hieu\Downloads\bfsvc.exe
+[2025:06:05 02:02:54] Run clean file
+[2025:06:05 02:02:54] Login as hieu
+[2025:06:05 02:02:54] Logged as hieu
+[2025:06:05 02:02:54] Login as SYSTEM
+[2025:06:05 02:02:54] Logged as SYSTEM
+[2025:06:05 02:02:54] Waiting for 5 minutes
+[2025:06:05 02:07:57] Done bfsvc.exe
+[2025:06:05 02:07:57] Cannot evaluate clean file bfsvc.exe
+
+[2025:06:05 02:07:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\FolderChangesView.exe.log
+[2025:06:05 02:07:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\unsecapp.exe.log
+[2025:06:05 02:07:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\perfhost.exe.log
+[2025:06:05 02:07:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\PerceptionSimulationService.exe.log
+[2025:06:05 02:07:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\health-break-reminder.exe.log
+[2025:06:05 02:07:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\DismHost.exe.log
+[2025:06:05 02:07:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WiseDiskCleanerPortable_10.8.4.paf.exe.log
+[2025:06:05 02:07:57]
+[2025:06:05 02:07:57] Processing clean file name NetHackPortable_3.6.6_English.paf.exe
+[2025:06:05 02:07:57]
+[2025:06:05 02:07:57] Processing clean file name NetHackPortable_3.6.6_English.paf.exe, attempt 0
+[2025:06:05 02:07:57] Evaluating clean file NetHackPortable_3.6.6_English.paf.exe
+[2025:06:05 02:07:57] Revert to snapshot
+[2025:06:05 02:08:35] Run VM
+[2025:06:05 02:08:35] Login as SYSTEM
+[2025:06:05 02:08:35] Logged as SYSTEM
+[2025:06:05 02:08:35] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\NetHackPortable_3.6.6_English.paf.exe -> C:\Users\hieu\Downloads\NetHackPortable_3.6.6_English.paf.exe
+[2025:06:05 02:08:38] Run clean file
+[2025:06:05 02:08:38] Login as hieu
+[2025:06:05 02:08:38] Logged as hieu
+[2025:06:05 02:08:38] Login as SYSTEM
+[2025:06:05 02:08:38] Logged as SYSTEM
+[2025:06:05 02:08:38] Waiting for 5 minutes
+[2025:06:05 02:13:41] Done NetHackPortable_3.6.6_English.paf.exe
+[2025:06:05 02:13:41] Cannot evaluate clean file NetHackPortable_3.6.6_English.paf.exe
+
+[2025:06:05 02:13:41] Clean file evaluated: E:\Graduation_Project\clean_combined_log\MobileFileSearch.exe.log
+[2025:06:05 02:13:41] Clean file evaluated: E:\Graduation_Project\clean_combined_log\print.exe.log
+[2025:06:05 02:13:41] Clean file evaluated: E:\Graduation_Project\clean_combined_log\msdt.exe.log
+[2025:06:05 02:13:41] Clean file evaluated: E:\Graduation_Project\clean_combined_log\qprocess.exe.log
+[2025:06:05 02:13:41] Clean file evaluated: E:\Graduation_Project\clean_combined_log\Dxpserver.exe.log
+[2025:06:05 02:13:41] Clean file evaluated: E:\Graduation_Project\clean_combined_log\nslookup.exe.log
+[2025:06:05 02:13:41] Clean file evaluated: E:\Graduation_Project\clean_combined_log\tzutil.exe.log
+[2025:06:05 02:13:41]
+[2025:06:05 02:13:41] Processing clean file name TypingMaster_Typing_Tutor_Pro.exe
+[2025:06:05 02:13:41]
+[2025:06:05 02:13:41] Processing clean file name TypingMaster_Typing_Tutor_Pro.exe, attempt 0
+[2025:06:05 02:13:41] Evaluating clean file TypingMaster_Typing_Tutor_Pro.exe
+[2025:06:05 02:13:41] Revert to snapshot
+[2025:06:05 02:14:13] Run VM
+[2025:06:05 02:14:13] Login as SYSTEM
+[2025:06:05 02:14:13] Logged as SYSTEM
+[2025:06:05 02:14:13] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\TypingMaster_Typing_Tutor_Pro.exe -> C:\Users\hieu\Downloads\TypingMaster_Typing_Tutor_Pro.exe
+[2025:06:05 02:14:16] Run clean file
+[2025:06:05 02:14:16] Login as hieu
+[2025:06:05 02:14:16] Logged as hieu
+[2025:06:05 02:14:16] File is not compatible: TypingMaster_Typing_Tutor_Pro.exe
+[2025:06:05 02:14:17] Cannot evaluate clean file TypingMaster_Typing_Tutor_Pro.exe
+
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\CompPkgSrv.exe.log
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\IMEWDBLD.EXE.log
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\ControlPadPortable_0.72_English.paf.exe.log
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\CDGS.exe.log
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\Register-CimProvider.exe.log
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\CompMgmtLauncher.exe.log
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\ssh-keygen.exe.log
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\ResetEngine.exe.log
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\wmlaunch.exe.log
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\NetEvtFwdr.exe.log
+[2025:06:05 02:14:17] Clean file evaluated: E:\Graduation_Project\clean_combined_log\BrowserDownloadsView.exe.log
+[2025:06:05 02:14:17]
+[2025:06:05 02:14:17] Processing clean file name PrintBrmUi.exe
+[2025:06:05 02:14:17]
+[2025:06:05 02:14:17] Processing clean file name PrintBrmUi.exe, attempt 0
+[2025:06:05 02:14:17] Evaluating clean file PrintBrmUi.exe
+[2025:06:05 02:14:17] Revert to snapshot
+[2025:06:05 02:14:44] Run VM
+[2025:06:05 02:14:44] Login as SYSTEM
+[2025:06:05 02:14:45] Logged as SYSTEM
+[2025:06:05 02:14:45] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\PrintBrmUi.exe -> C:\Users\hieu\Downloads\PrintBrmUi.exe
+[2025:06:05 02:14:45] Run clean file
+[2025:06:05 02:14:45] Login as hieu
+[2025:06:05 02:14:46] Logged as hieu
+[2025:06:05 02:14:46] Login as SYSTEM
+[2025:06:05 02:14:47] Logged as SYSTEM
+[2025:06:05 02:14:47] Waiting for 5 minutes
+[2025:06:05 02:19:50] Done PrintBrmUi.exe
+[2025:06:05 02:19:50] Cannot evaluate clean file PrintBrmUi.exe
+
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\whoami.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\AltStreamDump.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\relog.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WiseProgramUninstallerPortable_2.6.1.paf.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\secinit.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\msra.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\FreeAlarmClockSetup.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\omadmprc.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\ReAgentc.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\MMCSnapInsView.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WerFault.exe.log
+[2025:06:05 02:19:50] Clean file evaluated: E:\Graduation_Project\clean_combined_log\TokenBrokerCookies.exe.log
+[2025:06:05 02:19:50]
+[2025:06:05 02:19:50] Processing clean file name wlanext.exe
+[2025:06:05 02:19:50]
+[2025:06:05 02:19:50] Processing clean file name wlanext.exe, attempt 0
+[2025:06:05 02:19:50] Evaluating clean file wlanext.exe
+[2025:06:05 02:19:50] Revert to snapshot
+[2025:06:05 02:20:23] Run VM
+[2025:06:05 02:20:23] Login as SYSTEM
+[2025:06:05 02:20:24] Logged as SYSTEM
+[2025:06:05 02:20:24] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\wlanext.exe -> C:\Users\hieu\Downloads\wlanext.exe
+[2025:06:05 02:20:24] Run clean file
+[2025:06:05 02:20:24] Login as hieu
+[2025:06:05 02:20:24] File is not compatible: wlanext.exe
+[2025:06:05 02:20:25] Cannot evaluate clean file wlanext.exe
+
+[2025:06:05 02:20:25]
+[2025:06:05 02:20:25] Processing clean file name rdpsign.exe
+[2025:06:05 02:20:25]
+[2025:06:05 02:20:25] Processing clean file name rdpsign.exe, attempt 0
+[2025:06:05 02:20:25] Evaluating clean file rdpsign.exe
+[2025:06:05 02:20:25] Revert to snapshot
+[2025:06:05 02:21:08] Run VM
+[2025:06:05 02:21:08] Login as SYSTEM
+[2025:06:05 02:21:09] Logged as SYSTEM
+[2025:06:05 02:21:09] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\rdpsign.exe -> C:\Users\hieu\Downloads\rdpsign.exe
+[2025:06:05 02:21:09] Run clean file
+[2025:06:05 02:21:09] Login as hieu
+[2025:06:05 02:21:09] File is not compatible: rdpsign.exe
+[2025:06:05 02:21:10] Cannot evaluate clean file rdpsign.exe
+
+[2025:06:05 02:21:10] Clean file evaluated: E:\Graduation_Project\clean_combined_log\SystemExplorerPortable_7.1.0.paf.exe.log
+[2025:06:05 02:21:10]
+[2025:06:05 02:21:10] Processing clean file name fsquirt.exe
+[2025:06:05 02:21:10]
+[2025:06:05 02:21:10] Processing clean file name fsquirt.exe, attempt 0
+[2025:06:05 02:21:10] Evaluating clean file fsquirt.exe
+[2025:06:05 02:21:10] Revert to snapshot
+[2025:06:05 02:21:42] Run VM
+[2025:06:05 02:21:42] Login as SYSTEM
+[2025:06:05 02:21:43] Logged as SYSTEM
+[2025:06:05 02:21:43] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\fsquirt.exe -> C:\Users\hieu\Downloads\fsquirt.exe
+[2025:06:05 02:21:43] Run clean file
+[2025:06:05 02:21:43] Login as hieu
+[2025:06:05 02:21:43] Logged as hieu
+[2025:06:05 02:21:44] Login as SYSTEM
+[2025:06:05 02:21:44] Logged as SYSTEM
+[2025:06:05 02:21:44] Waiting for 5 minutes
+[2025:06:05 02:26:47] Done fsquirt.exe
+[2025:06:05 02:26:47] Cannot evaluate clean file fsquirt.exe
+
+[2025:06:05 02:26:47] Clean file evaluated: E:\Graduation_Project\clean_combined_log\cvtres.exe.log
+[2025:06:05 02:26:47] Clean file evaluated: E:\Graduation_Project\clean_combined_log\sdclt.exe.log
+[2025:06:05 02:26:47] Clean file evaluated: E:\Graduation_Project\clean_combined_log\SpeedyFoxPortable_2.0.30_Rev_2_English.paf.exe.log
+[2025:06:05 02:26:47] Clean file evaluated: E:\Graduation_Project\clean_combined_log\whosip.exe.log
+[2025:06:05 02:26:47] Clean file evaluated: E:\Graduation_Project\clean_combined_log\LastActivityView.exe.log
+[2025:06:05 02:26:47] Clean file evaluated: E:\Graduation_Project\clean_combined_log\FsIso.exe.log
+[2025:06:05 02:26:47] Clean file evaluated: E:\Graduation_Project\clean_combined_log\RpcPing.exe.log
+[2025:06:05 02:26:47]
+[2025:06:05 02:26:47] Processing clean file name cttunesvr.exe
+[2025:06:05 02:26:47]
+[2025:06:05 02:26:47] Processing clean file name cttunesvr.exe, attempt 0
+[2025:06:05 02:26:47] Evaluating clean file cttunesvr.exe
+[2025:06:05 02:26:47] Revert to snapshot
+[2025:06:05 02:27:20] Run VM
+[2025:06:05 02:27:20] Login as SYSTEM
+[2025:06:05 02:27:21] Logged as SYSTEM
+[2025:06:05 02:27:21] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\cttunesvr.exe -> C:\Users\hieu\Downloads\cttunesvr.exe
+[2025:06:05 02:27:21] Run clean file
+[2025:06:05 02:27:21] Login as hieu
+[2025:06:05 02:27:22] Logged as hieu
+[2025:06:05 02:27:22] Login as SYSTEM
+[2025:06:05 02:27:22] Logged as SYSTEM
+[2025:06:05 02:27:22] Waiting for 5 minutes
+[2025:06:05 02:32:26] Done cttunesvr.exe
+[2025:06:05 02:32:26] Cannot evaluate clean file cttunesvr.exe
+
+[2025:06:05 02:32:26] Clean file evaluated: E:\Graduation_Project\clean_combined_log\AppHostRegistrationVerifier.exe.log
+[2025:06:05 02:32:26]
+[2025:06:05 02:32:26] Processing clean file name PING.EXE
+[2025:06:05 02:32:26]
+[2025:06:05 02:32:26] Processing clean file name PING.EXE, attempt 0
+[2025:06:05 02:32:26] Evaluating clean file PING.EXE
+[2025:06:05 02:32:26] Revert to snapshot
+[2025:06:05 02:32:52] Run VM
+[2025:06:05 02:32:52] Login as SYSTEM
+[2025:06:05 02:32:53] Logged as SYSTEM
+[2025:06:05 02:32:53] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\PING.EXE -> C:\Users\hieu\Downloads\PING.EXE
+[2025:06:05 02:32:53] Run clean file
+[2025:06:05 02:32:53] Login as hieu
+[2025:06:05 02:32:53] Logged as hieu
+[2025:06:05 02:32:53] Login as SYSTEM
+[2025:06:05 02:32:54] Logged as SYSTEM
+[2025:06:05 02:32:54] Waiting for 5 minutes
+[2025:06:05 02:37:57] Done PING.EXE
+[2025:06:05 02:37:57] Cannot evaluate clean file PING.EXE
+
+[2025:06:05 02:37:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\BigSolitairesPortable_1.4_Rev_3_English.paf.exe.log
+[2025:06:05 02:37:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\MdmDiagnosticsTool.exe.log
+[2025:06:05 02:37:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WinDock_Setup_1_2_1.exe.log
+[2025:06:05 02:37:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\diskperf.exe.log
+[2025:06:05 02:37:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\rufus-2.9.exe.log
+[2025:06:05 02:37:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\mobsync.exe.log
+[2025:06:05 02:37:57] Clean file evaluated: E:\Graduation_Project\clean_combined_log\appidpolicyconverter.exe.log
+[2025:06:05 02:37:57]
+[2025:06:05 02:37:57] Processing clean file name On-ScreenKeyboardPortable_2.1.paf.exe
+[2025:06:05 02:37:57]
+[2025:06:05 02:37:57] Processing clean file name On-ScreenKeyboardPortable_2.1.paf.exe, attempt 0
+[2025:06:05 02:37:57] Evaluating clean file On-ScreenKeyboardPortable_2.1.paf.exe
+[2025:06:05 02:37:57] Revert to snapshot
+[2025:06:05 02:38:28] Run VM
+[2025:06:05 02:38:28] Login as SYSTEM
+[2025:06:05 02:38:29] Logged as SYSTEM
+[2025:06:05 02:38:29] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\On-ScreenKeyboardPortable_2.1.paf.exe -> C:\Users\hieu\Downloads\On-ScreenKeyboardPortable_2.1.paf.exe
+[2025:06:05 02:38:29] Run clean file
+[2025:06:05 02:38:29] Login as hieu
+[2025:06:05 02:38:29] Logged as hieu
+[2025:06:05 02:38:30] Login as SYSTEM
+[2025:06:05 02:38:30] Logged as SYSTEM
+[2025:06:05 02:38:30] Waiting for 5 minutes
+[2025:06:05 02:43:33] Done On-ScreenKeyboardPortable_2.1.paf.exe
+[2025:06:05 02:43:33] Cannot evaluate clean file On-ScreenKeyboardPortable_2.1.paf.exe
+
+[2025:06:05 02:43:33] Clean file evaluated: E:\Graduation_Project\clean_combined_log\wiaacmgr.exe.log
+[2025:06:05 02:43:33] Clean file evaluated: E:\Graduation_Project\clean_combined_log\WinDefThreatsView.exe.log
+[2025:06:05 02:43:33] Clean file evaluated: E:\Graduation_Project\clean_combined_log\SystemSettingsBroker.exe.log
+[2025:06:05 02:43:33]
+[2025:06:05 02:43:33] Processing clean file name winMd5SumPortable_1.0.1.55_Rev_4_English.paf.exe
+[2025:06:05 02:43:33]
+[2025:06:05 02:43:33] Processing clean file name winMd5SumPortable_1.0.1.55_Rev_4_English.paf.exe, attempt 0
+[2025:06:05 02:43:33] Evaluating clean file winMd5SumPortable_1.0.1.55_Rev_4_English.paf.exe
+[2025:06:05 02:43:33] Revert to snapshot
+[2025:06:05 02:44:09] Run VM
+[2025:06:05 02:44:09] Login as SYSTEM
+[2025:06:05 02:44:09] Logged as SYSTEM
+[2025:06:05 02:44:09] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\winMd5SumPortable_1.0.1.55_Rev_4_English.paf.exe -> C:\Users\hieu\Downloads\winMd5SumPortable_1.0.1.55_Rev_4_English.paf.exe
+[2025:06:05 02:44:10] Run clean file
+[2025:06:05 02:44:10] Login as hieu
+[2025:06:05 02:44:10] Logged as hieu
+[2025:06:05 02:44:11] Login as SYSTEM
+[2025:06:05 02:44:11] Logged as SYSTEM
+[2025:06:05 02:44:11] Waiting for 5 minutes
+[2025:06:05 02:49:14] Done winMd5SumPortable_1.0.1.55_Rev_4_English.paf.exe
+[2025:06:05 02:49:14] Cannot evaluate clean file winMd5SumPortable_1.0.1.55_Rev_4_English.paf.exe
+
+[2025:06:05 06:52:37]
+[2025:06:05 06:52:37] Processing clean file name NetworkOpenedFiles.exe
+[2025:06:05 06:52:37]
+[2025:06:05 06:52:37] Processing clean file name NetworkOpenedFiles.exe, attempt 0
+[2025:06:05 06:52:37] Evaluating clean file NetworkOpenedFiles.exe
+[2025:06:05 06:52:37] Revert to snapshot
+[2025:06:05 06:52:46] Run VM
+[2025:06:05 06:52:46] Login as SYSTEM
+[2025:06:05 06:52:46] Logged as SYSTEM
+[2025:06:05 06:52:46] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\NetworkOpenedFiles.exe -> C:\Users\hieu\Downloads\NetworkOpenedFiles.exe
+[2025:06:05 06:52:46] Run clean file
+[2025:06:05 06:52:46] Login as hieu
+[2025:06:05 06:52:47] Logged as hieu
+[2025:06:05 06:52:47] File is not compatible: NetworkOpenedFiles.exe
+[2025:06:05 06:52:48] Cannot evaluate clean file NetworkOpenedFiles.exe
+
+[2025:06:05 06:52:48]
+[2025:06:05 06:52:48] Processing clean file name InstalledCodec.exe
+[2025:06:05 06:52:48]
+[2025:06:05 06:52:48] Processing clean file name InstalledCodec.exe, attempt 0
+[2025:06:05 06:52:48] Evaluating clean file InstalledCodec.exe
+[2025:06:05 06:52:48] Revert to snapshot
+[2025:06:05 06:53:11] Run VM
+[2025:06:05 06:53:11] Login as SYSTEM
+[2025:06:05 06:53:13] Logged as SYSTEM
+[2025:06:05 06:53:13] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\InstalledCodec.exe -> C:\Users\hieu\Downloads\InstalledCodec.exe
+[2025:06:05 06:53:15] Run clean file
+[2025:06:05 06:53:15] Login as hieu
+[2025:06:05 06:53:15] Logged as hieu
+[2025:06:05 06:53:15] File is not compatible: InstalledCodec.exe
+[2025:06:05 06:53:17] Cannot evaluate clean file InstalledCodec.exe
+
+[2025:06:05 06:53:17]
+[2025:06:05 06:53:17] Processing clean file name SystemSettingsAdminFlows.exe
+[2025:06:05 06:53:17]
+[2025:06:05 06:53:17] Processing clean file name SystemSettingsAdminFlows.exe, attempt 0
+[2025:06:05 06:53:17] Evaluating clean file SystemSettingsAdminFlows.exe
+[2025:06:05 06:53:17] Revert to snapshot
+[2025:06:05 06:53:32] Run VM
+[2025:06:05 06:53:32] Login as SYSTEM
+[2025:06:05 06:53:33] Logged as SYSTEM
+[2025:06:05 06:53:33] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SystemSettingsAdminFlows.exe -> C:\Users\hieu\Downloads\SystemSettingsAdminFlows.exe
+[2025:06:05 06:53:34] Run clean file
+[2025:06:05 06:53:34] Login as hieu
+[2025:06:05 06:53:35] Logged as hieu
+[2025:06:05 06:53:35] File is not compatible: SystemSettingsAdminFlows.exe
+[2025:06:05 06:53:36] Cannot evaluate clean file SystemSettingsAdminFlows.exe
+
+[2025:06:05 06:53:36]
+[2025:06:05 06:53:36] Processing clean file name setupcl.exe
+[2025:06:05 06:53:36]
+[2025:06:05 06:53:36] Processing clean file name setupcl.exe, attempt 0
+[2025:06:05 06:53:36] Evaluating clean file setupcl.exe
+[2025:06:05 06:53:36] Revert to snapshot
+[2025:06:05 06:53:50] Run VM
+[2025:06:05 06:53:50] Login as SYSTEM
+[2025:06:05 06:53:51] Logged as SYSTEM
+[2025:06:05 06:53:51] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\setupcl.exe -> C:\Users\hieu\Downloads\setupcl.exe
+[2025:06:05 06:53:51] Run clean file
+[2025:06:05 06:53:51] Login as hieu
+[2025:06:05 06:53:51] File is not compatible: setupcl.exe
+[2025:06:05 06:53:52] Cannot evaluate clean file setupcl.exe
+
+[2025:06:05 06:53:52]
+[2025:06:05 06:53:52] Processing clean file name letsview-setup.exe
+[2025:06:05 06:53:52]
+[2025:06:05 06:53:52] Processing clean file name letsview-setup.exe, attempt 0
+[2025:06:05 06:53:52] Evaluating clean file letsview-setup.exe
+[2025:06:05 06:53:52] Revert to snapshot
+[2025:06:05 06:54:29] Run VM
+[2025:06:05 06:54:29] Login as SYSTEM
+[2025:06:05 06:54:29] Logged as SYSTEM
+[2025:06:05 06:54:29] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\letsview-setup.exe -> C:\Users\hieu\Downloads\letsview-setup.exe
+[2025:06:05 06:54:30] Run clean file
+[2025:06:05 06:54:30] Login as hieu
+[2025:06:05 06:54:30] Logged as hieu
+[2025:06:05 06:54:31] File is not compatible: letsview-setup.exe
+[2025:06:05 06:54:32] Cannot evaluate clean file letsview-setup.exe
+
+[2025:06:05 06:54:32]
+[2025:06:05 06:54:32] Processing clean file name gpresult.exe
+[2025:06:05 06:54:32]
+[2025:06:05 06:54:32] Processing clean file name gpresult.exe, attempt 0
+[2025:06:05 06:54:32] Evaluating clean file gpresult.exe
+[2025:06:05 06:54:32] Revert to snapshot
+[2025:06:05 06:55:26] Run VM
+[2025:06:05 06:55:26] Login as SYSTEM
+[2025:06:05 06:55:27] Logged as SYSTEM
+[2025:06:05 06:55:27] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\gpresult.exe -> C:\Users\hieu\Downloads\gpresult.exe
+[2025:06:05 06:55:32] Run clean file
+[2025:06:05 06:55:32] Login as hieu
+[2025:06:05 06:55:32] Logged as hieu
+[2025:06:05 06:55:32] Login as SYSTEM
+[2025:06:05 06:55:33] Logged as SYSTEM
+[2025:06:05 06:55:33] Waiting for 5 minutes
+[2025:06:05 07:00:38] Done gpresult.exe
+[2025:06:05 07:00:38] Cannot evaluate clean file gpresult.exe
+
+[2025:06:05 07:00:38]
+[2025:06:05 07:00:38] Processing clean file name instnm.exe
+[2025:06:05 07:00:38]
+[2025:06:05 07:00:38] Processing clean file name instnm.exe, attempt 0
+[2025:06:05 07:00:38] Evaluating clean file instnm.exe
+[2025:06:05 07:00:38] Revert to snapshot
+[2025:06:05 07:01:30] Run VM
+[2025:06:05 07:01:30] Login as SYSTEM
+[2025:06:05 07:01:31] Logged as SYSTEM
+[2025:06:05 07:01:31] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\instnm.exe -> C:\Users\hieu\Downloads\instnm.exe
+[2025:06:05 07:01:31] Run clean file
+[2025:06:05 07:01:31] Login as hieu
+[2025:06:05 07:01:32] Logged as hieu
+[2025:06:05 07:01:32] File is not compatible: instnm.exe
+[2025:06:05 07:01:33] Cannot evaluate clean file instnm.exe
+
+[2025:06:05 07:01:33]
+[2025:06:05 07:01:33] Processing clean file name psr.exe
+[2025:06:05 07:01:33]
+[2025:06:05 07:01:33] Processing clean file name psr.exe, attempt 0
+[2025:06:05 07:01:33] Evaluating clean file psr.exe
+[2025:06:05 07:01:33] Revert to snapshot
+[2025:06:05 07:02:09] Run VM
+[2025:06:05 07:02:09] Login as SYSTEM
+[2025:06:05 07:02:10] Logged as SYSTEM
+[2025:06:05 07:02:10] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\psr.exe -> C:\Users\hieu\Downloads\psr.exe
+[2025:06:05 07:02:10] Run clean file
+[2025:06:05 07:02:10] Login as hieu
+[2025:06:05 07:02:11] Logged as hieu
+[2025:06:05 07:02:11] File is not compatible: psr.exe
+[2025:06:05 07:02:12] Cannot evaluate clean file psr.exe
+
+[2025:06:05 07:02:12]
+[2025:06:05 07:02:12] Processing clean file name srdelayed.exe
+[2025:06:05 07:02:12]
+[2025:06:05 07:02:12] Processing clean file name srdelayed.exe, attempt 0
+[2025:06:05 07:02:12] Evaluating clean file srdelayed.exe
+[2025:06:05 07:02:12] Revert to snapshot
+[2025:06:05 07:03:07] Run VM
+[2025:06:05 07:03:07] Login as SYSTEM
+[2025:06:05 07:03:07] Logged as SYSTEM
+[2025:06:05 07:03:07] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\srdelayed.exe -> C:\Users\hieu\Downloads\srdelayed.exe
+[2025:06:05 07:03:08] Run clean file
+[2025:06:05 07:03:08] Login as hieu
+[2025:06:05 07:03:08] Logged as hieu
+[2025:06:05 07:03:08] File is not compatible: srdelayed.exe
+[2025:06:05 07:03:09] Cannot evaluate clean file srdelayed.exe
+
+[2025:06:05 07:03:09]
+[2025:06:05 07:03:09] Processing clean file name ProcessTCPSummary.exe
+[2025:06:05 07:03:09]
+[2025:06:05 07:03:09] Processing clean file name ProcessTCPSummary.exe, attempt 0
+[2025:06:05 07:03:09] Evaluating clean file ProcessTCPSummary.exe
+[2025:06:05 07:03:09] Revert to snapshot
+[2025:06:05 07:03:46] Run VM
+[2025:06:05 07:03:46] Login as SYSTEM
+[2025:06:05 07:03:46] Logged as SYSTEM
+[2025:06:05 07:03:46] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ProcessTCPSummary.exe -> C:\Users\hieu\Downloads\ProcessTCPSummary.exe
+[2025:06:05 07:03:47] Run clean file
+[2025:06:05 07:03:47] Login as hieu
+[2025:06:05 07:03:47] Logged as hieu
+[2025:06:05 07:03:48] Login as SYSTEM
+[2025:06:05 07:03:48] Logged as SYSTEM
+[2025:06:05 07:03:48] Waiting for 5 minutes
+[2025:06:05 07:08:51] Done ProcessTCPSummary.exe
+[2025:06:05 07:08:51] Cannot evaluate clean file ProcessTCPSummary.exe
+
+[2025:06:05 07:08:51]
+[2025:06:05 07:08:51] Processing clean file name PkgMgr.exe
+[2025:06:05 07:08:51]
+[2025:06:05 07:08:51] Processing clean file name PkgMgr.exe, attempt 0
+[2025:06:05 07:08:51] Evaluating clean file PkgMgr.exe
+[2025:06:05 07:08:51] Revert to snapshot
+[2025:06:05 07:09:41] Run VM
+[2025:06:05 07:09:41] Login as SYSTEM
+[2025:06:05 07:09:41] Logged as SYSTEM
+[2025:06:05 07:09:41] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\PkgMgr.exe -> C:\Users\hieu\Downloads\PkgMgr.exe
+[2025:06:05 07:09:42] Run clean file
+[2025:06:05 07:09:42] Login as hieu
+[2025:06:05 07:09:43] Logged as hieu
+[2025:06:05 07:09:43] File is not compatible: PkgMgr.exe
+[2025:06:05 07:09:44] Cannot evaluate clean file PkgMgr.exe
+
+[2025:06:05 07:09:44]
+[2025:06:05 07:09:44] Processing clean file name rdpsign.exe
+[2025:06:05 07:09:44]
+[2025:06:05 07:09:44] Processing clean file name rdpsign.exe, attempt 0
+[2025:06:05 07:09:44] Evaluating clean file rdpsign.exe
+[2025:06:05 07:09:44] Revert to snapshot
+[2025:06:05 07:10:21] Run VM
+[2025:06:05 07:10:21] Login as SYSTEM
+[2025:06:05 07:10:22] Logged as SYSTEM
+[2025:06:05 07:10:22] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\rdpsign.exe -> C:\Users\hieu\Downloads\rdpsign.exe
+[2025:06:05 07:10:23] Run clean file
+[2025:06:05 07:10:23] Login as hieu
+[2025:06:05 07:10:23] Logged as hieu
+[2025:06:05 07:10:23] Login as SYSTEM
+[2025:06:05 07:10:23] Logged as SYSTEM
+[2025:06:05 07:10:23] Waiting for 5 minutes
+[2025:06:05 07:15:26] Done rdpsign.exe
+[2025:06:05 07:15:26] Cannot evaluate clean file rdpsign.exe
+
+[2025:06:05 07:15:26]
+[2025:06:05 07:15:26] Processing clean file name SystemPropertiesRemote.exe
+[2025:06:05 07:15:26]
+[2025:06:05 07:15:26] Processing clean file name SystemPropertiesRemote.exe, attempt 0
+[2025:06:05 07:15:26] Evaluating clean file SystemPropertiesRemote.exe
+[2025:06:05 07:15:26] Revert to snapshot
+[2025:06:05 07:16:01] Run VM
+[2025:06:05 07:16:01] Login as SYSTEM
+[2025:06:05 07:16:01] Logged as SYSTEM
+[2025:06:05 07:16:01] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\SystemPropertiesRemote.exe -> C:\Users\hieu\Downloads\SystemPropertiesRemote.exe
+[2025:06:05 07:16:01] Run clean file
+[2025:06:05 07:16:01] Login as hieu
+[2025:06:05 07:16:02] Logged as hieu
+[2025:06:05 07:16:02] File is not compatible: SystemPropertiesRemote.exe
+[2025:06:05 07:16:04] Cannot evaluate clean file SystemPropertiesRemote.exe
+
+[2025:06:05 07:16:04]
+[2025:06:05 07:16:04] Processing clean file name DataProtectionDecryptor.exe
+[2025:06:05 07:16:04]
+[2025:06:05 07:16:04] Processing clean file name DataProtectionDecryptor.exe, attempt 0
+[2025:06:05 07:16:04] Evaluating clean file DataProtectionDecryptor.exe
+[2025:06:05 07:16:04] Revert to snapshot
+[2025:06:05 07:16:35] Run VM
+[2025:06:05 07:16:35] Login as SYSTEM
+[2025:06:05 07:16:35] Logged as SYSTEM
+[2025:06:05 07:16:35] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\DataProtectionDecryptor.exe -> C:\Users\hieu\Downloads\DataProtectionDecryptor.exe
+[2025:06:05 07:16:36] Run clean file
+[2025:06:05 07:16:36] Login as hieu
+[2025:06:05 07:16:36] Logged as hieu
+[2025:06:05 07:16:36] Login as SYSTEM
+[2025:06:05 07:16:36] Logged as SYSTEM
+[2025:06:05 07:16:36] Waiting for 5 minutes
+[2025:06:05 07:21:39] Done DataProtectionDecryptor.exe
+[2025:06:05 07:21:39] Cannot evaluate clean file DataProtectionDecryptor.exe
+
+[2025:06:05 07:21:39]
+[2025:06:05 07:21:39] Processing clean file name driverquery.exe
+[2025:06:05 07:21:39]
+[2025:06:05 07:21:39] Processing clean file name driverquery.exe, attempt 0
+[2025:06:05 07:21:39] Evaluating clean file driverquery.exe
+[2025:06:05 07:21:39] Revert to snapshot
+[2025:06:05 07:22:46] Run VM
+[2025:06:05 07:22:46] Login as SYSTEM
+[2025:06:05 07:22:46] Logged as SYSTEM
+[2025:06:05 07:22:46] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\driverquery.exe -> C:\Users\hieu\Downloads\driverquery.exe
+[2025:06:05 07:22:46] Run clean file
+[2025:06:05 07:22:46] Login as hieu
+[2025:06:05 07:22:47] Logged as hieu
+[2025:06:05 07:22:47] Login as SYSTEM
+[2025:06:05 07:22:47] Logged as SYSTEM
+[2025:06:05 07:22:47] Waiting for 5 minutes
+[2025:06:05 07:27:50] Done driverquery.exe
+[2025:06:05 07:27:50] Cannot evaluate clean file driverquery.exe
+
+[2025:06:05 07:27:50]
+[2025:06:05 07:27:50] Processing clean file name WebCache.exe
+[2025:06:05 07:27:50]
+[2025:06:05 07:27:50] Processing clean file name WebCache.exe, attempt 0
+[2025:06:05 07:27:50] Evaluating clean file WebCache.exe
+[2025:06:05 07:27:50] Revert to snapshot
+[2025:06:05 07:28:25] Run VM
+[2025:06:05 07:28:25] Login as SYSTEM
+[2025:06:05 07:28:25] Logged as SYSTEM
+[2025:06:05 07:28:25] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\WebCache.exe -> C:\Users\hieu\Downloads\WebCache.exe
+[2025:06:05 07:28:26] Run clean file
+[2025:06:05 07:28:26] Login as hieu
+[2025:06:05 07:28:26] Logged as hieu
+[2025:06:05 07:28:26] Login as SYSTEM
+[2025:06:05 07:28:26] Logged as SYSTEM
+[2025:06:05 07:28:26] Waiting for 5 minutes
+[2025:06:05 07:33:29] Done WebCache.exe
+[2025:06:05 07:33:29] Cannot evaluate clean file WebCache.exe
+
+[2025:06:05 07:33:29]
+[2025:06:05 07:33:29] Processing clean file name rufus-3.3p.exe
+[2025:06:05 07:33:29]
+[2025:06:05 07:33:29] Processing clean file name rufus-3.3p.exe, attempt 0
+[2025:06:05 07:33:29] Evaluating clean file rufus-3.3p.exe
+[2025:06:05 07:33:29] Revert to snapshot
+[2025:06:05 07:34:10] Run VM
+[2025:06:05 07:34:10] Login as SYSTEM
+[2025:06:05 07:34:10] Logged as SYSTEM
+[2025:06:05 07:34:10] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\rufus-3.3p.exe -> C:\Users\hieu\Downloads\rufus-3.3p.exe
+[2025:06:05 07:34:11] Run clean file
+[2025:06:05 07:34:11] Login as hieu
+[2025:06:05 07:34:12] Logged as hieu
+[2025:06:05 07:34:12] File is not compatible: rufus-3.3p.exe
+[2025:06:05 07:34:13] Cannot evaluate clean file rufus-3.3p.exe
+
+[2025:06:05 07:34:13]
+[2025:06:05 07:34:13] Processing clean file name UevTemplateConfigItemGenerator.exe
+[2025:06:05 07:34:13]
+[2025:06:05 07:34:13] Processing clean file name UevTemplateConfigItemGenerator.exe, attempt 0
+[2025:06:05 07:34:13] Evaluating clean file UevTemplateConfigItemGenerator.exe
+[2025:06:05 07:34:13] Revert to snapshot
+[2025:06:05 07:34:51] Run VM
+[2025:06:05 07:34:51] Login as SYSTEM
+[2025:06:05 07:34:52] Logged as SYSTEM
+[2025:06:05 07:34:52] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\UevTemplateConfigItemGenerator.exe -> C:\Users\hieu\Downloads\UevTemplateConfigItemGenerator.exe
+[2025:06:05 07:34:52] Run clean file
+[2025:06:05 07:34:52] Login as hieu
+[2025:06:05 07:34:53] Logged as hieu
+[2025:06:05 07:34:53] File is not compatible: UevTemplateConfigItemGenerator.exe
+[2025:06:05 07:34:54] Cannot evaluate clean file UevTemplateConfigItemGenerator.exe
+
+[2025:06:05 07:34:54]
+[2025:06:05 07:34:54] Processing clean file name Bluetooth_File_Transfer_PC.exe
+[2025:06:05 07:34:54]
+[2025:06:05 07:34:54] Processing clean file name Bluetooth_File_Transfer_PC.exe, attempt 0
+[2025:06:05 07:34:54] Evaluating clean file Bluetooth_File_Transfer_PC.exe
+[2025:06:05 07:34:54] Revert to snapshot
+[2025:06:05 07:35:42] Run VM
+[2025:06:05 07:35:42] Login as SYSTEM
+[2025:06:05 07:35:42] Logged as SYSTEM
+[2025:06:05 07:35:42] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\Bluetooth_File_Transfer_PC.exe -> C:\Users\hieu\Downloads\Bluetooth_File_Transfer_PC.exe
+[2025:06:05 07:35:44] Run clean file
+[2025:06:05 07:35:44] Login as hieu
+[2025:06:05 07:35:44] Logged as hieu
+[2025:06:05 07:35:45] File is not compatible: Bluetooth_File_Transfer_PC.exe
+[2025:06:05 07:35:46] Cannot evaluate clean file Bluetooth_File_Transfer_PC.exe
+
+[2025:06:05 07:35:46]
+[2025:06:05 07:35:46] Processing clean file name WinBoardPortable_4.8.0.paf.exe
+[2025:06:05 07:35:46]
+[2025:06:05 07:35:46] Processing clean file name WinBoardPortable_4.8.0.paf.exe, attempt 0
+[2025:06:05 07:35:46] Evaluating clean file WinBoardPortable_4.8.0.paf.exe
+[2025:06:05 07:35:46] Revert to snapshot
+[2025:06:05 07:36:32] Run VM
+[2025:06:05 07:36:32] Login as SYSTEM
+[2025:06:05 07:36:32] Logged as SYSTEM
+[2025:06:05 07:36:32] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\WinBoardPortable_4.8.0.paf.exe -> C:\Users\hieu\Downloads\WinBoardPortable_4.8.0.paf.exe
+[2025:06:05 07:36:35] Run clean file
+[2025:06:05 07:36:35] Login as hieu
+[2025:06:05 07:36:35] Logged as hieu
+[2025:06:05 07:36:35] Login as SYSTEM
+[2025:06:05 07:36:36] Logged as SYSTEM
+[2025:06:05 07:36:36] Waiting for 5 minutes
+[2025:06:05 07:41:40] Done WinBoardPortable_4.8.0.paf.exe
+[2025:06:05 07:41:40] Cannot evaluate clean file WinBoardPortable_4.8.0.paf.exe
+
+[2025:06:05 07:41:40]
+[2025:06:05 07:41:40] Processing clean file name UserOOBEBroker.exe
+[2025:06:05 07:41:40]
+[2025:06:05 07:41:40] Processing clean file name UserOOBEBroker.exe, attempt 0
+[2025:06:05 07:41:40] Evaluating clean file UserOOBEBroker.exe
+[2025:06:05 07:41:40] Revert to snapshot
+[2025:06:05 07:42:23] Run VM
+[2025:06:05 07:42:23] Login as SYSTEM
+[2025:06:05 07:42:23] Logged as SYSTEM
+[2025:06:05 07:42:23] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\UserOOBEBroker.exe -> C:\Users\hieu\Downloads\UserOOBEBroker.exe
+[2025:06:05 07:42:24] Run clean file
+[2025:06:05 07:42:24] Login as hieu
+[2025:06:05 07:42:24] Logged as hieu
+[2025:06:05 07:42:24] Login as SYSTEM
+[2025:06:05 07:42:24] Logged as SYSTEM
+[2025:06:05 07:42:24] Waiting for 5 minutes
+[2025:06:05 07:47:27] Done UserOOBEBroker.exe
+[2025:06:05 07:47:27] Cannot evaluate clean file UserOOBEBroker.exe
+
+[2025:06:05 07:47:27]
+[2025:06:05 07:47:27] Processing clean file name BitLockerWizardElev.exe
+[2025:06:05 07:47:27]
+[2025:06:05 07:47:27] Processing clean file name BitLockerWizardElev.exe, attempt 0
+[2025:06:05 07:47:27] Evaluating clean file BitLockerWizardElev.exe
+[2025:06:05 07:47:27] Revert to snapshot
+[2025:06:05 07:48:25] Run VM
+[2025:06:05 07:48:25] Login as SYSTEM
+[2025:06:05 07:48:25] Logged as SYSTEM
+[2025:06:05 07:48:25] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\BitLockerWizardElev.exe -> C:\Users\hieu\Downloads\BitLockerWizardElev.exe
+[2025:06:05 07:48:26] Run clean file
+[2025:06:05 07:48:26] Login as hieu
+[2025:06:05 07:48:26] File is not compatible: BitLockerWizardElev.exe
+[2025:06:05 07:48:27] Cannot evaluate clean file BitLockerWizardElev.exe
+
+[2025:06:05 07:48:27]
+[2025:06:05 07:48:27] Processing clean file name CustomExplorerToolbar.exe
+[2025:06:05 07:48:27]
+[2025:06:05 07:48:27] Processing clean file name CustomExplorerToolbar.exe, attempt 0
+[2025:06:05 07:48:27] Evaluating clean file CustomExplorerToolbar.exe
+[2025:06:05 07:48:27] Revert to snapshot
+[2025:06:05 07:49:08] Run VM
+[2025:06:05 07:49:08] Login as SYSTEM
+[2025:06:05 07:49:09] Logged as SYSTEM
+[2025:06:05 07:49:09] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\CustomExplorerToolbar.exe -> C:\Users\hieu\Downloads\CustomExplorerToolbar.exe
+[2025:06:05 07:49:09] Run clean file
+[2025:06:05 07:49:09] Login as hieu
+[2025:06:05 07:49:09] File is not compatible: CustomExplorerToolbar.exe
+[2025:06:05 07:49:10] Cannot evaluate clean file CustomExplorerToolbar.exe
+
+[2025:06:05 07:49:10]
+[2025:06:05 07:49:10] Processing clean file name ComboFix.exe
+[2025:06:05 07:49:10]
+[2025:06:05 07:49:10] Processing clean file name ComboFix.exe, attempt 0
+[2025:06:05 07:49:10] Evaluating clean file ComboFix.exe
+[2025:06:05 07:49:10] Revert to snapshot
+[2025:06:05 07:49:36] Run VM
+[2025:06:05 07:49:36] Login as SYSTEM
+[2025:06:05 07:49:37] Logged as SYSTEM
+[2025:06:05 07:49:37] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\ComboFix.exe -> C:\Users\hieu\Downloads\ComboFix.exe
+[2025:06:05 07:49:40] Run clean file
+[2025:06:05 07:49:40] Login as hieu
+[2025:06:05 07:49:40] Logged as hieu
+[2025:06:05 07:49:40] File is not compatible: ComboFix.exe
+[2025:06:05 07:49:42] Cannot evaluate clean file ComboFix.exe
+
+[2025:06:05 07:49:42]
+[2025:06:05 07:49:42] Processing clean file name PrintBrm.exe
+[2025:06:05 07:49:42]
+[2025:06:05 07:49:42] Processing clean file name PrintBrm.exe, attempt 0
+[2025:06:05 07:49:42] Evaluating clean file PrintBrm.exe
+[2025:06:05 07:49:42] Revert to snapshot
+[2025:06:05 07:49:56] Run VM
+[2025:06:05 07:49:56] Login as SYSTEM
+[2025:06:05 07:49:58] Logged as SYSTEM
+[2025:06:05 07:49:58] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\PrintBrm.exe -> C:\Users\hieu\Downloads\PrintBrm.exe
+[2025:06:05 07:49:58] Run clean file
+[2025:06:05 07:49:58] Login as hieu
+[2025:06:05 07:49:58] Logged as hieu
+[2025:06:05 07:49:58] Login as SYSTEM
+[2025:06:05 07:49:59] Logged as SYSTEM
+[2025:06:05 07:49:59] Waiting for 5 minutes
+[2025:06:05 07:55:01] Done PrintBrm.exe
+[2025:06:05 07:55:01] Cannot evaluate clean file PrintBrm.exe
+
+[2025:06:05 07:55:01]
+[2025:06:05 07:55:01] Processing clean file name setup.exe
+[2025:06:05 07:55:01]
+[2025:06:05 07:55:01] Processing clean file name setup.exe, attempt 0
+[2025:06:05 07:55:01] Evaluating clean file setup.exe
+[2025:06:05 07:55:01] Revert to snapshot
+[2025:06:05 07:55:21] Run VM
+[2025:06:05 07:55:21] Login as SYSTEM
+[2025:06:05 07:55:22] Logged as SYSTEM
+[2025:06:05 07:55:22] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\setup.exe -> C:\Users\hieu\Downloads\setup.exe
+[2025:06:05 07:55:22] Run clean file
+[2025:06:05 07:55:22] Login as hieu
+[2025:06:05 07:55:22] Logged as hieu
+[2025:06:05 07:55:23] File is not compatible: setup.exe
+[2025:06:05 07:55:24] Cannot evaluate clean file setup.exe
+
+[2025:06:05 07:55:24]
+[2025:06:05 07:55:24] Processing clean file name Ashampoo_AntiSpy.exe
+[2025:06:05 07:55:24]
+[2025:06:05 07:55:24] Processing clean file name Ashampoo_AntiSpy.exe, attempt 0
+[2025:06:05 07:55:24] Evaluating clean file Ashampoo_AntiSpy.exe
+[2025:06:05 07:55:24] Revert to snapshot
+[2025:06:05 07:55:38] Run VM
+[2025:06:05 07:55:38] Login as SYSTEM
+[2025:06:05 07:55:38] Logged as SYSTEM
+[2025:06:05 07:55:38] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\Ashampoo_AntiSpy.exe -> C:\Users\hieu\Downloads\Ashampoo_AntiSpy.exe
+[2025:06:05 07:55:39] Run clean file
+[2025:06:05 07:55:39] Login as hieu
+[2025:06:05 07:55:39] Logged as hieu
+[2025:06:05 07:55:40] File is not compatible: Ashampoo_AntiSpy.exe
+[2025:06:05 07:55:40] Cannot evaluate clean file Ashampoo_AntiSpy.exe
+
+[2025:06:05 09:30:57]
+[2025:06:05 09:30:57] Processing clean file name audit.exe
+[2025:06:05 09:30:57]
+[2025:06:05 09:30:57] Processing clean file name audit.exe, attempt 0
+[2025:06:05 09:30:57] Evaluating clean file audit.exe
+[2025:06:05 09:30:57] Revert to snapshot
+[2025:06:05 09:31:04] Run VM
+[2025:06:05 09:31:04] Login as SYSTEM
+[2025:06:05 09:31:05] Logged as SYSTEM
+[2025:06:05 09:31:05] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\audit.exe -> C:\Users\hieu\Downloads\audit.exe
+[2025:06:05 09:31:05] Run clean file
+[2025:06:05 09:31:05] Login as hieu
+[2025:06:05 09:31:05] Logged as hieu
+[2025:06:05 09:31:05] Login as SYSTEM
+[2025:06:05 09:31:05] Logged as SYSTEM
+[2025:06:05 09:31:05] Waiting for 5 minutes
+[2025:06:05 09:36:05] Something went wrong :( VixError #1: Unknown error
+[2025:06:05 09:36:06] Retrying audit.exe
+[2025:06:05 09:41:34]
+[2025:06:05 09:41:34] Processing clean file name audit.exe
+[2025:06:05 09:41:34]
+[2025:06:05 09:41:34] Processing clean file name audit.exe, attempt 0
+[2025:06:05 09:41:34] Evaluating clean file audit.exe
+[2025:06:05 09:41:34] Revert to snapshot
+[2025:06:05 09:41:39] Run VM
+[2025:06:05 09:41:39] Login as SYSTEM
+[2025:06:05 09:41:39] Logged as SYSTEM
+[2025:06:05 09:41:39] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\audit.exe -> C:\Users\hieu\Downloads\audit.exe
+[2025:06:05 09:41:40] Run clean file
+[2025:06:05 09:41:40] Login as hieu
+[2025:06:05 09:41:40] Logged as hieu
+[2025:06:05 09:41:40] Login as SYSTEM
+[2025:06:05 09:41:40] Logged as SYSTEM
+[2025:06:05 09:41:40] Waiting for 5 minutes
+[2025:06:05 09:46:40] Something went wrong :( VixError #3025: The command is not recognized by VMware Tools
+[2025:06:05 09:46:41] Retrying audit.exe
+[2025:06:05 09:46:52]
+[2025:06:05 09:46:52] Processing clean file name audit.exe
+[2025:06:05 09:46:52]
+[2025:06:05 09:46:52] Processing clean file name audit.exe, attempt 0
+[2025:06:05 09:46:52] Evaluating clean file audit.exe
+[2025:06:05 09:46:52] Revert to snapshot
+[2025:06:05 09:46:56] Run VM
+[2025:06:05 09:46:56] Login as SYSTEM
+[2025:06:05 09:46:57] Logged as SYSTEM
+[2025:06:05 09:46:57] Copy clean file from host to guest: E:\Graduation_Project\clean_combined\audit.exe -> C:\Users\hieu\Downloads\audit.exe
+[2025:06:05 09:46:57] Run clean file
+[2025:06:05 09:46:57] Login as hieu
+[2025:06:05 09:46:57] Logged as hieu
+[2025:06:05 09:46:57] Login as SYSTEM
+[2025:06:05 09:46:57] Logged as SYSTEM
+[2025:06:05 09:46:57] Waiting for 5 minutes
+[2025:06:05 09:51:57] Something went wrong :( VixError #3025: The command is not recognized by VMware Tools
+[2025:06:05 09:51:58] Retrying audit.exe

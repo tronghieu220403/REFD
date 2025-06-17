@@ -7,7 +7,7 @@
 
 #include "../ulti/include.h"
 #include "../trid/trid_api.h"
-#define PRODUCT_PATH L"E:\\hieunt210330\\"
+#define PRODUCT_PATH L"E:\\hieunt210330\\hieunt210330\\"
 
 #define BelowTextThreshold(part, total) (part <= total * 97 / 100)
 
@@ -84,6 +84,8 @@ namespace type_iden
         bool Init(const std::wstring& defs_dir, const std::wstring& trid_dll_path);
         std::vector<std::string> GetTypes(const fs::path& file_path);
 	};
+
+    std::wstring CovertTypesToString(const std::vector<std::string>& types);
 
 }
 

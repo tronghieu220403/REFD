@@ -1,0 +1,219 @@
+File: AvosLocker.txt
+Total files: 5000
+Number of file with no ext detected: 4882
+No extension rate: 97.64%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: BadRabbit.txt
+Total files: 5000
+Number of file with no ext detected: 3402
+No extension rate: 68.04%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: BlackBasta.txt
+Total files: 5000
+Number of file with no ext detected: 4837
+No extension rate: 96.74%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: BlackCat.txt
+Total files: 4991
+Number of file with no ext detected: 4848
+No extension rate: 97.13%
+Number of file extensions mismatch content: 4991
+Mismatch rate: 100.00%
+
+File: BlackMatter.txt
+Total files: 4998
+Number of file with no ext detected: 4846
+No extension rate: 96.96%
+Number of file extensions mismatch content: 4998
+Mismatch rate: 100.00%
+
+File: Cerber.txt
+Total files: 4998
+Number of file with no ext detected: 0
+No extension rate: 0.00%
+Number of file extensions mismatch content: 4998
+Mismatch rate: 100.00%
+
+File: Chimera.txt
+Total files: 5000
+Number of file with no ext detected: 4855
+No extension rate: 97.10%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: Cl0p.txt
+Total files: 5000
+Number of file with no ext detected: 4851
+No extension rate: 97.02%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: Conti.txt
+Total files: 5000
+Number of file with no ext detected: 4874
+No extension rate: 97.48%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: CryptoLocker.txt
+Total files: 5000
+Number of file with no ext detected: 4831
+No extension rate: 96.62%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: Cuba.txt
+Total files: 5000
+Number of file with no ext detected: 4999
+No extension rate: 99.98%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: Darkside.txt
+Total files: 5000
+Number of file with no ext detected: 4874
+No extension rate: 97.48%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: Dharma.txt
+Total files: 5000
+Number of file with no ext detected: 4260
+No extension rate: 85.20%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: GandCrab.txt
+Total files: 5000
+Number of file with no ext detected: 4865
+No extension rate: 97.30%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: HelloKitty.txt
+Total files: 5000
+Number of file with no ext detected: 4833
+No extension rate: 96.66%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: Jigsaw.txt
+Total files: 5000
+Number of file with no ext detected: 4797
+No extension rate: 95.94%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: Lockbit.txt
+Total files: 5000
+Number of file with no ext detected: 4831
+No extension rate: 96.62%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: Lorenz.txt
+Total files: 5000
+Number of file with no ext detected: 4999
+No extension rate: 99.98%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: Maze.txt
+Total files: 5000
+Number of file with no ext detected: 4853
+No extension rate: 97.06%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: Medusa.txt
+Total files: 5000
+Number of file with no ext detected: 4905
+No extension rate: 98.10%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: NetWalker.txt
+Total files: 5006
+Number of file with no ext detected: 4853
+No extension rate: 96.94%
+Number of file extensions mismatch content: 5006
+Mismatch rate: 100.00%
+
+File: NotPetya.txt
+Total files: 5011
+Number of file with no ext detected: 4738
+No extension rate: 94.55%
+Number of file extensions mismatch content: 5011
+Mismatch rate: 100.00%
+
+File: Phobos.txt
+Total files: 5001
+Number of file with no ext detected: 4242
+No extension rate: 84.82%
+Number of file extensions mismatch content: 5001
+Mismatch rate: 100.00%
+
+File: RansomEXX.txt
+Total files: 5000
+Number of file with no ext detected: 4946
+No extension rate: 98.92%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: REvil.txt
+Total files: 5006
+Number of file with no ext detected: 4861
+No extension rate: 97.10%
+Number of file extensions mismatch content: 5006
+Mismatch rate: 100.00%
+
+File: Ryuk.txt
+Total files: 5001
+Number of file with no ext detected: 4865
+No extension rate: 97.28%
+Number of file extensions mismatch content: 5001
+Mismatch rate: 100.00%
+
+File: SunCrypt.txt
+Total files: 5000
+Number of file with no ext detected: 4843
+No extension rate: 96.86%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: TeslaCrypt.txt
+Total files: 5000
+Number of file with no ext detected: 5000
+No extension rate: 100.00%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: WannaCry.txt
+Total files: 5000
+Number of file with no ext detected: 5000
+No extension rate: 100.00%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+File: WastedLocker.txt
+Total files: 5000
+Number of file with no ext detected: 4864
+No extension rate: 97.28%
+Number of file extensions mismatch content: 5000
+Mismatch rate: 100.00%
+
+
+AvosLocker & BadRabbit & BlackBasta & BlackCat \\
+BlackMatter & Cerber & Chimera & Cl0p \\
+Conti & CryptoLocker & Cuba & Darkside \\
+Dharma & GandCrab & HelloKitty & Jigsaw \\
+Lockbit & Lorenz & Maze & Medusa \\
+NetWalker & NotPetya & Phobos & REvil \\
+RansomEXX & Ryuk & SunCrypt & TeslaCrypt \\
+WannaCry & WastedLocker

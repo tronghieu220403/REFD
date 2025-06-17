@@ -25,13 +25,13 @@ namespace com
 			}
 			else
 			{
-                DebugMessage("FltCreateCommunicationPort failed: %x\n", status);
+				DebugMessage("FltCreateCommunicationPort failed: %x", status);
 				ComPort::Close();
 			}
 		}
 		else
 		{
-            DebugMessage("FltBuildDefaultSecurityDescriptor failed: %x\n", status);
+			DebugMessage("FltBuildDefaultSecurityDescriptor failed: %x", status);
 		}
 		return status;
 	}
@@ -40,7 +40,7 @@ namespace com
 	{
 		if (client_port_ == nullptr)
 		{
-            DebugMessage("client_port_ is null\n");
+			DebugMessage("client_port_ is null");
 			return STATUS_CONNECTION_INVALID;
 		}
 		LARGE_INTEGER timeout;
@@ -55,11 +55,11 @@ namespace com
 		);
 		if (status != STATUS_SUCCESS && status != 0x11)
 		{
-            DebugMessage("SendMessage failed: %x\n", status);
+			DebugMessage("SendMessage failed: %x", status);
 		}
 		else
 		{
-            DebugMessage("SendMessage success: %x\n", status);
+			DebugMessage("SendMessage success: %x", status);
 			status = STATUS_SUCCESS;
 		}
 		return status;
@@ -122,7 +122,7 @@ namespace com
 
 		PAGED_CODE();
 
-		DebugMessage("output_buffer_length %d\n", output_buffer_length);
+		DebugMessage("output_buffer_length %d", output_buffer_length);
 
 		if (!IS_ALIGNED(output_buffer, sizeof(char)))
 		{
@@ -140,8 +140,7 @@ namespace com
 			return GetExceptionCode();
 		}
 
-		PCHAR msg = (char *)"kernel msg";
-		// DebugMessage("user msg is : % s \r\n\n", (PCHAR)input_buffer);
+		PCHAR msg = (char*)"";
 
 		RtlCopyMemory(&output_buffer, msg, sizeof(msg));
 

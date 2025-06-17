@@ -6,7 +6,7 @@
 #include "include.h"
 
 #define DEBUG_LOG_THRESHOLD 1000
-#define LOG_PATH L"E:\\hieunt20210330\\log.txt"
+#define LOG_PATH L"E:\\hieunt210330\\hieunt210330\\log.txt"
 
 namespace debug {
 
@@ -28,6 +28,6 @@ namespace debug {
 }  // namespace debug
 
 #define PrintDebugW(str, ...) \
-    debug::DebugPrintW((std::wstring(L"[") + __FUNCTIONW__ + L":" + std::to_wstring(__LINE__) + L"] " + str).c_str(), __VA_ARGS__)
+    debug::DebugPrintW(L"[%ws:%d] " str L"\n", __FUNCTIONW__, __LINE__, __VA_ARGS__)
 
 #endif

@@ -166,10 +166,10 @@ namespace type_iden
 	{
 		try
 		{
-            auto file_size = manager::GetFileSize(file_path);
-            if (file_size == 0 || file_size > FILE_MAX_SIZE_SCAN) {
-                return false;
-            }
+			auto file_size = manager::GetFileSize(file_path);
+			if (file_size == 0 || file_size > FILE_MAX_SIZE_SCAN) {
+				return false;
+			}
 			std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
 			if (!file.is_open()) {
 				return false; // File cannot be opened
@@ -191,66 +191,66 @@ namespace type_iden
 		return false; // If no encoding matches, return false
 	}
 
-    TrID::~TrID()
-    {
-        if (trid_api != nullptr)
-        {
-            delete trid_api;
-            trid_api = nullptr;
-        }
-        issue_thread_id = 0;
-    }
+	TrID::~TrID()
+	{
+		if (trid_api != nullptr)
+		{
+			delete trid_api;
+			trid_api = nullptr;
+		}
+		issue_thread_id = 0;
+	}
 
-    bool TrID::Init(const std::wstring& defs_dir, const std::wstring& trid_dll_path)
-    {
-        std::lock_guard<std::mutex> lock(m_mutex);
+	bool TrID::Init(const std::wstring& defs_dir, const std::wstring& trid_dll_path)
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
 		if (ulti::IsCurrentX86Process() == false)
 		{
 			PrintDebugW(L"Current process is not a x86 process");
 			return false;
 		}
-        if (trid_api != nullptr)
-        {
-            delete trid_api;
-            trid_api = nullptr;
-        }
+		if (trid_api != nullptr)
+		{
+			delete trid_api;
+			trid_api = nullptr;
+		}
 		try
 		{
 			trid_api = new TridApi(ulti::WstrToStr(defs_dir).c_str(), trid_dll_path.c_str());
 		}
-        catch (int trid_error_code)
-        {
+		catch (int trid_error_code)
+		{
 			if (trid_error_code == TRID_MISSING_LIBRARY)
 			{
 				PrintDebugW(L"TrIDLib.dll not found");
 			}
-            if (trid_api != nullptr)
-            {
-                delete trid_api;
-                trid_api = nullptr;
-            }
-            return false;
-        }
-        issue_thread_id = GetCurrentThreadId();
+			if (trid_api != nullptr)
+			{
+				delete trid_api;
+				trid_api = nullptr;
+			}
+			return false;
+		}
+		issue_thread_id = GetCurrentThreadId();
 		return true;
-    }
+	}
 
-    std::vector<std::string> TrID::GetTypes(const fs::path& file_path)
-    {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        PrintDebugW(L"GetTypes of file: %s", file_path.c_str());
+	std::vector<std::string> TrID::GetTypes(const fs::path& file_path)
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		//PrintDebugW(L"Getting types of file: %ws", file_path.wstring().c_str());
 		/*
-        if (issue_thread_id != GetCurrentThreadId())
-        {
-            PrintDebugW(L"TrID API is not thread-safe");
-            return {};
-        }
+		if (issue_thread_id != GetCurrentThreadId())
+		{
+			PrintDebugW(L"TrID API is not thread-safe");
+			return {};
+		}
 		*/
-        if (trid_api == nullptr)
-        {
-            PrintDebugW(L"TrID API is not initialized");
-            return {};
-        }
+		if (trid_api == nullptr)
+		{
+			PrintDebugW(L"TrID API is not initialized");
+			return {};
+		}
 		if (file_path.empty())
 		{
 			PrintDebugW(L"File path is empty");
@@ -259,23 +259,49 @@ namespace type_iden
 		int ret;
 		std::vector<std::string> types;
 
+        std::vector<char> buf(4096); // Buffer for TrID API results
+
 		trid_api->SubmitFileA(file_path.string().c_str());
 		ret = trid_api->Analyze();
 		if (ret)
 		{
-			char buf[512];
-			*buf = 0;
-			ret = trid_api->GetInfo(TRID_GET_RES_NUM, 0, buf);
+			ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
+            //PrintDebugW(L"TrID analysis successful for file %ws, result code: %d", file_path.c_str(), ret);
+			ret = trid_api->GetInfo(TRID_GET_RES_NUM, 0, buf.data());
 			for (int i = ret + 1; i--;)
 			{
-				trid_api->GetInfo(TRID_GET_RES_FILETYPE, i, buf);
-				std::string type_str(buf);
+				ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
+				try
+				{
+					trid_api->GetInfo(TRID_GET_RES_FILETYPE, i, buf.data());
+				}
+				catch (...)
+				{
+					continue;
+				}
+				std::string type_str(buf.data());
+				if (type_str.size() == 0)
+				{
+					continue;
+				}
 				if (type_str.find("ransom") != std::string::npos || type_str.find("ncrypt") != std::string::npos)
 				{
 					continue;
 				}
-				trid_api->GetInfo(TRID_GET_RES_FILEEXT, i, buf);
-				std::string ext_str(buf);
+				ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
+				try
+				{
+					trid_api->GetInfo(TRID_GET_RES_FILEEXT, i, buf.data());
+				}
+				catch (...)
+				{
+					continue;
+				}
+				std::string ext_str(buf.data());
+				if (ext_str.size() == 0)
+				{
+					continue;
+				}
 
 				if (ext_str.size() > 0)
 				{
@@ -295,27 +321,57 @@ namespace type_iden
 						types.push_back(type_str);
 					}
 				}
-				*buf = 0;
 			}
 		}
-
-        // Read all bytes of the file
-		std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
-		if (!file.is_open()) {
-            PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
-			return types; // File cannot be opened
-		}
-
-		if (IsPrintableFile(file_path))
+		else
 		{
-            PrintDebugW(L"File %ws is a printable file", file_path.c_str());
-			types.push_back("TXT");
 		}
+		// Read all bytes of the file
+		try
+		{
+			std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
+			if (file.is_open()) {
+				if (IsPrintableFile(file_path))
+				{
+					types.push_back("txt");
+				}
+			}
+			else
+			{
+				//PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
+			}
+            file.close();
+		}
+		catch (...)
+		{
+
+		}
+
 		if (types.size() == 0)
 		{
 			types.push_back("");
 		}
-        return types;
-    }
+#ifdef _DEBUG
+		std::string types_str = "<";
+		for (const auto& type : types)
+		{
+			types_str += "\"" + type + "\", ";
+		}
+		types_str[types_str.size() - 2] = '>';
+		//PrintDebugW(L"File types: %ws", ulti::StrToWstr(types_str).c_str());
+#endif // _DEBUG
 
+		return types;
+	}
+
+	std::wstring CovertTypesToString(const std::vector<std::string>& types)
+	{
+		std::string types_str = "<";
+		for (const auto& type : types)
+		{
+			types_str += "\"" + type + "\", ";
+		}
+        types_str += ">";
+        return ulti::StrToWstr(types_str);
+	}
 }

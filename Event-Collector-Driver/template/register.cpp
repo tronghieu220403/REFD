@@ -25,7 +25,7 @@ namespace reg
 
 	void DrvUnload(PDRIVER_OBJECT driver_object)
 	{
-		DebugMessage("%ws\n", __FUNCTIONW__);
+		DebugMessage("%ws", __FUNCTIONW__);
 
 		collector::DrvUnload();
 		//ioctl::DrvUnload(driver_object);
@@ -56,25 +56,30 @@ namespace reg
 		com::kComPort->Create();
 	}
 
-	void FltUnload()
+	NTSTATUS FltUnload()
 	{
-		DebugMessage("%ws\n", __FUNCTIONW__);
-        DebugMessage("Closing com port\n");
+		DebugMessage("Begin %ws", __FUNCTIONW__);
+
+		NTSTATUS status;
+		status = collector::FltUnload();
+		if (status == STATUS_FLT_DO_NOT_DETACH)
+		{
+			return status;
+		}
+
+		DebugMessage("Closing com port");
 		com::kComPort->Close();
-        DebugMessage("Unregistering kFilterHandle\n");
+		DebugMessage("Unregistering kFilterHandle");
 		FltUnregisterFilter(kFilterHandle);
 
-        DebugMessage("Unregistering filter\n");
-		collector::FltUnload();
-
-        DebugMessage("Free memory structures\n");
+		DebugMessage("Free memory structures");
 		delete kFltFuncVector;
 		kFltFuncVector = nullptr;
 		delete com::kComPort;
-        com::kComPort = nullptr;
+		com::kComPort = nullptr;
 
-		DebugMessage("Done %s\n", __FUNCTION__);
-		return;
+		DebugMessage("Done %s", __FUNCTION__);
+		return STATUS_SUCCESS;
 	}
 
 	Context* AllocCompletionContext()
