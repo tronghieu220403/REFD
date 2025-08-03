@@ -260,107 +260,116 @@ namespace type_iden
 		std::vector<std::string> types;
 
         std::vector<char> buf(4096); // Buffer for TrID API results
-
-		trid_api->SubmitFileA(file_path.string().c_str());
-		ret = trid_api->Analyze();
-		if (ret)
-		{
-			ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
-            //PrintDebugW(L"TrID analysis successful for file %ws, result code: %d", file_path.c_str(), ret);
-			ret = trid_api->GetInfo(TRID_GET_RES_NUM, 0, buf.data());
-			for (int i = ret + 1; i--;)
-			{
-				ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
-				try
-				{
-					trid_api->GetInfo(TRID_GET_RES_FILETYPE, i, buf.data());
-				}
-				catch (...)
-				{
-					continue;
-				}
-				std::string type_str(buf.data());
-				if (type_str.size() == 0)
-				{
-					continue;
-				}
-				if (type_str.find("ransom") != std::string::npos || type_str.find("ncrypt") != std::string::npos)
-				{
-					continue;
-				}
-				ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
-				try
-				{
-					trid_api->GetInfo(TRID_GET_RES_FILEEXT, i, buf.data());
-				}
-				catch (...)
-				{
-					continue;
-				}
-				std::string ext_str(buf.data());
-				if (ext_str.size() == 0)
-				{
-					continue;
-				}
-
-				if (ext_str.size() > 0)
-				{
-					std::stringstream ss(ext_str);
-					std::string ext;
-					while (std::getline(ss, ext, '/'))
-					{
-						ulti::ToLowerOverride(ext);
-						types.push_back(ext); // Save found extension
-					}
-				}
-				else
-				{
-					if (type_str.size() > 0)
-					{
-						ulti::ToLowerOverride(type_str);
-						types.push_back(type_str);
-					}
-				}
-			}
-		}
-		else
-		{
-		}
-		// Read all bytes of the file
 		try
 		{
-			std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
-			if (file.is_open()) {
-				if (IsPrintableFile(file_path))
+			trid_api->SubmitFileA(file_path.string().c_str());
+			ret = trid_api->Analyze();
+			if (ret)
+			{
+				ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
+				//PrintDebugW(L"TrID analysis successful for file %ws, result code: %d", file_path.c_str(), ret);
+				ret = trid_api->GetInfo(TRID_GET_RES_NUM, 0, buf.data());
+				for (int i = ret + 1; i--;)
 				{
-					types.push_back("txt");
+					ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
+					try
+					{
+						trid_api->GetInfo(TRID_GET_RES_FILETYPE, i, buf.data());
+					}
+					catch (...)
+					{
+						continue;
+					}
+					std::string type_str(buf.data());
+					if (type_str.size() == 0)
+					{
+						continue;
+					}
+					if (type_str.find("ransom") != std::string::npos || type_str.find("ncrypt") != std::string::npos)
+					{
+						continue;
+					}
+					ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
+					try
+					{
+						trid_api->GetInfo(TRID_GET_RES_FILEEXT, i, buf.data());
+					}
+					catch (...)
+					{
+						continue;
+					}
+					std::string ext_str(buf.data());
+					if (ext_str.size() == 0)
+					{
+						continue;
+					}
+
+					if (ext_str.size() > 0)
+					{
+						std::stringstream ss(ext_str);
+						std::string ext;
+						while (std::getline(ss, ext, '/'))
+						{
+							ulti::ToLowerOverride(ext);
+							types.push_back(ext); // Save found extension
+						}
+					}
+					else
+					{
+						if (type_str.size() > 0)
+						{
+							ulti::ToLowerOverride(type_str);
+							types.push_back(type_str);
+						}
+					}
 				}
 			}
 			else
 			{
-				//PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
 			}
-            file.close();
+			// Read all bytes of the file
+			try
+			{
+				std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
+				if (file.is_open()) {
+					if (IsPrintableFile(file_path))
+					{
+						types.push_back("txt");
+					}
+				}
+				else
+				{
+					PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
+				}
+				file.close();
+			}
+			catch (...)
+			{
+				PrintDebugW(L"Trid Error", file_path.c_str());
+			}
+
+			if (types.size() == 0)
+			{
+				types.push_back("");
+			}
+#ifdef _DEBUG
+			std::string types_str = "<";
+			for (const auto& type : types)
+			{
+				types_str += "\"" + type + "\", ";
+			}
+			types_str[types_str.size() - 2] = '>';
+			//PrintDebugW(L"File types: %ws", ulti::StrToWstr(types_str).c_str());
+#endif // _DEBUG
 		}
 		catch (...)
 		{
 
 		}
-
 		if (types.size() == 0)
 		{
 			types.push_back("");
 		}
-#ifdef _DEBUG
-		std::string types_str = "<";
-		for (const auto& type : types)
-		{
-			types_str += "\"" + type + "\", ";
-		}
-		types_str[types_str.size() - 2] = '>';
-		//PrintDebugW(L"File types: %ws", ulti::StrToWstr(types_str).c_str());
-#endif // _DEBUG
-
 		return types;
 	}
 

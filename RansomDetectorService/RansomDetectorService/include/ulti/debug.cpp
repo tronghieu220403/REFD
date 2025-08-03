@@ -76,7 +76,7 @@ namespace debug {
 	}
 
 	void DebugPrintW(const wchar_t* pwsz_format, ...) {
-		return;
+		//return;
 		if (pwsz_format == nullptr) return;
 
 		std::lock_guard<std::mutex> lock(debug_mutex);

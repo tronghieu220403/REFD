@@ -275,7 +275,7 @@ inline String<T>::String(const T* cstr)
 }
 
 template<>
-inline std::WString::String(const UNICODE_STRING& uni_str)
+inline String<WCHAR>::String(const UNICODE_STRING& uni_str)
 {
 	size_ = uni_str.Length / sizeof(WCHAR);
 	elements_ = Allocate(size_);
@@ -287,9 +287,9 @@ inline std::WString::String(const UNICODE_STRING& uni_str)
 }
 
 template<>
-inline std::WString::String(const PUNICODE_STRING& p_uni_str)
+inline String<WCHAR>::String(const PUNICODE_STRING& p_uni_str)
 {
-	this->std::WString::String(*p_uni_str);
+	this->String<WCHAR>::String(*p_uni_str);
 }
 
 template<>
@@ -369,7 +369,7 @@ inline String<T>& String<T>::operator=(const T* cstr)
 }
 
 template<>
-inline std::WString& std::WString::operator=(const PUNICODE_STRING& uni_str)
+inline String<WCHAR>& String<WCHAR>::operator=(const PUNICODE_STRING& uni_str)
 {
 	Deallocate();
 	if (uni_str == nullptr)

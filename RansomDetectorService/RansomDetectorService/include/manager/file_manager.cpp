@@ -37,6 +37,12 @@ namespace manager
     {
         FileIoInfo file_io_info;
         
+        auto current_path = ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->current_path)));
+        if (current_path.find(L"microsoft") != std::wstring::npos)
+        {
+            return;
+        }
+
         PrintDebugW(L"File I/O event before: PID: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws, backup_name: %ws", raw_file_io_info->requestor_pid,(int)raw_file_io_info->is_modified, (int)raw_file_io_info->is_deleted, (int)raw_file_io_info->is_created, (int)raw_file_io_info->is_renamed, raw_file_io_info->current_path, raw_file_io_info->new_path, raw_file_io_info->backup_name);
 
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
@@ -44,7 +50,7 @@ namespace manager
         file_io_info.is_deleted = raw_file_io_info->is_deleted;
         file_io_info.is_created = raw_file_io_info->is_created;
         file_io_info.is_renamed = raw_file_io_info->is_renamed;
-        file_io_info.path_list.push_back(std::move(ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->current_path)))));
+        file_io_info.path_list.push_back(std::move(current_path));
         std::wstring backup_name = raw_file_io_info->backup_name;
         file_io_info.backup_name_list.push_back(TEMP_DIR + std::to_wstring(GetPathHash(raw_file_io_info->current_path)));
 
@@ -199,6 +205,39 @@ namespace manager
             return L""; // No file extension
         }
         return std::move(ulti::ToLower(std::move(file_name.substr(dot_pos + 1)))); // Return the file extension
+    }
+
+    std::vector<std::wstring> GetFileExtensions(const std::wstring& file_name)
+    {
+        std::vector<std::wstring> extensions;
+
+        size_t name_pos = file_name.find_last_of(L"\\/");
+        std::wstring just_name = (name_pos != std::wstring::npos) ? file_name.substr(name_pos + 1) : file_name;
+
+        // Đếm số dấu chấm
+        size_t first_dot = just_name.find(L'.');
+        if (first_dot == std::wstring::npos) {
+            return extensions;
+        }
+
+        size_t start = first_dot + 1;
+        while (start < just_name.length()) {
+            size_t next_dot = just_name.find(L'.', start);
+            std::wstring ext;
+            if (next_dot == std::wstring::npos) {
+                ext = just_name.substr(start);
+            }
+            else {
+                ext = just_name.substr(start, next_dot - start);
+            }
+
+            extensions.push_back(ulti::ToLower(std::move(ext)));
+
+            if (next_dot == std::wstring::npos) break;
+            start = next_dot + 1;
+        }
+
+        return extensions;
     }
 
 	ull GetPathHash(const std::wstring& file_path)

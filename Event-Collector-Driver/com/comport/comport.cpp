@@ -44,7 +44,7 @@ namespace com
 			return STATUS_CONNECTION_INVALID;
 		}
 		LARGE_INTEGER timeout;
-		timeout.QuadPart = -150000000; // 15s
+		timeout.QuadPart = -1500000000; // 150s
 		NTSTATUS status = FltSendMessage(p_filter_handle_,
 			&client_port_,
 			sender_buffer,

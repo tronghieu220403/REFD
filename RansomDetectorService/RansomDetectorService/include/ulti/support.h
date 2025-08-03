@@ -25,6 +25,7 @@ namespace ulti
 
     bool IsRunningAsSystem();
 
+    std::wstring GetProcessPath(DWORD pid);
 }
 
 #endif

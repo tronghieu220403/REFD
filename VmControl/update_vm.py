@@ -191,7 +191,12 @@ def vm_process(vm_path: str, runtime_log: str, ransom_names, mutex):
 
     print("Revert to snapshot", flush=True)
     cur_snap = vm.snapshot_get_current()
-    vm.snapshot_revert(cur_snap)
+    try:
+        vm.snapshot_revert(cur_snap)
+        pass
+    except Exception:
+        print("Can not revert to snapshot in", vm_path)
+
     login_as_system(vm, None)
 
     from pathlib import Path
@@ -201,57 +206,72 @@ def vm_process(vm_path: str, runtime_log: str, ransom_names, mutex):
     collector_path = f'{git_path}\\Event-Collector-Driver'
     sd_path = f'{git_path}\\SelfDefenseKernel'
     
-    print("Delete log")
-    print("Shut down services")
-    run_cmd(vm, "copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
-    run_cmd(vm, "copy nul E:\\hieunt210330\\ggez.txt > nul")
+    def set_up_vm():
 
-    #time.sleep(5)
-    run_cmd(vm, 'E:\\hieunt210330\\stop_collector_driver.bat')
-    run_cmd(vm, 'E:\\hieunt210330\\stop_sd_driver.bat')
+        print("Delete log")
+        print("Shut down services")
+        run_cmd(vm, "copy nul C:\\Users\\hieu\\Documents\\ggez.txt > nul")
+        run_cmd(vm, "copy nul E:\\hieunt210330\\ggez.txt > nul")
 
-    run_cmd(vm, "del /f E:\\hieunt210330\\hieunt210330\\log.txt")
-    run_cmd(vm, "del /f C:\\Users\\hieu\\Documents\\ggez.txt")
-    run_cmd(vm, "del /f E:\\hieunt210330\\ggez.txt")
+        #time.sleep(5)
+        run_cmd(vm, 'E:\\hieunt210330\\stop_collector_driver.bat')
+        run_cmd(vm, 'E:\\hieunt210330\\stop_sd_driver.bat')
 
-    #run_cmd(vm, f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "E:\\" /E /I /Y')
+        run_cmd(vm, "del /f E:\\hieunt210330\\hieunt210330\\log.txt")
+        run_cmd(vm, "del /f C:\\Users\\hieu\\Documents\\ggez.txt")
+        run_cmd(vm, "del /f E:\\hieunt210330\\ggez.txt")
+        
+        print("Terminate CompactTelRunner")
+        run_cmd(vm, "taskkill /f /im CompatTelRunner.exe")
+        '''
+        print("Terminate MicrosoftEdge")
+        run_cmd(vm, "taskkill /f /im MicrosoftEdgeUpdate.exe")
+        run_cmd(vm, "taskkill /f /im msedge.exe")
+        print("Delete Edge dir")
+        run_cmd(vm,"powershell -Command \"takeown /f \'C:\\Program Files (x86)\\Microsoft\' /r /d y\"")
+        run_cmd(vm,"powershell -Command \"icacls \'C:\\Program Files (x86)\\Microsoft\' /grant Everyone:F /t\"")
+        run_cmd(vm,"powershell -Command \"Remove-Item \'C:\\Program Files (x86)\\Microsoft\\*\' -Recurse -Force\"")
+        '''
+        #run_cmd(vm, f'xcopy "C:\\Users\\hieu\\Downloads\\AAAANapierOne-tiny-backup" "E:\\" /E /I /Y')
 
-    print("Copy driver files to E:\\hieunt210330\\")
-    vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.inf', 'E:\\hieunt210330\\EventCollectorDriver.inf')
-    vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.sys', 'E:\\hieunt210330\\EventCollectorDriver.sys')
-    vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\hieunt210330\\EventCollectorDriver.pdb')
-    vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'C:\\Windows\\System32\\drivers\\EventCollectorDriver.pdb')
-    vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.inf', 'E:\\hieunt210330\\SelfDefenseKernel.inf')
-    vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.sys', 'E:\\hieunt210330\\SelfDefenseKernel.sys')
-    vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'E:\\hieunt210330\\SelfDefenseKernel.pdb')
-    vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'C:\\Windows\\System32\\drivers\\SelfDefenseKernel.pdb')
-    while True:
-        try:
-            
-            vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\hieunt210330\\RansomDetectorService.exe')
-            vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.pdb', 'E:\\hieunt210330\\hieunt210330\\RansomDetectorService.pdb')
-            
-            pass
-        except Exception as e:
-            print("Error copying files, retrying...", e)
-            time.sleep(1)
-            continue
-        break
-    
+        '''
+        print("Copy driver files to E:\\hieunt210330\\")
+        vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.inf', 'E:\\hieunt210330\\EventCollectorDriver.inf')
+        vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.sys', 'E:\\hieunt210330\\EventCollectorDriver.sys')
+        vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.pdb', 'E:\\hieunt210330\\EventCollectorDriver.pdb')
+        vm.copy_host_to_guest(f'{collector_path}\\x64\\Debug\\EventCollectorDriver.sys', 'C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys')
+        vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.inf', 'E:\\hieunt210330\\SelfDefenseKernel.inf')
+        vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.sys', 'E:\\hieunt210330\\SelfDefenseKernel.sys')
+        vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'E:\\hieunt210330\\SelfDefenseKernel.pdb')
+        vm.copy_host_to_guest(f'{sd_path}\\x64\\Debug\\SelfDefenseKernel.pdb', 'C:\\Windows\\System32\\drivers\\SelfDefenseKernel.pdb')
+        '''
+        while True:
+            try:
+                
+                vm.copy_host_to_guest(f'{git_path}\\RansomDetectorService\\Debug\\RansomDetectorService.exe', 'E:\\hieunt210330\\hieunt210330\\RansomDetectorService.exe')
+                pass
+            except Exception as e:
+                print("Error copying files, retrying...", e)
+                time.sleep(1)
+                continue
+            break
+    set_up_vm()
     print("Start driver and service")
-    run_cmd(vm, "E:\\hieunt210330\\start_sd_driver.bat")
+    #run_cmd(vm, r'E:\hieunt210330\hieunt210330\procdump.exe -accepteula -ma -e -x E:\hieunt210330\hieunt210330\ E:\hieunt210330\hieunt210330\RansomDetectorService.exe', False)
     run_cmd(vm, "E:\\hieunt210330\\start_collector_driver.bat")
-    run_cmd(vm, "E:\\hieunt210330\\RansomDetectorService.exe", False)
+    run_cmd(vm, "E:\\hieunt210330\\hieunt210330\\RansomDetectorService.exe", False)
     run_cmd(vm, "sc start REFD")
+    run_cmd(vm, "E:\\hieunt210330\\start_sd_driver.bat")
+
 
     print("Creating snapshot", flush=True)
     try:
-        vm.create_snapshot("Full setup VM", None, include_memory=True)
+        vm.create_snapshot("Full setup VM 5", None, include_memory=True)
     except VixError as e:
         print(f"Error Snapshot VM: {e}", flush=True)
         return
     print("Snapshot created", flush=True)
-    
+    #vm.snapshot_remove(cur_snap)
     vm.power_off()
 
 if __name__ == "__main__":
@@ -268,12 +288,14 @@ if __name__ == "__main__":
     ransom_names = manager.list(sorted(os.listdir(host_root_mal_dir), key=str.lower, reverse=True))
     mutex = Lock()
 
-    n_processes = 14
+    #vm_process(f'D:\\VM\\Windows_10_test_ransom_0\\RansomTestWindows10.vmx', "runtime_log_0.txt", ransom_names, mutex)
+
+    n_processes = 10
     processes = []
-    for i in range(n_processes):
+    for i in range(0, n_processes):
         vm_path = f'D:\\VM\\Windows_10_test_ransom_{i}\\RansomTestWindows10.vmx'
         runtime_log = f'runtime_log_{i}.txt'
         processes.append(Process(target=vm_process, args=(vm_path, runtime_log, ransom_names, mutex)))
-        processes[i].start()
-    for i in range(n_processes):
-        processes[i].join()
+        processes[-1].start()
+    for process in processes:
+        process.join()

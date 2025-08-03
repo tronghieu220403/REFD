@@ -36,6 +36,7 @@
 #define TYPE_NULL 3
 #define TYPE_NOT_NULL 4
 #define TYPE_NO_EVALUATION 5
+#define TYPE_DONE_EVALUATION 6
 
 namespace manager {
 
@@ -108,6 +109,7 @@ namespace manager {
 	uint64_t GetFileSize(const std::wstring& file_path);
 
 	std::wstring GetFileExtension(const std::wstring& file_name);
+	std::vector<std::wstring> GetFileExtensions(const std::wstring& file_name);
 
 	ull GetPathHash(const std::wstring& file_path);
 	

@@ -161,4 +161,21 @@ namespace ulti
         return is_system;
     }
 
+    std::wstring GetProcessPath(DWORD pid) {
+        std::wstring path;
+
+        HANDLE hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+        if (hProcess) {
+            WCHAR buffer[MAX_PATH];
+            DWORD size = MAX_PATH;
+
+            if (QueryFullProcessImageNameW(hProcess, 0, buffer, &size)) {
+                path.assign(buffer, size);
+            }
+
+            CloseHandle(hProcess);
+        }
+
+        return path;
+    }
 }
