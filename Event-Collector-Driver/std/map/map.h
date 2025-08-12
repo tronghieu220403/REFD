@@ -156,7 +156,7 @@ public:
 // Constructors
 
 template <typename Key, typename T, typename Compare>
-Map<Key, T, Compare>::Map() : size_(0), compare_() {
+inline Map<Key, T, Compare>::Map() : size_(0), compare_() {
     nil_ = new Node(Key(), T());
     nil_->is_red = false;
     nil_->left = nil_->right = nil_->parent = nil_;
@@ -164,7 +164,7 @@ Map<Key, T, Compare>::Map() : size_(0), compare_() {
 }
 
 template <typename Key, typename T, typename Compare>
-Map<Key, T, Compare>::Map(const KeyCompare& comp) : size_(0), compare_(comp) {
+inline Map<Key, T, Compare>::Map(const KeyCompare& comp) : size_(0), compare_(comp) {
     nil_ = new Node(Key(), T());
     nil_->is_red = false;
     nil_->left = nil_->right = nil_->parent = nil_;
@@ -173,7 +173,7 @@ Map<Key, T, Compare>::Map(const KeyCompare& comp) : size_(0), compare_(comp) {
 
 template <typename Key, typename T, typename Compare>
 template <class InputIterator>
-Map<Key, T, Compare>::Map(InputIterator first, InputIterator last, const KeyCompare& comp)
+inline Map<Key, T, Compare>::Map(InputIterator first, InputIterator last, const KeyCompare& comp)
     : Map(comp) {
     for (; first != last; ++first) {
         Insert(*first);
@@ -181,7 +181,7 @@ Map<Key, T, Compare>::Map(InputIterator first, InputIterator last, const KeyComp
 }
 
 template <typename Key, typename T, typename Compare>
-Map<Key, T, Compare>::Map(const Map& other) : Map(other.compare_) {
+inline Map<Key, T, Compare>::Map(const Map& other) : Map(other.compare_) {
     if (other.root_ != other.nil_) {
         root_ = Copy(other.root_, nil_);
         size_ = other.size_;
@@ -189,7 +189,7 @@ Map<Key, T, Compare>::Map(const Map& other) : Map(other.compare_) {
 }
 
 template <typename Key, typename T, typename Compare>
-Map<Key, T, Compare>::Map(Map&& other)
+inline Map<Key, T, Compare>::Map(Map&& other)
     : root_(other.root_), nil_(other.nil_), size_(other.size_), compare_(other.compare_) {
     other.root_ = nullptr;
     other.nil_ = nullptr;
@@ -199,7 +199,7 @@ Map<Key, T, Compare>::Map(Map&& other)
 // Destructor
 
 template <typename Key, typename T, typename Compare>
-Map<Key, T, Compare>::~Map() {
+inline Map<Key, T, Compare>::~Map() {
     Clear();
     delete nil_;
 }
@@ -207,7 +207,7 @@ Map<Key, T, Compare>::~Map() {
 // Assignment operators
 
 template <typename Key, typename T, typename Compare>
-Map<Key, T, Compare>& Map<Key, T, Compare>::operator=(const Map& other) {
+inline Map<Key, T, Compare>& Map<Key, T, Compare>::operator=(const Map& other) {
     if (this != &other) {
         Clear();
         compare_ = other.compare_;
@@ -224,7 +224,7 @@ Map<Key, T, Compare>& Map<Key, T, Compare>::operator=(const Map& other) {
 }
 
 template <typename Key, typename T, typename Compare>
-Map<Key, T, Compare>& Map<Key, T, Compare>::operator=(Map&& other) {
+inline Map<Key, T, Compare>& Map<Key, T, Compare>::operator=(Map&& other) {
     if (this != &other) {
         Clear();
         delete nil_;
@@ -243,66 +243,66 @@ Map<Key, T, Compare>& Map<Key, T, Compare>::operator=(Map&& other) {
 // Iterators
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Begin() const {
+inline typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Begin() const {
     return iterator(Minimum(root_), this);
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::End() const {
+inline typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::End() const {
     return iterator(nil_, this);
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::reverse_iterator Map<Key, T, Compare>::RBegin() const {
+inline typename Map<Key, T, Compare>::reverse_iterator Map<Key, T, Compare>::RBegin() const {
     return reverse_iterator(End());
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::reverse_iterator Map<Key, T, Compare>::REnd() const {
+inline typename Map<Key, T, Compare>::reverse_iterator Map<Key, T, Compare>::REnd() const {
     return reverse_iterator(Begin());
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::const_iterator Map<Key, T, Compare>::CBegin() const {
+inline typename Map<Key, T, Compare>::const_iterator Map<Key, T, Compare>::CBegin() const {
     return Begin();
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::const_iterator Map<Key, T, Compare>::CEnd() const {
+inline typename Map<Key, T, Compare>::const_iterator Map<Key, T, Compare>::CEnd() const {
     return End();
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::const_reverse_iterator Map<Key, T, Compare>::CRBegin() const {
+inline typename Map<Key, T, Compare>::const_reverse_iterator Map<Key, T, Compare>::CRBegin() const {
     return RBegin();
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::const_reverse_iterator Map<Key, T, Compare>::CREnd() const {
+inline typename Map<Key, T, Compare>::const_reverse_iterator Map<Key, T, Compare>::CREnd() const {
     return REnd();
 }
 
 // Capacity
 
 template <typename Key, typename T, typename Compare>
-bool Map<Key, T, Compare>::Empty() const {
+inline bool Map<Key, T, Compare>::Empty() const {
     return size_ == 0;
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::Size() const {
+inline typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::Size() const {
     return size_;
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::MaxSize() const {
+inline typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::MaxSize() const {
     return static_cast<size_type>(ULL_MAX) / sizeof(Node);
 }
 
 // Element access
 
 template <typename Key, typename T, typename Compare>
-T& Map<Key, T, Compare>::operator[](const Key& key) {
+inline T& Map<Key, T, Compare>::operator[](const Key& key) {
     Node* x = root_;
     Node* y = nil_;
     while (x != nil_) {
@@ -340,13 +340,13 @@ T& Map<Key, T, Compare>::operator[](const Key& key) {
 // Modifiers
 
 template <typename Key, typename T, typename Compare>
-Pair<typename Map<Key, T, Compare>::iterator, bool> Map<Key, T, Compare>::Insert(
+inline Pair<typename Map<Key, T, Compare>::iterator, bool> Map<Key, T, Compare>::Insert(
     const value_type& val) {
     return Insert(val.first, val.second);
 }
 
 template <typename Key, typename T, typename Compare>
-Pair<typename Map<Key, T, Compare>::iterator, bool> Map<Key, T, Compare>::Insert(
+inline Pair<typename Map<Key, T, Compare>::iterator, bool> Map<Key, T, Compare>::Insert(
     const Key& key, const T& val) {
 	Erase(key);
 	Node* z = new Node(key, val);
@@ -388,7 +388,7 @@ Pair<typename Map<Key, T, Compare>::iterator, bool> Map<Key, T, Compare>::Insert
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Erase(const_iterator position) {
+inline typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Erase(const_iterator position) {
     if (position == End()) {
         return iterator();
     }
@@ -434,7 +434,7 @@ typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Erase(const_iterat
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::Erase(const key_type& key) {
+inline typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::Erase(const key_type& key) {
     iterator it = Find(key);
     if (it != End()) {
         Erase(it);
@@ -444,7 +444,7 @@ typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::Erase(const key_t
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Erase(const_iterator first,
+inline typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Erase(const_iterator first,
     const_iterator last) {
     while (first != last) {
         first = Erase(first);
@@ -453,7 +453,7 @@ typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Erase(const_iterat
 }
 
 template <typename Key, typename T, typename Compare>
-void Map<Key, T, Compare>::Swap(Map& other) {
+inline void Map<Key, T, Compare>::Swap(Map& other) {
     Node* temp_root = root_;
     Node* temp_nil = nil_;
     ull temp_size = size_;
@@ -471,7 +471,7 @@ void Map<Key, T, Compare>::Swap(Map& other) {
 }
 
 template <typename Key, typename T, typename Compare>
-void Map<Key, T, Compare>::Clear() {
+inline void Map<Key, T, Compare>::Clear() {
     Clear(root_);
     root_ = nil_;
     size_ = 0;
@@ -480,19 +480,19 @@ void Map<Key, T, Compare>::Clear() {
 // Observers
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::KeyCompare Map<Key, T, Compare>::KeyComp() const {
+inline typename Map<Key, T, Compare>::KeyCompare Map<Key, T, Compare>::KeyComp() const {
     return compare_;
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::ValueCompare Map<Key, T, Compare>::ValueComp() const {
+inline typename Map<Key, T, Compare>::ValueCompare Map<Key, T, Compare>::ValueComp() const {
     return ValueCompare(compare_);
 }
 
 // Operations
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Find(const key_type& key) const {
+inline typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Find(const key_type& key) const {
     Node* current = root_;
     while (current != nil_) {
         if (compare_(key, current->data.first)) {
@@ -509,12 +509,12 @@ typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::Find(const key_typ
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::Count(const key_type& key) const {
+inline typename Map<Key, T, Compare>::size_type Map<Key, T, Compare>::Count(const key_type& key) const {
     return Find(key) != End() ? 1 : 0;
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::LowerBound(const key_type& key) const {
+inline typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::LowerBound(const key_type& key) const {
     Node* current = root_;
     Node* result = nil_;
     while (current != nil_) {
@@ -530,7 +530,7 @@ typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::LowerBound(const k
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::UpperBound(const key_type& key) const {
+inline typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::UpperBound(const key_type& key) const {
     Node* current = root_;
     Node* result = nil_;
     while (current != nil_) {
@@ -546,7 +546,7 @@ typename Map<Key, T, Compare>::iterator Map<Key, T, Compare>::UpperBound(const k
 }
 
 template <typename Key, typename T, typename Compare>
-Pair<typename Map<Key, T, Compare>::iterator, typename Map<Key, T, Compare>::iterator>
+inline Pair<typename Map<Key, T, Compare>::iterator, typename Map<Key, T, Compare>::iterator>
 Map<Key, T, Compare>::EqualRange(const key_type& key) const {
     return Pair<iterator, iterator>(LowerBound(key), UpperBound(key));
 }
@@ -554,7 +554,7 @@ Map<Key, T, Compare>::EqualRange(const key_type& key) const {
 // Helper Functions
 
 template <typename Key, typename T, typename Compare>
-void Map<Key, T, Compare>::LeftRotate(Node* x) {
+inline void Map<Key, T, Compare>::LeftRotate(Node* x) {
     Node* y = x->right;
     x->right = y->left;
     if (y->left != nil_) {
@@ -575,7 +575,7 @@ void Map<Key, T, Compare>::LeftRotate(Node* x) {
 }
 
 template <typename Key, typename T, typename Compare>
-void Map<Key, T, Compare>::RightRotate(Node* y) {
+inline void Map<Key, T, Compare>::RightRotate(Node* y) {
     Node* x = y->left;
     y->left = x->right;
     if (x->right != nil_) {
@@ -596,7 +596,7 @@ void Map<Key, T, Compare>::RightRotate(Node* y) {
 }
 
 template <typename Key, typename T, typename Compare>
-void Map<Key, T, Compare>::InsertFixup(Node* z) {
+inline void Map<Key, T, Compare>::InsertFixup(Node* z) {
     while (z->parent->is_red) {
         if (z->parent == z->parent->parent->left) {
             Node* y = z->parent->parent->right;
@@ -639,7 +639,7 @@ void Map<Key, T, Compare>::InsertFixup(Node* z) {
 }
 
 template <typename Key, typename T, typename Compare>
-void Map<Key, T, Compare>::DeleteFixup(Node* x) {
+inline void Map<Key, T, Compare>::DeleteFixup(Node* x) {
     while (x != root_ && !x->is_red) {
         if (x == x->parent->left) {
             Node* w = x->parent->right;
@@ -698,7 +698,7 @@ void Map<Key, T, Compare>::DeleteFixup(Node* x) {
 }
 
 template <typename Key, typename T, typename Compare>
-void Map<Key, T, Compare>::Transplant(Node* u, Node* v) {
+inline void Map<Key, T, Compare>::Transplant(Node* u, Node* v) {
     if (u->parent == nil_) {
         root_ = v;
     }
@@ -712,7 +712,7 @@ void Map<Key, T, Compare>::Transplant(Node* u, Node* v) {
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Minimum(Node* node) const {
+inline typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Minimum(Node* node) const {
     while (node->left != nil_) {
         node = node->left;
     }
@@ -720,7 +720,7 @@ typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Minimum(Node* node) c
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Maximum(Node* node) const {
+inline typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Maximum(Node* node) const {
     while (node->right != nil_) {
         node = node->right;
     }
@@ -728,7 +728,7 @@ typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Maximum(Node* node) c
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Successor(Node* node) const {
+inline typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Successor(Node* node) const {
     if (node->right != nil_) {
         return Minimum(node->right);
     }
@@ -741,7 +741,7 @@ typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Successor(Node* node)
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Predecessor(Node* node) const {
+inline typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Predecessor(Node* node) const {
     if (node->left != nil_) {
         return Maximum(node->left);
     }
@@ -754,7 +754,7 @@ typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Predecessor(Node* nod
 }
 
 template <typename Key, typename T, typename Compare>
-void Map<Key, T, Compare>::Clear(Node* node) {
+inline void Map<Key, T, Compare>::Clear(Node* node) {
     if (node != nil_) {
         Clear(node->left);
         Clear(node->right);
@@ -763,7 +763,7 @@ void Map<Key, T, Compare>::Clear(Node* node) {
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Copy(Node* node, Node* parent) {
+inline typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Copy(Node* node, Node* parent) {
     if (node == nil_) {
         return nil_;
     }
@@ -778,7 +778,7 @@ typename Map<Key, T, Compare>::Node* Map<Key, T, Compare>::Copy(Node* node, Node
 // Iterator implementation
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::Iterator& Map<Key, T, Compare>::Iterator::operator++() {
+inline typename Map<Key, T, Compare>::Iterator& Map<Key, T, Compare>::Iterator::operator++() {
     if (node_ == map_->nil_) {
         return *this;
     }
@@ -787,14 +787,14 @@ typename Map<Key, T, Compare>::Iterator& Map<Key, T, Compare>::Iterator::operato
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::Iterator Map<Key, T, Compare>::Iterator::operator++(int) {
+inline typename Map<Key, T, Compare>::Iterator Map<Key, T, Compare>::Iterator::operator++(int) {
     Iterator temp = *this;
     ++(*this);
     return temp;
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::Iterator& Map<Key, T, Compare>::Iterator::operator--() {
+inline typename Map<Key, T, Compare>::Iterator& Map<Key, T, Compare>::Iterator::operator--() {
     if (node_ == map_->nil_) {
         node_ = map_->Maximum(map_->root_);
         return *this;
@@ -804,7 +804,7 @@ typename Map<Key, T, Compare>::Iterator& Map<Key, T, Compare>::Iterator::operato
 }
 
 template <typename Key, typename T, typename Compare>
-typename Map<Key, T, Compare>::Iterator Map<Key, T, Compare>::Iterator::operator--(int) {
+inline typename Map<Key, T, Compare>::Iterator Map<Key, T, Compare>::Iterator::operator--(int) {
     Iterator temp = *this;
     --(*this);
     return temp;
