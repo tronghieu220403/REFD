@@ -212,18 +212,6 @@ namespace std
         return *this;
 	}
 
-	WString& Move(WString&& other) noexcept
-	{
-        WString tmp;
-        tmp.size_ = other.size_;
-        tmp.capacity_ = other.capacity_;
-        tmp.elements_ = other.elements_;
-		other.size_ = 0;
-		other.capacity_ = 0;
-		other.elements_ = nullptr;
-		return tmp;
-	}
-
 	// Destructor
 	WString::~WString()
 	{
