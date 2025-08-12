@@ -638,7 +638,10 @@ namespace std
 	WCHAR* WString::Allocate(size_t n)
 	{
 		WCHAR* p = new WCHAR[n + 1];
-		p[n] = L'\0';
+		if (p != nullptr)
+		{
+			p[n] = L'\0';
+		}
 		return p;
 	}
 
