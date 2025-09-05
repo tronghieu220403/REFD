@@ -381,6 +381,7 @@ MiniFsUnload(
 	NTSTATUS status = STATUS_SUCCESS;
 
 	status = reg::FltUnload();
+
 	if (status == STATUS_FLT_DO_NOT_DETACH)
 	{
 		DebugMessage("Do not unload: STATUS_FLT_DO_NOT_DETACH");

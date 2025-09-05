@@ -9,22 +9,23 @@ namespace backup
         ull* backup_path_len,
         const PFLT_FILTER p_filter_handle, const PFLT_INSTANCE p_instance, const PFILE_OBJECT p_file_object = nullptr)
     {
-        if (backup_path_len != nullptr)
-        {
-            *backup_path_len = 0;
-        }
-        if (backup_path_max_len > 0 && backup_path != nullptr)
-        {
-            backup_path[0] = L'\0';
-        }
-
+        //return true;
         if (KeGetCurrentIrql() != PASSIVE_LEVEL)
         {
             return false;
         }
+
         if (backup_path == nullptr)
         {
             return false;
+        }
+        if (backup_path_len != nullptr)
+        {
+            *backup_path_len = 0;
+        }
+        if (backup_path_max_len > 0)
+        {
+            backup_path[0] = L'\0';
         }
 
         NTSTATUS status;

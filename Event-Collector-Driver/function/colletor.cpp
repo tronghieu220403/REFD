@@ -36,7 +36,7 @@ namespace collector
 	NTSTATUS FltUnload()
     {
         //DebugMessage("Begin %ws", __FUNCTIONW__);
-
+        /*
         String<WCHAR> file_path1(file::NormalizeDevicePathStr(L"\\??\\C:\\Users\\hieu\\Documents\\ggez.txt"));
         String<WCHAR> file_path2(file::NormalizeDevicePathStr(L"\\??\\E:\\hieunt210330\\ggez.txt"));
         if (file::ZwIsFileExist(file_path1) == true || file::ZwIsFileExist(file_path2) == true)
@@ -44,6 +44,7 @@ namespace collector
             //DebugMessage("Magic files exist, so we allow the driver to unload");
             return STATUS_SUCCESS;
         }
+        */
         //DebugMessage("STATUS_FLT_DO_NOT_DETACH");
         return STATUS_FLT_DO_NOT_DETACH;
     }
@@ -632,7 +633,6 @@ namespace collector
         {
             //DebugMessage("FltGetStreamHandleContext success: handle context %p", p_handle_context);
         }
-		//DebugMessage("File %ws, instance %p, file object %p, pid %d", flt::GetFileFullPathName(data).Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
         //DebugMessage("File: %ws, requestor pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d", p_handle_context->current_path, p_handle_context->requestor_pid, p_handle_context->is_modified, p_handle_context->is_deleted, p_handle_context->is_created, p_handle_context->is_renamed);
         FltReleaseContext(p_handle_context);

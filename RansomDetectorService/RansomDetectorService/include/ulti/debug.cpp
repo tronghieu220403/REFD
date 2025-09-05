@@ -3,10 +3,9 @@
 
 namespace debug {
 
-	std::mutex debug_mutex;
+	std::mutex file_debug_mutex;
 	HANDLE log_file_handle = INVALID_HANDLE_VALUE;
 	int debug_count = 0;
-	std::wstring log;
 
 	void InitDebugLog()
 	{
@@ -41,6 +40,8 @@ namespace debug {
 
 	void WriteDebugToFileW(const std::wstring& message)
 	{
+		std::lock_guard<std::mutex> lock(file_debug_mutex);
+
 		try {
 			if (log_file_handle == INVALID_HANDLE_VALUE || log_file_handle == 0)
 			{
@@ -79,11 +80,8 @@ namespace debug {
 		//return;
 		if (pwsz_format == nullptr) return;
 
-		std::lock_guard<std::mutex> lock(debug_mutex);
-		if (log.size() < 16384 * 512)
-		{
-			log.resize(16384 * 512);
-		}
+		std::wstring log;
+		log.resize(1024);
 
 		va_list args;
 		va_start(args, pwsz_format);
@@ -111,7 +109,7 @@ namespace debug {
 
 			log.insert(0, time_str);
 			OutputDebugStringW(log.c_str());
-			WriteDebugToFileW(log.c_str());
+			//WriteDebugToFileW(log.c_str());
 		}
 
 		va_end(args);

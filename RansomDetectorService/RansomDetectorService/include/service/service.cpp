@@ -185,17 +185,17 @@ namespace srv
 			/*
             A little trick to prevent the service from stopping is to rebirth the service immediately (create another thread to call this exe with parameter rebirth, recreate the service, wait for the current service die and then run it again).
 			*/
-			/*
 			service_status.dwCurrentState = SERVICE_STOP_PENDING;
 			SetServiceStatus(status_handle, &service_status);
 			service_status.dwCurrentState = SERVICE_STOPPED;
 			SetServiceStatus(status_handle, &service_status);
-			*/
+			/*
             // However, for testing purposes, I will deny the stop code
             PrintDebugW(L"Service stop");
             service_status.dwCurrentState = SERVICE_RUNNING;
             service_status.dwWin32ExitCode = ERROR_ACCESS_DENIED;
             SetServiceStatus(status_handle, &service_status);
+			*/
 		}
 		else if (ctrl_code == SERVICE_CONTROL_SHUTDOWN)
 		{
@@ -229,7 +229,7 @@ namespace srv
 		service_status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
 		service_status.dwWin32ExitCode = NO_ERROR;
 		service_status.dwWaitHint = 0;
-		service_status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN;// | SERVICE_ACCEPT_STOP;
+		service_status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN | SERVICE_ACCEPT_STOP;
 
 		status_handle = RegisterServiceCtrlHandlerW(service_name, (LPHANDLER_FUNCTION)ServiceCtrlHandler);
 		if (status_handle == NULL)

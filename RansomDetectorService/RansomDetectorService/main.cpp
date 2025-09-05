@@ -32,11 +32,13 @@ static void StartEventCollector()
 
 	while (true)
 	{
+		/*
 		if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
 		{
 			PrintDebugW(L"ggez.txt detected, terminate service");
 			ExitProcess(0);
 		}
+		*/
 
 		PrintDebugW(L"Creating communication port %ws", PORT_NAME);
 		HRESULT hr = com_port.Create(PORT_NAME);
@@ -118,11 +120,13 @@ static void ServiceMain()
 		while (true)
 		{
 			StartEventCollector();
+			/*
 			if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
 			{
 				PrintDebugW(L"ggez.txt detected, terminate service");
 				ExitProcess(0);
 			}
+			*/
 			Sleep(50);
 		}
 		}));
@@ -135,11 +139,13 @@ static void ServiceMain()
 			manager::kEvaluator->ProcessDataQueue();
             last_process_time = std::chrono::steady_clock::now();
 			manager::kEvaluator->UnlockMutex();
+			/*
 			if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
 			{
 				PrintDebugW(L"ggez.txt detected, terminate service");
 				ExitProcess(0);
 			}
+			*/
 			Sleep(1000);
 		}
 		});
