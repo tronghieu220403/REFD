@@ -44,7 +44,8 @@ namespace com
 			return STATUS_CONNECTION_INVALID;
 		}
 		LARGE_INTEGER timeout;
-		timeout.QuadPart = -150000000; // 15s
+		//timeout.QuadPart = -150000000; // 15s
+		timeout.QuadPart = 0; // 0s
 		NTSTATUS status = FltSendMessage(p_filter_handle_,
 			&client_port_,
 			sender_buffer,
@@ -55,13 +56,10 @@ namespace com
 		);
 		if (status != STATUS_SUCCESS && status != 0x11)
 		{
-			DebugMessage("SendMessage failed: 0x%x", status);
 		}
 		else
 		{
-			DebugMessage("SendMessage success: 0x%x", status);
 			status = STATUS_SUCCESS;
-			STATUS_PENDING;
 		}
 		return status;
 	}

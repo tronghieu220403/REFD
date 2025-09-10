@@ -716,7 +716,7 @@ namespace std
         return str;
     }
 
-	static WString ToWstring(unsigned long long num)
+	WString ToWstring(unsigned long long num)
     {
         WString str;
         str.Resize(32);

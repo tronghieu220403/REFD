@@ -54,10 +54,7 @@
     <ClCompile Include="template\system_routine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="function\backup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="function\detector.cpp">
+    <ClCompile Include="std\string\wstring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,9 +95,6 @@
     <ClInclude Include="std\set\set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="std\string\string.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="std\sync\mutex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -128,10 +122,7 @@
     <ClInclude Include="template\system_routine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="function\backup.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="function\detector.h">
+    <ClInclude Include="std\string\wstring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

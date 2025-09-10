@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../std/memory/memory.h"
-#include "../../std/string/string.h"
+#include "../../std/string/wstring.h"
 #include "../../std/vector/vector.h"
 #include "../../std/sync/mutex.h"
 
@@ -50,7 +50,7 @@ namespace ioctl
 	*/
 
 	// User must free the returned buffer.
-	inline IOCTL_CMD* FlattenIoctlCmd(IOCTL_CMD_CLASS query_class, const String<WCHAR>& str)
+	inline IOCTL_CMD* FlattenIoctlCmd(IOCTL_CMD_CLASS query_class, const std::WString& str)
 	{
 		IOCTL_CMD* ioctl_cmd = (IOCTL_CMD*)new char[sizeof(IOCTL_CMD) + str.Size() * sizeof(WCHAR)];
 		ioctl_cmd->cmd_class = query_class;
@@ -59,7 +59,7 @@ namespace ioctl
 		return ioctl_cmd;
 	}
 
-	inline void WriteIoctlCmd(IOCTL_CMD* ioctl_cmd, IOCTL_CMD_CLASS query_class, const String<WCHAR>& str)
+	inline void WriteIoctlCmd(IOCTL_CMD* ioctl_cmd, IOCTL_CMD_CLASS query_class, const std::WString& str)
 	{
 		ioctl_cmd->cmd_class = query_class;
 		ioctl_cmd->data_len = str.Size() * sizeof(WCHAR);

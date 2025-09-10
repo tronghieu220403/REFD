@@ -408,7 +408,7 @@ MiniFsPreOperation (
     }
     /*
 #ifdef _DEBUG
-    String<WCHAR> current_path = flt::GetFileFullPathName(data);
+    std::WString current_path = flt::GetFileFullPathName(data);
 
     if (current_path.Find(L"test\\") == ULL_MAX)
     {
@@ -514,7 +514,7 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
         if (handle_context != nullptr)
         {
             //DebugMessage("FLT_STREAMHANDLE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
-            if (handle_context->is_modified + handle_context->is_deleted + handle_context->is_created + handle_context->is_renamed == 0)
+            if (handle_context->is_modified == 0)
             {
                 //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
@@ -530,7 +530,7 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
         if (handle_context != nullptr)
         {
             //DebugMessage("FLT_FILE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
-            if (handle_context->is_modified + handle_context->is_deleted + handle_context->is_created + handle_context->is_renamed == 0)
+            if (handle_context->is_modified == 0)
             {
                 //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
