@@ -73,23 +73,9 @@ namespace manager {
 		{
 			FileIoInfo& event = file_io_list.front();
 			auto pid = event.requestor_pid; // std::move will make event.requestor_pid invalid if we use: events_by_pid[event.requestor_pid].push_back(std::move(event));
-			if (pid_to_name_map.find(pid) == pid_to_name_map.end())
-			{
-				pid_to_name_map[pid] = ulti::GetProcessPath(pid);
-				PrintDebugW(L"New process %d detected, path %ws, create new merged events list", pid, pid_to_name_map[pid].data());
-			}
-			const auto& process_path = pid_to_name_map[pid];
-			if (process_path == L"C:\\Windows\\System32\\svchost.exe"
-				&& event.path_list[0].find(L"Microsoft") != std::wstring::npos)
-			{
-				file_io_list.pop();
-				continue;
-			}
-			if (DiscardEventByPid(pid) == true)
-			{
-				file_io_list.pop();
-				continue;
-			}
+			
+			// Discard not honey pots file
+
 			events_by_pid[pid].push_back(std::move(event));
 			file_io_list.pop();
 		}
@@ -251,195 +237,33 @@ namespace manager {
 
 	bool Evaluator::AnalyzeEvent(FileIoInfo& event)
 	{
-#ifdef _DEBUG
-		std::wstring paths_str = L"<";
-		for (const auto& path : event.path_list)
-		{
-			paths_str += path + L", ";
-		}
-		paths_str[paths_str.size() - 2] = L'>';
-		std::wstring backup_paths_str = L"<";
-		for (const auto& path : event.backup_name_list)
-		{
-			backup_paths_str += path + L", ";
-		}
-		backup_paths_str[backup_paths_str.size() - 2] = L'>';
-#endif // _DEBUG
+		PrintDebugW(L"AnalyzeEvent: %ws, pid %d", event.path.c_str(), event.requestor_pid);
 
-		int old_index = -1;
-		int new_index = -1;
-
-		PrintDebugW(L"AnalyzeEvent: %ws, pid %d, is modified %d, is_created %d, is_renamed %d, is_deleted %d, backup list %ws", paths_str.c_str(), event.requestor_pid, event.is_modified, event.is_created, event.is_renamed, event.is_deleted, backup_paths_str.c_str());
-
-		if (event.is_modified == false)
+		if (event.types.size() == 0)
 		{
-            PrintDebugW(L"The file %ws was not modified, no need to analyze types", paths_str.c_str());
-			return false;
-		}
-		
-        PrintDebugW(L"Get old types");
-		if (event.is_created == false && event.old_types.size() == 0) {
-			for (int i = 0; i < (int)event.path_list.size(); i++)
+			if (FileExist(event.path) == true)
 			{
-				PrintDebugW("Index %d, path %ws, backup %ws", i, event.path_list[i].c_str(), event.backup_name_list[i].c_str());
-				if (event.backup_name_list[i].size() == 0)
-				{
-					continue;
-				}
-				auto backup_path = event.backup_name_list[i];
-				if (FileExist(backup_path) == true)
-				{
-                    old_index = i;
-					PrintDebugW("Backup is exist %ws", backup_path.c_str());
-					event.old_types = std::move(kTrID->GetTypes(backup_path));
-					//PrintDebugW("Deleting file: %ws", backup_path.c_str());
-					//DeleteFileW(backup_path.c_str());
-					break;
-				}
-				else
-				{
-					PrintDebugW("Backup is not exist %ws", backup_path.c_str());
-				}
+				event.types = std::move(kTrID->GetTypes(event.path));
 			}
-		}
-		if (old_index == -1) {
-			old_index = 0;
-		}
-
-        PrintDebugW(L"Get new types");
-
-		if (event.new_types.size() == 0)
-		{
-			for (int i = (int)event.path_list.size() - 1; i >= old_index; --i)
+			else
 			{
-				PrintDebugW("Index %d, path %ws, backup %ws", i, event.path_list[i].c_str(), event.backup_name_list[i].c_str());
-				if (FileExist(event.path_list[i]) == true)
-				{
-					PrintDebugW("Current is exist %ws", event.path_list[i].c_str());
-					new_index = i;
-					std::wstring backup_path = TEMP_DIR + CopyToTmp(event.path_list[i], true);
-					event.new_types = std::move(kTrID->GetTypes(backup_path));
-					//PrintDebugW("Deleting file: %ws", backup_path.c_str());
-					//DeleteFileW(backup_path.c_str());
-					break;
-				}
-				else
-				{
-					PrintDebugW("Current is not exist %ws", event.path_list[i].c_str());
-				}
-			}
-
-			if (new_index == -1)
-			{
-				PrintDebugW("new_index == -1 -> new file not exists -> rename is not yet handled.");
-				//event.type_match = TYPE_NO_EVALUATION;
 				return false;
 			}
 		}
 
-        PrintDebugW("End getting types");
+		const std::vector<std::string>& ext_accepted_types = ...;
 
-		bool is_default_types_matched = false;
-		std::string ext;
-		for (int i = 0; i < (int)event.path_list.size(); i++) {
-			auto ext_tmp = ulti::WstrToStr(GetFileExtension(event.path_list[i]));
-			if (type_iden::kExtensionMap.find(ext_tmp) != type_iden::kExtensionMap.end()) {
-				ext = ext_tmp;
-			}
-		}
-		if (ext != "") {
-			const std::vector<std::string>& ext_accepted_types = type_iden::kExtensionMap[ext];
-			is_default_types_matched = type_iden::HasCommonType(ext_accepted_types, event.new_types);
-			PrintDebugW(L"is_default_types_matched: %d", is_default_types_matched);
-		}
-		else
-		{
-			is_default_types_matched = true;
-		}
-
-		bool is_types_matched_after_modified = false;
-		if (event.is_created == false)
-		{
-            if ((event.old_types.size() == 1 && event.old_types.front() == "") || event.old_types.size() == 0)
-            {
-				is_types_matched_after_modified = true;
-            }
-			else
-			{
-				is_types_matched_after_modified = type_iden::HasCommonType(event.old_types, event.new_types);
-			}
-			PrintDebugW(L"is_types_matched_after_modified: %d", is_types_matched_after_modified);
-		}
-
-		if (ext == "") {
-			if (event.is_created == true) {
-				event.type_match = ((event.new_types.size() == 1 && event.new_types.front() == "") || event.new_types.size() == 0) ? TYPE_NULL : TYPE_NOT_NULL;
-			}
-			else {
-				event.type_match = (is_types_matched_after_modified == true) ? TYPE_HAS_COMMON : TYPE_MISMATCH;
-			}
-		}
-		else {
-			event.type_match = ((is_default_types_matched | is_types_matched_after_modified) == true) ? TYPE_HAS_COMMON : TYPE_MISMATCH ;
-		}
-
-		if (event.type_match == TYPE_MISMATCH)
-		{
-			bool monitored_types = false;
-			for (const auto& file_path : event.path_list)
-			{
-				for (const auto& ext_tmp_wstr : GetFileExtensions(file_path))
-				{
-					auto ext = ulti::WstrToStr(ext_tmp_wstr);
-					if (ext == "")
-					{
-						continue;
-					}
-					if (type_iden::kExtensionMap.find(ext) != type_iden::kExtensionMap.end())
-					{
-						monitored_types = true;
-						break;
-					}
-				}
-                if (monitored_types == true)
-                {
-                    break;
-                }
-			}
-            if (monitored_types == false)
-            {
-                PrintDebugW(L"File %ws is not monitored, skip", event.path_list.front().c_str());
-                return false;
-            }
-		}
-
-        PrintDebugW(L"old_types %ws, new_types %ws, default %ws", type_iden::CovertTypesToString(event.old_types).c_str(), type_iden::CovertTypesToString(event.new_types).c_str(), type_iden::CovertTypesToString((type_iden::kExtensionMap.find(ext) != type_iden::kExtensionMap.end()) ? type_iden::kExtensionMap[ext] : std::vector<std::string>()).c_str());
+		event.type_match = (type_iden::HasCommonType(ext_accepted_types, event.types)) ? TYPE_HAS_COMMON : TYPE_MISMATCH;
 
 #ifdef _DEBUG
 		switch (event.type_match)
 		{
-		case TYPE_MATCH_NOT_EVALUATED:
-			PrintDebugW(L"event.type_match: TYPE_MATCH_NOT_EVALUATED");
-			break;
-
 		case TYPE_MISMATCH:
-			PrintDebugW(L"event.type_match: TYPE_MISMATCH");
+			PrintDebugW(L"TYPE_MISMATCH: types %ws, ext_accepted_types %ws", type_iden::CovertTypesToString(event.types).c_str(), type_iden::CovertTypesToString(ext_accepted_types));
 			break;
 
 		case TYPE_HAS_COMMON:
-			PrintDebugW(L"event.type_match: TYPE_HAS_COMMON");
-			break;
-
-		case TYPE_NULL:
-			PrintDebugW(L"event.type_match: TYPE_NULL");
-			break;
-
-		case TYPE_NOT_NULL:
-			PrintDebugW(L"event.type_match: TYPE_NOT_NULL");
-			break;
-
-		case TYPE_NO_EVALUATION:
-			PrintDebugW(L"event.type_match: TYPE_NO_EVALUATION");
+			PrintDebugW(L"TYPE_HAS_COMMON: types %ws, ext_accepted_types %ws", type_iden::CovertTypesToString(event.types).c_str(), type_iden::CovertTypesToString(ext_accepted_types));
 			break;
 
 		default:

@@ -28,7 +28,7 @@
 
 #define BEGIN_WIDTH 1024
 #define END_WIDTH 1024
-#define HIEUNT_MAX_PATH (260 * 4)
+#define HIEUNT_MAX_PATH (1024)
 
 #define TYPE_MATCH_NOT_EVALUATED 0
 #define TYPE_MISMATCH 1
@@ -44,27 +44,15 @@ namespace manager {
 	{
 		ULONG requestor_pid = 0;
 		bool is_modified = false;
-		bool is_deleted = false;
-		bool is_created = false;
-		bool is_renamed = false;
 		WCHAR current_path[HIEUNT_MAX_PATH] = { 0 };
-		WCHAR new_path[HIEUNT_MAX_PATH] = { 0 };
-		WCHAR backup_name[HIEUNT_MAX_PATH] = { 0 };
 	};
 
 	struct FileIoInfo
 	{
 		ULONG requestor_pid = 0;
-		bool is_modified = false;
-		bool is_deleted = false;
-		bool is_created = false;
-		bool is_renamed = false;
-		bool is_success = true;
 		ULONG type_match = TYPE_MATCH_NOT_EVALUATED;
-		std::vector<std::wstring> path_list;
-		std::vector<std::wstring> backup_name_list;
-		std::vector<std::string> old_types;
-		std::vector<std::string> new_types;
+		std::wstring path;
+		std::vector<std::string> types;
 	};
 
 	class FileIoManager {

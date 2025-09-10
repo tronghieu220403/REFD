@@ -38,28 +38,11 @@ namespace manager
         FileIoInfo file_io_info;
         
         auto current_path = ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->current_path)));
-        if (current_path.find(L"microsoft") != std::wstring::npos)
-        {
-            return;
-        }
 
-        PrintDebugW(L"File I/O event before: PID: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws, backup_name: %ws", raw_file_io_info->requestor_pid,(int)raw_file_io_info->is_modified, (int)raw_file_io_info->is_deleted, (int)raw_file_io_info->is_created, (int)raw_file_io_info->is_renamed, raw_file_io_info->current_path, raw_file_io_info->new_path, raw_file_io_info->backup_name);
+        PrintDebugW(L"File I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid,raw_file_io_info->current_path);
 
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
-        file_io_info.is_modified = raw_file_io_info->is_modified;
-        file_io_info.is_deleted = raw_file_io_info->is_deleted;
-        file_io_info.is_created = raw_file_io_info->is_created;
-        file_io_info.is_renamed = raw_file_io_info->is_renamed;
-        file_io_info.path_list.push_back(std::move(current_path));
-        std::wstring backup_name = raw_file_io_info->backup_name;
-        file_io_info.backup_name_list.push_back(TEMP_DIR + std::to_wstring(GetPathHash(raw_file_io_info->current_path)));
-
-        if (raw_file_io_info->is_renamed == true)
-        {
-            file_io_info.path_list.push_back(std::move(ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->new_path)))));
-            file_io_info.backup_name_list.push_back(TEMP_DIR + std::to_wstring(GetPathHash(raw_file_io_info->new_path)));
-        }
-
+        file_io_info.path = std::move(current_path);
         file_io_queue_.push(std::move(file_io_info));
     }
 
@@ -81,11 +64,12 @@ namespace manager
     std::wstring GetNativePath(const std::wstring& dos_path)
     {
         std::wstring drive_name = dos_path.substr(0, dos_path.find_first_of('\\'));
+        /* // Do not use cache since disk can change name
         if (kNativePath.find(drive_name) != kNativePath.end())
         {
             return kNativePath[drive_name] + dos_path.substr(drive_name.length());
         }
-
+        */
         std::wstring device_name;
         device_name.resize(MAX_PATH);
         DWORD status;
@@ -117,12 +101,13 @@ namespace manager
             return clean_path.substr(4); // Remove "\\?\" or "\\.\"
         }
 
+        /* // Do not use cache since disk can change name
         std::wstring device_name = nt_path.substr(0, nt_path.find(L'\\', sizeof("\\Device\\") - 1)); // Extract device name
         auto it = kDosPath.find(device_name);
         if (it != kDosPath.end()) {
             return it->second + clean_path.substr(device_name.length());
         }
-
+        */
         // Try all drive letters to find the matching device path
         wchar_t device_path[MAX_PATH];
         std::wstring dos_path = L"";
