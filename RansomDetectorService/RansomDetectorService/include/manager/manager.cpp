@@ -185,11 +185,11 @@ namespace manager {
 					// If the event wasn't merged, add it as a new event
 					merged_events.push_back(current_event);
                     int new_index = merged_events.size() - 1;
-					const auto& current_path = current_event.path_list.front();
+					const auto& path = current_event.path_list.front();
 					// Update the path hash map
-					ull new_path_hash = manager::GetPathHash(current_path);
+					ull new_path_hash = manager::GetPathHash(path);
 					path_hash_to_merged_index[new_path_hash] = new_index;
-					PrintDebugW(L"Process %d: Path hash %llu -> index %d (path %ws)", pid, new_path_hash, merged_events.size() - 1, current_path.c_str());
+					PrintDebugW(L"Process %d: Path hash %llu -> index %d (path %ws)", pid, new_path_hash, merged_events.size() - 1, path.c_str());
 
 					if (current_event.is_renamed == true)
 					{

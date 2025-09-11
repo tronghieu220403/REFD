@@ -25,6 +25,7 @@ namespace collector
         reg::kFltFuncVector->PushBack({ IRP_MJ_CLOSE, PreFileClose, PostFileClose });
         reg::kFltFuncVector->PushBack({ IRP_MJ_WRITE, PreWriteFile, PostFileWrite });
         reg::kFltFuncVector->PushBack({ IRP_MJ_ACQUIRE_FOR_SECTION_SYNCHRONIZATION, PreFileAcquireForSectionSync, PostFileAcquireForSectionSync });
+        reg::kFltFuncVector->PushBack({ IRP_MJ_SET_INFORMATION, PreFileSetInformation, PostFileSetInformation });
 
         //DebugMessage("Callbacks created.");
         return;
@@ -120,9 +121,10 @@ namespace collector
 
         const auto& create_params = data->Iopb->Parameters.Create;
         bool has_write_access = create_params.SecurityContext->DesiredAccess & (FILE_WRITE_DATA | FILE_APPEND_DATA);
+        bool has_delete_access = create_params.SecurityContext->DesiredAccess & DELETE;
 
-        // Not interested in files without write access
-        if (!has_write_access)
+        // Not interested in files without write and delete access
+        if (!has_write_access && ! has_delete_access)
         {
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
@@ -136,7 +138,7 @@ namespace collector
 
         memset(handle_context, 0, sizeof(HANDLE_CONTEXT));
         handle_context->requestor_pid = FltGetRequestorProcessId(data);
-        RtlCopyMemory(handle_context->current_path, current_path.Data(), current_path.Size() * sizeof(WCHAR));
+        RtlCopyMemory(handle_context->path, current_path.Data(), current_path.Size() * sizeof(WCHAR));
         
         status = FltSetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, FLT_SET_CONTEXT_KEEP_IF_EXISTS, reinterpret_cast<PFLT_CONTEXT>(handle_context), nullptr);
 
@@ -196,6 +198,96 @@ namespace collector
         return FLT_POSTOP_FINISHED_PROCESSING;
     }
 
+    FLT_PREOP_CALLBACK_STATUS PreFileSetInformation(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
+    {
+        NTSTATUS status;
+
+        if (data->RequestorMode == KernelMode)
+        {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        //DebugMessage("File %ws, instance %p, file object %p, pid %d", flt::GetFileFullPathName(data).Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
+
+        PHANDLE_CONTEXT p_handle_context = nullptr;
+
+        status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
+        if (!NT_SUCCESS(status))
+        {
+            if (status != STATUS_NOT_FOUND) {
+                //DebugMessage("FltGetStreamHandleContext failed: %x", status);
+            }
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+        
+        auto& set_info_params = data->Iopb->Parameters.SetFileInformation;
+
+        auto file_info_class = set_info_params.FileInformationClass;
+
+        if (file_info_class == FileRenameInformation 
+            || file_info_class == FileRenameInformationBypassAccessCheck
+            || file_info_class == FileRenameInformationEx 
+            || file_info_class == FileRenameInformationExBypassAccessCheck)
+        {
+            //DebugMessage("FileRenameInformation");
+
+            PFILE_RENAME_INFORMATION target_info = (PFILE_RENAME_INFORMATION)data->Iopb->Parameters.SetFileInformation.InfoBuffer;
+            PFLT_FILE_NAME_INFORMATION name_info;
+
+            status = FltGetDestinationFileNameInformation(
+                flt_objects->Instance,
+                flt_objects->FileObject,
+                target_info->RootDirectory,
+                target_info->FileName,
+                target_info->FileNameLength,
+                FLT_FILE_NAME_NORMALIZED | FLT_FILE_NAME_QUERY_DEFAULT,
+                &name_info
+            );
+
+            if (NT_SUCCESS(status))
+            {
+                p_handle_context->is_renamed = true;
+                if (name_info->Name.Length > 0 && name_info->Name.Length < (HIEUNT_MAX_PATH - 1) * sizeof(WCHAR))
+                {
+                    RtlCopyMemory(p_handle_context->path, name_info->Name.Buffer, name_info->Name.Length);
+                    p_handle_context->path[name_info->Name.Length / sizeof(WCHAR)] = L'\0';
+                }
+                else
+                {
+                    RtlZeroMemory(p_handle_context->path, sizeof(p_handle_context->path));
+                }
+                //DebugMessage("File: %ws, renamed to %ws", p_handle_context->current_path, p_handle_context->new_path);
+                FltReleaseFileNameInformation(name_info);
+            }
+        }
+
+        FltReleaseContext(p_handle_context);
+        return FLT_PREOP_SUCCESS_NO_CALLBACK;
+    }
+
+    FLT_POSTOP_CALLBACK_STATUS PostFileSetInformation(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID completion_context, FLT_POST_OPERATION_FLAGS flags)
+    {
+        /*
+        //DebugMessage("%ws, instance %p, file object %p, pid %d", __FUNCTIONW__, flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
+        if (!NT_SUCCESS(data->IoStatus.Status))
+        {
+            return FLT_POSTOP_FINISHED_PROCESSING;
+        }
+
+        if (flags & FLTFL_POST_OPERATION_DRAINING)
+        {
+            return FLT_POSTOP_FINISHED_PROCESSING;
+        }
+
+        if (data->RequestorMode == KernelMode)
+        {
+            return FLT_POSTOP_FINISHED_PROCESSING;
+        }
+        */
+
+        return FLT_POSTOP_FINISHED_PROCESSING;
+    }
+
     FLT_PREOP_CALLBACK_STATUS PreFileAcquireForSectionSync(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
     {
 		if (data->RequestorMode == KernelMode)
@@ -227,7 +319,7 @@ namespace collector
                 
                 memset(handle_context, 0, sizeof(HANDLE_CONTEXT));
 
-                RtlCopyMemory(handle_context->current_path, current_path.Data(), current_path.Size() * sizeof(WCHAR));
+                RtlCopyMemory(handle_context->path, current_path.Data(), current_path.Size() * sizeof(WCHAR));
                 handle_context->requestor_pid = FltGetRequestorProcessId(data);
                 
                 status = FltSetFileContext(flt_objects->Instance, flt_objects->FileObject, FLT_SET_CONTEXT_KEEP_IF_EXISTS, reinterpret_cast<PFLT_CONTEXT>(handle_context), nullptr);

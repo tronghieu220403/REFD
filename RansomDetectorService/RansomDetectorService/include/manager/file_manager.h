@@ -44,7 +44,8 @@ namespace manager {
 	{
 		ULONG requestor_pid = 0;
 		bool is_modified = false;
-		WCHAR current_path[HIEUNT_MAX_PATH] = { 0 };
+		bool is_renamed = false;
+		WCHAR path[HIEUNT_MAX_PATH] = { 0 };
 	};
 
 	struct FileIoInfo

@@ -514,7 +514,7 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
         if (handle_context != nullptr)
         {
             //DebugMessage("FLT_STREAMHANDLE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
-            if (handle_context->is_modified == 0)
+            if (handle_context->is_modified == false || handle_context->is_renamed == false)
             {
                 //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
@@ -530,7 +530,7 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
         if (handle_context != nullptr)
         {
             //DebugMessage("FLT_FILE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
-            if (handle_context->is_modified == 0)
+            if (handle_context->is_modified == false || handle_context->is_renamed == false)
             {
                 //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;

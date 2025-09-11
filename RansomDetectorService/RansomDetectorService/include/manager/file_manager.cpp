@@ -37,12 +37,12 @@ namespace manager
     {
         FileIoInfo file_io_info;
         
-        auto current_path = ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->current_path)));
+        auto path = ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->path)));
 
-        PrintDebugW(L"File I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid,raw_file_io_info->current_path);
+        PrintDebugW(L"File I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid,raw_file_io_info->path);
 
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
-        file_io_info.path = std::move(current_path);
+        file_io_info.path = std::move(path);
         file_io_queue_.push(std::move(file_io_info));
     }
 
