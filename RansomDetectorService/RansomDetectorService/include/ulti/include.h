@@ -98,4 +98,6 @@ typedef unsigned long long ull;
 
 namespace fs = std::filesystem;
 
+using namespace std;
+
 #endif // ETWSERVICE_ULTI_INCLUDE_H_

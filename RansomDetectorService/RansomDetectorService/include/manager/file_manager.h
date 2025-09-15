@@ -53,7 +53,6 @@ namespace manager {
 		ULONG requestor_pid = 0;
 		ULONG type_match = TYPE_MATCH_NOT_EVALUATED;
 		std::wstring path;
-		std::vector<std::string> types;
 	};
 
 	class FileIoManager {

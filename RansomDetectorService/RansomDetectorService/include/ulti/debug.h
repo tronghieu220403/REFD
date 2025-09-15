@@ -28,6 +28,6 @@ namespace debug {
 }  // namespace debug
 
 #define PrintDebugW(str, ...) \
-    debug::DebugPrintW(L"[%ws:%d] " str L"\n", __FUNCTIONW__, __LINE__, __VA_ARGS__)
+    debug::DebugPrintW(L"[RansomDetectorService] [%ws:%d] " str L"\n", __FUNCTIONW__, __LINE__, __VA_ARGS__)
 
 #endif

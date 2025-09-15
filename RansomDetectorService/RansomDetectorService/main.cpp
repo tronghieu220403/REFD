@@ -132,7 +132,6 @@ static void ServiceMain()
 		}));
 
 	std::thread processing_thread([&last_process_time]() {
-        manager::ClearTmpFiles();
 		while (true)
 		{
 			manager::kEvaluator->LockMutex();
