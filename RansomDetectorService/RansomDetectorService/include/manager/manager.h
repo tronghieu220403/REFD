@@ -27,7 +27,7 @@ namespace manager {
 		void LockMutex();
 		void UnlockMutex();
 
-		void ProcessDataQueue();
+		void Evaluate();
 
 		bool AnalyzeEvent(FileIoInfo& event);
 

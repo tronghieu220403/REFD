@@ -32,21 +32,14 @@ static void StartEventCollector()
 
 	while (true)
 	{
-		/*
-		if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
-		{
-			PrintDebugW(L"ggez.txt detected, terminate service");
-			ExitProcess(0);
-		}
-		*/
-
-		PrintDebugW(L"Creating communication port %ws", PORT_NAME);
+		//PrintDebugW(L"Creating communication port %ws", PORT_NAME);
 		HRESULT hr = com_port.Create(PORT_NAME);
 		if (FAILED(hr))
 		{
-			PrintDebugW(L"Failed to create communication port: %08X", hr);
+			//PrintDebugW(L"Failed to create communication port: 0x%08X", hr);
 			Sleep(1000); // Retry after 1 second
 		}
+		//PrintDebugW(L"Communication port created");
 
 		while (true)
 		{
@@ -54,10 +47,8 @@ static void StartEventCollector()
             auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(current_time - last_process_time);
 			if (elapsed.count() >= 6) // Check every 6 seconds
 			{
-                //Sleep(100); // Sleep for 0.1 second before checking again
 				manager::kEvaluator->LockMutex();
-				manager::kEvaluator->ProcessDataQueue();
-				//last_process_time = std::chrono::steady_clock::now();
+				manager::kEvaluator->Evaluate();
 				manager::kEvaluator->UnlockMutex();
                 last_process_time = current_time;
 			}
@@ -65,7 +56,6 @@ static void StartEventCollector()
 			hr = com_port.Get((PFILTER_MESSAGE_HEADER)buffer, buffer_size);
 			if (SUCCEEDED(hr))
 			{
-				//PrintDebugW(L"Received message from communication port");
 				COMPORT_MESSAGE* msg = (COMPORT_MESSAGE*)buffer;
 				// Process the message
 				manager::RawFileIoInfo* raw_file_io_info = &msg->raw_file_io_info;
@@ -76,7 +66,7 @@ static void StartEventCollector()
 			}
 			else
 			{
-				//PrintDebugW(L"Failed to receive message: %08X", hr);
+				//PrintDebugW(L"Failed to receive message: 0x%08X", hr);
 				break; // Exit the loop on failure
 			}
 		}
@@ -120,13 +110,6 @@ static void ServiceMain()
 		while (true)
 		{
 			StartEventCollector();
-			/*
-			if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
-			{
-				PrintDebugW(L"ggez.txt detected, terminate service");
-				ExitProcess(0);
-			}
-			*/
 			Sleep(50);
 		}
 		}));
@@ -135,16 +118,9 @@ static void ServiceMain()
 		while (true)
 		{
 			manager::kEvaluator->LockMutex();
-			manager::kEvaluator->ProcessDataQueue();
+			manager::kEvaluator->Evaluate();
             last_process_time = std::chrono::steady_clock::now();
 			manager::kEvaluator->UnlockMutex();
-			/*
-			if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
-			{
-				PrintDebugW(L"ggez.txt detected, terminate service");
-				ExitProcess(0);
-			}
-			*/
 			Sleep(1000);
 		}
 		});
@@ -157,11 +133,6 @@ static void ServiceMain()
 			manager::kEvaluator->LockMutex();
 			//manager::kEvaluator->EvaluateProcesses();
 			manager::kEvaluator->UnlockMutex();
-			if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
-			{
-				PrintDebugW(L"ggez.txt detected, terminate service");
-				ExitProcess(0);
-			}
 			
 			auto end_time = std::chrono::high_resolution_clock::now();
 			DWORD duration = (DWORD)std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();

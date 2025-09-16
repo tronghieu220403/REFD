@@ -50,5 +50,5 @@ struct ScopedDefer
 /// Implementation of "defer" keyword similar in Go and Zig to automatically
 /// call resource cleanup at end of function scope without copy-pasted cleanup
 /// statements or separate RAII wrapper data types.
-#define DEFER(x) \
+#define defer(x) \
     const auto STR_CONCAT(tmpDeferVarName, __LINE__) = ScopedDefer([&]() { x; })

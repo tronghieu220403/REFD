@@ -43,9 +43,10 @@ namespace collector
             //DebugMessage("Magic files exist, so we allow the driver to unload");
             return STATUS_SUCCESS;
         }
-        */
         //DebugMessage("STATUS_FLT_DO_NOT_DETACH");
         return STATUS_FLT_DO_NOT_DETACH;
+        */
+        return STATUS_SUCCESS;
     }
 
     FLT_PREOP_CALLBACK_STATUS PreFileCreate(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
@@ -229,8 +230,6 @@ namespace collector
             || file_info_class == FileRenameInformationEx 
             || file_info_class == FileRenameInformationExBypassAccessCheck)
         {
-            //DebugMessage("FileRenameInformation");
-
             PFILE_RENAME_INFORMATION target_info = (PFILE_RENAME_INFORMATION)data->Iopb->Parameters.SetFileInformation.InfoBuffer;
             PFLT_FILE_NAME_INFORMATION name_info;
 
@@ -246,6 +245,8 @@ namespace collector
 
             if (NT_SUCCESS(status))
             {
+                //DebugMessage("File: %ws, renamed to %ws", p_handle_context->path, name_info->Name.Buffer);
+
                 p_handle_context->is_renamed = true;
                 if (name_info->Name.Length > 0 && name_info->Name.Length < (HIEUNT_MAX_PATH - 1) * sizeof(WCHAR))
                 {
@@ -256,7 +257,6 @@ namespace collector
                 {
                     RtlZeroMemory(p_handle_context->path, sizeof(p_handle_context->path));
                 }
-                //DebugMessage("File: %ws, renamed to %ws", p_handle_context->current_path, p_handle_context->new_path);
                 FltReleaseFileNameInformation(name_info);
             }
         }

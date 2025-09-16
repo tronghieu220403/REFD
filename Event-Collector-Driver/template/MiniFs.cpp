@@ -514,12 +514,12 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
         if (handle_context != nullptr)
         {
             //DebugMessage("FLT_STREAMHANDLE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
-            if (handle_context->is_modified == false || handle_context->is_renamed == false)
+            if (handle_context->is_modified == false && handle_context->is_renamed == false)
             {
                 //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
             }
-            //DebugMessage("Sending event to user mode: PID %d, is_modified %d, is_deleted %d, is_created %d, is_renamed %d, current_path %ws, new_path %ws", handle_context->requestor_pid, handle_context->is_modified, handle_context->is_deleted, handle_context->is_created, handle_context->is_renamed, handle_context->current_path, handle_context->new_path);
+            DebugMessage("Sending event to user mode: PID %d, is_modified %d, is_renamed %d, path %ws", handle_context->requestor_pid, handle_context->is_modified, handle_context->is_renamed, handle_context->path);
 
             com::kComPort->Send(handle_context, sizeof(collector::HANDLE_CONTEXT));
         }
@@ -530,12 +530,12 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
         if (handle_context != nullptr)
         {
             //DebugMessage("FLT_FILE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
-            if (handle_context->is_modified == false || handle_context->is_renamed == false)
+            if (handle_context->is_modified == false && handle_context->is_renamed == false)
             {
                 //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
                 return;
             }
-            //DebugMessage("Sending event to user mode: PID %d, is_modified %d, is_deleted %d, is_created %d, is_renamed %d, current_path %ws, new_path %ws", handle_context->requestor_pid, handle_context->is_modified, handle_context->is_deleted, handle_context->is_created, handle_context->is_renamed, handle_context->current_path, handle_context->new_path);
+            DebugMessage("Sending event to user mode: PID %d, is_modified %d, is_renamed %d, path %ws", handle_context->requestor_pid, handle_context->is_modified, handle_context->is_renamed, handle_context->path);
             com::kComPort->Send(handle_context, sizeof(collector::HANDLE_CONTEXT));
         }
     }

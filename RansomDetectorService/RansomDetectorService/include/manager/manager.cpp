@@ -29,26 +29,22 @@ namespace manager {
 		event_mutex_.unlock();
 	}
 
-	void Evaluator::ProcessDataQueue()
+	void Evaluator::Evaluate()
 	{
 		auto current_time = std::chrono::steady_clock::now();
 
-		PrintDebugW(L"Start processing data queue");
 		std::queue<FileIoInfo> file_io_list;
 		kFileIoManager->LockMutex();
 		kFileIoManager->MoveQueue(file_io_list);
 		kFileIoManager->UnlockMutex();
-		PrintDebugW(L"Number of file I/O events: %d", file_io_list.size());
-		// If the event list is empty, return an empty queue
-
+		
 		if (file_io_list.empty()) {
 			return;
 		}
+
 		// Store events grouped by requestor_pid
 		std::unordered_map<ULONG, std::vector<FileIoInfo>> events_by_pid;
 		
-        static std::unordered_map<ULONG, std::wstring> pid_to_name_map;
-
 		// Move events from the queue into the map grouped by requestor_pid
 		while (!file_io_list.empty())
 		{
@@ -61,7 +57,6 @@ namespace manager {
 			file_io_list.pop();
 		}
 
-		PrintDebugW(L"Merging events");
 		// Iterate through each group of events with the same requestor_pid
 		for (auto& pid_events : events_by_pid)
 		{
@@ -73,15 +68,12 @@ namespace manager {
 	{
 		PrintDebugW(L"Start evaluating processes");
 
-		for (auto& pid_events : global_merged_events_by_pid) {
-			auto pid = pid_events.first;
-			EvaluateProcess(pid);
-		}
 		PrintDebugW(L"End evaluating processes");
 	}
 
 	bool Evaluator::AnalyzeEvent(FileIoInfo& event)
 	{
+		/*
 		PrintDebugW(L"AnalyzeEvent: %ws, pid %d", event.path.c_str(), event.requestor_pid);
 
 		if (event.types.size() == 0)
@@ -115,14 +107,14 @@ namespace manager {
 			break;
 		}
 #endif // _DEBUG
-
+		*/
 		return true;
 	}
 
 
 	bool Evaluator::EvaluateProcess(ULONG pid)
 	{
-		return is_ransomware;
+		return false;
 	}
 
 	bool Evaluator::DiscardEventByPid(ULONG issuing_pid)

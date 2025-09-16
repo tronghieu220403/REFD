@@ -10,7 +10,7 @@
 #include "../../template/register.h"
 #include "../../template/flt-ex.h"
 
-#define HIEUNT_MAX_PATH (260 * 4 * 2)
+#define HIEUNT_MAX_PATH 1024
 
 namespace collector
 {
