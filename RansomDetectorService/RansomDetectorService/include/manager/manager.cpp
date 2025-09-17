@@ -1,5 +1,6 @@
 ﻿#include "manager.h"
 #include "file_type_iden.h"
+#include "known_folder.h"
 
 namespace manager {
 
@@ -46,14 +47,16 @@ namespace manager {
 		std::unordered_map<ULONG, std::vector<FileIoInfo>> events_by_pid;
 		
 		// Move events from the queue into the map grouped by requestor_pid
-		while (!file_io_list.empty())
+		while (file_io_list.empty() == false)
 		{
 			FileIoInfo& event = file_io_list.front();
 			auto pid = event.requestor_pid; // std::move will make event.requestor_pid invalid if we use: events_by_pid[event.requestor_pid].push_back(std::move(event));
 			
-			// Discard not honey pots file
-
-			events_by_pid[pid].push_back(std::move(event));
+			if (kf_checker.IsPathInKnownFolders(event.path) == true)
+				events_by_pid[pid].push_back(std::move(event));
+			{
+				PrintDebugW(L"In known folder: %ws", event.path.c_str());
+			}
 			file_io_list.pop();
 		}
 

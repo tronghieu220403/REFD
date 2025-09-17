@@ -9,6 +9,7 @@ C/C++ -> General -> Additional Include Dir -> $(ProjectDir)include
 #include "manager/manager.h"
 #include "com/minifilter_comm.h"
 #include "manager/file_type_iden.h"
+#include "manager/known_folder.h"
 
 constexpr auto SERVICE_NAME = L"REFD";
 
@@ -36,13 +37,14 @@ static void StartEventCollector()
 		HRESULT hr = com_port.Create(PORT_NAME);
 		if (FAILED(hr))
 		{
-			//PrintDebugW(L"Failed to create communication port: 0x%08X", hr);
+			PrintDebugW(L"Failed to create communication port: 0x%08X", hr);
 			Sleep(1000); // Retry after 1 second
 		}
 		//PrintDebugW(L"Communication port created");
 
 		while (true)
 		{
+			//PrintDebugW(L"Check every 6 seconds");
             auto current_time = std::chrono::steady_clock::now();
             auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(current_time - last_process_time);
 			if (elapsed.count() >= 6) // Check every 6 seconds
@@ -52,10 +54,12 @@ static void StartEventCollector()
 				manager::kEvaluator->UnlockMutex();
                 last_process_time = current_time;
 			}
+
 			//PrintDebugW(L"Wait for a message from the communication port");
 			hr = com_port.Get((PFILTER_MESSAGE_HEADER)buffer, buffer_size);
 			if (SUCCEEDED(hr))
 			{
+				//PrintDebugW(L"Message received, size %d", ((PFILTER_MESSAGE_HEADER)buffer)->ReplyLength);
 				COMPORT_MESSAGE* msg = (COMPORT_MESSAGE*)buffer;
 				// Process the message
 				manager::RawFileIoInfo* raw_file_io_info = &msg->raw_file_io_info;
@@ -76,9 +80,8 @@ static void StartEventCollector()
 static void ServiceMain()
 {
 	PrintDebugW(L"ServiceMain, current pid %d", GetCurrentProcessId());
-#ifdef _DEBUG
+	
 	srv::InitServiceCtrlHandler(SERVICE_NAME);
-#endif // _DEBUG
 
 	/*
 	if (ulti::CreateDir(MAIN_DIR) == false)
@@ -89,6 +92,14 @@ static void ServiceMain()
 	*/
 
 	debug::InitDebugLog();
+
+	try {
+		kf_checker.Init(L"E:\\hieunt210330\\hieunt210330\\knownfolders.json");
+	}
+	catch (std::exception& ex) {
+		PrintDebugW("KnownFolderChecker error: %ws", ulti::StrToWstr(ex.what()).c_str());
+		return;
+	}
 
 	manager::Init();
 
@@ -125,27 +136,8 @@ static void ServiceMain()
 		}
 		});
 
-	std::jthread manager_thread([]() {
-		while (true)
-		{
-			auto start_time = std::chrono::high_resolution_clock::now();
-			/*
-			manager::kEvaluator->LockMutex();
-			//manager::kEvaluator->EvaluateProcesses();
-			manager::kEvaluator->UnlockMutex();
-			
-			auto end_time = std::chrono::high_resolution_clock::now();
-			DWORD duration = (DWORD)std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-			DWORD sleep_ms = duration < (DWORD)EVALUATATION_INTERVAL_MS ? EVALUATATION_INTERVAL_MS - duration : 0;
-			PrintDebugW(L"Evaluation took %d ms, sleeping for %d ms", duration, sleep_ms);
-			Sleep(sleep_ms);
-			*/
-			Sleep(1000);
-		}
-		});
 	processing_thread.join();
 	collector_thread.join();
-	manager_thread.join();
 	debug::CleanupDebugLog();
 }
 

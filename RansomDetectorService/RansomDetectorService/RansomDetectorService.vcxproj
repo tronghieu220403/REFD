@@ -144,6 +144,7 @@
     <ClCompile Include="include\com\minifilter_com.cpp" />
     <ClCompile Include="include\manager\file_manager.cpp" />
     <ClCompile Include="include\manager\file_type_iden.cpp" />
+    <ClCompile Include="include\manager\known_folder.cpp" />
     <ClCompile Include="include\manager\manager.cpp" />
     <ClCompile Include="include\manager\process_manager.cpp" />
     <ClCompile Include="include\mutex\mutex.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="include\com\minifilter_comm.h" />
     <ClInclude Include="include\manager\file_manager.h" />
     <ClInclude Include="include\manager\file_type_iden.h" />
+    <ClInclude Include="include\manager\known_folder.h" />
     <ClInclude Include="include\manager\manager.h" />
     <ClInclude Include="include\manager\process_manager.h" />
     <ClInclude Include="include\mutex\mutex.h" />

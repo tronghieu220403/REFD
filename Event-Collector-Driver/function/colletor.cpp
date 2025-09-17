@@ -182,12 +182,12 @@ namespace collector
             {
                 return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
-
             NTSTATUS status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
             if (!NT_SUCCESS(status))
             {
 				return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
+            p_handle_context->is_modified = true;
         }
 
         FltReleaseContext(p_handle_context);
@@ -321,7 +321,7 @@ namespace collector
 
                 RtlCopyMemory(handle_context->path, current_path.Data(), current_path.Size() * sizeof(WCHAR));
                 handle_context->requestor_pid = FltGetRequestorProcessId(data);
-                
+                handle_context->is_modified = true;
                 status = FltSetFileContext(flt_objects->Instance, flt_objects->FileObject, FLT_SET_CONTEXT_KEEP_IF_EXISTS, reinterpret_cast<PFLT_CONTEXT>(handle_context), nullptr);
                 if (!NT_SUCCESS(status))
                 {
