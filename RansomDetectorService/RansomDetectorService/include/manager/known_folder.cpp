@@ -276,3 +276,46 @@ bool KnownFolderChecker::IsPathInKnownFolders(
     }
     return false;
 }
+
+std::vector<std::wstring> KnownFolderChecker::GetKnownFolders()
+{
+    std::vector<std::wstring> result;
+
+    // List of user folders to skip
+    std::vector<std::wstring> skip_users = {
+        L"public", L"default", L"all users", L"default user"
+    };
+
+    for (const auto& rule : rules_) {
+        if (!rule.any_user) {
+            // Case: rule does not require user expansion
+            // Just add the prefix as a folder
+            result.push_back(rule.prefix);
+        }
+        else {
+            // Case: rule requires expanding all users in C:\Users
+            std::wstring users_root = L"c:\\users";
+            for (const auto& entry : std::filesystem::directory_iterator(users_root)) {
+                if (!entry.is_directory()) continue;
+
+                // Extract the user folder name
+                std::wstring username = entry.path().filename().wstring();
+
+                // Convert to lowercase for comparison
+                std::wstring lower = username;
+                std::transform(lower.begin(), lower.end(), lower.begin(), ::towlower);
+
+                // Skip special system users
+                if (std::find(skip_users.begin(), skip_users.end(), lower) != skip_users.end()) {
+                    continue;
+                }
+
+                // Build the full folder path: prefix + username + suffix
+                std::wstring full = rule.prefix + username + rule.suffix_after_user;
+                result.push_back(full);
+            }
+        }
+    }
+
+    return result;
+}

@@ -11,6 +11,8 @@ C/C++ -> General -> Additional Include Dir -> $(ProjectDir)include
 #include "manager/file_type_iden.h"
 #include "manager/known_folder.h"
 
+#include "honey/honeypot.h"
+
 constexpr auto SERVICE_NAME = L"REFD";
 
 #define PORT_NAME L"\\hieunt_mf"
@@ -93,14 +95,6 @@ static void ServiceMain()
 
 	debug::InitDebugLog();
 
-	try {
-		kf_checker.Init(L"E:\\hieunt210330\\hieunt210330\\knownfolders.json");
-	}
-	catch (std::exception& ex) {
-		PrintDebugW("KnownFolderChecker error: %ws", ulti::StrToWstr(ex.what()).c_str());
-		return;
-	}
-
 	manager::Init();
 
 	if (ulti::CreateDir(TEMP_DIR) == false)
@@ -114,6 +108,17 @@ static void ServiceMain()
 		PrintDebugW(L"TrID init failed");
 		return;
 	}
+
+	try {
+		kf_checker.Init(L"E:\\hieunt210330\\hieunt210330\\knownfolders.json");
+	}
+	catch (std::exception& ex) {
+		PrintDebugW("KnownFolderChecker error: %ws", ulti::StrToWstr(ex.what()).c_str());
+		return;
+	}
+
+	honeypot::HoneyPot::Init(kf_checker.GetKnownFolders(), L"E:\\hieunt210330\\honeypot");
+
 
 	auto last_process_time = std::chrono::steady_clock::now();
 

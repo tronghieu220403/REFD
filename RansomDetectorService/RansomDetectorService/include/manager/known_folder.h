@@ -55,7 +55,7 @@ public:
 
     void Init(const std::wstring& config_file);
     bool IsPathInKnownFolders(const std::wstring& file_path) const;
-
+    std::vector<std::wstring> GetKnownFolders();
 private:
     std::vector<FolderRule> rules_;
 

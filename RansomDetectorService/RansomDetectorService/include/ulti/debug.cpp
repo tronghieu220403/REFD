@@ -77,43 +77,53 @@ namespace debug {
 	}
 
 	void DebugPrintW(const wchar_t* pwsz_format, ...) {
-		//return;
 		if (pwsz_format == nullptr) return;
 
-		std::wstring log;
-		log.resize(1024);
+		// Reusable buffer per thread
+		thread_local std::vector<wchar_t> buffer;
+		buffer.clear();
+
+		// Build timestamp string first
+		SYSTEMTIME time;
+		GetLocalTime(&time);
+
+		wchar_t time_str[64];
+		int prefix_len = swprintf_s(time_str, 64,
+			L"[%d/%02d/%02d - %02d:%02d:%02d][REFD] ",
+			time.wYear, time.wMonth, time.wDay,
+			time.wHour, time.wMinute, time.wSecond);
+
+		if (prefix_len <= 0) return;
 
 		va_list args;
 		va_start(args, pwsz_format);
-		int len = 0;
-		while (true) {
-			try {
-				len = vswprintf_s(&log[0], log.size(), pwsz_format, args);
-			}
-			catch (...) {
-				if (errno == ERANGE) {
-					log.resize(log.size() * 2);
-					continue;
-				}
-			}
-			break;
-		}
-		if (len > 0) {
-			SYSTEMTIME time;
-			GetLocalTime(&time);
 
-			wchar_t time_str[64];
-			swprintf_s(time_str, 64, L"[%d/%02d/%02d - %02d:%02d:%02d][REFD] ",
-				time.wYear, time.wMonth, time.wDay,
-				time.wHour, time.wMinute, time.wSecond);
+		va_list args_copy;
+		va_copy(args_copy, args);
+		int msg_len = _vscwprintf(pwsz_format, args_copy);
+		va_end(args_copy);
 
-			log.insert(0, time_str);
-			OutputDebugStringW(log.c_str());
-			//WriteDebugToFileW(log.c_str());
+		if (msg_len <= 0) {
+			va_end(args);
+			return;
 		}
+
+		// Allocate buffer once: prefix + message + null terminator
+		buffer.resize(prefix_len + msg_len + 1);
+
+		// Copy prefix into buffer
+		wmemcpy(buffer.data(), time_str, prefix_len);
+
+		// Format message into buffer right after prefix
+		vswprintf_s(buffer.data() + prefix_len, msg_len + 1, pwsz_format, args);
 
 		va_end(args);
+
+		// Null-terminated already, safe to print
+		OutputDebugStringW(buffer.data());
+		//WriteDebugToFileW(buffer.data());
 	}
+
 
 	std::wstring GetErrorMessage(DWORD errorCode) {
 		LPWSTR messageBuffer = nullptr;
