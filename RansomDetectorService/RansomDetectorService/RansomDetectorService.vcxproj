@@ -148,6 +148,7 @@
     <ClCompile Include="include\manager\file_type_iden.cpp" />
     <ClCompile Include="include\manager\known_folder.cpp" />
     <ClCompile Include="include\manager\manager.cpp" />
+    <ClCompile Include="include\manager\matcher.cpp" />
     <ClCompile Include="include\mutex\mutex.cpp" />
     <ClCompile Include="include\service\service.cpp" />
     <ClCompile Include="include\trid\trid_api.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="include\manager\file_type_iden.h" />
     <ClInclude Include="include\manager\known_folder.h" />
     <ClInclude Include="include\manager\manager.h" />
+    <ClInclude Include="include\manager\matcher.h" />
     <ClInclude Include="include\mutex\mutex.h" />
     <ClInclude Include="include\service\service.h" />
     <ClInclude Include="include\trid\trid_api.h" />
