@@ -30,9 +30,6 @@
     <ClCompile Include="include\manager\manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\manager\process_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\mutex\mutex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,6 +51,12 @@
     <ClCompile Include="include\manager\known_folder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\honey\honeypot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\manager\cache.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\com\driver_comm.h">
@@ -69,9 +72,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\manager\manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\manager\process_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\mutex\mutex.h">
@@ -93,6 +93,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\manager\known_folder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\honey\honeypot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\manager\cache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

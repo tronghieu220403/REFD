@@ -95,6 +95,7 @@ namespace manager {
 	bool DirExist(const std::wstring& dir_path);
 
 	uint64_t GetFileSize(const std::wstring& file_path);
+	std::wstring GetFileName(const std::wstring& path);
 
 	std::wstring GetFileExtension(const std::wstring& file_name);
 	std::vector<std::wstring> GetFileExtensions(const std::wstring& file_name);

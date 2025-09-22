@@ -182,6 +182,13 @@ namespace manager
         return size.QuadPart;
     }
 
+    std::wstring GetFileName(const std::wstring& path)
+    {
+        size_t pos = path.find_last_of(L"\\/");
+        if (pos == std::string::npos) return path;
+        return path.substr(pos + 1);
+    }
+
     // Function to get file extension
     std::wstring GetFileExtension(const std::wstring& file_name) {
 		size_t name_pos = file_name.find_last_of(L"\\/");

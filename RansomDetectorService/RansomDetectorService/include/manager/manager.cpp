@@ -52,9 +52,9 @@ namespace manager {
 			FileIoInfo& event = file_io_list.front();
 			auto pid = event.requestor_pid; // std::move will make event.requestor_pid invalid if we use: events_by_pid[event.requestor_pid].push_back(std::move(event));
 			
-			if (kf_checker.IsPathInKnownFolders(event.path) == true)
-				events_by_pid[pid].push_back(std::move(event));
+			if (kf_checker.IsPathInKnownFolders(event.path) == true && GetFileName(event.path).find(L"hieunt-") != std::wstring::npos);
 			{
+				events_by_pid[pid].push_back(std::move(event));
 				PrintDebugW(L"In known folder: %ws", event.path.c_str());
 			}
 			file_io_list.pop();
