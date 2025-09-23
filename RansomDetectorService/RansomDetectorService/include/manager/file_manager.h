@@ -22,6 +22,7 @@
 #define MIN_DIR_COUNT 2
 
 #define FILE_MAX_SIZE_SCAN (30 * 1024 * 1024) // 30MB
+#define FILE_MIN_SIZE_SCAN 10
 
 #define THRESHOLD_PERCENTAGE 80
 #define BelowThreshold(part, total) (part <= total * THRESHOLD_PERCENTAGE / 100)

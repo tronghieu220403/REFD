@@ -60,6 +60,7 @@ namespace manager {
 			file_io_list.pop();
 		}
 
+		// Xử lí chỉ cần mang tính local, cụ thể là tìm xem pid này thay đổi những folder nào rồi đem ra phân tích các folder (bỏ qua nếu trong cache chưa quá hạn hoặc trực tiếp đánh giá rồi cập nhật cache) chứ không lưu lại các lần xử lí sau.
 		// Iterate through each group of events with the same requestor_pid
 		for (auto& pid_events : events_by_pid)
 		{

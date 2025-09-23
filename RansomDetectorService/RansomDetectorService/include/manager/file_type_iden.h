@@ -62,11 +62,11 @@ namespace type_iden
 
     bool HasCommonType(const std::vector<std::string>& types1, const std::vector<std::string>& types2);
 
-	bool CheckPrintableUTF16(const std::vector<unsigned char>& buffer);
+	bool CheckPrintableUTF16(const std::span<unsigned char>& buffer);
 
-	bool CheckPrintableUTF8(const std::vector<unsigned char>& buffer);
+	bool CheckPrintableUTF8(const std::span<unsigned char>& buffer);
 
-	bool CheckPrintableANSI(const std::vector<unsigned char>& buffer);
+	bool CheckPrintableUTF32(const std::span<unsigned char>& buffer);
 
 	bool IsPrintableFile(const fs::path& file_path);
 

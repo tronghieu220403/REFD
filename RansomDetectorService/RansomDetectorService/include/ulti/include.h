@@ -45,7 +45,7 @@
 #include <cctype>
 #include <codecvt>
 #include <cwctype>
-
+#include <span>
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "FltLib.lib")
 #pragma comment(lib, "comsupp.lib")

@@ -26,19 +26,64 @@ namespace type_iden
 		return false;
 	}
 
-	bool CheckPrintableUTF16(const std::vector<unsigned char>& buffer)
+
+	bool IsPrintableCodepoint(uint32_t cp) {
+		if (cp == '\n' || cp == '\r' || cp == '\t') return true;
+		if (cp >= 0x20 && cp < 0x7F) return true; // ASCII printable
+		return iswprint((wint_t)cp) || iswspace((wint_t)cp);
+	}
+
+	bool CheckPrintableUTF16(const std::span<unsigned char>& buffer)
 	{
-		if (buffer.size() == 0) {
-			return true;
+		size_t i = 0;
+		bool little_endian = true;
+
+		// BOM check
+		if (buffer[0] == 0xFF && buffer[1] == 0xFE) {
+			little_endian = true;
+			i = 2;
+		}
+		else if (buffer[0] == 0xFE && buffer[1] == 0xFF) {
+			little_endian = false;
+			i = 2;
 		}
 
 		std::streamsize printable_chars = 0;
 		std::streamsize total_chars = buffer.size() / sizeof(wchar_t);
 
-		for (size_t i = 0; i < buffer.size(); i += 2)
-		{
-			wchar_t c = *(wchar_t*)&buffer[i];
-			if (iswprint(c) || iswspace(c)) {
+		auto read_u16 = [&](size_t idx) -> uint16_t {
+			if (little_endian)
+				return buffer[idx] | (buffer[idx + 1] << 8);
+			else
+				return (buffer[idx] << 8) | buffer[idx + 1];
+			};
+
+		while (i + 1 < buffer.size()) {
+			uint16_t w1 = read_u16(i);
+			i += 2;
+
+			uint32_t codepoint = 0;
+
+			if (w1 >= 0xD800 && w1 <= 0xDBFF) {
+				// high surrogate
+				if (i + 1 < buffer.size()) {
+					uint16_t w2 = read_u16(i);
+					if (w2 >= 0xDC00 && w2 <= 0xDFFF) {
+						codepoint = 0x10000 + (((w1 - 0xD800) << 10) | (w2 - 0xDC00));
+						i += 2;
+					}
+					else {
+						// invalid surrogate
+						continue;
+					}
+				}
+			}
+			else {
+				codepoint = w1;
+			}
+
+			total_chars++;
+			if (IsPrintableCodepoint(codepoint)) {
 				printable_chars++;
 			}
 		}
@@ -50,145 +95,176 @@ namespace type_iden
 		return !BelowTextThreshold(printable_chars, total_chars);
 	}
 
-	bool CheckPrintableUTF8(const std::vector<unsigned char>& buffer)
+	bool CheckPrintableUTF8(const std::span<unsigned char>& buffer)
 	{
-		if (buffer.size() == 0) {
-			return true;
-		}
-
 		std::streamsize printable_chars = 0;
 		std::streamsize total_chars = 0;
 		size_t i = 0;
+		if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
+		{
+			i = 3; // skip UTF-8 BOM
+		}
 		while (i < buffer.size()) {
-
 			unsigned char c = buffer[i];
-			if (c < 0x80) { // 1-byte ASCII (7-bit)
-				total_chars++;
-				if (isprint(c) || isspace(c)) {
-					printable_chars++;
-				}
-				i++;
+			uint32_t codepoint = 0;
+			size_t seq_len = 0;
+
+			if (c < 0b10000000) { // 1-byte ASCII: 0xxxxxxx
+				codepoint = c;
+				seq_len = 1;
 			}
-			else if ((c & 0xE0) == 0xC0) { // 2-byte UTF-8
-				if (i + 1 < buffer.size()) {
-					wchar_t wchar = ((c & 0x1F) << 6) | (buffer[i + 1] & 0x3F);
-					total_chars++;
-					if (iswprint(wchar) || iswspace(wchar)) {
-						printable_chars++;
-					}
-				}
-				i += 2;
-				/*
-				// Should be like this:
-				if (i + 1 < buffer.size()) {
-					if (buffer.size() == BEGIN_WIDTH + BEGIN_WIDTH && i < BEGIN_WIDTH && i + 1 >= BEGIN_WIDTH) // Char between the merge may not correct
-					{
-						i = BEGIN_WIDTH;
-						continue;
-					}
-					wchar_t wchar = ((c & 0x1F) << 6) | (buffer[i + 1] & 0x3F);
-					if (iswprint(wchar) || iswspace(wchar)) {
-						total_chars += 2;
-						printable_chars += 2;
-						i += 2;
-					}
-					else
-					{
-						if (buffer.size() == BEGIN_WIDTH + BEGIN_WIDTH && i >= BEGIN_WIDTH && i <= BEGIN_WIDTH + 2) // May be there is a first char in UTF-8 char disappeared.
-						{
-							i += 1;
-						}
-						else
-						{
-							total_chars += 2;
-							i += 2;
-						}
-					}
-				}
-				*/
+			else if (i + 1 < buffer.size()
+				&& (c & 0b11100000) == 0b11000000
+				&& (buffer[i + 1] & 0b11000000) == 0b10000000)
+				// 2-byte UTF-8: 110xxxxx 10xxxxxx
+			{
+				codepoint = ((c & 0b00011111) << 6) | (buffer[i + 1] & 0b00111111);
+				seq_len = 2;
 			}
-			else if ((c & 0xF0) == 0xE0) { // 3-byte UTF-8
-				if (i + 2 < buffer.size()) {
-					wchar_t wchar = ((c & 0x0F) << 12) | ((buffer[i + 1] & 0x3F) << 6) | (buffer[i + 2] & 0x3F);
-					total_chars++;
-					if (iswprint(wchar) || iswspace(wchar)) {
-						printable_chars++;
-					}
-				}
-				i += 3;
+			else if (i + 2 < buffer.size()
+				&& (c & 0b11110000) == 0b11100000
+				&& (buffer[i + 1] & 0b11000000) == 0b10000000
+				&& (buffer[i + 2] & 0b11000000) == 0b10000000)
+				// 3-byte UTF-8: 1110xxxx 10xxxxxx 10xxxxxx
+			{
+				codepoint = ((c & 0x0F) << 12) | ((buffer[i + 1] & 0b00111111) << 6) | (buffer[i + 2] & 0b00111111);
+				seq_len = 3;
 			}
-			else if ((c & 0xF8) == 0xF0) { // 4-byte UTF-8
-				if (i + 3 < buffer.size()) {
-					wchar_t wchar = ((c & 0x07) << 18) | ((buffer[i + 1] & 0x3F) << 12) | ((buffer[i + 2] & 0x3F) << 6) | (buffer[i + 3] & 0x3F);
-					total_chars++;
-					if (iswprint(wchar) || iswspace(wchar)) {
-						printable_chars++;
-					}
-				}
-				i += 4;
+			else if (i + 3 < buffer.size()
+				&& (c & 0b11111000) == 0b11110000
+				&& (buffer[i + 1] & 0b11000000) == 0b10000000
+				&& (buffer[i + 2] & 0b11000000) == 0b10000000
+				&& (buffer[i + 3] & 0b11000000) == 0b10000000)
+				// 4-byte UTF-8: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+			{
+				codepoint = ((c & 0b00000111) << 18) | ((buffer[i + 1] & 0b00111111) << 12)
+					| ((buffer[i + 2] & 0b00111111) << 6) | (buffer[i + 3] & 0b00111111);
+				seq_len = 4;
 			}
 			else {
-				i++; // Skip invalid bytes
+				// invalid byte
+				i++;
+				continue;
 			}
+
+			total_chars++;
+			if (IsPrintableCodepoint(codepoint)) {
+				printable_chars++;
+			}
+
+			i += seq_len;
 		}
 
-		if (total_chars == 0) {
-			return false;
-		}
-
+		if (total_chars == 0) return false;
 		return !BelowTextThreshold(printable_chars, total_chars);
 	}
 
-	bool CheckPrintableANSI(const std::vector<unsigned char>& buffer)
+	bool CheckPrintableUTF32(const std::span<unsigned char>& buffer)
 	{
-		if (buffer.size() == 0) {
-			return true;
+		size_t i = 0;
+		bool little_endian = true;
+
+		// BOM check
+		if (buffer.size() >= 4) {
+			if (buffer[0] == 0xFF && buffer[1] == 0xFE &&
+				buffer[2] == 0x00 && buffer[3] == 0x00) {
+				little_endian = true;
+				i = 4;
+			}
+			else if (buffer[0] == 0x00 && buffer[1] == 0x00 &&
+				buffer[2] == 0xFE && buffer[3] == 0xFF) {
+				little_endian = false;
+				i = 4;
+			}
 		}
 
-		std::streamsize printable_chars = 0;
-		std::streamsize total_chars = 0;
+		auto read_u32 = [&](size_t idx) -> uint32_t {
+			if (little_endian) {
+				return (uint32_t)buffer[idx] |
+					((uint32_t)buffer[idx + 1] << 8) |
+					((uint32_t)buffer[idx + 2] << 16) |
+					((uint32_t)buffer[idx + 3] << 24);
+			}
+			else {
+				return ((uint32_t)buffer[idx] << 24) |
+					((uint32_t)buffer[idx + 1] << 16) |
+					((uint32_t)buffer[idx + 2] << 8) |
+					(uint32_t)buffer[idx + 3];
+			}
+			};
 
-		for (unsigned char c : buffer) {
+		std::streamsize total_chars = 0;
+		std::streamsize printable_chars = 0;
+
+		while (i + 3 < buffer.size()) {
+			uint32_t cp = read_u32(i);
+			i += 4;
+
+			// UTF-32 validity 
+			if (cp > 0x10FFFF) continue;
+			if (cp >= 0xD800 && cp <= 0xDFFF) continue; // invalid surrogate
+
 			total_chars++;
-			if (isprint(c) || isspace(c)) {
+			if (IsPrintableCodepoint(cp)) {
 				printable_chars++;
 			}
 		}
 
-		if (total_chars == 0) {
-			return false;
-		}
+		if (total_chars == 0) return false;
 
 		return !BelowTextThreshold(printable_chars, total_chars);
 	}
 
 	bool IsPrintableFile(const fs::path& file_path)
 	{
-		try
-		{
-			auto file_size = manager::GetFileSize(file_path);
-			if (file_size == 0 || file_size > FILE_MAX_SIZE_SCAN) {
-				return false;
-			}
-			std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
-			if (!file.is_open()) {
-				return false; // File cannot be opened
-			}
-
-			std::vector<unsigned char> buffer(file_size); // Buffer to hold file data
-			file.read(reinterpret_cast<char*>(buffer.data()), file_size); // Read all data into buffer
-			file.close();
-
-			// Check against different encodings and return true if any matches
-			if (CheckPrintableUTF8(buffer) || CheckPrintableUTF16(buffer) || CheckPrintableANSI(buffer)) {
-				return true;
-			}
+		HANDLE file_handle = CreateFileW(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+			nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+		if (file_handle == INVALID_HANDLE_VALUE) {
+			return false;
 		}
-		catch (...)
-		{
+		defer{ CloseHandle(file_handle); };
 
+		LARGE_INTEGER li_size{};
+		if (!GetFileSizeEx(file_handle, &li_size)) {
+			return false;
 		}
-		return false; // If no encoding matches, return false
+
+		size_t file_size = static_cast<size_t>(li_size.QuadPart);
+		if (file_size < FILE_MIN_SIZE_SCAN || file_size > FILE_MAX_SIZE_SCAN) {
+			return false;
+		}
+
+		HANDLE mapping_handle = CreateFileMappingW(file_handle, nullptr,
+			PAGE_READONLY, 0, 0, nullptr);
+		if (!mapping_handle) {
+			return false;
+		}
+		defer{ CloseHandle(mapping_handle); };
+
+		unsigned char* data = static_cast<unsigned char*>(
+			MapViewOfFile(mapping_handle, FILE_MAP_READ, 0, 0, 0));
+		if (!data) {
+			return false;
+		}
+		defer{ UnmapViewOfFile(data); };
+
+		size_t sample_size = std::min<size_t>(1024, file_size);
+		std::span<unsigned char> sample(data, sample_size);
+
+		// Helper lambda: verify both sample and full file with one checkFn
+		auto verify = [&](auto&& checkFn) -> bool {
+			if (!checkFn(sample)) return false;
+			// Sample passed, now read full file
+			std::span<unsigned char> buffer(data, file_size);
+			return checkFn(buffer);
+			};
+
+		// Try encodings in order
+		if (verify(CheckPrintableUTF8))  return true;
+		if (verify(CheckPrintableUTF16)) return true;
+		if (verify(CheckPrintableUTF32)) return true;
+
+		return false;
 	}
 
 	TrID::~TrID()

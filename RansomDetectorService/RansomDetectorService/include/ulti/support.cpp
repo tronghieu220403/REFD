@@ -56,31 +56,11 @@ namespace ulti
 
     bool IsCurrentX86Process()
     {
-        static bool is_eval = false;
-        static bool is_x86 = false;
-        if (is_eval)
-        {
-            return is_x86;
-        }
-        SYSTEM_INFO systemInfo = { 0 };
-        GetNativeSystemInfo(&systemInfo);
-
-        // x86 environment
-        if (systemInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_INTEL)
-        {
-            is_x86 = true;
-            is_eval = true;
+        #if defined(__x86_64__) || defined(_M_X64)
+            return false;
+        #elif defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
             return true;
-        }
-
-        BOOL is_wow64 = FALSE;
-        if (IsWow64Process(GetCurrentProcess(), &is_wow64) == FALSE)
-        {
-            debug::DebugPrintW(L"IsWow64Process error 0x%x", GetLastError());
-        }
-        is_x86 = (is_wow64 == FALSE) ? false : true;
-        is_eval = true;
-        return is_wow64;
+        #endif
     }
 
     bool CreateDir(const std::wstring& dir_path)
