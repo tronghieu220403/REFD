@@ -38,6 +38,9 @@
 #define TYPE_NO_EVALUATION 5
 #define TYPE_DONE_EVALUATION 6
 
+#define DEVICE_CACHE_USAGE_COUNT_MAX 10
+#define DEVICE_CACHE_USAGE_SECOND_MAX 10
+
 namespace manager {
 
 	struct RawFileIoInfo
@@ -76,8 +79,14 @@ namespace manager {
 
 	/*___________________________________________*/
 
-	inline std::unordered_map<std::wstring, const std::wstring> kNativePath;
-	inline std::unordered_map<std::wstring, const std::wstring> kDosPath;
+	inline int kNativeOpCnt = 0;
+	inline int kDosOpCnt = 0;
+
+	inline std::chrono::steady_clock::time_point kLastNativeQueryTime = std::chrono::steady_clock::now();
+	inline std::chrono::steady_clock::time_point kLastDosQueryTime = std::chrono::steady_clock::now();
+
+	inline std::unordered_map<std::wstring, const std::wstring> kNativePathCache;
+	inline std::unordered_map<std::wstring, const std::wstring> kDosPathCache;
 
 	/*_________________FUNCTIONS_________________*/
 

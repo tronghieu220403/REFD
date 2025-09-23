@@ -15,7 +15,9 @@ namespace ulti
     std::vector<char> StringToVectorChar(const std::string& s);
     std::vector<unsigned char> StringToVectorUChar(const std::string& s);
     std::wstring ToLower(const std::wstring& wstr);
+    std::string ToLower(const std::string& wstr);
     void ToLowerOverride(std::string& wstr);
+    void ToLowerOverride(std::wstring& wstr);
 
     bool IsCurrentX86Process();
 

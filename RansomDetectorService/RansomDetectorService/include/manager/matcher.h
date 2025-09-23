@@ -36,4 +36,4 @@ private:
     bool Dfs(int b_index);
 };
 
-#endif  // MYPROJECT_MATCHER_H_
+#endif  // MATCHER_H_

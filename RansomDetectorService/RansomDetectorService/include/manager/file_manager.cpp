@@ -37,12 +37,12 @@ namespace manager
     {
         FileIoInfo file_io_info;
         
-        auto path = ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->path)));
+        file_io_info.path = GetLongDosPath(GetDosPath(raw_file_io_info->path));
+        ulti::ToLowerOverride(file_io_info.path);
 
         PrintDebugW(L"File I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid,raw_file_io_info->path);
 
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
-        file_io_info.path = std::move(path);
         file_io_queue_.push(std::move(file_io_info));
     }
 
@@ -54,8 +54,8 @@ namespace manager
             std::wstring drive_str = std::wstring(1, drive) + L":";
             if (QueryDosDeviceW(drive_str.c_str(), device_path, MAX_PATH)) {
                 std::wstring device_name = device_path;
-                kDosPath.insert({device_name, drive_str});
-                kNativePath.insert({ drive_str, device_name });
+                kDosPathCache.insert({device_name, drive_str});
+                kNativePathCache.insert({ drive_str, device_name });
                 PrintDebugW(L"Cached: %ws -> %ws", device_name.c_str(), drive_str.c_str());
             }
         }
@@ -64,14 +64,23 @@ namespace manager
     std::wstring GetNativePath(const std::wstring& dos_path)
     {
         std::wstring drive_name = dos_path.substr(0, dos_path.find_first_of('\\'));
-        /* // Do not use cache since disk can change name
-        if (kNativePath.find(drive_name) != kNativePath.end())
+        
+        using namespace std::chrono;
+
+        std::wstring drive_name = dos_path.substr(0, dos_path.find_first_of('\\'));
+
+        auto now = steady_clock::now();
+        defer{ kLastNativeQueryTime = now; };
+        auto elapsed = duration_cast<seconds>(now - kLastNativeQueryTime).count();
+        bool allow_cache = (elapsed < DEVICE_CACHE_USAGE_SECOND_MAX && kNativeOpCnt < DEVICE_CACHE_USAGE_COUNT_MAX);
+        if (allow_cache && kNativePathCache.find(drive_name) != kNativePathCache.end())
         {
-            return kNativePath[drive_name] + dos_path.substr(drive_name.length());
+            ++kNativeOpCnt;
+            return kNativePathCache[drive_name] + dos_path.substr(drive_name.length());
         }
-        */
+
         std::wstring device_name;
-        device_name.resize(MAX_PATH);
+        device_name.resize(30);
         DWORD status;
         while (QueryDosDeviceW(drive_name.data(), (WCHAR*)device_name.data(), (DWORD)device_name.size()) == 0)
         {
@@ -84,12 +93,17 @@ namespace manager
             device_name.resize(device_name.size() * 2);
         }
         device_name.resize(wcslen(device_name.data()));
-        kNativePath.insert({ drive_name, device_name });
+        kNativePathCache.insert({ drive_name, device_name });
+
+        kNativeOpCnt = 0;
+
         return device_name + dos_path.substr(dos_path.find_first_of('\\'));
     }
 
     std::wstring GetDosPathCaseSensitive(const std::wstring& nt_path)
     {
+        using namespace std::chrono;
+
         // If the file_path is empty or it does not start with "\\" (not a device file_path), return as-is
         if (nt_path.empty() || nt_path[0] != L'\\') {
             return nt_path;
@@ -101,13 +115,23 @@ namespace manager
             return clean_path.substr(4); // Remove "\\?\" or "\\.\"
         }
 
-        /* // Do not use cache since disk can change name
-        std::wstring device_name = nt_path.substr(0, nt_path.find(L'\\', sizeof("\\Device\\") - 1)); // Extract device name
-        auto it = kDosPath.find(device_name);
-        if (it != kDosPath.end()) {
-            return it->second + clean_path.substr(device_name.length());
+        auto now = steady_clock::now();
+        defer{ kLastDosQueryTime = now; };
+        auto elapsed = duration_cast<seconds>(now - kLastDosQueryTime).count();
+        bool allow_cache = (elapsed < DEVICE_CACHE_USAGE_SECOND_MAX && kDosOpCnt < DEVICE_CACHE_USAGE_COUNT_MAX);
+
+        if (allow_cache)
+        {
+            std::wstring device_name = nt_path.substr(0, nt_path.find(L'\\', sizeof("\\Device\\") - 1)); // Extract device name
+            auto it = kDosPathCache.find(device_name);
+            if (it != kDosPathCache.end())
+            {
+                ++kDosOpCnt;
+                return it->second + clean_path.substr(device_name.length());
+            }
         }
-        */
+
+
         // Try all drive letters to find the matching device path
         wchar_t device_path[MAX_PATH];
         std::wstring dos_path = L"";
@@ -117,12 +141,12 @@ namespace manager
                 std::wstring device_name = device_path;
                 if (clean_path.find(device_name) == 0) {
                     dos_path = drive_str + clean_path.substr(device_name.length());
-                    kDosPath.insert({device_name, drive_str}); // Cache
+                    kDosPathCache.insert({device_name, drive_str}); // Cache
                     break;
                 }
             }
         }
-
+        kDosOpCnt = 0;
         return dos_path;
     }
 

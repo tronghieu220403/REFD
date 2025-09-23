@@ -32,34 +32,26 @@ namespace ulti
 
     std::wstring ToLower(const std::wstring& wstr)
     {
-        std::setlocale(LC_ALL, "en_US.utf8");
-        defer{
-            std::setlocale(LC_ALL, nullptr);
-        };
         std::wstring result = wstr;
-        for (wchar_t& c : result)
-        {
-            if (std::iswalpha(c))
-            {
-                c = std::towlower(c);
-            }
-        }
+        CharLowerBuffW(result.data(), result.size());
         return result;
+    }
+
+    std::string ToLower(const std::string& wstr)
+    {
+        std::string result = wstr;
+        CharLowerBuffA(result.data(), result.size());
+        return result;
+    }
+
+    void ToLowerOverride(std::wstring& wstr)
+    {
+        CharLowerBuffW(wstr.data(), wstr.size());
     }
 
     void ToLowerOverride(std::string& wstr)
     {
-        std::setlocale(LC_ALL, "en_US.utf8");
-        defer{
-            std::setlocale(LC_ALL, nullptr);
-        };
-        for (char& c : wstr)
-        {
-            if (std::isalpha(c))
-            {
-                c = std::tolower(c);
-            }
-        }
+        CharLowerBuffA(wstr.data(), wstr.size());
     }
 
     bool IsCurrentX86Process()
