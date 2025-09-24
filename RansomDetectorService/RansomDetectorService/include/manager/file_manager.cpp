@@ -131,7 +131,6 @@ namespace manager
             }
         }
 
-
         // Try all drive letters to find the matching device path
         wchar_t device_path[MAX_PATH];
         std::wstring dos_path = L"";
