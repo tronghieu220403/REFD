@@ -103,13 +103,16 @@ static void ServiceMain()
 		return;
 	}
 	kTrID = new type_iden::TrID();
-	if (kTrID == nullptr || kTrID->Init(PRODUCT_PATH, (std::wstring(PRODUCT_PATH) + L"TrIDLib.dll").c_str()) == false)
+	std::wstring trid_dir = std::wstring(PRODUCT_PATH) + L"TrID";
+	if (kTrID == nullptr || kTrID->Init(trid_dir, trid_dir + L"TrIDLib.dll") == false)
 	{
 		PrintDebugW(L"TrID init failed");
 		return;
 	}
 
 	try {
+		// Cần config động, thư mục nào là honeypot folder (chỉ toàn honeypot file), thư mục nào có honeypot file lẩn giữa các file khác
+		// Sửa cấu trúc của config.
 		kf_checker.Init(L"E:\\hieunt210330\\hieunt210330\\knownfolders.json");
 	}
 	catch (std::exception& ex) {
@@ -117,8 +120,9 @@ static void ServiceMain()
 		return;
 	}
 
+	// Cần config động, thư mục này có gì có những file nào
+	// Cần file config v2 để lưu
 	honeypot::HoneyPot::Init(kf_checker.GetKnownFolders(), L"E:\\hieunt210330\\honeypot");
-
 
 	auto last_process_time = std::chrono::steady_clock::now();
 

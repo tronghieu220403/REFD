@@ -2,7 +2,7 @@
 #ifndef MANAGER_H_
 #define MANAGER_H_
 
-#include "ulti/support.h"
+#include "../ulti/support.h"
 #include "file_manager.h"
 
 namespace manager {
@@ -27,12 +27,8 @@ namespace manager {
 		void UnlockMutex();
 
 		void Evaluate();
-
-		bool AnalyzeEvent(FileIoInfo& event);
-
-		bool EvaluateProcess(ULONG pid);
-
-		void EvaluateProcesses();
+		
+		bool IsDirAttackedByRansomware(const std::wstring& dir_path);
 
 		bool DiscardEventByPid(ULONG issuing_pid);
 	};

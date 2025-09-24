@@ -215,7 +215,7 @@ namespace type_iden
 		return !BelowTextThreshold(printable_chars, total_chars);
 	}
 
-	bool IsPrintableFile(const fs::path& file_path)
+	bool IsPrintableFile(const std::wstring& file_path)
 	{
 		HANDLE file_handle = CreateFileW(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
 			nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
@@ -262,7 +262,7 @@ namespace type_iden
 		// Try encodings in order
 		if (verify(CheckPrintableUTF8))  return true;
 		if (verify(CheckPrintableUTF16)) return true;
-		if (verify(CheckPrintableUTF32)) return true;
+		//if (verify(CheckPrintableUTF32)) return true;
 
 		return false;
 	}
@@ -311,7 +311,7 @@ namespace type_iden
 		return true;
 	}
 
-	std::vector<std::string> TrID::GetTypes(const fs::path& file_path)
+	std::vector<std::string> TrID::GetTypes(const std::wstring& file_path)
 	{
 		std::lock_guard<std::mutex> lock(m_mutex); // TRID is not thread safe
 		//PrintDebugW(L"Getting types of file: %ws", file_path.wstring().c_str());
@@ -329,10 +329,12 @@ namespace type_iden
 		int ret;
 		std::vector<std::string> types;
 
+		const auto file_path_str = ulti::WstrToStr(file_path);
+
 		char buf[256]; // Buffer for TrID API results
 		try
 		{
-			trid_api->SubmitFileA(file_path.string().c_str());
+			trid_api->SubmitFileA(file_path_str.c_str());
 			ret = trid_api->Analyze();
 			if (ret)
 			{

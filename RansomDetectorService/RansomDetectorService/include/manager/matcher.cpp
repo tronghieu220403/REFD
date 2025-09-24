@@ -6,17 +6,17 @@
 #include <limits>
 
 void Matcher::SetInput(
-    const std::vector<std::vector<std::wstring>>& vectors,
-    const std::vector<std::wstring>& b_strings) {
+    const std::vector<std::vector<std::string>>& vectors,
+    const std::vector<std::string>& b_strings) {
     num_vectors_ = static_cast<int>(vectors.size());
     num_b_strings_ = static_cast<int>(b_strings.size());
 
     // Build map from string to list of vector indices that contain it.
-    std::unordered_map<std::wstring, std::vector<int>> string_to_vector_indices;
+    std::unordered_map<std::string, std::vector<int>> string_to_vector_indices;
     string_to_vector_indices.reserve(num_vectors_ * 2);
 
     for (int vector_index = 0; vector_index < num_vectors_; ++vector_index) {
-        std::unordered_set<std::wstring> seen;
+        std::unordered_set<std::string> seen;
         for (const auto& s : vectors[vector_index]) {
             if (seen.insert(s).second) {
                 string_to_vector_indices[s].push_back(vector_index);

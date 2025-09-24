@@ -68,7 +68,7 @@ namespace type_iden
 
 	bool CheckPrintableUTF32(const std::span<unsigned char>& buffer);
 
-	bool IsPrintableFile(const fs::path& file_path);
+	bool IsPrintableFile(const std::wstring& file_path);
 
 	// TrID lib can only run on x86 process. Do not use this in async multi-thread.
 	// To use TrID on async multi-thread, each instance of TrID must create and load an unique clone of TrIDLib.dll (for example TrIDLib_X.dll)
@@ -82,7 +82,7 @@ namespace type_iden
         TrID() = default;
         ~TrID();
         bool Init(const std::wstring& defs_dir, const std::wstring& trid_dll_path);
-        std::vector<std::string> GetTypes(const fs::path& file_path);
+        std::vector<std::string> GetTypes(const std::wstring& file_path);
 	};
 
     std::wstring CovertTypesToString(const std::vector<std::string>& types);

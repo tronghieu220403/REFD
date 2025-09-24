@@ -13,8 +13,8 @@ public:
     // Sets inputs: `vectors` is list of vectors of wstring; `b_strings`
     // is list of strings to match.
     void SetInput(
-        const std::vector<std::vector<std::wstring>>& vectors,
-        const std::vector<std::wstring>& b_strings);
+        const std::vector<std::vector<std::string>>& vectors,
+        const std::vector<std::string>& b_strings);
 
     // Returns maximum number of matches.
     int Solve();

@@ -3,16 +3,38 @@
 
 namespace ulti
 {
-    std::wstring StrToWstr(const std::string& str)
-    {
-        std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
-        return myconv.from_bytes(str);
+    std::wstring StrToWstr(const std::string& str) {
+        if (str.empty()) return L"";
+
+        int size_needed = MultiByteToWideChar(CP_UTF8, 0,
+            str.c_str(), static_cast<int>(str.size()),
+            nullptr, 0);
+        if (size_needed <= 0) {
+            return L"";
+        }
+
+        std::wstring wstr(size_needed, L'\0');
+        MultiByteToWideChar(CP_UTF8, 0,
+            str.c_str(), static_cast<int>(str.size()),
+            &wstr[0], size_needed);
+        return wstr;
     }
 
-    std::string WstrToStr(const std::wstring& wstr)
-    {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> myconv;
-        return myconv.to_bytes(wstr);
+    std::string WstrToStr(const std::wstring& wstr) {
+        if (wstr.empty()) return "";
+
+        int size_needed = WideCharToMultiByte(CP_UTF8, 0,
+            wstr.c_str(), static_cast<int>(wstr.size()),
+            nullptr, 0, nullptr, nullptr);
+        if (size_needed <= 0) {
+            return "";
+        }
+
+        std::string str(size_needed, '\0');
+        WideCharToMultiByte(CP_UTF8, 0, 
+            wstr.c_str(), static_cast<int>(wstr.size()), 
+            &str[0], size_needed, nullptr, nullptr);
+        return str;
     }
 
     std::string CharVectorToString(const std::vector<char>& v)

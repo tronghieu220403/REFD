@@ -49,15 +49,19 @@ namespace manager {
 		// Move events from the queue into the map grouped by requestor_pid
 		while (file_io_list.empty() == false)
 		{
-			FileIoInfo& event = file_io_list.front();
-			auto pid = event.requestor_pid; // std::move will make event.requestor_pid invalid if we use: events_by_pid[event.requestor_pid].push_back(std::move(event));
-			
-			if (kf_checker.IsPathInKnownFolders(event.path) == true && GetFileName(event.path).find(L"hieunt-") != std::wstring::npos);
-			{
-				events_by_pid[pid].push_back(std::move(event));
-				PrintDebugW(L"In known folder: %ws", event.path.c_str());
-			}
+			FileIoInfo event(std::move(file_io_list.front()));
 			file_io_list.pop();
+
+			auto pid = event.requestor_pid;
+			if (DiscardEventByPid(pid) == true)
+			{
+				continue;
+			}
+			if (kf_checker.IsPathInKnownFolders(event.path) == true && GetFileName(event.path).find(L"hieunt-") != std::wstring::npos)
+			{
+				PrintDebugW(L"In known folder: %ws", event.path.c_str());
+				events_by_pid[pid].push_back(std::move(event));
+			}
 		}
 
 		// Xử lí chỉ cần mang tính local, cụ thể là tìm xem pid này thay đổi những folder nào rồi đem ra phân tích các folder (bỏ qua nếu trong cache chưa quá hạn hoặc trực tiếp đánh giá rồi cập nhật cache) chứ không lưu lại các lần xử lí sau.
@@ -68,57 +72,36 @@ namespace manager {
 		}
 	}
 
-	void Evaluator::EvaluateProcesses()
+	bool Evaluator::IsDirAttackedByRansomware(const std::wstring& dir_path)
 	{
-		PrintDebugW(L"Start evaluating processes");
-
-		PrintDebugW(L"End evaluating processes");
-	}
-
-	bool Evaluator::AnalyzeEvent(FileIoInfo& event)
-	{
-		/*
-		PrintDebugW(L"AnalyzeEvent: %ws, pid %d", event.path.c_str(), event.requestor_pid);
-
-		if (event.types.size() == 0)
-		{
-			if (FileExist(event.path) == true)
-			{
-				event.types = std::move(kTrID->GetTypes(event.path));
-			}
-			else
-			{
-				return false;
+		std::vector<std::wstring> files;
+		if (fs::exists(dir_path) && fs::is_directory(dir_path)) {
+			return false;
+		}
+		try {
+			for (const auto& entry : fs::directory_iterator(dir_path)) {
+				try {
+					if (entry.is_regular_file()) {
+						files.push_back(entry.path().wstring());
+					}
+				}
+				catch (...) {}
 			}
 		}
+		catch (...) { }
 
-		const std::vector<std::string>& ext_accepted_types = ...;
-
-		event.type_match = (type_iden::HasCommonType(ext_accepted_types, event.types)) ? TYPE_HAS_COMMON : TYPE_MISMATCH;
-
-#ifdef _DEBUG
-		switch (event.type_match)
+		std::vector<std::vector<std::string>> v;
+		for (auto& file_path : files)
 		{
-		case TYPE_MISMATCH:
-			PrintDebugW(L"TYPE_MISMATCH: types %ws, ext_accepted_types %ws", type_iden::CovertTypesToString(event.types).c_str(), type_iden::CovertTypesToString(ext_accepted_types));
-			break;
-
-		case TYPE_HAS_COMMON:
-			PrintDebugW(L"TYPE_HAS_COMMON: types %ws, ext_accepted_types %ws", type_iden::CovertTypesToString(event.types).c_str(), type_iden::CovertTypesToString(ext_accepted_types));
-			break;
-
-		default:
-			break;
+			const auto file_path_str = ulti::WstrToStr(file_path);
+			if (ulti::StrToWstr(file_path_str) != file_path)
+			{
+				continue;
+			}
+			v.push_back(kTrID->GetTypes(file_path));
 		}
-#endif // _DEBUG
-		*/
-		return true;
-	}
 
-
-	bool Evaluator::EvaluateProcess(ULONG pid)
-	{
-		return false;
+		// Cần config
 	}
 
 	bool Evaluator::DiscardEventByPid(ULONG issuing_pid)

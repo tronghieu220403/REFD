@@ -67,8 +67,6 @@ namespace manager
         
         using namespace std::chrono;
 
-        std::wstring drive_name = dos_path.substr(0, dos_path.find_first_of('\\'));
-
         auto now = steady_clock::now();
         defer{ kLastNativeQueryTime = now; };
         auto elapsed = duration_cast<seconds>(now - kLastNativeQueryTime).count();
