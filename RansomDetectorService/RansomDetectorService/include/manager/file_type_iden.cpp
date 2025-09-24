@@ -313,15 +313,9 @@ namespace type_iden
 
 	std::vector<std::string> TrID::GetTypes(const fs::path& file_path)
 	{
-		std::lock_guard<std::mutex> lock(m_mutex);
+		std::lock_guard<std::mutex> lock(m_mutex); // TRID is not thread safe
 		//PrintDebugW(L"Getting types of file: %ws", file_path.wstring().c_str());
-		/*
-		if (issue_thread_id != GetCurrentThreadId())
-		{
-			PrintDebugW(L"TrID API is not thread-safe");
-			return {};
-		}
-		*/
+		
 		if (trid_api == nullptr)
 		{
 			PrintDebugW(L"TrID API is not initialized");
@@ -335,117 +329,70 @@ namespace type_iden
 		int ret;
 		std::vector<std::string> types;
 
-        std::vector<char> buf(4096); // Buffer for TrID API results
+		char buf[256]; // Buffer for TrID API results
 		try
 		{
 			trid_api->SubmitFileA(file_path.string().c_str());
 			ret = trid_api->Analyze();
 			if (ret)
 			{
-				ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
+				ZeroMemory(buf, sizeof(buf)); // Clear buffer for next use
 				//PrintDebugW(L"TrID analysis successful for file %ws, result code: %d", file_path.c_str(), ret);
-				ret = trid_api->GetInfo(TRID_GET_RES_NUM, 0, buf.data());
+				ret = trid_api->GetInfo(TRID_GET_RES_NUM, 0, buf);
 				for (int i = ret + 1; i--;)
 				{
-					ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
-					try
-					{
-						trid_api->GetInfo(TRID_GET_RES_FILETYPE, i, buf.data());
-					}
-					catch (...)
-					{
+					ZeroMemory(buf, sizeof(buf)); // Clear buffer for next use
+
+					try { trid_api->GetInfo(TRID_GET_RES_FILETYPE, i, buf); }
+					catch (...) { continue; }
+					
+					std::string type_str(buf);
+					if (type_str.size() == 0
+						|| type_str.find("ransom") != std::string::npos
+						|| type_str.find("ncrypt") != std::string::npos) 
 						continue;
-					}
-					std::string type_str(buf.data());
-					if (type_str.size() == 0)
-					{
-						continue;
-					}
-					if (type_str.find("ransom") != std::string::npos || type_str.find("ncrypt") != std::string::npos)
-					{
-						continue;
-					}
-					ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
-					try
-					{
-						trid_api->GetInfo(TRID_GET_RES_FILEEXT, i, buf.data());
-					}
-					catch (...)
-					{
-						continue;
-					}
-					std::string ext_str(buf.data());
-					if (ext_str.size() == 0)
-					{
-						continue;
-					}
+
+					ZeroMemory(buf, sizeof(buf)); // Clear buffer for next use
+					
+					try { trid_api->GetInfo(TRID_GET_RES_FILEEXT, i, buf); }
+					catch (...) { continue; }
+
+					std::string ext_str(buf);
 
 					if (ext_str.size() > 0)
 					{
+						ulti::ToLowerOverride(ext_str);
 						std::stringstream ss(ext_str);
 						std::string ext;
 						while (std::getline(ss, ext, '/'))
 						{
-							ulti::ToLowerOverride(ext);
 							types.push_back(ext); // Save found extension
 						}
 					}
-					else
+					else if (type_str.size() > 0)
 					{
-						if (type_str.size() > 0)
-						{
-							ulti::ToLowerOverride(type_str);
-							types.push_back(type_str);
-						}
+						ulti::ToLowerOverride(type_str);
+						types.push_back(type_str);
 					}
 				}
 			}
-			else
-			{
-			}
-			// Read all bytes of the file
-			try
-			{
-				std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
-				if (file.is_open()) {
-					if (IsPrintableFile(file_path))
-					{
-						types.push_back("txt");
-					}
-				}
-				else
-				{
-					PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
-				}
-				file.close();
-			}
-			catch (...)
-			{
-				PrintDebugW(L"Trid Error", file_path.c_str());
-			}
-
-			if (types.size() == 0)
-			{
-				types.push_back("");
-			}
-#ifdef _DEBUG
-			std::string types_str = "<";
-			for (const auto& type : types)
-			{
-				types_str += "\"" + type + "\", ";
-			}
-			types_str[types_str.size() - 2] = '>';
-			//PrintDebugW(L"File types: %ws", ulti::StrToWstr(types_str).c_str());
-#endif // _DEBUG
 		}
 		catch (...)
 		{
 
 		}
+
+		// Read all bytes of the file
+		if (IsPrintableFile(file_path))
+		{
+			types.push_back("txt");
+		}
+
 		if (types.size() == 0)
 		{
 			types.push_back("");
 		}
+
 		return types;
 	}
 
