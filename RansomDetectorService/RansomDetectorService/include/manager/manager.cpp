@@ -1,6 +1,7 @@
 ﻿#include "manager.h"
 #include "file_type_iden.h"
 #include "known_folder.h"
+#include "matcher.h"
 
 namespace manager {
 
@@ -75,14 +76,16 @@ namespace manager {
 	bool Evaluator::IsDirAttackedByRansomware(const std::wstring& dir_path)
 	{
 		std::vector<std::wstring> files;
-		if (fs::exists(dir_path) && fs::is_directory(dir_path)) {
+		if (manager::DirExist(dir_path) == false) {
 			return false;
 		}
 		try {
 			for (const auto& entry : fs::directory_iterator(dir_path)) {
 				try {
-					if (entry.is_regular_file()) {
-						files.push_back(entry.path().wstring());
+					const auto file_path = entry.path().wstring();
+					const auto sz = manager::GetFileSize(file_path);
+					if (sz != 0 && sz <= FILE_MAX_SIZE_SCAN) {
+						files.push_back(file_path);
 					}
 				}
 				catch (...) {}
@@ -90,18 +93,24 @@ namespace manager {
 		}
 		catch (...) { }
 
-		std::vector<std::vector<std::string>> v;
+		std::vector<std::vector<std::string>> vvs;
 		for (auto& file_path : files)
 		{
-			const auto file_path_str = ulti::WstrToStr(file_path);
-			if (ulti::StrToWstr(file_path_str) != file_path)
+			if (ulti::StrToWstr(ulti::WstrToStr(file_path)) != file_path)
 			{
 				continue;
 			}
-			v.push_back(kTrID->GetTypes(file_path));
+			vvs.push_back(kTrID->GetTypes(file_path));
 		}
 
-		// Cần config
+		// Cần config để lấy vs thay vì ví dụ thế này
+		std::vector<std::string> vs(60, "txt");
+
+		Matcher m;
+		m.SetInput(vvs, vs);
+		auto ans = m.Solve();
+		
+		return false;
 	}
 
 	bool Evaluator::DiscardEventByPid(ULONG issuing_pid)

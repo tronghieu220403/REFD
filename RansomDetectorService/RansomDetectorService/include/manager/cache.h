@@ -4,6 +4,9 @@
 #include <shared_mutex>
 #include <string>
 #include <unordered_map>
+#include <queue>
+
+#include "manager.h"
 
 // Folder scan result verdict.
 enum class Verdict {
@@ -22,8 +25,11 @@ class FolderCache {
 public:
     FolderCache();
 
+    // Add to queue
+    void AddToQueue(const std::wstring& folder);
+
     // Adds or updates a folder in the cache.
-    void Add(const std::wstring& folder, Verdict verdict);
+    void Update(const std::wstring& folder, Verdict verdict);
 
     // Gets a folder result from the cache.
     // Returns: {verdict, expired_flag}.
@@ -36,11 +42,17 @@ public:
     // Returns true if removed successfully.
     bool Delete(const std::wstring& folder);
 
+    static void ScanThread(const FolderCache* cache);
+
 private:
+    std::queue<std::wstring> queue_;
     std::unordered_map<std::wstring, CacheEntry> cache_;
     mutable std::shared_mutex mutex_;  // Shared for read, exclusive for write.
 
-    static constexpr std::chrono::minutes kCacheTtl{ 5 };  // TTL = 5 minutes.
+    static constexpr std::chrono::seconds kFirstCacheTtl{ 30 };  // TTL = 30 seconds.
+    static constexpr std::chrono::minutes kCacheTtl{ 60 };  // TTL = 60 minutes.
 };
+
+inline FolderCache* kFolderCache = nullptr;
 
 #endif  // PROJECT_FOLDER_CACHE_H_

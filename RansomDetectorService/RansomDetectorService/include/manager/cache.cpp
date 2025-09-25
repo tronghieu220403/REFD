@@ -2,7 +2,7 @@
 
 FolderCache::FolderCache() = default;
 
-void FolderCache::Add(const std::wstring& folder, Verdict verdict) {
+void FolderCache::Update(const std::wstring& folder, Verdict verdict) {
     std::unique_lock<std::shared_mutex> lock(mutex_);  // Exclusive lock.
     cache_[folder] = { verdict, std::chrono::steady_clock::now() };
 }
@@ -37,4 +37,9 @@ void FolderCache::Cleanup() {
 bool FolderCache::Delete(const std::wstring& folder) {
     std::unique_lock<std::shared_mutex> lock(mutex_);  // Exclusive lock.
     return cache_.erase(folder) > 0;
+}
+
+void FolderCache::ScanThread(const FolderCache* cache, const manager::Evaluator)
+{
+
 }
