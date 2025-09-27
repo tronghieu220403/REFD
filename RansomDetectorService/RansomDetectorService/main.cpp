@@ -102,9 +102,9 @@ static void ServiceMain()
 		PrintDebugW(L"Create temp dir %ws failed", TEMP_DIR);
 		return;
 	}
-	kTrID = new type_iden::TrID();
+	kFileType = new type_iden::FileType();
 	std::wstring trid_dir = std::wstring(PRODUCT_PATH) + L"TrID";
-	if (kTrID == nullptr || kTrID->Init(trid_dir, trid_dir + L"TrIDLib.dll") == false)
+	if (kFileType == nullptr || kFileType->InitTrid(trid_dir, trid_dir + L"TrIDLib.dll") == false)
 	{
 		PrintDebugW(L"TrID init failed");
 		return;

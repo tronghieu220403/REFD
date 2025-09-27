@@ -46,6 +46,8 @@
 #include <codecvt>
 #include <cwctype>
 #include <span>
+#include <cstdint>
+
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "FltLib.lib")
 #pragma comment(lib, "comsupp.lib")
@@ -99,5 +101,7 @@ typedef unsigned long long ull;
 namespace fs = std::filesystem;
 
 using namespace std;
+
+#define PRODUCT_PATH L"E:\\hieunt210330\\hieunt210330\\"
 
 #endif // ETWSERVICE_ULTI_INCLUDE_H_

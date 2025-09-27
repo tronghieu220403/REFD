@@ -39,7 +39,7 @@ bool FolderCache::Delete(const std::wstring& folder) {
     return cache_.erase(folder) > 0;
 }
 
-void FolderCache::ScanThread(const FolderCache* cache, const manager::Evaluator)
+void FolderCache::ScanThread(const FolderCache* cache)
 {
 
 }

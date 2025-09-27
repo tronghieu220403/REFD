@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -142,6 +142,8 @@
   <ItemGroup>
     <ClCompile Include="include\com\driver_comm.cpp" />
     <ClCompile Include="include\com\minifilter_com.cpp" />
+    <ClCompile Include="include\file_type\txt.cpp" />
+    <ClCompile Include="include\file_type\zip.cpp" />
     <ClCompile Include="include\honey\honeypot.cpp" />
     <ClCompile Include="include\manager\cache.cpp" />
     <ClCompile Include="include\manager\file_manager.cpp" />
@@ -151,6 +153,7 @@
     <ClCompile Include="include\manager\matcher.cpp" />
     <ClCompile Include="include\mutex\mutex.cpp" />
     <ClCompile Include="include\service\service.cpp" />
+    <ClCompile Include="include\trid\trid.cpp" />
     <ClCompile Include="include\trid\trid_api.cpp" />
     <ClCompile Include="include\ulti\debug.cpp" />
     <ClCompile Include="include\ulti\support.cpp" />
@@ -159,6 +162,8 @@
   <ItemGroup>
     <ClInclude Include="include\com\driver_comm.h" />
     <ClInclude Include="include\com\minifilter_comm.h" />
+    <ClInclude Include="include\file_type\txt.h" />
+    <ClInclude Include="include\file_type\zip.h" />
     <ClInclude Include="include\honey\honeypot.h" />
     <ClInclude Include="include\manager\cache.h" />
     <ClInclude Include="include\manager\file_manager.h" />
@@ -168,6 +173,7 @@
     <ClInclude Include="include\manager\matcher.h" />
     <ClInclude Include="include\mutex\mutex.h" />
     <ClInclude Include="include\service\service.h" />
+    <ClInclude Include="include\trid\trid.h" />
     <ClInclude Include="include\trid\trid_api.h" />
     <ClInclude Include="include\ulti\debug.h" />
     <ClInclude Include="include\ulti\include.h" />
