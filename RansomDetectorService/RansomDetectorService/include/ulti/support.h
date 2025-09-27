@@ -19,6 +19,11 @@ namespace ulti
     void ToLowerOverride(std::string& wstr);
     void ToLowerOverride(std::wstring& wstr);
 
+    template <typename T>
+    void AddVectorsInPlace(std::vector<T>& dest, const std::vector<T>& source) {
+        dest.insert(dest.end(), source.begin(), source.end());
+    }
+
     bool IsCurrentX86Process();
 
     bool CreateDir(const std::wstring& dir_path);

@@ -3,6 +3,7 @@
 
 namespace type_iden
 {
+#pragma pack(push, 1)
     struct EocdRecord {
         uint32_t signature;       // 0x06054b50
         uint16_t disk_number;
@@ -50,6 +51,7 @@ namespace type_iden
         uint16_t extra_len;
         // name + extra follows
     };
+#pragma pack(pop)
 
 	vector<string> GetZipTypes(const span<UCHAR>& data);
 }

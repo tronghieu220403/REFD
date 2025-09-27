@@ -1,4 +1,5 @@
 #pragma once
+#include "../ulti/include.h"
 #include "trid_api.h"
 
 namespace type_iden

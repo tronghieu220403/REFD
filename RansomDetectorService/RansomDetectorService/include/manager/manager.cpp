@@ -100,7 +100,8 @@ namespace manager {
 			{
 				continue;
 			}
-			vvs.push_back(kTrID->GetTypes(file_path));
+			DWORD status;
+			vvs.push_back(kFileType->GetTypes(file_path, &status));
 		}
 
 		// Cần config để lấy vs thay vì ví dụ thế này

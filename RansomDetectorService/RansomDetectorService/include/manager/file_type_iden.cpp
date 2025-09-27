@@ -51,8 +51,7 @@ namespace type_iden
 	bool FileType::InitTrid(const wstring& defs_dir, const wstring& trid_dll_path)
 	{
 		trid_ = new type_iden::TrID();
-		wstring trid_dir = wstring(PRODUCT_PATH) + L"TrID";
-		if (trid_ == nullptr || trid_->Init(trid_dir, trid_dir + L"TrIDLib.dll") == false)
+		if (trid_ == nullptr || trid_->Init(defs_dir, trid_dll_path) == false)
 		{
 			PrintDebugW(L"TrID init failed");
 			return false;
@@ -61,46 +60,64 @@ namespace type_iden
 		return true;
 	}
 
-	vector<string> FileType::GetTypes(const wstring& file_path)
+	vector<string> FileType::GetTypes(const wstring& file_path, DWORD* p_status)
 	{
 		vector<string> types;
+		if (p_status == nullptr)
+		{
+			return types;
+		}
 
-		types.emplace_back(trid_->GetTypes(file_path));
+		*p_status = ERROR_SUCCESS;
+		size_t file_size = 0;
+		defer
+		{
+			if (types.size() == 0 && file_size > 0 && file_size <= FILE_MAX_SIZE_SCAN)
+			{
+				ulti::AddVectorsInPlace(types, trid_->GetTypes(file_path));
+			}
+		};
 
 		HANDLE file_handle = CreateFileW(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
 			nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if (file_handle == INVALID_HANDLE_VALUE) {
+			*p_status = GetLastError();
 			return types;
 		}
 		defer{ CloseHandle(file_handle); };
 
 		LARGE_INTEGER li_size{};
 		if (!GetFileSizeEx(file_handle, &li_size)) {
+			*p_status = GetLastError();
 			return types;
 		}
 
-		size_t file_size = static_cast<size_t>(li_size.QuadPart);
+		file_size = static_cast<size_t>(li_size.QuadPart);
 		if (file_size < FILE_MIN_SIZE_SCAN || file_size > FILE_MAX_SIZE_SCAN) {
+			*p_status = ERROR_FILE_TOO_LARGE;
 			return types;
 		}
 
 		HANDLE mapping_handle = CreateFileMappingW(file_handle, nullptr,
 			PAGE_READONLY, 0, li_size.LowPart, nullptr);
 		if (!mapping_handle) {
+			*p_status = GetLastError();
 			return types;
 		}
 		defer{ CloseHandle(mapping_handle); };
 
 		UCHAR* data = (UCHAR *)MapViewOfFile(mapping_handle, FILE_MAP_READ, 0, 0, li_size.LowPart);
 		if (!data) {
+			*p_status = GetLastError();
 			return types;
 		}
 		defer{ UnmapViewOfFile(data); };
 
 		const span<UCHAR> span_data(data, file_size);
 
-		types.emplace_back(GetTxtTypes(span_data));
-
+		ulti::AddVectorsInPlace(types, GetTxtTypes(span_data));
+		ulti::AddVectorsInPlace(types, GetZipTypes(span_data));
+		
 		return types;
 	}
 }

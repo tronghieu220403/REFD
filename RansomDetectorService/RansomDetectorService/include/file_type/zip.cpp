@@ -52,6 +52,7 @@ namespace type_iden
 
             size_t name_off = pos + sizeof(CentralDirHeader);
             size_t next_off = name_off + cd->name_len + cd->extra_len + cd->comment_len;
+
             if (next_off > data.size()) {
                 is_zip = false;
                 break;
@@ -63,7 +64,6 @@ namespace type_iden
             if (has_docx == false && name == "word/document.xml") has_docx = true;
             if (has_xlsx == false && name == "xl/workbook.xml") has_xlsx = true;
             if (has_pptx == false && name == "ppt/presentation.xml") has_pptx = true;
-
 
             if (cd->local_header_offset + sizeof(LocalFileHeader) > data.size())
             {
@@ -84,8 +84,10 @@ namespace type_iden
             pos = next_off;
         }
 
-        // If we reach here, it's at least a valid ZIP
-        types.push_back("zip");
+        if (is_zip)
+        {
+            types.push_back("zip");
+        }
 
         if (has_docx) types.push_back("docx");
         if (has_xlsx) types.push_back("xlsx");

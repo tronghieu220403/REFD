@@ -67,7 +67,7 @@ namespace type_iden
 
         bool InitTrid(const std::wstring& defs_dir, const std::wstring& trid_dll_path);
 
-        std::vector<std::string> GetTypes(const std::wstring& file_path);
+        std::vector<std::string> GetTypes(const std::wstring& file_path, DWORD* p_status);
     };
 
     bool HasCommonType(const std::vector<std::string>& types1, const std::vector<std::string>& types2);
