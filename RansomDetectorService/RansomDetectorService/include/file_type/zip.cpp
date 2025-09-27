@@ -1,8 +1,31 @@
 #include "zip.h"
 #include "../ulti/support.h"
+#include <zlib.h>
 
 namespace type_iden
 {
+    // Compute CRC32 with zlib
+    uint32_t ComputeCRC32(const unsigned char* buf, size_t len) {
+        return crc32(0L, buf, static_cast<uInt>(len));
+    }
+
+    // Inflate (zlib) compressed data
+    bool InflateData(const unsigned char* comp, size_t comp_size,
+        std::vector<unsigned char>& out, size_t expected_size) {
+        out.resize(expected_size);
+        z_stream zs{};
+        zs.next_in = const_cast<Bytef*>(comp);
+        zs.avail_in = static_cast<uInt>(comp_size);
+        zs.next_out = out.data();
+        zs.avail_out = static_cast<uInt>(expected_size);
+
+        if (inflateInit2(&zs, -MAX_WBITS) != Z_OK) return false;
+        int ret = inflate(&zs, Z_FINISH);
+        inflateEnd(&zs);
+
+        return (ret == Z_STREAM_END && zs.total_out == expected_size);
+    }
+
     vector<string> GetZipTypes(const span<UCHAR>& data) {
         vector<string> types;
 
@@ -71,7 +94,8 @@ namespace type_iden
                 break;
             }
 
-            const LocalFileHeader* lh = reinterpret_cast<const LocalFileHeader*>(&data[cd->local_header_offset]);;
+            const LocalFileHeader* lh = reinterpret_cast<const LocalFileHeader*>(&data[cd->local_header_offset]);
+            pos = cd->local_header_offset;
             if (lh == nullptr
                 || lh->signature != 0x04034b50
                 || (lh->comp_size != cd->comp_size || lh->uncomp_size != cd->uncomp_size)
@@ -81,6 +105,46 @@ namespace type_iden
                 break;
             }
             
+            size_t data_start = (size_t)pos + sizeof(LocalFileHeader) + lh->name_len + lh->extra_len;
+            if (data_start + cd->comp_size > data.size())
+            {
+                is_zip = false;
+                break;
+            }
+
+            const unsigned char* comp_ptr = &data[data_start];
+            std::vector<unsigned char> decomp;
+
+            if (cd->compression == 0) {
+                // stored
+                if (cd->uncomp_size != cd->comp_size) {
+                    is_zip = false;
+                    break;
+                }
+
+                uint32_t real_crc = ComputeCRC32(comp_ptr, cd->comp_size);
+                if (real_crc != cd->crc32) {
+                    is_zip = false;
+                    break;
+                }
+
+            }
+            else if (cd->compression == 8) {
+                // deflate
+                if (!InflateData(comp_ptr, cd->comp_size, decomp, cd->uncomp_size)) {
+                    is_zip = false;
+                    break;
+                }
+                uint32_t real_crc = ComputeCRC32(decomp.data(), decomp.size());
+                if (real_crc != cd->crc32) {
+                    is_zip = false;
+                    break;
+                }
+            }
+            else {
+                nullptr;
+            }
+
             pos = next_off;
         }
 
