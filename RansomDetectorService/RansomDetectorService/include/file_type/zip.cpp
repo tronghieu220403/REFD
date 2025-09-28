@@ -144,10 +144,8 @@ namespace type_iden
                 break;
             }
 
-            if (cd->flags & 0b1) // Data is encrypted
-            {
-                continue;
-            }
+            // Data is encrypted
+            if (cd->flags & 0b1) { is_zip = false; break; }
 
             size_t data_start = (size_t)pos + sizeof(LocalFileHeader) + lh->name_len + lh->extra_len;
             if (data_start + cd->comp_size > data.size()) { is_zip = false; break; }
