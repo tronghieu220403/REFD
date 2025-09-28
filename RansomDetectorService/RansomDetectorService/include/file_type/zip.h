@@ -3,6 +3,8 @@
 
 namespace type_iden
 {
+// https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html
+
 #pragma pack(push, 1)
     struct EocdRecord {
         uint32_t signature;       // 0x06054b50
@@ -55,8 +57,10 @@ namespace type_iden
 
     uint32_t ComputeCRC32(const unsigned char* buf, size_t len);
 
-    bool InflateData(const unsigned char* comp, size_t comp_size,
-        std::vector<unsigned char>& out, size_t expected_size);
+    bool DecompressStored(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
+    bool DecompressDeflate(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
+    bool DecompressBzip2(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
+    bool DecompressLzma(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
 
 	vector<string> GetZipTypes(const span<UCHAR>& data);
 }
