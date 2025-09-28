@@ -50,12 +50,14 @@ namespace type_iden
 
 	bool FileType::InitTrid(const wstring& defs_dir, const wstring& trid_dll_path)
 	{
+#ifdef _M_IX86
 		trid_ = new type_iden::TrID();
 		if (trid_ == nullptr || trid_->Init(defs_dir, trid_dll_path) == false)
 		{
 			PrintDebugW(L"TrID init failed");
 			return false;
 		}
+#endif // _M_IX86
 
 		return true;
 	}
@@ -70,6 +72,8 @@ namespace type_iden
 
 		*p_status = ERROR_SUCCESS;
 		size_t file_size = 0;
+
+#ifdef _M_IX86
 		defer
 		{
 			if (types.size() == 0 && file_size > 0 && file_size <= FILE_MAX_SIZE_SCAN)
@@ -77,6 +81,7 @@ namespace type_iden
 				ulti::AddVectorsInPlace(types, trid_->GetTypes(file_path));
 			}
 		};
+#endif // _M_IX86 
 
 		HANDLE file_handle = CreateFileW(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
 			nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
