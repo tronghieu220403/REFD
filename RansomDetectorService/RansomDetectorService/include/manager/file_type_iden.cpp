@@ -120,9 +120,17 @@ namespace type_iden
 
 		const span<UCHAR> span_data(data, file_size);
 
-		ulti::AddVectorsInPlace(types, GetTxtTypes(span_data));
-		ulti::AddVectorsInPlace(types, GetZipTypes(span_data));
-		
+		auto TryGetTypes = [&](auto&& fn) -> void {
+			if (types.size() > 0) return; 
+			auto new_type = fn(span_data);
+			if (!new_type.empty()) {
+				ulti::AddVectorsInPlace(types, new_type);
+			}
+		};
+
+		TryGetTypes(GetZipTypes);
+		TryGetTypes(GetTxtTypes);
+
 		return types;
 	}
 }

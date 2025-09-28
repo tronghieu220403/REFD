@@ -75,7 +75,6 @@ namespace type_iden
     }
 
     // Dectect if a file is a ZIP-based file.
-    // This method CAN NOT be trusted on encrypted ZIP file (a ZIP file with password)
     vector<string> GetZipTypes(const span<UCHAR>& data) {
         vector<string> types;
 
