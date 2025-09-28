@@ -12,3 +12,4 @@
 /SelfDefenseKernel/x64
 /SelfDefenseKernel/AntiRansomKernel/x64
 /RansomDetectorService/RansomDetectorService/Release
+/RansomDetectorService/vcpkg_installed

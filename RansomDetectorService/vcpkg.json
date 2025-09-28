@@ -1,8 +1,9 @@
 {
-  "name": "RansomDetectorService",
+  "name": "test-project",
   "version-string": "0.1.0",
   "dependencies": [
     "zlib",
-    "minizip"
+	"bzip2",
+	"liblzma"
   ]
 }
