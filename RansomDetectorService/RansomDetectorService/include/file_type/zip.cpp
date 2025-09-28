@@ -74,28 +74,6 @@ namespace type_iden
         return (ret == BZ_OK && destLen == expected_size);
     }
 
-    bool DecompressLzma(const unsigned char* comp, size_t comp_size,
-        std::vector<unsigned char>& out, size_t expected_size) {
-        return true;
-        //out.resize(expected_size);
-        //lzma_stream strm = LZMA_STREAM_INIT;
-
-        //if (lzma_auto_decoder(&strm, UINT64_MAX, 0) != LZMA_OK) {
-        //    return false;
-        //}
-
-        //strm.next_in = comp;
-        //strm.avail_in = comp_size;
-        //strm.next_out = out.data();
-        //strm.avail_out = expected_size;
-
-        //lzma_ret ret = lzma_code(&strm, LZMA_FINISH);
-        //size_t total = strm.total_out;
-        //lzma_end(&strm);
-
-        //return (ret == LZMA_STREAM_END && total == expected_size);
-    }
-
     // Dectect if a file is a ZIP-based file.
     // This method CAN NOT be trusted on encrypted ZIP file (a ZIP file with password)
     vector<string> GetZipTypes(const span<UCHAR>& data) {
@@ -194,19 +172,15 @@ namespace type_iden
             if (cd->compression == 0) { // no compression
                 if (uncomp_size != comp_size) { is_zip = false; break; }
             }
-            if (cd->compression == 8) {
+            else if (cd->compression == 8) {
                 ok = DecompressDeflate(comp_ptr, comp_size, decomp, uncomp_size);
             }
             else if (cd->compression == 12) {
                 ok = DecompressBzip2(comp_ptr, comp_size, decomp, uncomp_size);
             }
-            else if (cd->compression == 14) {
-                //ok = DecompressLzma(comp_ptr, comp_size, decomp, uncomp_size);
-                continue;
-            }
-            else if (cd->compression == 98) {
-                //ok = DecompressPpmd(comp_ptr, comp_size, decomp, uncomp_size);
-                continue;
+            else {
+                // Not supported
+                is_zip = false; break;
             }
             if (ok == false) { is_zip = false; break; }
              uint32_t real_crc = (cd->compression == 0) ? ComputeCRC32(comp_ptr, comp_size) : ComputeCRC32(decomp.data(), decomp.size());

@@ -70,7 +70,6 @@ namespace type_iden
     bool DecompressStored(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
     bool DecompressDeflate(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
     bool DecompressBzip2(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
-    bool DecompressLzma(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
 
 	vector<string> GetZipTypes(const span<UCHAR>& data);
 }
