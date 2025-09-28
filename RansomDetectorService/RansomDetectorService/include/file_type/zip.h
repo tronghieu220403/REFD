@@ -53,9 +53,19 @@ namespace type_iden
         uint16_t extra_len;
         // name + extra follows
     };
+
+    struct DataDescriptor {
+        uint32_t signature;      // 0x08074b50 (optional)
+        uint32_t crc32;
+        uint32_t comp_size;
+        uint32_t uncomp_size;
+    };
+
 #pragma pack(pop)
 
     uint32_t ComputeCRC32(const unsigned char* buf, size_t len);
+    bool ReadDataDescriptor(const unsigned char* base, size_t file_size, size_t after_data_offset,
+        uint32_t& crc32_out, uint32_t& comp_size_out, uint32_t& uncomp_size_out);
 
     bool DecompressStored(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
     bool DecompressDeflate(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
