@@ -1,70 +1,80 @@
 #include "png.h"
 #include "../ulti/support.h"
+#include <jpeglib.h>
 
 namespace type_iden
 {
+    using UCHAR = unsigned char;
+
+    // Custom error handler to avoid exit() inside libjpeg
+    struct JpegErrorManager {
+        jpeg_error_mgr pub;
+        jmp_buf setjmp_buffer;
+    };
+
+    extern "C" {
+        static void JpegErrorExit(j_common_ptr cinfo) {
+            JpegErrorManager* err = (JpegErrorManager*)cinfo->err;
+            longjmp(err->setjmp_buffer, 1);
+        }
+
+        // Custom output_message (no-op, disable stderr logs)
+        static void JpegOutputMessage(j_common_ptr cinfo) {
+            // Do nothing (suppress all libjpeg messages)
+            return;
+        }
+    }
+
     std::vector<std::string> GetJpgTypes(const std::span<UCHAR>& data) {
         std::vector<std::string> result;
 
-        // Minimal size check: SOI (2 bytes) + EOI (2 bytes)
-        if (data.size() < 4) {
+        if (data.size() < 4) return result;
+        if (!(data[0] == 0xFF && data[1] == 0xD8)) return result;
+        if (!(data[data.size() - 2] == 0xFF && data[data.size() - 1] == 0xD9)) return result;
+
+        // libjpeg structures
+        jpeg_decompress_struct cinfo{};
+        JpegErrorManager jerr{};
+
+        cinfo.err = jpeg_std_error(&jerr.pub);
+        jerr.pub.error_exit = JpegErrorExit;
+        jerr.pub.output_message = JpegOutputMessage;
+
+        if (setjmp(jerr.setjmp_buffer)) {
+            // libjpeg reported error -> corrupt JPEG
+            jpeg_destroy_decompress(&cinfo);
             return result;
         }
 
-        // Check SOI marker
-        if (!(data[0] == 0xFF && data[1] == 0xD8)) {
+        jpeg_create_decompress(&cinfo);
+
+        // Feed buffer
+        jpeg_mem_src(&cinfo, (const unsigned char*)data.data(), data.size());
+
+        // Try reading header
+        if (jpeg_read_header(&cinfo, TRUE) != JPEG_HEADER_OK) {
+            jpeg_destroy_decompress(&cinfo);
             return result;
         }
 
-        // Check EOI marker
-        if (!(data[data.size() - 2] == 0xFF && data[data.size() - 1] == 0xD9)) {
-            return result;
+        // Try to start decompression (entropy check happens here)
+        jpeg_start_decompress(&cinfo);
+
+        // Read scanlines to fully validate entropy data
+        const int row_stride = cinfo.output_width * cinfo.output_components;
+        std::vector<unsigned char> buffer(row_stride);
+        while (cinfo.output_scanline < cinfo.output_height) {
+            unsigned char* row_ptr = buffer.data();
+            jpeg_read_scanlines(&cinfo, &row_ptr, 1);
         }
 
-        // Walk through segments
-        size_t pos = 2; // start after SOI
-        while (pos + 4 <= data.size()) {
-            if (data[pos] != 0xFF) {
-                // Invalid marker
-                return result;
-            }
+        // Clean up
+        jpeg_finish_decompress(&cinfo);
+        jpeg_destroy_decompress(&cinfo);
 
-            uint8_t marker = data[pos + 1];
-            pos += 2;
-
-            // Standalone markers (no length field)
-            if (marker == 0xD0 || marker == 0xD1 || marker == 0xD2 || marker == 0xD3 ||
-                marker == 0xD4 || marker == 0xD5 || marker == 0xD6 || marker == 0xD7 ||
-                marker == 0xD8 || marker == 0xD9) {
-                continue;
-            }
-
-            // Length must be at least 2 (for the length field itself)
-            if (pos + 2 > data.size()) {
-                return result;
-            }
-            uint16_t seg_len = (data[pos] << 8) | data[pos + 1];
-            if (seg_len < 2) {
-                return result;
-            }
-
-            pos += seg_len; // skip this segment
-
-            if (pos > data.size()) {
-                // Out of range => corrupt
-                return result;
-            }
-
-            if (marker == 0xDA) {
-                // SOS (Start of Scan): image data until EOI
-                break;
-            }
-        }
-
-        // If we reached here without errors, mark as jpeg
+        // If no errors -> valid JPEG
         result.push_back("jpg");
         return result;
     }
-
 
 }

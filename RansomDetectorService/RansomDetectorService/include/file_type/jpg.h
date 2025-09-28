@@ -3,5 +3,5 @@
 
 namespace type_iden
 {
-	vector<string> GetJpgTypes(const span<UCHAR>& data);
+	vector<string> GetJpgTypes(const std::span<UCHAR>& data);
 }

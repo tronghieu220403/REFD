@@ -48,6 +48,7 @@
 #include <cwctype>
 #include <span>
 #include <cstdint>
+#include <csetjmp>
 
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "FltLib.lib")

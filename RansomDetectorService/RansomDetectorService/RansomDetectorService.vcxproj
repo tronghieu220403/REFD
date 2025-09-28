@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="include\com\driver_comm.cpp" />
     <ClCompile Include="include\com\minifilter_com.cpp" />
+    <ClCompile Include="include\file_type\jpg.cpp" />
     <ClCompile Include="include\file_type\png.cpp" />
     <ClCompile Include="include\file_type\txt.cpp" />
     <ClCompile Include="include\file_type\zip.cpp" />
@@ -166,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="include\com\driver_comm.h" />
     <ClInclude Include="include\com\minifilter_comm.h" />
+    <ClInclude Include="include\file_type\jpg.h" />
     <ClInclude Include="include\file_type\png.h" />
     <ClInclude Include="include\file_type\txt.h" />
     <ClInclude Include="include\file_type\zip.h" />

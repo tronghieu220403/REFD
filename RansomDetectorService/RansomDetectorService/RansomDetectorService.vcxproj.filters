@@ -72,6 +72,9 @@
     <ClCompile Include="include\file_type\png.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\file_type\jpg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\com\driver_comm.h">
@@ -129,6 +132,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\file_type\png.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\file_type\jpg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

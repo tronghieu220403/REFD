@@ -2,8 +2,9 @@
   "name": "test-project",
   "version-string": "0.1.0",
   "dependencies": [
-    "zlib",
+	"zlib",
 	"bzip2",
-	"liblzma"
+	"liblzma",
+	"libjpeg-turbo"
   ]
 }
