@@ -53,5 +53,10 @@ namespace type_iden
     };
 #pragma pack(pop)
 
+    uint32_t ComputeCRC32(const unsigned char* buf, size_t len);
+
+    bool InflateData(const unsigned char* comp, size_t comp_size,
+        std::vector<unsigned char>& out, size_t expected_size);
+
 	vector<string> GetZipTypes(const span<UCHAR>& data);
 }

@@ -26,6 +26,8 @@ namespace type_iden
         return (ret == Z_STREAM_END && zs.total_out == expected_size);
     }
 
+    // Dectect if a file is a ZIP-based file.
+    // This method CAN NOT be trusted on encrypted ZIP file (a ZIP file with password)
     vector<string> GetZipTypes(const span<UCHAR>& data) {
         vector<string> types;
 
@@ -94,8 +96,8 @@ namespace type_iden
                 break;
             }
 
-            const LocalFileHeader* lh = reinterpret_cast<const LocalFileHeader*>(&data[cd->local_header_offset]);
             pos = cd->local_header_offset;
+            const LocalFileHeader* lh = reinterpret_cast<const LocalFileHeader*>(&data[pos]);
             if (lh == nullptr
                 || lh->signature != 0x04034b50
                 || (lh->comp_size != cd->comp_size || lh->uncomp_size != cd->uncomp_size)
