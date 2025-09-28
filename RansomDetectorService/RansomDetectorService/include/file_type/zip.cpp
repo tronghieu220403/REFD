@@ -1,16 +1,9 @@
 #include "zip.h"
 #include "../ulti/support.h"
-#include <zlib.h>
-#include <lzma.h>
 #include <bzlib.h>
 
 namespace type_iden
 {
-    // Compute CRC32 with zlib
-    uint32_t ComputeCRC32(const unsigned char* buf, size_t len) {
-        return crc32(0L, buf, static_cast<uInt>(len));
-    }
-
     bool ReadDataDescriptor(const unsigned char* base, size_t file_size, size_t after_data_offset,
         uint32_t& crc32_out, uint32_t& comp_size_out, uint32_t& uncomp_size_out)
     {
@@ -180,7 +173,7 @@ namespace type_iden
                 is_zip = false; break;
             }
             if (ok == false) { is_zip = false; break; }
-             uint32_t real_crc = (cd->compression == 0) ? ComputeCRC32(comp_ptr, comp_size) : ComputeCRC32(decomp.data(), decomp.size());
+            uint32_t real_crc = (cd->compression == 0) ? ulti::ComputeCRC32(comp_ptr, comp_size) : ulti::ComputeCRC32(decomp.data(), decomp.size());
             if (real_crc != crc32_val) { is_zip = false; break; }
         }
 

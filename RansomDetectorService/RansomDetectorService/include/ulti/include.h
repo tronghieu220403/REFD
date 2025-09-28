@@ -18,6 +18,7 @@
 #include <wtsapi32.h>
 #include <userenv.h>
 
+#include <zlib.h>
 #include <memory>
 #include <iostream>
 #include <string>

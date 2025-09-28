@@ -4,6 +4,7 @@
 #include "file_manager.h"
 #include "../file_type/txt.h"
 #include "../file_type/zip.h"
+#include "../file_type/png.h"
 
 namespace type_iden
 {
@@ -129,6 +130,7 @@ namespace type_iden
 		};
 
 		TryGetTypes(GetZipTypes);
+		TryGetTypes(GetPngTypes);
 		TryGetTypes(GetTxtTypes);
 
 		return types;

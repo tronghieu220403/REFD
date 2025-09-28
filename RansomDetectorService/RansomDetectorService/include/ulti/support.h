@@ -24,6 +24,8 @@ namespace ulti
         dest.insert(dest.end(), source.begin(), source.end());
     }
 
+    uint32_t ComputeCRC32(const unsigned char* buf, size_t len);
+
     bool IsCurrentX86Process();
 
     bool CreateDir(const std::wstring& dir_path);

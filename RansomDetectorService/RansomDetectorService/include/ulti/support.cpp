@@ -76,6 +76,11 @@ namespace ulti
         CharLowerBuffA(wstr.data(), wstr.size());
     }
 
+    // Compute CRC32 with zlib
+    uint32_t ComputeCRC32(const unsigned char* buf, size_t len) {
+        return crc32(0L, buf, static_cast<uInt>(len));
+    }
+
     bool IsCurrentX86Process()
     {
         #if defined(__x86_64__) || defined(_M_X64)

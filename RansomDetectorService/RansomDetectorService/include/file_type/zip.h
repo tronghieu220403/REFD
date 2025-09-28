@@ -63,7 +63,6 @@ namespace type_iden
 
 #pragma pack(pop)
 
-    uint32_t ComputeCRC32(const unsigned char* buf, size_t len);
     bool ReadDataDescriptor(const unsigned char* base, size_t file_size, size_t after_data_offset,
         uint32_t& crc32_out, uint32_t& comp_size_out, uint32_t& uncomp_size_out);
 
