@@ -6,6 +6,7 @@
 #include "../file_type/zip.h"
 #include "../file_type/png.h"
 #include "../file_type/jpg.h"
+#include "../file_type/7z.h"
 
 namespace type_iden
 {
@@ -134,6 +135,7 @@ namespace type_iden
 		TryGetTypes(GetPngTypes);
 		TryGetTypes(GetTxtTypes);
 		TryGetTypes(GetJpgTypes);
+		TryGetTypes(Get7zTypes);
 
 		return types;
 	}

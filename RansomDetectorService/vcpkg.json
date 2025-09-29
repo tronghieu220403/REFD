@@ -5,6 +5,7 @@
 	"zlib",
 	"bzip2",
 	"liblzma",
-	"libjpeg-turbo"
+	"libjpeg-turbo",
+	"libarchive"
   ]
 }
