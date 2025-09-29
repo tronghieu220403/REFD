@@ -132,7 +132,7 @@ namespace type_iden
 			}
 		};
 
-		TryGetTypes(GetZipTypes);
+		TryGetTypes(GetZipTypes2);
 		TryGetTypes(GetPngTypes);
 		TryGetTypes(GetTxtTypes);
 		TryGetTypes(GetJpgTypes);

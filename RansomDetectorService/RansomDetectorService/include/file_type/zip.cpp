@@ -69,6 +69,7 @@ namespace type_iden
     }
 
     // Dectect if a file is a ZIP-based file.
+    // Only support 3 mode: no compression mode, Deflate mode and BZIP2 mode
     vector<string> GetZipTypes(const span<UCHAR>& data) {
         vector<string> types;
 
@@ -103,6 +104,8 @@ namespace type_iden
         size_t pos = eocd->cd_offset;
         bool is_zip = true;
         bool has_docx = false, has_xlsx = false, has_pptx = false;
+        bool has_epub_mimetype = false, has_epub_container = false;
+        span<CHAR> epub_mimetype_content_span;
 
         for (int i = 0; i < eocd->total_records; i++) {
             if (pos + sizeof(CentralDirHeader) > data.size()) { is_zip = false; break; }
@@ -116,13 +119,6 @@ namespace type_iden
             defer{
                 pos = next_off;
             };
-
-            string name(reinterpret_cast<const char*>(&data[name_off]), cd->name_len);
-            ulti::ToLowerOverride(name);
-
-            if (has_docx == false && name == "word/document.xml") has_docx = true;
-            if (has_xlsx == false && name == "xl/workbook.xml") has_xlsx = true;
-            if (has_pptx == false && name == "ppt/presentation.xml") has_pptx = true;
 
             pos = cd->local_header_offset;
             if (pos + sizeof(LocalFileHeader) > data.size()) { is_zip = false; break; }
@@ -141,11 +137,10 @@ namespace type_iden
             if (cd->flags & 0b1) { is_zip = false; break; }
 
             size_t data_start = (size_t)pos + sizeof(LocalFileHeader) + lh->name_len + lh->extra_len;
-            if (data_start + cd->comp_size > data.size()) { is_zip = false; break; }
-
             uint32_t crc32_val = cd->crc32;
             uint32_t comp_size = cd->comp_size;
             uint32_t uncomp_size = cd->uncomp_size;
+            if (data_start + comp_size > data.size()) { is_zip = false; break; }
 
             // If Data Descriptor bit is set (bit 3), local header sizes/CRC is zero, the correct values are put in the data descriptor immediately following the compressed data
             if (cd->flags & 0b1000)
@@ -156,24 +151,42 @@ namespace type_iden
                 }
             }
 
+            string name(reinterpret_cast<const char*>(&data[name_off]), cd->name_len);
+            ulti::ToLowerOverride(name);
+
+            if (has_docx == false && name == "word/document.xml") has_docx = true;
+            if (has_xlsx == false && name == "xl/workbook.xml") has_xlsx = true;
+            if (has_pptx == false && name == "ppt/presentation.xml") has_pptx = true;
+            if (name == "mimetype") has_epub_mimetype = true;
+            if (name == "meta-inf/container.xml") has_epub_container = true;
+
             const unsigned char* comp_ptr = &data[data_start];
             vector<unsigned char> decomp;
 
-            bool ok = true;
             if (cd->compression == 0) { // no compression
                 if (uncomp_size != comp_size) { is_zip = false; break; }
+                if (name == "mimetype") {
+                    epub_mimetype_content_span = span((char *)comp_ptr, comp_size);
+                }
             }
-            else if (cd->compression == 8) {
-                ok = DecompressDeflate(comp_ptr, comp_size, decomp, uncomp_size);
+            else
+            {
+                bool ok = true;
+                if (cd->compression == 8) {
+                    ok = DecompressDeflate(comp_ptr, comp_size, decomp, uncomp_size);
+                }
+                else if (cd->compression == 12) {
+                    ok = DecompressBzip2(comp_ptr, comp_size, decomp, uncomp_size);
+                }
+                else {
+                    // Not supported
+                    is_zip = false; break;
+                }
+                if (ok == false) { is_zip = false; break; }
+                if (name == "mimetype") {
+                    epub_mimetype_content_span = span((char*)decomp.data(), decomp.size());
+                }
             }
-            else if (cd->compression == 12) {
-                ok = DecompressBzip2(comp_ptr, comp_size, decomp, uncomp_size);
-            }
-            else {
-                // Not supported
-                is_zip = false; break;
-            }
-            if (ok == false) { is_zip = false; break; }
             uint32_t real_crc = (cd->compression == 0) ? ulti::ComputeCRC32(comp_ptr, comp_size) : ulti::ComputeCRC32(decomp.data(), decomp.size());
             if (real_crc != crc32_val) { is_zip = false; break; }
         }
@@ -186,6 +199,23 @@ namespace type_iden
         if (has_docx) types.push_back("docx");
         if (has_xlsx) types.push_back("xlsx");
         if (has_pptx) types.push_back("pptx");
+
+
+        if (has_epub_mimetype && has_epub_container) {
+            // Trim whitespace/newlines
+            while (!epub_mimetype_content_span.empty() &&
+                (epub_mimetype_content_span.back() == '\n' ||
+                    epub_mimetype_content_span.back() == '\r' ||
+                    epub_mimetype_content_span.back() == ' '))
+            {
+                epub_mimetype_content_span = epub_mimetype_content_span.subspan(0, epub_mimetype_content_span.size() - 1);
+            }
+            string_view epub_mimetype_content_str(epub_mimetype_content_span.data(), epub_mimetype_content_span.size());
+
+            if (epub_mimetype_content_str == "application/epub+zip") {
+                types.push_back("epub");
+            }
+        }
 
         return types;
     }
