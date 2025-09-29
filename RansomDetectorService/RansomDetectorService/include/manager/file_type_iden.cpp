@@ -7,6 +7,7 @@
 #include "../file_type/png.h"
 #include "../file_type/jpg.h"
 #include "../file_type/7z.h"
+#include "../file_type/ole.h"
 
 namespace type_iden
 {
@@ -136,6 +137,7 @@ namespace type_iden
 		TryGetTypes(GetTxtTypes);
 		TryGetTypes(GetJpgTypes);
 		TryGetTypes(Get7zTypes);
+		TryGetTypes(GetOleTypes);
 
 		return types;
 	}

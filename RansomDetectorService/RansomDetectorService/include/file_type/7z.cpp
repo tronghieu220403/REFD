@@ -35,8 +35,9 @@ namespace type_iden
                 break;
             }
 
-            // Read full entry data to force CRC validation
-            char buf[8192];
+            // Skip full entry data to force CRC validation
+            // Do not use archive_read_data_skip
+            UCHAR buf[8192];
             while (true) {
                 auto size = archive_read_data(a, buf, sizeof(buf));
                 if (size == 0) break;      // End of entry
