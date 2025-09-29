@@ -1,5 +1,6 @@
 #pragma once
 #include "../ulti/include.h"
+#include <bzlib.h>
 
 namespace type_iden
 {
@@ -70,5 +71,7 @@ namespace type_iden
     bool DecompressDeflate(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
     bool DecompressBzip2(const unsigned char* comp, size_t comp_size, std::vector<unsigned char>& out, size_t expected_size);
 
-	vector<string> GetZipTypes(const span<UCHAR>& data);
+    vector<string> GetZipTypes(const span<UCHAR>& data);
+
+    vector<string> GetZipTypes2(const span<UCHAR>& data);
 }

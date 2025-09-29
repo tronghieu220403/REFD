@@ -1,6 +1,7 @@
 #include "zip.h"
 #include "../ulti/support.h"
-#include <bzlib.h>
+#include <archive.h>
+#include <archive_entry.h>
 
 namespace type_iden
 {
@@ -30,7 +31,7 @@ namespace type_iden
     }
 
     bool DecompressStored(const unsigned char* comp, size_t comp_size,
-        std::vector<unsigned char>& out, size_t expected_size) {
+        vector<unsigned char>& out, size_t expected_size) {
         if (comp_size != expected_size) return false;
         out.assign(comp, comp + comp_size);
         return true;
@@ -38,7 +39,7 @@ namespace type_iden
 
     // Inflate (zlib) compressed data
     bool DecompressDeflate(const unsigned char* comp, size_t comp_size,
-        std::vector<unsigned char>& out, size_t expected_size) {
+        vector<unsigned char>& out, size_t expected_size) {
         out.resize(expected_size);
         z_stream zs{};
         zs.next_in = const_cast<Bytef*>(comp);
@@ -54,7 +55,7 @@ namespace type_iden
     }
 
     bool DecompressBzip2(const unsigned char* comp, size_t comp_size,
-        std::vector<unsigned char>& out, size_t expected_size) {
+        vector<unsigned char>& out, size_t expected_size) {
         out.resize(expected_size);
         unsigned int destLen = static_cast<unsigned int>(expected_size);
 
@@ -156,7 +157,7 @@ namespace type_iden
             }
 
             const unsigned char* comp_ptr = &data[data_start];
-            std::vector<unsigned char> decomp;
+            vector<unsigned char> decomp;
 
             bool ok = true;
             if (cd->compression == 0) { // no compression
@@ -189,4 +190,125 @@ namespace type_iden
         return types;
     }
 
+    vector<string> GetZipTypes2(const span<UCHAR>& data)
+    {
+        vector<string> types;
+
+        if (data.size() < sizeof(EocdRecord)) {
+            return types;  // Too small
+        }
+
+        // Search for EOCD from end (max comment = 64KB)
+        const size_t max_back = 65536 + sizeof(EocdRecord);
+        size_t search_start = (data.size() > max_back) ? data.size() - max_back : 0;
+
+        size_t eocd_pos = string::npos;
+        for (size_t i = data.size() - 4; i > search_start; --i) {
+            if (*reinterpret_cast<const uint32_t*>(&data[i]) == 0x06054b50) {
+                eocd_pos = i;
+                break;
+            }
+        }
+        if (eocd_pos == string::npos) {
+            return types;  // No EOCD
+        }
+
+        const EocdRecord* eocd = reinterpret_cast<const EocdRecord*>(&data[eocd_pos]);
+        if (eocd->signature != 0x06054b50) {
+            return types;
+        }
+        if (eocd->cd_offset + eocd->cd_size > data.size()) {
+            return types;
+        }
+
+        // Scan central directory entries
+        size_t pos = eocd->cd_offset;
+        bool is_zip = true;
+        bool has_docx = false, has_xlsx = false, has_pptx = false;
+
+        for (int i = 0; i < eocd->total_records; i++) {
+            if (pos + sizeof(CentralDirHeader) > data.size()) { is_zip = false; break; }
+            const CentralDirHeader* cd = reinterpret_cast<const CentralDirHeader*>(&data[pos]);
+            if (cd->signature != 0x02014b50) { is_zip = false; break; }
+
+            size_t name_off = pos + sizeof(CentralDirHeader);
+            const size_t next_off = name_off + cd->name_len + cd->extra_len + cd->comment_len;
+
+            if (next_off > data.size()) { is_zip = false; break; }
+            defer{
+                pos = next_off;
+            };
+
+            // Data is encrypted
+            if (cd->flags & 0b1) { is_zip = false; break; }
+
+            pos = cd->local_header_offset;
+            if (pos + sizeof(LocalFileHeader) > data.size()) { is_zip = false; break; }
+
+            const LocalFileHeader* lh = reinterpret_cast<const LocalFileHeader*>(&data[pos]);
+            if (lh == nullptr
+                || lh->signature != 0x04034b50
+                || (lh->comp_size != cd->comp_size || lh->uncomp_size != cd->uncomp_size)
+                || lh->crc32 != cd->crc32)
+            {
+                is_zip = false;
+                break;
+            }
+
+            size_t data_start = (size_t)pos + sizeof(LocalFileHeader) + lh->name_len + lh->extra_len;
+            if (data_start + cd->comp_size > data.size()) { is_zip = false; break; }
+        }
+
+        if (is_zip == false)
+        {
+            return types;
+        }
+
+        struct archive* a = archive_read_new();
+        archive_read_support_format_zip(a); // enable ZIP format
+
+        // Ensure cleanup on exit
+        defer{ archive_read_free(a); };
+
+        // Open from memory buffer
+        if (archive_read_open_memory(a, (void*)data.data(), data.size()) != ARCHIVE_OK) {
+            return types; // invalid or corrupted
+        }
+
+        struct archive_entry* entry;
+        while (true) {
+            int r = archive_read_next_header(a, &entry);
+            if (r == ARCHIVE_EOF) {
+                break; // finished reading all entries
+            }
+            if (r != ARCHIVE_OK) {
+                return types; // corrupted
+            }
+
+            string name(archive_entry_pathname(entry));
+            ulti::ToLowerOverride(name);
+
+            if (has_docx == false && name == "word/document.xml") has_docx = true;
+            if (has_xlsx == false && name == "xl/workbook.xml") has_xlsx = true;
+            if (has_pptx == false && name == "ppt/presentation.xml") has_pptx = true;
+
+            // Read file data (this validates CRC)
+            char buf[8192];
+            while (true) {
+                la_ssize_t r = archive_read_data(a, buf, sizeof(buf));
+                if (r < 0) {
+                    return types; // corrupted
+                }
+                if (r == 0) break; // EOF for this entry
+            }
+        }
+
+        // If we reach here -> ZIP valid
+        types.push_back("zip");
+        if (has_docx) types.push_back("docx");
+        if (has_xlsx) types.push_back("xlsx");
+        if (has_pptx) types.push_back("pptx");
+
+        return types;
+    }
 }
