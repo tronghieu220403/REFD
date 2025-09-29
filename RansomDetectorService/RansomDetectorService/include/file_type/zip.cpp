@@ -190,6 +190,7 @@ namespace type_iden
         return types;
     }
 
+    // Dectect if a file is a ZIP-based file.
     vector<string> GetZipTypes2(const span<UCHAR>& data)
     {
         vector<string> types;
@@ -224,7 +225,6 @@ namespace type_iden
         // Scan central directory entries
         size_t pos = eocd->cd_offset;
         bool is_zip = true;
-        bool has_docx = false, has_xlsx = false, has_pptx = false;
 
         for (int i = 0; i < eocd->total_records; i++) {
             if (pos + sizeof(CentralDirHeader) > data.size()) { is_zip = false; break; }
@@ -275,6 +275,11 @@ namespace type_iden
             return types; // invalid or corrupted
         }
 
+        bool has_docx = false, has_xlsx = false, has_pptx = false;
+
+        bool has_epub_mimetype = false, has_epub_container = false;
+        string epub_mimetype_content;
+
         struct archive_entry* entry;
         while (true) {
             int r = archive_read_next_header(a, &entry);
@@ -292,6 +297,25 @@ namespace type_iden
             if (has_xlsx == false && name == "xl/workbook.xml") has_xlsx = true;
             if (has_pptx == false && name == "ppt/presentation.xml") has_pptx = true;
 
+            if (name == "mimetype") {
+                has_epub_mimetype = true;
+                // Read its content to check value
+                char buf[256] = {};
+                la_ssize_t n = archive_read_data(a, buf, sizeof(buf) - 1);
+                if (n > 0) {
+                    epub_mimetype_content.assign(buf, buf + n);
+                    // trim
+                    while (!epub_mimetype_content.empty() &&
+                        (epub_mimetype_content.back() == '\n' || epub_mimetype_content.back() == '\r' || epub_mimetype_content.back() == ' '))
+                    {
+                        epub_mimetype_content.pop_back();
+                    }
+                }
+            }
+            else if (name == "meta-inf/container.xml") {
+                has_epub_container = true;
+            }
+
             // Read file data (this validates CRC)
             char buf[8192];
             while (true) {
@@ -308,6 +332,13 @@ namespace type_iden
         if (has_docx) types.push_back("docx");
         if (has_xlsx) types.push_back("xlsx");
         if (has_pptx) types.push_back("pptx");
+
+        if (has_epub_mimetype 
+            && has_epub_container 
+            && epub_mimetype_content == "application/epub+zip")
+        {
+            types.push_back("epub");
+        }
 
         return types;
     }
