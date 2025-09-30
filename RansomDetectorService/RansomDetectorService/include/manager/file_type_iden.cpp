@@ -136,7 +136,7 @@ namespace type_iden
 		};
 
 		TryGetTypes(GetPdfTypes);
-		TryGetTypes(GetZipTypes2);
+		TryGetTypes(GetZipTypes);
 		TryGetTypes(GetRarTypes);
 		TryGetTypes(GetPngTypes);
 		TryGetTypes(GetJpgTypes);
