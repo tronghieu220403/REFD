@@ -89,7 +89,7 @@ namespace type_iden {
         STATSTG st{};
         HRESULT hr = stream->Stat(&st, STATFLAG_NONAME);
         if (FAILED(hr)) {
-            cerr << ("Stat failed for stream: " + path_utf8) << endl;
+            //cerr << ("Stat failed for stream: " + path_utf8) << endl;
             return false;
         }
         const ULONGLONG declared_size = st.cbSize.QuadPart;
@@ -102,19 +102,19 @@ namespace type_iden {
             ULONG cb_read = 0;
             hr = stream->Read(buf.get(), kChunk, &cb_read);
             if (FAILED(hr)) {
-                cerr << ("Read failed for stream: " + path_utf8) << endl;
+                //cerr << ("Read failed for stream: " + path_utf8) << endl;
                 return false;
             }
             if (cb_read == 0) break;
             total_read += cb_read;
             if (total_read > (1ULL << 34)) {  // 16 GB guard
-                cerr << ("Stream too large/loop? " + path_utf8) << endl;
+                //cerr << ("Stream too large/loop? " + path_utf8) << endl;
                 return false;
             }
         }
 
         if (declared_size != 0 && total_read != declared_size) {
-            cerr << "Stream size mismatch at " + path_utf8 + " (declared=" +  ", read=" + std::to_string(total_read) + ")" << endl;
+            //cerr << "Stream size mismatch at " + path_utf8 + " (declared=" +  ", read=" + std::to_string(total_read) + ")" << endl;
             return false;
         }
         return true;
@@ -123,14 +123,14 @@ namespace type_iden {
     inline bool WalkStorageRecursive(IStorage* storage, const std::wstring& path, size_t depth) {
         if (!storage) return false;
         if (depth > 64) {
-            cerr << ("Storage nesting too deep.") << endl;
+            //cerr << ("Storage nesting too deep.") << endl;
             return false;
         }
 
         IEnumSTATSTG* enum_stat = nullptr;
         HRESULT hr = storage->EnumElements(0, nullptr, 0, &enum_stat);
         if (FAILED(hr) || !enum_stat) {
-            cerr << "EnumElements failed at " + ulti::WstrToStr(path) << endl;
+            //cerr << "EnumElements failed at " + ulti::WstrToStr(path) << endl;
             return false;
         }
 
@@ -148,7 +148,7 @@ namespace type_iden {
                     nullptr, 0, &child_storage);
                 if (FAILED(hr) || !child_storage) {
                     ok = false;
-                    cerr << ("OpenStorage failed at " + child_path_u8) << endl;
+                    //cerr << ("OpenStorage failed at " + child_path_u8) << endl;
                 }
                 else {
                     if (!WalkStorageRecursive(child_storage, child_path, depth + 1)) {
@@ -163,7 +163,7 @@ namespace type_iden {
                     STGM_READ | STGM_SHARE_EXCLUSIVE, 0, &stream);
                 if (FAILED(hr) || !stream) {
                     ok = false;
-                    cerr << ("OpenStream failed at " + child_path_u8);
+                    //cerr << ("OpenStream failed at " + child_path_u8);
                 }
                 else {
                     if (!ReadEntireStream(stream, child_path_u8)) {
@@ -184,14 +184,14 @@ namespace type_iden {
 
     bool DeepValidateOle(const std::span<UCHAR>& data) {
         if (data.size() < 512) {
-            cerr << ("Too small for OLE header.");
+            //cerr << ("Too small for OLE header.");
             return false;
         }
 
         static const BYTE kOleSignature[8] =
         { 0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1 };
         if (memcmp(data.data(), kOleSignature, 8) != 0) {
-            cerr << ("Missing OLE signature.");
+            //cerr << ("Missing OLE signature.");
             return false;
         }
 
@@ -209,7 +209,7 @@ namespace type_iden {
             nullptr, 0, &root);
         mem_lock_bytes->Release();
         if (FAILED(hr) || !root) {
-            cerr << ("StgOpenStorageOnILockBytes failed.");
+            //cerr << ("StgOpenStorageOnILockBytes failed.");
             return false;
         }
 
