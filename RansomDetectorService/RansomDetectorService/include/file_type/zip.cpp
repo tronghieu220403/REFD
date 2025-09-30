@@ -304,6 +304,7 @@ namespace type_iden
         if (archive_read_open_memory(a, (void*)data.data(), data.size()) != ARCHIVE_OK) {
             return types; // invalid or corrupted
         }
+        defer{ archive_read_close(a); };
 
         bool has_docx = false, has_xlsx = false, has_pptx = false;
 

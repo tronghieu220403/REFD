@@ -6,11 +6,11 @@ namespace type_iden
 {
     // Return {"7z"} if the archive is valid, otherwise return an empty vector
     std::vector<std::string> Get7zTypes(const std::span<UCHAR>& data) {
-        std::vector<std::string> result;
+        std::vector<std::string> types;
 
         struct archive* a = archive_read_new();
         if (!a) {
-            return result;
+            return types;
         }
 
         // Ensure cleanup on exit
@@ -20,8 +20,9 @@ namespace type_iden
         archive_read_support_filter_all(a);
 
         if (archive_read_open_memory(a, data.data(), data.size()) != ARCHIVE_OK) {
-            return result;
+            return types;
         }
+        defer{ archive_read_close(a); };
 
         struct archive_entry* entry;
         bool ok = true;
@@ -50,8 +51,8 @@ namespace type_iden
         }
 
         if (ok) {
-            result.push_back("7z");
+            types.push_back("7z");
         }
-        return result;
+        return types;
     }
 }

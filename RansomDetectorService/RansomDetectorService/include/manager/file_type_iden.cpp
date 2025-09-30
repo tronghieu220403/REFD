@@ -9,6 +9,7 @@
 #include "../file_type/7z.h"
 #include "../file_type/pdf.h"
 #include "../file_type/rar.h"
+#include "../file_type/gzip.h"
 //#include "../file_type/ole.h"
 
 namespace type_iden
@@ -141,6 +142,7 @@ namespace type_iden
 		TryGetTypes(GetJpgTypes);
 		TryGetTypes(Get7zTypes);
 		TryGetTypes(GetTxtTypes);
+		TryGetTypes(GetGzipTypes);
 
 		//TryGetTypes(GetOleTypes); // Bad performance, do not implement.
 		return types;
