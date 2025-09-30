@@ -8,6 +8,7 @@
 #include "../file_type/jpg.h"
 #include "../file_type/7z.h"
 #include "../file_type/pdf.h"
+#include "../file_type/rar.h"
 //#include "../file_type/ole.h"
 
 namespace type_iden
@@ -133,13 +134,14 @@ namespace type_iden
 			}
 		};
 
-		TryGetTypes(GetZipTypes2);
 		TryGetTypes(GetPdfTypes);
+		TryGetTypes(GetZipTypes2);
+		TryGetTypes(GetRarTypes);
 		TryGetTypes(GetPngTypes);
-		TryGetTypes(GetTxtTypes);
 		TryGetTypes(GetJpgTypes);
 		TryGetTypes(Get7zTypes);
-		
+		TryGetTypes(GetTxtTypes);
+
 		//TryGetTypes(GetOleTypes); // Bad performance, do not implement.
 		return types;
 	}
