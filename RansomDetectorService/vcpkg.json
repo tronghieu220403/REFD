@@ -6,6 +6,7 @@
 	"bzip2",
 	"liblzma",
 	"libjpeg-turbo",
-	"libarchive"
+	"libarchive",
+	"qpdf"
   ]
 }

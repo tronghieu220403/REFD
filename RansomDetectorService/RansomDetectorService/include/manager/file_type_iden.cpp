@@ -7,6 +7,7 @@
 #include "../file_type/png.h"
 #include "../file_type/jpg.h"
 #include "../file_type/7z.h"
+#include "../file_type/pdf.h"
 //#include "../file_type/ole.h"
 
 namespace type_iden
@@ -133,6 +134,7 @@ namespace type_iden
 		};
 
 		TryGetTypes(GetZipTypes2);
+		TryGetTypes(GetPdfTypes);
 		TryGetTypes(GetPngTypes);
 		TryGetTypes(GetTxtTypes);
 		TryGetTypes(GetJpgTypes);

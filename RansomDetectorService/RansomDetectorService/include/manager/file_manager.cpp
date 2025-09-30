@@ -311,7 +311,7 @@ namespace manager
 			return L"";
 		}
 		std::vector<UCHAR> data;
-		data.resize(min((size_t)tmp_file_size, BEGIN_WIDTH + END_WIDTH));
+		data.resize((std::min)((size_t)tmp_file_size, (size_t)BEGIN_WIDTH + END_WIDTH));
 		// Read and write the first BEGIN_WIDTH bytes and last END_WIDTH bytes
 		DWORD bytes_cnt = 0;
 

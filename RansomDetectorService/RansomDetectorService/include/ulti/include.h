@@ -5,7 +5,9 @@
 
 #ifndef ETWSERVICE_ULTI_INCLUDE_H_
 #define ETWSERVICE_ULTI_INCLUDE_H_
+#define NOMINMAX
 #include <Windows.h>
+#include <limits>
 #include <iphlpapi.h>
 #include <TlHelp32.h>
 #include <Psapi.h>
