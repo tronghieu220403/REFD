@@ -17,7 +17,7 @@ namespace type_iden {
         // Enable gzip support explicitly.
         archive_read_support_filter_gzip(a);
         // Also support raw to avoid "unknown format".
-        archive_read_support_format_raw(a);
+        archive_read_support_format_tar(a);
 
         // Open from memory buffer.
         if (archive_read_open_memory(a, data.data(), data.size()) != ARCHIVE_OK) {
