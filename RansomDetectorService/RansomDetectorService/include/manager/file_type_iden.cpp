@@ -11,6 +11,7 @@
 #include "../file_type/rar.h"
 #include "../file_type/gzip.h"
 #include "../file_type/mp3.h"
+#include "../file_type/mp4.h"
 //#include "../file_type/webp.h"
 //#include "../file_type/ole.h"
 
@@ -146,6 +147,7 @@ namespace type_iden
 		TryGetTypes(GetTxtTypes);
 		TryGetTypes(GetGzipTypes);
 		TryGetTypes(GetMp3Types);
+		TryGetTypes(GetMp4Types);
 
 		//TryGetTypes(GetWebpTypes); // Bad performance, do not use.
 		//TryGetTypes(GetOleTypes); // Bad performance, do not implement.

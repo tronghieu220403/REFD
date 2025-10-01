@@ -75,39 +75,39 @@ namespace type_iden
         // Allocate format context and custom AVIO context.
         AVFormatContext* fmt_ctx = avformat_alloc_context();
         if (!fmt_ctx) return types;
+        defer{ avformat_free_context(fmt_ctx); };
 
         const int kAvioBufSize = 1 << 14;  // 16KB IO buffer
         uint8_t* avio_buf = static_cast<uint8_t*>(av_malloc(kAvioBufSize));
         if (!avio_buf) {
-            avformat_free_context(fmt_ctx);
             return types;
         }
 
         BufferData bd{ reinterpret_cast<const unsigned char*>(data.data()), data.size(), 0 };
-
         // Create AVIO with read + seek from memory.
         AVIOContext* avio_ctx =
             avio_alloc_context(avio_buf, kAvioBufSize, 0, &bd, &ReadPacket, nullptr, &Seek);
-        if (!avio_ctx) {
-            av_free(avio_buf);
-            avformat_free_context(fmt_ctx);
-            return types;
-        }
-
+        if (!avio_ctx) { return types; }
+        defer{ 
+            /* note: the internal buffer could have changed, and be != avio_buf */
+            if (avio_ctx->buffer != nullptr)
+            {
+                av_freep(&avio_ctx->buffer);
+            }
+            avio_context_free(&avio_ctx); 
+        };
+        
         fmt_ctx->pb = avio_ctx;
         fmt_ctx->flags |= AVFMT_FLAG_CUSTOM_IO;
 
         // Open "input" from our custom IO. Let FFmpeg probe the format.
         if (avformat_open_input(&fmt_ctx, nullptr, nullptr, nullptr) < 0) {
-            avio_context_free(&avio_ctx);  // also frees avio_ctx->buffer
-            avformat_free_context(fmt_ctx);
             return types;
         }
+        defer{ avformat_close_input(&fmt_ctx); };
 
         // Parse stream info (detects audio stream and codec parameters).
         if (avformat_find_stream_info(fmt_ctx, nullptr) < 0) {
-            avformat_close_input(&fmt_ctx);
-            if (avio_ctx) avio_context_free(&avio_ctx);
             return types;
         }
 
@@ -116,37 +116,26 @@ namespace type_iden
         const int stream_index =
             av_find_best_stream(fmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, (const AVCodec**)&codec, 0);
         if (stream_index < 0 || codec == nullptr) {
-            avformat_close_input(&fmt_ctx);
-            if (avio_ctx) avio_context_free(&avio_ctx);
             return types;
         }
 
         // Strong check: require MP3 decoder (accept both mp3 and mp3float decoders).
         if (codec->id != AV_CODEC_ID_MP3) {
             // Not an MP3 stream; treat as not-mp3 (empty).
-            avformat_close_input(&fmt_ctx);
-            if (avio_ctx) avio_context_free(&avio_ctx);
             return types;
         }
 
         AVCodecContext* codec_ctx = avcodec_alloc_context3(codec);
         if (!codec_ctx) {
-            avformat_close_input(&fmt_ctx);
-            if (avio_ctx) avio_context_free(&avio_ctx);
             return types;
         }
+        defer{ avcodec_free_context(&codec_ctx); };
 
         if (avcodec_parameters_to_context(codec_ctx, fmt_ctx->streams[stream_index]->codecpar) < 0) {
-            avcodec_free_context(&codec_ctx);
-            avformat_close_input(&fmt_ctx);
-            if (avio_ctx) avio_context_free(&avio_ctx);
             return types;
         }
 
         if (avcodec_open2(codec_ctx, codec, nullptr) < 0) {
-            avcodec_free_context(&codec_ctx);
-            avformat_close_input(&fmt_ctx);
-            if (avio_ctx) avio_context_free(&avio_ctx);
             return types;
         }
 
@@ -156,12 +145,12 @@ namespace type_iden
         if (!pkt || !frame) {
             if (pkt) av_packet_free(&pkt);
             if (frame) av_frame_free(&frame);
-            avcodec_free_context(&codec_ctx);
-            avformat_close_input(&fmt_ctx);
-            if (avio_ctx) avio_context_free(&avio_ctx);
             return types;
         }
-
+        defer{ 
+            if (pkt) { av_packet_free(&pkt);  pkt = nullptr; }
+            if (frame) { av_frame_free(&frame); frame = nullptr; }
+        };
         bool had_any_frame = false;
         bool all_ok = true;
 
@@ -233,13 +222,6 @@ namespace type_iden
                 all_ok = false;
             }
         }
-
-        // Cleanup
-        av_frame_free(&frame);
-        av_packet_free(&pkt);
-        avcodec_free_context(&codec_ctx);
-        avformat_close_input(&fmt_ctx);
-        if (avio_ctx) avio_context_free(&avio_ctx);  // also frees avio buffer
 
         // Decision: valid MP3 only if at least one decoded frame and zero errors.
         if (all_ok && had_any_frame) {

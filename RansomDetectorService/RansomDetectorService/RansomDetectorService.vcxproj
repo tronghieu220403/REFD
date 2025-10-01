@@ -149,6 +149,7 @@
     <ClCompile Include="include\file_type\gzip.cpp" />
     <ClCompile Include="include\file_type\jpg.cpp" />
     <ClCompile Include="include\file_type\mp3.cpp" />
+    <ClCompile Include="include\file_type\mp4.cpp" />
     <ClCompile Include="include\file_type\ole.cpp" />
     <ClCompile Include="include\file_type\pdf.cpp" />
     <ClCompile Include="include\file_type\png.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="include\file_type\gzip.h" />
     <ClInclude Include="include\file_type\jpg.h" />
     <ClInclude Include="include\file_type\mp3.h" />
+    <ClInclude Include="include\file_type\mp4.h" />
     <ClInclude Include="include\file_type\ole.h" />
     <ClInclude Include="include\file_type\pdf.h" />
     <ClInclude Include="include\file_type\png.h" />
