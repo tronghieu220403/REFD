@@ -93,10 +93,7 @@
     <ClCompile Include="include\file_type\webp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\file_type\mp3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\file_type\mp4.cpp">
+    <ClCompile Include="include\file_type\mpeg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -182,10 +179,7 @@
     <ClInclude Include="include\file_type\webp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\file_type\mp3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\file_type\mp4.h">
+    <ClInclude Include="include\file_type\mpeg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
