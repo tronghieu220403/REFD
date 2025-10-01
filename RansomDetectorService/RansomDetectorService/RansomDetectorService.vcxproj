@@ -148,11 +148,13 @@
     <ClCompile Include="include\file_type\7z.cpp" />
     <ClCompile Include="include\file_type\gzip.cpp" />
     <ClCompile Include="include\file_type\jpg.cpp" />
+    <ClCompile Include="include\file_type\mp3.cpp" />
     <ClCompile Include="include\file_type\ole.cpp" />
     <ClCompile Include="include\file_type\pdf.cpp" />
     <ClCompile Include="include\file_type\png.cpp" />
     <ClCompile Include="include\file_type\rar.cpp" />
     <ClCompile Include="include\file_type\txt.cpp" />
+    <ClCompile Include="include\file_type\webp.cpp" />
     <ClCompile Include="include\file_type\zip.cpp" />
     <ClCompile Include="include\honey\honeypot.cpp" />
     <ClCompile Include="include\manager\cache.cpp" />
@@ -175,11 +177,13 @@
     <ClInclude Include="include\file_type\7z.h" />
     <ClInclude Include="include\file_type\gzip.h" />
     <ClInclude Include="include\file_type\jpg.h" />
+    <ClInclude Include="include\file_type\mp3.h" />
     <ClInclude Include="include\file_type\ole.h" />
     <ClInclude Include="include\file_type\pdf.h" />
     <ClInclude Include="include\file_type\png.h" />
     <ClInclude Include="include\file_type\rar.h" />
     <ClInclude Include="include\file_type\txt.h" />
+    <ClInclude Include="include\file_type\webp.h" />
     <ClInclude Include="include\file_type\zip.h" />
     <ClInclude Include="include\honey\honeypot.h" />
     <ClInclude Include="include\manager\cache.h" />
