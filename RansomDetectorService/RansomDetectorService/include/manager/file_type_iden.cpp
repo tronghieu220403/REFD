@@ -4,15 +4,13 @@
 #include "file_manager.h"
 #include "../file_type/txt.h"
 #include "../file_type/zip.h"
-#include "../file_type/png.h"
-#include "../file_type/jpg.h"
+#include "../file_type/image.h"
 #include "../file_type/7z.h"
 #include "../file_type/pdf.h"
 #include "../file_type/rar.h"
 #include "../file_type/gzip.h"
 #include "../file_type/zlib.h"
 #include "../file_type/av.h"
-//#include "../file_type/webp.h"
 //#include "../file_type/ole.h"
 
 namespace type_iden

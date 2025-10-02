@@ -69,12 +69,6 @@
     <ClCompile Include="include\trid\trid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\file_type\png.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\file_type\jpg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\file_type\7z.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -90,13 +84,13 @@
     <ClCompile Include="include\file_type\gzip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\file_type\webp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\file_type\av.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\file_type\zlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\file_type\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,12 +149,6 @@
     <ClInclude Include="include\trid\trid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\file_type\png.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\file_type\jpg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\file_type\7z.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -179,13 +167,13 @@
     <ClInclude Include="include\file_type\gzip.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\file_type\webp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\file_type\av.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\file_type\zlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\file_type\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
