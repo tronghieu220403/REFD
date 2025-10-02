@@ -1,3 +1,5 @@
+
+#ifdef _M_IX86
 #include "trid.h"
 #include "../ulti/include.h"
 #include "../ulti/support.h"
@@ -123,3 +125,5 @@ namespace type_iden
 		return types;
 	}
 }
+
+#endif // _M_IX86

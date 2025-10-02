@@ -96,10 +96,13 @@ namespace manager {
 		std::vector<std::vector<std::string>> vvs;
 		for (auto& file_path : files)
 		{
+#ifdef _M_IX86
+			// Compatible with TRID
 			if (ulti::StrToWstr(ulti::WstrToStr(file_path)) != file_path)
 			{
 				continue;
 			}
+#endif // _M_IX86 
 			DWORD status;
 			vvs.push_back(kFileType->GetTypes(file_path, &status));
 		}

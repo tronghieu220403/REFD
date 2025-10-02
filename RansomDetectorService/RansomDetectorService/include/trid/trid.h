@@ -1,4 +1,7 @@
 #pragma once
+#ifndef TRID_TRID_H_
+#define TRID_TRID_H_
+#ifdef _M_IX86
 #include "../ulti/include.h"
 #include "trid_api.h"
 
@@ -17,5 +20,6 @@ namespace type_iden
         bool Init(const std::wstring& defs_dir, const std::wstring& trid_dll_path);
         std::vector<std::string> GetTypes(const std::wstring& file_path);
     };
-
 }
+#endif // _M_IX86
+#endif // RDS_TRID_TRID_H_

@@ -6,6 +6,8 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 
+#ifdef _M_IX86
+
 #include <windows.h>
 
 #define TRID_GET_RES_NUM          1     // Get the number of results available
@@ -52,5 +54,7 @@ public:
 	TridApi(const char* defs_path = nullptr, const wchar_t* trid_lib_dll_path = nullptr);
 	~TridApi();
 };
+
+#endif // _M_IX86
 
 #endif // TRID_TRID_API_H

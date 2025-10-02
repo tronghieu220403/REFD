@@ -45,11 +45,13 @@ namespace type_iden
 
 	FileType::~FileType()
 	{
+#ifdef _M_IX86
 		if (trid_ != nullptr)
 		{
 			delete trid_;
 			trid_ = nullptr;
 		}
+#endif // _M_IX86
 	}
 
 	bool FileType::InitTrid(const wstring& defs_dir, const wstring& trid_dll_path)
