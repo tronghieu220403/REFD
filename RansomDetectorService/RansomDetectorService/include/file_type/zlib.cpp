@@ -1,4 +1,4 @@
-#include "gzip.h"
+#include "zlib.h"
 #include <archive.h>
 #include <archive_entry.h>
 
