@@ -24,6 +24,9 @@ namespace ulti
         dest.insert(dest.end(), source.begin(), source.end());
     }
 
+    std::vector<std::string> SplitString(const std::string& input,
+        const std::string& delimiter);
+
     uint32_t ComputeCRC32(const unsigned char* buf, size_t len);
 
     bool IsCurrentX86Process();

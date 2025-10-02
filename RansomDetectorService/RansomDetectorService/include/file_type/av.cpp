@@ -1,4 +1,4 @@
-#include "mpeg.h"
+#include "av.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -6,6 +6,7 @@ extern "C" {
 #include <libavutil/error.h>
 #include <libavutil/mem.h>
 }
+#include "../ulti/support.h"
 
 using std::string;
 using std::vector;
@@ -64,7 +65,7 @@ namespace type_iden
 
     // Decode all audio packets and require zero decode errors.
     // Return true only if every frame decodes cleanly; otherwise return empty.
-    static bool DeepCheckMp3(AVCodec* codec, const int stream_index, AVFormatContext* fmt_ctx)
+    static bool DeepCheckAudio(AVCodec* codec, const int stream_index, AVFormatContext* fmt_ctx)
     {
         AVCodecContext* codec_ctx = avcodec_alloc_context3(codec);
         if (!codec_ctx) {
@@ -171,7 +172,9 @@ namespace type_iden
         return false;
     }
 
-    static bool DeepCheckMp4(AVFormatContext* fmt_ctx)
+    // Decode all video packets and frames and require zero decode errors.
+    // Return true only if every frame decodes cleanly; otherwise return empty.
+    static bool DeepCheckVideo(AVFormatContext* fmt_ctx)
     {
         // Decode all streams fully
         bool decode_ok = true;
@@ -246,29 +249,28 @@ namespace type_iden
         return false;
     }
 
-    vector<string> GetMpegTypes(const std::span<UCHAR>& data) {
-        vector<string> types;
-        if (data.size() < 4) return types;
+    vector<string> GetAudioVideoTypes(const std::span<UCHAR>& data) {
+        if (data.size() < 4) return {};
 
         // Silence FFmpeg logs (optional).
         av_log_set_level(AV_LOG_QUIET);
 
         // Allocate format context and custom AVIO context.
         AVFormatContext* fmt_ctx = avformat_alloc_context();
-        if (!fmt_ctx) return types;
+        if (!fmt_ctx) return {};
         defer{ avformat_free_context(fmt_ctx); };
 
         const int kAvioBufSize = 1 << 14;  // 16KB IO buffer
         uint8_t* avio_buf = static_cast<uint8_t*>(av_malloc(kAvioBufSize));
         if (!avio_buf) {
-            return types;
+            return {};
         }
 
         BufferData bd{ reinterpret_cast<const unsigned char*>(data.data()), data.size(), 0 };
         // Create AVIO with read + seek from memory.
         AVIOContext* avio_ctx =
             avio_alloc_context(avio_buf, kAvioBufSize, 0, &bd, &ReadPacket, nullptr, &Seek);
-        if (!avio_ctx) { return types; }
+        if (!avio_ctx) { return {}; }
         defer{
             /* note: the internal buffer could have changed, and be != avio_buf */
             if (avio_ctx->buffer != nullptr)
@@ -283,37 +285,50 @@ namespace type_iden
 
         // Open "input" from our custom IO. Let FFmpeg probe the format.
         if (avformat_open_input(&fmt_ctx, nullptr, nullptr, nullptr) < 0) {
-            return types;
+            return {};
         }
         defer{ avformat_close_input(&fmt_ctx); };
+        
+        vector<string> types;
+        if (fmt_ctx->iformat->long_name) {
+            types.push_back((char*)fmt_ctx->iformat->long_name);
+        }
+        else if (fmt_ctx->iformat->mime_type) {
+            types.push_back((char*)fmt_ctx->iformat->mime_type);
+        }
+        else if (fmt_ctx->iformat->name) {
+            types = ulti::SplitString(fmt_ctx->iformat->name, ",");
+        }
+        else if (fmt_ctx->iformat->extensions) {
+            types = ulti::SplitString(fmt_ctx->iformat->extensions, ",");
+        }
 
         // Parse stream info (detects audio stream and codec parameters).
+        // This is basic check
         if (avformat_find_stream_info(fmt_ctx, nullptr) < 0) {
-            return types;
+            return {};
         }
 
         // Find best audio stream and associated decoder.
         AVCodec* codec = nullptr;
-        const int stream_index =
-            av_find_best_stream(fmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, (const AVCodec**)&codec, 0);
-        if (stream_index < 0 || codec == nullptr) {
-            return types;
-        }
-
-        // Strong check: require MP3 decoder (accept both mp3 and mp3float decoders).
-        if (codec->id != AV_CODEC_ID_MP3) {
-            // Not an MP3 stream; treat as not-mp3 (empty).
-            if (DeepCheckMp4(fmt_ctx) == true)
-            {
-                types.push_back("mp4");
+        int stream_index = av_find_best_stream(fmt_ctx, AVMEDIA_TYPE_VIDEO, -1, -1, (const AVCodec**)&codec, 0);
+        if (stream_index >= 0 && codec != nullptr) {
+            //if (DeepCheckVideo(fmt_ctx) == false) { return {}; }; // ~30 times slower
+            if (types.size() == 0) {
+                return { "video" };
             }
             return types;
         }
-        if (DeepCheckMp3(codec, stream_index, fmt_ctx) == true)
-        {
-            types.push_back("mp3");
+
+        codec = nullptr;
+        stream_index = av_find_best_stream(fmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, (const AVCodec**)&codec, 0);
+        if (stream_index >= 0 && codec != nullptr) {
+            //if (DeepCheckAudio(codec, stream_index, fmt_ctx) == false) { return {}; }; // ~30 times slower
+            if (types.size() == 0) {
+                return { "audio" };
+            }
+            return types;
         }
-        
         return types;
     }
 }

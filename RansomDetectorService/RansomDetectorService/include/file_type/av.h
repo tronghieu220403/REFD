@@ -3,5 +3,5 @@
 
 namespace type_iden
 {
-	vector<string> GetMpegTypes(const std::span<UCHAR>& data);
+	vector<string> GetAudioVideoTypes(const std::span<UCHAR>& data);
 }

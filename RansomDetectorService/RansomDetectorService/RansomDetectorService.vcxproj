@@ -146,9 +146,9 @@
     <ClCompile Include="include\com\driver_comm.cpp" />
     <ClCompile Include="include\com\minifilter_com.cpp" />
     <ClCompile Include="include\file_type\7z.cpp" />
+    <ClCompile Include="include\file_type\av.cpp" />
     <ClCompile Include="include\file_type\gzip.cpp" />
     <ClCompile Include="include\file_type\jpg.cpp" />
-    <ClCompile Include="include\file_type\mpeg.cpp" />
     <ClCompile Include="include\file_type\ole.cpp" />
     <ClCompile Include="include\file_type\pdf.cpp" />
     <ClCompile Include="include\file_type\png.cpp" />
@@ -175,9 +175,9 @@
     <ClInclude Include="include\com\driver_comm.h" />
     <ClInclude Include="include\com\minifilter_comm.h" />
     <ClInclude Include="include\file_type\7z.h" />
+    <ClInclude Include="include\file_type\av.h" />
     <ClInclude Include="include\file_type\gzip.h" />
     <ClInclude Include="include\file_type\jpg.h" />
-    <ClInclude Include="include\file_type\mpeg.h" />
     <ClInclude Include="include\file_type\ole.h" />
     <ClInclude Include="include\file_type\pdf.h" />
     <ClInclude Include="include\file_type\png.h" />

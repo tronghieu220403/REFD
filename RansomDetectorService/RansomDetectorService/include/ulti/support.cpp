@@ -76,6 +76,22 @@ namespace ulti
         CharLowerBuffA(wstr.data(), wstr.size());
     }
 
+    // Split a string by a given delimiter into a vector of strings.
+    std::vector<std::string> SplitString(const std::string& input,
+        const std::string& delimiter) {
+        std::vector<std::string> result;
+        size_t start = 0;
+        size_t end = 0;
+
+        while ((end = input.find(delimiter, start)) != std::string::npos) {
+            result.push_back(input.substr(start, end - start));
+            start = end + delimiter.length();
+        }
+        // Add the last token
+        result.push_back(input.substr(start));
+        return result;
+    }
+
     // Compute CRC32 with zlib
     uint32_t ComputeCRC32(const unsigned char* buf, size_t len) {
         return crc32(0L, buf, static_cast<uInt>(len));
