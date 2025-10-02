@@ -1,7 +1,8 @@
-#include "zip.h"
+#include "compress.h"
 #include "../ulti/support.h"
 #include <archive.h>
 #include <archive_entry.h>
+#include <zlib.h>
 
 namespace type_iden
 {
@@ -219,6 +220,227 @@ namespace type_iden
             types.push_back("oxps");
         }
 
+        return types;
+    }
+
+    // Return {"rar"} if the archive is valid, otherwise return an empty vector
+    vector<string> GetRarTypes(const span<UCHAR>& data) {
+        vector<string> types;
+
+        struct archive* a = archive_read_new();
+        if (!a) return types;
+
+        // Ensure cleanup on exit
+        defer{ archive_read_free(a); };
+
+        archive_read_support_format_rar(a);
+        archive_read_support_filter_all(a);
+
+        if (archive_read_open_memory(a, data.data(), data.size()) != ARCHIVE_OK) {
+            return types;
+        }
+        defer{ archive_read_close(a); };
+
+        struct archive_entry* entry;
+        bool ok = true;
+
+        // Iterate through all entries in the archive
+        while (true) {
+            int r = archive_read_next_header(a, &entry);
+            if (r == ARCHIVE_EOF) break;   // End of archive
+            if (r != ARCHIVE_OK) {
+                ok = false;
+                break;
+            }
+
+            // Skip full entry data to force CRC validation
+            // Do not use archive_read_data_skip
+            UCHAR buf[8192];
+            while (true) {
+                auto size = archive_read_data(a, buf, sizeof(buf));
+                if (size == 0) break;      // End of entry
+                if (size < 0) {
+                    ok = false;
+                    break;
+                }
+            }
+            if (!ok) break;
+        }
+
+        if (ok) {
+            types.push_back("rar");
+        }
+        return types;
+    }
+
+    // Return {"7z"} if the archive is valid, otherwise return an empty vector
+    std::vector<std::string> Get7zTypes(const std::span<UCHAR>& data) {
+        std::vector<std::string> types;
+
+        struct archive* a = archive_read_new();
+        if (!a) {
+            return types;
+        }
+
+        // Ensure cleanup on exit
+        defer{ archive_read_free(a); };
+
+        archive_read_support_format_7zip(a);
+        archive_read_support_filter_all(a);
+
+        if (archive_read_open_memory(a, data.data(), data.size()) != ARCHIVE_OK) {
+            return types;
+        }
+        defer{ archive_read_close(a); };
+
+        struct archive_entry* entry;
+        bool ok = true;
+
+        // Iterate through all entries in the archive
+        while (true) {
+            int r = archive_read_next_header(a, &entry);
+            if (r == ARCHIVE_EOF) break;   // End of archive
+            if (r != ARCHIVE_OK) {
+                ok = false;
+                break;
+            }
+
+            // Skip full entry data to force CRC validation
+            // Do not use archive_read_data_skip
+            UCHAR buf[8192];
+            while (true) {
+                auto size = archive_read_data(a, buf, sizeof(buf));
+                if (size == 0) break;      // End of entry
+                if (size < 0) {
+                    ok = false;
+                    break;
+                }
+            }
+            if (!ok) break;
+        }
+
+        if (ok) {
+            types.push_back("7z");
+        }
+        return types;
+    }
+
+    // Return {"gzip"} if buffer is valid gzip (validated by libarchive).
+    std::vector<std::string> GetGzipTypes(const std::span<UCHAR>& data) {
+        std::vector<std::string> types;
+
+        struct archive* a = archive_read_new();
+        if (!a) return types;
+
+        // Ensure cleanup on exit
+        defer{ archive_read_free(a); };
+
+        // Enable gzip support explicitly.
+        archive_read_support_filter_gzip(a);
+        // Also support raw to avoid "unknown format".
+        archive_read_support_format_tar(a);
+
+        // Open from memory buffer.
+        if (archive_read_open_memory(a, data.data(), data.size()) != ARCHIVE_OK) {
+            return types;
+        }
+        defer{ archive_read_close(a); };
+
+        struct archive_entry* entry;
+        bool ok = true;
+
+        int r = archive_read_next_header(a, &entry);
+        if (r == ARCHIVE_OK) {
+            // Skip full entry data to force CRC validation
+            // Do not use archive_read_data_skip
+            UCHAR buf[8192];
+            while (true) {
+                auto size = archive_read_data(a, buf, sizeof(buf));
+                if (size == 0) break;      // End of entry
+                if (size < 0) {
+                    ok = false;
+                    break;
+                }
+            }
+        }
+
+        if (ok == true)
+        {
+            types.push_back("gzip");
+        }
+
+        return types;
+    }
+
+    // Compute Adler-32 for a buffer
+    static uint32_t Adler32(const unsigned char* data, size_t size) {
+        return adler32(1L, data, static_cast<uInt>(size));
+    }
+
+    std::vector<std::string> GetZlibTypes(const std::span<UCHAR>& data) {
+        std::vector<std::string> types;
+
+        if (data.size() < 6) {
+            // too small: must have header + checksum
+            return types;
+        }
+
+        // Prepare z_stream
+        z_stream strm{};
+        strm.next_in = const_cast<Bytef*>(data.data());
+        strm.avail_in = static_cast<uInt>(data.size());
+
+        if (inflateInit(&strm) != Z_OK) {
+            return types;
+        }
+
+        std::vector<unsigned char> out;
+        out.reserve(8192);
+
+        int ret = Z_OK;
+        UCHAR buf[8192];
+
+        // Decompress loop
+        do {
+            strm.next_out = buf;
+            strm.avail_out = sizeof(buf);
+
+            ret = inflate(&strm, Z_NO_FLUSH);
+            if (ret == Z_DATA_ERROR || ret == Z_MEM_ERROR || ret == Z_NEED_DICT) {
+                inflateEnd(&strm);
+                return types;  // corrupted
+            }
+
+            size_t have = sizeof(buf) - strm.avail_out;
+            out.insert(out.end(), buf, buf + have);
+
+        } while (ret != Z_STREAM_END);
+
+        inflateEnd(&strm);
+
+        // If stream not ended correctly -> corrupted
+        if (ret != Z_STREAM_END) {
+            return types;
+        }
+
+        // Verify Adler-32 checksum at end of input
+        if (data.size() < 4) {
+            return types;
+        }
+
+        // Last 4 bytes in network byte order
+        size_t adler_offset = data.size() - 4;
+        uint32_t stored = (data[adler_offset] << 24) |
+            (data[adler_offset + 1] << 16) |
+            (data[adler_offset + 2] << 8) |
+            (data[adler_offset + 3]);
+
+        uint32_t computed = Adler32(out.data(), out.size());
+        if (stored != computed) {
+            return types;  // checksum mismatch
+        }
+
+        types.push_back("zlib");
         return types;
     }
 }

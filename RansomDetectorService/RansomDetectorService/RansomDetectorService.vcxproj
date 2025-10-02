@@ -145,16 +145,12 @@
   <ItemGroup>
     <ClCompile Include="include\com\driver_comm.cpp" />
     <ClCompile Include="include\com\minifilter_com.cpp" />
-    <ClCompile Include="include\file_type\7z.cpp" />
     <ClCompile Include="include\file_type\av.cpp" />
-    <ClCompile Include="include\file_type\gzip.cpp" />
+    <ClCompile Include="include\file_type\compress.cpp" />
     <ClCompile Include="include\file_type\image.cpp" />
     <ClCompile Include="include\file_type\ole.cpp" />
     <ClCompile Include="include\file_type\pdf.cpp" />
-    <ClCompile Include="include\file_type\rar.cpp" />
     <ClCompile Include="include\file_type\txt.cpp" />
-    <ClCompile Include="include\file_type\zip.cpp" />
-    <ClCompile Include="include\file_type\zlib.cpp" />
     <ClCompile Include="include\honey\honeypot.cpp" />
     <ClCompile Include="include\manager\cache.cpp" />
     <ClCompile Include="include\manager\file_manager.cpp" />
@@ -173,16 +169,12 @@
   <ItemGroup>
     <ClInclude Include="include\com\driver_comm.h" />
     <ClInclude Include="include\com\minifilter_comm.h" />
-    <ClInclude Include="include\file_type\7z.h" />
     <ClInclude Include="include\file_type\av.h" />
-    <ClInclude Include="include\file_type\gzip.h" />
+    <ClInclude Include="include\file_type\compress.h" />
     <ClInclude Include="include\file_type\image.h" />
     <ClInclude Include="include\file_type\ole.h" />
     <ClInclude Include="include\file_type\pdf.h" />
-    <ClInclude Include="include\file_type\rar.h" />
     <ClInclude Include="include\file_type\txt.h" />
-    <ClInclude Include="include\file_type\zip.h" />
-    <ClInclude Include="include\file_type\zlib.h" />
     <ClInclude Include="include\honey\honeypot.h" />
     <ClInclude Include="include\manager\cache.h" />
     <ClInclude Include="include\manager\file_manager.h" />

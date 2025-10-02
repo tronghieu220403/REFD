@@ -1,6 +1,5 @@
 #pragma once
 #include "../ulti/include.h"
-#include <bzlib.h>
 
 namespace type_iden
 {
@@ -68,4 +67,13 @@ namespace type_iden
         uint32_t& crc32_out, uint32_t& comp_size_out, uint32_t& uncomp_size_out);
 
     vector<string> GetZipTypes(const span<UCHAR>& data);
+
+    vector<string> GetRarTypes(const span<UCHAR>& data);
+
+    vector<string> Get7zTypes(const std::span<UCHAR>& data);
+
+    vector<string> GetGzipTypes(const std::span<UCHAR>& data);
+
+    vector<string> GetZlibTypes(const std::span<UCHAR>& data);
+
 }
