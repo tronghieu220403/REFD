@@ -10,6 +10,7 @@
 #include "../file_type/pdf.h"
 #include "../file_type/rar.h"
 #include "../file_type/gzip.h"
+#include "../file_type/zlib.h"
 #include "../file_type/av.h"
 //#include "../file_type/webp.h"
 //#include "../file_type/ole.h"
@@ -142,10 +143,11 @@ namespace type_iden
 		TryGetTypes(GetRarTypes);
 		TryGetTypes(GetPngTypes);
 		TryGetTypes(GetJpgTypes);
+		TryGetTypes(GetAudioVideoTypes);
 		TryGetTypes(Get7zTypes);
 		TryGetTypes(GetTxtTypes);
+		TryGetTypes(GetZlibTypes);
 		TryGetTypes(GetGzipTypes);
-		TryGetTypes(GetAudioVideoTypes);
 
 		//TryGetTypes(GetWebpTypes); // Bad performance, do not use.
 		//TryGetTypes(GetOleTypes); // Bad performance, do not implement.

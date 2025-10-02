@@ -96,6 +96,9 @@
     <ClCompile Include="include\file_type\av.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\file_type\zlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\com\driver_comm.h">
@@ -180,6 +183,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\file_type\av.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\file_type\zlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

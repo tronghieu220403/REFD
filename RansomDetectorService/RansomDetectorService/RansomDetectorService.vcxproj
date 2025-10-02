@@ -156,6 +156,7 @@
     <ClCompile Include="include\file_type\txt.cpp" />
     <ClCompile Include="include\file_type\webp.cpp" />
     <ClCompile Include="include\file_type\zip.cpp" />
+    <ClCompile Include="include\file_type\zlib.cpp" />
     <ClCompile Include="include\honey\honeypot.cpp" />
     <ClCompile Include="include\manager\cache.cpp" />
     <ClCompile Include="include\manager\file_manager.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="include\file_type\txt.h" />
     <ClInclude Include="include\file_type\webp.h" />
     <ClInclude Include="include\file_type\zip.h" />
+    <ClInclude Include="include\file_type\zlib.h" />
     <ClInclude Include="include\honey\honeypot.h" />
     <ClInclude Include="include\manager\cache.h" />
     <ClInclude Include="include\manager\file_manager.h" />
