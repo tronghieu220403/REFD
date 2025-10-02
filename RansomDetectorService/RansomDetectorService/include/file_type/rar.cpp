@@ -4,7 +4,7 @@
 
 namespace type_iden
 {
-    // Return {"7z"} if the archive is valid, otherwise return an empty vector
+    // Return {"rar"} if the archive is valid, otherwise return an empty vector
     std::vector<std::string> GetRarTypes(const std::span<UCHAR>& data) {
         std::vector<std::string> types;
 

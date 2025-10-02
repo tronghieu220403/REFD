@@ -1,4 +1,4 @@
-#include "png.h"
+#include "jpg.h"
 #include "../ulti/support.h"
 #include <jpeglib.h>
 
