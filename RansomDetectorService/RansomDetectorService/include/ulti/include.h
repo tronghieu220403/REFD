@@ -3,8 +3,8 @@
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 
-#ifndef ETWSERVICE_ULTI_INCLUDE_H_
-#define ETWSERVICE_ULTI_INCLUDE_H_
+#ifndef ULTI_INCLUDE_H_
+#define ULTI_INCLUDE_H_
 #define NOMINMAX
 #include <Windows.h>
 #include <limits>
@@ -108,4 +108,4 @@ using namespace std;
 
 #define PRODUCT_PATH L"E:\\hieunt210330\\hieunt210330\\"
 
-#endif // ETWSERVICE_ULTI_INCLUDE_H_
+#endif // ULTI_INCLUDE_H_
