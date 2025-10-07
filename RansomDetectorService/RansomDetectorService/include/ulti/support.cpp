@@ -205,13 +205,13 @@ namespace ulti
 
         GetSystemTimeAsFileTime(&now);
 
-        ULONGLONG t_create = (((ULONGLONG)creation_time.dwHighDateTime) << 32) | creation_time.dwLowDateTime;
-        ULONGLONG t_now = (((ULONGLONG)now.dwHighDateTime) << 32) | now.dwLowDateTime;
-        ULONGLONG t_kernel = (((ULONGLONG)kernel_time.dwHighDateTime) << 32) | kernel_time.dwLowDateTime;
-        ULONGLONG t_user = (((ULONGLONG)user_time.dwHighDateTime) << 32) | user_time.dwLowDateTime;
+        ull t_create = (((ull)creation_time.dwHighDateTime) << 32) | creation_time.dwLowDateTime;
+        ull t_now = (((ull)now.dwHighDateTime) << 32) | now.dwLowDateTime;
+        ull t_kernel = (((ull)kernel_time.dwHighDateTime) << 32) | kernel_time.dwLowDateTime;
+        ull t_user = (((ull)user_time.dwHighDateTime) << 32) | user_time.dwLowDateTime;
 
-        ULONGLONG wall_time = t_now - t_create;
-        ULONGLONG cpu_time = t_kernel + t_user;
+        ull wall_time = t_now - t_create;
+        ull cpu_time = t_kernel + t_user;
 
         if (wall_time == 0)
             return 0.0;
@@ -231,8 +231,8 @@ namespace ulti
         }
 
         // Static variables to keep historical data for up to 1 hour
-        static ULONGLONG s_start_time_100ns = 0;   // System start time for this 1h window
-        static ULONGLONG s_base_cpu_100ns = 0;     // CPU time at start of window
+        static ull s_start_time_100ns = 0;   // System start time for this 1h window
+        static ull s_base_cpu_100ns = 0;     // CPU time at start of window
         static bool s_initialized = false;
 
         FILETIME creation_time, exit_time, kernel_time, user_time;
@@ -242,11 +242,11 @@ namespace ulti
             return;
         }
 
-        auto t_now = std::chrono::duration_cast<std::chrono::duration<uint64_t, std::ratio<1, 10'000'000>>>(std::chrono::steady_clock::now().time_since_epoch()).count();
+        auto t_now = std::chrono::duration_cast<std::chrono::duration<ull, std::ratio<1, 10'000'000>>>(std::chrono::steady_clock::now().time_since_epoch()).count();
 
         // Convert FILETIME to 64-bit integers (100 ns units)
-        auto t_kernel = (((ULONGLONG)kernel_time.dwHighDateTime) << 32) | kernel_time.dwLowDateTime;
-        auto t_user = (((ULONGLONG)user_time.dwHighDateTime) << 32) | user_time.dwLowDateTime;
+        auto t_kernel = (((ull)kernel_time.dwHighDateTime) << 32) | kernel_time.dwLowDateTime;
+        auto t_user = (((ull)user_time.dwHighDateTime) << 32) | user_time.dwLowDateTime;
 
         auto cpu_time = t_kernel + t_user;
 
@@ -264,7 +264,7 @@ namespace ulti
             return;
 
         // Check if more than 1 hour has passed (1 hour = 3600s = 36,000,000,000 * 100ns)
-        const ULONGLONG ONE_HOUR_100NS = 3600ULL * 10000000ULL;
+        const ull ONE_HOUR_100NS = 3600ULL * 10000000ULL;
         if (wall_time >= ONE_HOUR_100NS)
         {
             // Reset stats for new 1-hour window
@@ -274,13 +274,13 @@ namespace ulti
         }
 
         // Compute deltas relative to base values
-        ULONGLONG rel_cpu = cpu_time - s_base_cpu_100ns;
+        ull rel_cpu = cpu_time - s_base_cpu_100ns;
         if (rel_cpu == 0)
             return;
 
         // Compute sleep time based on desired CPU usage
-        ULONGLONG sleep_100ns = cpu_time * 100 / ((ULONGLONG)(cpu_perc * 1000) / 1000) - wall_time;
-        ULONGLONG sleep_ms = (ULONGLONG)sleep_100ns / 10000;
+        ull sleep_100ns = cpu_time * 100 / ((ull)(cpu_perc * 1000) / 1000) - wall_time;
+        ull sleep_ms = (ull)sleep_100ns / 10000;
         if (sleep_ms >= 1.0 && sleep_ms <= 3600000ULL)
         {
             Sleep((DWORD)sleep_ms);

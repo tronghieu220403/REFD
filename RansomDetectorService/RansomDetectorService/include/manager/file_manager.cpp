@@ -23,7 +23,7 @@ namespace manager
         return file_io_info;
     }
 
-    uint64_t FileIoManager::GetQueueSize()
+    ull FileIoManager::GetQueueSize()
     {
         return file_io_queue_.size();
     }
@@ -50,6 +50,38 @@ namespace manager
 
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
         file_io_queue_.push(std::move(file_io_info));
+    }
+
+    bool FileCache::Add(const wstring& path, const FileCacheInfo& info)
+    {
+        auto h = GetWstrHash(path);
+        std::unique_lock lock(mt_);
+        if (cache_.find(h) != cache_.end())
+        {
+            return false;
+        }
+        cache_.insert({ h, info });
+        return true;
+    }
+
+    bool FileCache::Get(const wstring& path, FileCacheInfo& info)
+    {
+        auto h = GetWstrHash(path);
+        std::shared_lock lock(mt_);
+        if (cache_.find(h) == cache_.end())
+        {
+            return false;
+        }
+        info = cache_[h];
+        return true;
+    }
+
+    bool FileCache::Erase(const wstring& path)
+    {
+        auto h = GetWstrHash(path);
+        std::unique_lock lock(mt_);
+        cache_.erase(h);
+        return true;
     }
 
     void InitDosDeviceCache()
@@ -195,7 +227,7 @@ namespace manager
         return true;
     }
 
-    uint64_t GetFileSize(const std::wstring& ws)
+    ull GetFileSize(const std::wstring& ws)
     {
         WIN32_FILE_ATTRIBUTE_DATA fad;
         if (!GetFileAttributesEx(ws.c_str(), GetFileExInfoStandard, &fad))

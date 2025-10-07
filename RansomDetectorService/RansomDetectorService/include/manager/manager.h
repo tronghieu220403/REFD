@@ -13,6 +13,7 @@ using namespace honeypot;
 
 namespace manager {
 	inline FileIoManager* kFileIoManager = nullptr;
+	inline FileCache* kFileCache = nullptr;
 	inline ULONG kCurrentPid = 0;
 
 	void Init();

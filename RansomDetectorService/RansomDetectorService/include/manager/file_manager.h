@@ -69,12 +69,28 @@ namespace manager {
 		void UnlockMutex();
 
 		FileIoInfo PopFileIoEvent();
-		uint64_t GetQueueSize();
+		ull GetQueueSize();
 
 		void MoveQueue(std::queue<FileIoInfo>& target_file_io_queue);
 
 		void PushFileEventToQueue(const RawFileIoInfo* raw_file_io_info);
 
+	};
+
+	struct FileCacheInfo
+	{
+		ull size;
+		vector<string> types;
+	};
+
+	class FileCache {
+	private:
+		unordered_map<ull, FileCacheInfo> cache_;
+		std::shared_mutex mt_;
+	public:
+		bool Add(const wstring& path, const FileCacheInfo& info);
+		bool Get(const wstring& path, FileCacheInfo& info);
+		bool Erase(const wstring& path);
 	};
 
 	/*___________________________________________*/
@@ -103,7 +119,7 @@ namespace manager {
 	bool FileExist(const std::wstring& file_path);
 	bool DirExist(const std::wstring& dir_path);
 
-	uint64_t GetFileSize(const std::wstring& file_path);
+	ull GetFileSize(const std::wstring& file_path);
 	std::wstring GetFileName(const std::wstring& path);
 	std::wstring GetFileNameNoExt(const std::wstring& path);
 

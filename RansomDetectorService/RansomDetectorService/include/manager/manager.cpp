@@ -10,6 +10,7 @@ namespace manager {
 		PrintDebugW(L"Manager initialized");
 		kCurrentPid = GetCurrentProcessId();
 		InitDosDeviceCache();
+		kFileCache = new FileCache();
 		kFileIoManager = new FileIoManager();
 		kEvaluator = new Evaluator();
 	}
@@ -19,6 +20,7 @@ namespace manager {
 		PrintDebugW(L"Manager cleaned up");
 		delete kEvaluator;
 		delete kFileIoManager;
+		delete kFileCache;
 	}
 
 	void Evaluator::LockMutex()
@@ -36,8 +38,8 @@ namespace manager {
 		struct QueueInfo {
 			honeypot::HoneyType type = honeypot::HoneyType::kNotHoney;
 			int change_count = 0; // change_count > 0 -> push in to queue
-			LONGLONG last_scan = 0;
-			LONGLONG first_add = 0;
+			ll last_scan = 0;
+			ll first_add = 0;
 		};
 
 		auto get_now = []() -> int64_t {
@@ -91,6 +93,7 @@ namespace manager {
 				if (verdict == honeypot::HoneyType::kNotHoney) {
 					continue;
 				}
+				kFileCache->Erase(event.path);
 				auto& ele = mp[path];
 				ele.change_count++;
 				if (ele.first_add == 0) ele.first_add = get_now();
@@ -135,12 +138,12 @@ namespace manager {
 
 	bool Evaluator::IsDirAttackedByRansomware(const wstring& dir_path, const HoneyType& dir_type)
 	{
-		vector<wstring> files;
+		vector<wstring> paths;
 		if (manager::DirExist(dir_path) == false) {
 			return false;
 		}
 		auto honey_names(hp.GetHoneyNames());
-		set<ULONGLONG> s;
+		set<ull> s;
 		for (const auto& name : honey_names)
 		{
 			s.insert(GetWstrHash(name));
@@ -156,23 +159,45 @@ namespace manager {
 						continue;
 					}
 				}
-				files.push_back(file_path);
+				paths.push_back(file_path);
 			}
 		}
 		catch (...) { }
 
 		vector<vector<string>> dvvs;
-		for (auto& file_path : files)
+		for (auto& path : paths)
 		{
 #ifdef _M_IX86
 			// Compatible with TRID
-			if (ulti::StrToWstr(ulti::WstrToStr(file_path)) != file_path)
+			if (ulti::StrToWstr(ulti::WstrToStr(path)) != path)
 			{
 				continue;
 			}
 #endif // _M_IX86
 			DWORD status;
-			dvvs.push_back(kFileType->GetTypes(file_path, &status));
+			ull file_size = 0;
+			FileCacheInfo info = {};
+			if (kFileCache->Get(path, info) == false)
+			{
+				auto types = kFileType->GetTypes(path, &status, &file_size);
+				if (status == ERROR_SUCCESS)
+				{
+					dvvs.push_back(types);
+				}
+				if (file_size != 0) {
+					info.size = file_size;
+					kFileCache->Add(path, info);
+				}
+			}
+			else
+			{
+				file_size = info.size;
+				if (file_size < FILE_MIN_SIZE_SCAN || file_size > FILE_MAX_SIZE_SCAN)
+				{
+					continue;
+				}
+				dvvs.push_back(info.types);
+			}
 		}
 
 		// Need config for file randomization for each dir
@@ -182,7 +207,7 @@ namespace manager {
 		m.SetInput(dvvs, hvvs);
 		auto ans = m.Solve();
 		
-		return BelowTypeThreshold((size_t)ans, (files.size()));
+		return BelowTypeThreshold((size_t)ans, (paths.size()));
 	}
 
 	bool Evaluator::DiscardEventByPid(ULONG issuing_pid)

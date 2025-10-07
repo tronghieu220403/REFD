@@ -95,6 +95,7 @@ struct {
 typedef unsigned int uint32;
 
 typedef unsigned long long ull;
+typedef long long ll;
 
 #define FlagOn(_Flag, _Bit)  (((_Flag) & (_Bit)) != 0)
 

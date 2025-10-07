@@ -20,8 +20,8 @@
 
 struct GuidHash {
     size_t operator()(const GUID& g) const noexcept {
-        const uint64_t* p = reinterpret_cast<const uint64_t*>(&g);
-        return std::hash<uint64_t>()(p[0]) ^ std::hash<uint64_t>()(p[1]);
+        const ull* p = reinterpret_cast<const ull*>(&g);
+        return std::hash<ull>()(p[0]) ^ std::hash<ull>()(p[1]);
     }
 };
 

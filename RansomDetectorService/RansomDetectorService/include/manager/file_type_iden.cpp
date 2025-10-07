@@ -68,7 +68,7 @@ namespace type_iden
 		return true;
 	}
 
-	vector<string> FileType::GetTypes(const wstring& file_path, DWORD* p_status)
+	vector<string> FileType::GetTypes(const wstring& file_path, DWORD* p_status, ull* p_file_size)
 	{
 		vector<string> types;
 		if (p_status == nullptr)
@@ -77,7 +77,6 @@ namespace type_iden
 		}
 
 		*p_status = ERROR_SUCCESS;
-		size_t file_size = 0;
 
 #ifdef _M_IX86
 		defer
@@ -103,8 +102,8 @@ namespace type_iden
 			return types;
 		}
 
-		file_size = static_cast<size_t>(li_size.QuadPart);
-		if (file_size < FILE_MIN_SIZE_SCAN || file_size > FILE_MAX_SIZE_SCAN) {
+		*p_file_size = static_cast<size_t>(li_size.QuadPart);
+		if (*p_file_size < FILE_MIN_SIZE_SCAN || *p_file_size > FILE_MAX_SIZE_SCAN) {
 			*p_status = ERROR_FILE_TOO_LARGE;
 			return types;
 		}
@@ -124,7 +123,7 @@ namespace type_iden
 		}
 		defer{ UnmapViewOfFile(data); };
 
-		const span<UCHAR> span_data(data, file_size);
+		const span<UCHAR> span_data(data, *p_file_size);
 
 		auto TryGetTypes = [&](auto&& fn) -> void {
 			if (types.size() > 0) return; 
