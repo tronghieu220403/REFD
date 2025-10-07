@@ -96,20 +96,28 @@ static void ServiceMain()
 
 	debug::InitDebugLog();
 
-	manager::Init();
-
+#ifdef _M_IX86
 	if (ulti::CreateDir(TEMP_DIR) == false)
 	{
 		PrintDebugW(L"Create temp dir %ws failed", TEMP_DIR);
 		return;
 	}
+#endif // _M_IX86
+
 	kFileType = new type_iden::FileType();
+	if (kFileType == nullptr)
+	{
+		PrintDebugW(L"kFileType init failed");
+		return;
+	}
+#ifdef _M_IX86
 	std::wstring trid_dir = std::wstring(PRODUCT_PATH) + L"TrID";
-	if (kFileType == nullptr || kFileType->InitTrid(trid_dir, trid_dir + L"TrIDLib.dll") == false)
+	if (kFileType->InitTrid(trid_dir, trid_dir + L"TrIDLib.dll") == false)
 	{
 		PrintDebugW(L"TrID init failed");
 		return;
 	}
+#endif // _M_IX86
 
 	try {
 		// Cần config động, thư mục nào là honeypot folder (chỉ toàn honeypot file), thư mục nào có honeypot file lẩn giữa các file khác
@@ -127,6 +135,8 @@ static void ServiceMain()
 	{
 		return;
 	}
+
+	manager::Init();
 
 	auto last_process_time = std::chrono::steady_clock::now();
 

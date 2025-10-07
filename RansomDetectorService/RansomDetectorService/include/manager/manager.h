@@ -4,6 +4,12 @@
 
 #include "../ulti/support.h"
 #include "file_manager.h"
+#include "../honey/honeypot.h"
+
+using namespace honeypot;
+
+#define THRESHOLD_PERCENTAGE 80
+#define BelowTypeThreshold(part, total) (part <= total * THRESHOLD_PERCENTAGE / 100)
 
 namespace manager {
 	inline FileIoManager* kFileIoManager = nullptr;
@@ -28,7 +34,7 @@ namespace manager {
 
 		void Evaluate();
 		
-		bool IsDirAttackedByRansomware(const std::wstring& dir_path);
+		bool IsDirAttackedByRansomware(const std::wstring& dir_path, const HoneyType& dir_type);
 
 		bool DiscardEventByPid(ULONG issuing_pid);
 	};

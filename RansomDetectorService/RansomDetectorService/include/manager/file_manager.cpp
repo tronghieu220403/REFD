@@ -108,7 +108,7 @@ namespace manager
     {
         using namespace std::chrono;
 
-        // If the file_path is empty or it does not start with "\\" (not a device file_path), return as-is
+        // If the ws is empty or it does not start with "\\" (not a device ws), return as-is
         if (nt_path.empty() || nt_path[0] != L'\\') {
             return nt_path;
         }
@@ -177,9 +177,9 @@ namespace manager
         return long_path;
     }
 
-    bool FileExist(const std::wstring& file_path)
+    bool FileExist(const std::wstring& ws)
     {
-        DWORD file_attributes = GetFileAttributesW(file_path.c_str());
+        DWORD file_attributes = GetFileAttributesW(ws.c_str());
         if (file_attributes == INVALID_FILE_ATTRIBUTES || FlagOn(file_attributes, FILE_ATTRIBUTE_DIRECTORY) == true) {
             return false;
         }
@@ -195,12 +195,12 @@ namespace manager
         return true;
     }
 
-    uint64_t GetFileSize(const std::wstring& file_path)
+    uint64_t GetFileSize(const std::wstring& ws)
     {
         WIN32_FILE_ATTRIBUTE_DATA fad;
-        if (!GetFileAttributesEx(file_path.c_str(), GetFileExInfoStandard, &fad))
+        if (!GetFileAttributesEx(ws.c_str(), GetFileExInfoStandard, &fad))
         {
-            PrintDebugW(L"GetFileSize failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
+            PrintDebugW(L"GetFileSize failed for file %ws, error %s", ws.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
             return 0;
         }
         LARGE_INTEGER size;
@@ -214,6 +214,15 @@ namespace manager
         size_t pos = path.find_last_of(L"\\/");
         if (pos == std::string::npos) return path;
         return path.substr(pos + 1);
+    }
+
+    std::wstring GetFileNameNoExt(const std::wstring& path)
+    {
+        auto file_name = GetFileName(path);
+        size_t dot = file_name.find_first_of(L'.');
+        if (dot == std::wstring::npos)
+            return file_name;
+        return file_name.substr(0, dot);
     }
 
     // Function to get file extension
@@ -259,23 +268,23 @@ namespace manager
         return extensions;
     }
 
-	ull GetPathHash(const std::wstring& file_path)
+	ull GetWstrHash(const std::wstring& ws)
 	{
         ull backup_hash = 0;
-		for (auto& c : file_path)
+		for (auto& c : ws)
 		{
 			backup_hash += (backup_hash * 65535 + c) % (10000000007);
 		}
 		return backup_hash;
 	}
 
-    std::wstring CopyToTmp(const std::wstring& file_path, bool create_new_if_duplicate)
+    std::wstring CopyToTmp(const std::wstring& ws, bool create_new_if_duplicate)
 	{
-		std::wstring base_tmp_name = std::to_wstring(GetPathHash(file_path));
+		std::wstring base_tmp_name = std::to_wstring(GetWstrHash(ws));
         std::wstring dest = TEMP_DIR + base_tmp_name;
         if (create_new_if_duplicate == false)
         {
-            PrintDebugW(L"Copying file %ws to %ws", file_path.c_str(), dest.c_str());
+            PrintDebugW(L"Copying file %ws to %ws", ws.c_str(), dest.c_str());
             if (FileExist(dest) == true)
             {
                 PrintDebugW(L"File %ws already exists", dest.c_str());
@@ -295,12 +304,12 @@ namespace manager
                 counter++;
             }
             base_tmp_name = tmp_name;
-            PrintDebugW(L"Copying file %ws to %ws", file_path.c_str(), dest.c_str());
+            PrintDebugW(L"Copying file %ws to %ws", ws.c_str(), dest.c_str());
         }
-        HANDLE h_src = CreateFileW(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+        HANDLE h_src = CreateFileW(ws.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
         if (h_src == INVALID_HANDLE_VALUE)
         {
-            PrintDebugW(L"CreateFile failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
+            PrintDebugW(L"CreateFile failed for file %ws, error %s", ws.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
             return L"";
         }
         HANDLE h_dest = CreateFileW(dest.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -313,7 +322,7 @@ namespace manager
 		ull tmp_file_size = 0;
 		if (::GetFileSizeEx(h_src, (PLARGE_INTEGER)&tmp_file_size) == 0 || tmp_file_size > INT_MAX)
 		{
-            PrintDebugW(L"GetFileSizeEx failed for file %ws, error %s, tmp_file_size %lld", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str(), tmp_file_size);
+            PrintDebugW(L"GetFileSizeEx failed for file %ws, error %s, tmp_file_size %lld", ws.c_str(), debug::GetErrorMessage(GetLastError()).c_str(), tmp_file_size);
 			return L"";
 		}
 		std::vector<UCHAR> data;
@@ -326,7 +335,7 @@ namespace manager
 			if (!ReadFile(h_src, data.data(), (DWORD)tmp_file_size, &bytes_cnt, NULL) || bytes_cnt != tmp_file_size 
 				|| !WriteFile(h_dest, data.data(), bytes_cnt, &bytes_cnt, NULL) || bytes_cnt != tmp_file_size)
 			{
-                PrintDebugW(L"ReadFile or WriteFile failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
+                PrintDebugW(L"ReadFile or WriteFile failed for file %ws, error %s", ws.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
 				CloseHandle(h_src);
 				CloseHandle(h_dest);
 				return L"";
@@ -342,7 +351,7 @@ namespace manager
 				|| !WriteFile(h_dest, data.data(), bytes_cnt, &bytes_cnt, NULL) || bytes_cnt != END_WIDTH
 				)
 			{
-                PrintDebugW(L"ReadFile or WriteFile failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
+                PrintDebugW(L"ReadFile or WriteFile failed for file %ws, error %s", ws.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
 				CloseHandle(h_src);
 				CloseHandle(h_dest);
 				return L"";
@@ -352,14 +361,14 @@ namespace manager
 		// Close both files after completion
 		CloseHandle(h_src);
 		CloseHandle(h_dest);
-        PrintDebugW(L"File %ws copied to %ws", file_path.c_str(), dest.c_str());
+        PrintDebugW(L"File %ws copied to %ws", ws.c_str(), dest.c_str());
 		return base_tmp_name;
     }
 
     // Function to clear temporary files
     void ClearTmpFiles() {
         std::filesystem::path tmp_dir = TEMP_DIR;
-        // Convert file_path to wstring for Windows API
+        // Convert ws to wstring for Windows API
         std::wstring temp_path = tmp_dir.wstring();
         if (temp_path[temp_path.size() - 1] != L'\\') {
             temp_path += L"\\";
@@ -380,16 +389,16 @@ namespace manager
                 continue;
             }
 
-            // Create full file_path to file or directory
+            // Create full ws to file or directory
             std::wstring full_path = temp_path + find_file_data.cFileName;
 
             // Check and delete file or directory
             if (find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                // If it's a directory, delete it (not recursive)
+                // If it'ws a directory, delete it (not recursive)
                 RemoveDirectoryW(full_path.c_str());
             }
             else {
-                // If it's a file, delete it
+                // If it'ws a file, delete it
                 DeleteFileW(full_path.c_str());
             }
         } while (FindNextFileW(h_find, &find_file_data) != 0);
@@ -397,11 +406,4 @@ namespace manager
         // Close search handle
         FindClose(h_find);
     }
-
-	std::vector<std::pair<std::wstring, std::vector<std::string>>> GetTypes(const std::vector<std::wstring>& file_list) // -> vector<file_path, list of ext>>
-	{
-		// Remember to cache
-		return std::vector<std::pair<std::wstring, std::vector<std::string>>>();
-	}
-
 }

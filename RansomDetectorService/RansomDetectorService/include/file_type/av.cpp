@@ -302,7 +302,8 @@ namespace type_iden
         else if (fmt_ctx->iformat->extensions) {
             types = ulti::SplitString(fmt_ctx->iformat->extensions, ",");
         }
-
+        sort(types.begin(), types.end());
+        
         // Parse stream info (detects audio stream and codec parameters).
         // This is basic check
         if (avformat_find_stream_info(fmt_ctx, nullptr) < 0) {

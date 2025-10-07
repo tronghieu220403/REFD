@@ -92,7 +92,7 @@ namespace honeypot {
         return dirs;
     }
 
-    vector<string> HoneyPot::GetHoneyTypes()
+    vector<vector<string>> HoneyPot::GetHoneyTypes()
     {
         if (honey_types_.size() != 0)
         {
@@ -103,7 +103,7 @@ namespace honeypot {
                 if (!entry.is_regular_file()) continue;
                 std::wstring file_path = entry.path().wstring();
                 DWORD status = 0;
-                ulti::AddVectorsInPlace(honey_types_, kFileType->GetTypes(file_path, &status));
+                honey_types_.push_back(kFileType->GetTypes(file_path, &status));
             }
             catch (...) {
 
@@ -122,7 +122,7 @@ namespace honeypot {
         for (const auto& entry : fs::directory_iterator(source_dir_)) {
             try {
                 if (!entry.is_regular_file()) continue;
-                std::wstring name = ulti::ToLower(manager::GetFileName(entry.path().filename()));
+                std::wstring name = ulti::ToLower(manager::GetFileNameNoExt(entry.path().filename()));
                 DWORD status = 0;
                 honey_names_.push_back(name);
             }

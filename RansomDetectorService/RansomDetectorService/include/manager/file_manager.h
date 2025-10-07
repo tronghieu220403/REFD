@@ -24,9 +24,6 @@
 #define FILE_MAX_SIZE_SCAN (5 * 1024 * 1024) // 5MB
 #define FILE_MIN_SIZE_SCAN 10
 
-#define THRESHOLD_PERCENTAGE 80
-#define BelowThreshold(part, total) (part <= total * THRESHOLD_PERCENTAGE / 100)
-
 #define BEGIN_WIDTH 1024
 #define END_WIDTH 1024
 #define HIEUNT_MAX_PATH (1024)
@@ -108,17 +105,15 @@ namespace manager {
 
 	uint64_t GetFileSize(const std::wstring& file_path);
 	std::wstring GetFileName(const std::wstring& path);
+	std::wstring GetFileNameNoExt(const std::wstring& path);
 
 	std::wstring GetFileExtension(const std::wstring& file_name);
 	std::vector<std::wstring> GetFileExtensions(const std::wstring& file_name);
 
-	ull GetPathHash(const std::wstring& file_path);
+	ull GetWstrHash(const std::wstring& file_path);
 	
 	std::wstring CopyToTmp(const std::wstring& file_path, bool create_new_if_duplicate = false);
 
 	void ClearTmpFiles();
-
-	std::vector<std::pair<std::wstring, std::vector<std::string>>> GetTypes(const std::vector<std::wstring>& file_list);
-
 }
 #endif  // MANAGER_FILE_MANAGER_H_

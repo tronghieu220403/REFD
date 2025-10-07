@@ -18,7 +18,7 @@ namespace honeypot
     {
     private:
         unordered_map<wstring, HoneyType> honey_folders_;
-        vector<string> honey_types_;
+        vector<vector<string>> honey_types_;
         vector<wstring> honey_names_;
         wstring source_dir_;
     public:
@@ -30,7 +30,7 @@ namespace honeypot
 
         HoneyType GetHoneyFolderType(const std::wstring& file_path);
         vector<pair<wstring, HoneyType>> GetHoneyFolders();
-        vector<string> GetHoneyTypes();
+        vector<vector<string>> GetHoneyTypes();
         vector<wstring> GetHoneyNames();
     };
 

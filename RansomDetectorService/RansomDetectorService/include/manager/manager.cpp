@@ -2,7 +2,6 @@
 #include "file_type_iden.h"
 #include "known_folder.h"
 #include "matcher.h"
-#include "../honey/honeypot.h"
 
 namespace manager {
 
@@ -42,7 +41,7 @@ namespace manager {
 		};
 
 		auto get_now = []() -> int64_t {
-			return std::chrono::steady_clock::now().time_since_epoch().count();
+			return chrono::steady_clock::now().time_since_epoch().count();
 			};
 
 		unordered_map<wstring, QueueInfo> mp;
@@ -57,8 +56,7 @@ namespace manager {
 		auto now = get_now();
 		while (true)
 		{
-			if (now - get_now() >= 3600LL * 2LL)
-			{
+			if (now - get_now() >= 3600LL * 2LL) {
 				for (auto& x : mp) {
 					auto& info = x.second;
 					info.change_count = 0;
@@ -67,7 +65,7 @@ namespace manager {
 				}
 			}
 
-			std::queue<FileIoInfo> file_io_list;
+			queue<FileIoInfo> file_io_list;
 			kFileIoManager->LockMutex();
 			kFileIoManager->MoveQueue(file_io_list);
 			kFileIoManager->UnlockMutex();
@@ -76,39 +74,35 @@ namespace manager {
 				Sleep(500);
 			}
 
-			std::vector<FileIoInfo> events;
+			vector<FileIoInfo> events;
 
 			// Move events from the queue into the map grouped by requestor_pid
 			while (file_io_list.empty() == false)
 			{
-				FileIoInfo event(std::move(file_io_list.front()));
+				FileIoInfo event(move(file_io_list.front()));
 				file_io_list.pop();
 
 				const auto& path = fs::path(event.path).parent_path().wstring();
-
 				auto pid = event.requestor_pid;
-				if (DiscardEventByPid(pid) == true)
-				{
+				if (DiscardEventByPid(pid) == true) {
 					continue;
 				}
 				auto verdict = hp.GetHoneyFolderType(path);
-				if (verdict == honeypot::HoneyType::kNotHoney)
-				{
+				if (verdict == honeypot::HoneyType::kNotHoney) {
 					continue;
 				}
 				auto& ele = mp[path];
 				ele.change_count++;
 				if (ele.first_add == 0) ele.first_add = get_now();
 			}
+
 			vector<pair<wstring, QueueInfo>> v;
-			for (const auto& x : mp)
-			{
-				if (get_now() - x.second.last_scan >= 60LL * 5)
-				{
+			for (const auto& x : mp) {
+				if (get_now() - x.second.last_scan >= 60LL * 5) {
 					v.push_back({ x.first, x.second });
 				}
 			}
-			std::sort(v.begin(), v.end(),
+			sort(v.begin(), v.end(),
 				[](const pair<wstring, QueueInfo>& a, const pair<wstring, QueueInfo>& b) {
 					const auto& a_ele = a.second;
 					const auto& b_ele = b.second;
@@ -121,9 +115,9 @@ namespace manager {
 					return a_ele.change_count > b_ele.change_count;
 				});
 			auto& x = mp[v[0].first];
-			if (get_now() - x.first_add >= (x.type == honeypot::HoneyType::kHoneyIsolated ? 5 : 60))
+			if (get_now() - x.first_add >= (x.type == HoneyType::kHoneyIsolated ? 10 : 60))
 			{
-				if (IsDirAttackedByRansomware(v[0].first) == true)
+				if (IsDirAttackedByRansomware(v[0].first, x.type) == true)
 				{
 					debug::DebugPrintW(L"Some process is ransomware. It attacked %ws", v[0].first.c_str());
 				}
@@ -131,25 +125,43 @@ namespace manager {
 				x.first_add = 0;
 				x.last_scan = get_now();
 			}
+			else
+			{
+				Sleep(100);
+			}
 			ulti::ThreadPerfCtrlSleep();
 		}
 	}
 
-	bool Evaluator::IsDirAttackedByRansomware(const std::wstring& dir_path)
+	bool Evaluator::IsDirAttackedByRansomware(const wstring& dir_path, const HoneyType& dir_type)
 	{
-		std::vector<std::wstring> files;
+		vector<wstring> files;
 		if (manager::DirExist(dir_path) == false) {
 			return false;
 		}
+		auto honey_names(hp.GetHoneyNames());
+		set<ULONGLONG> s;
+		for (const auto& name : honey_names)
+		{
+			s.insert(GetWstrHash(name));
+		}
+
 		try {
 			for (const auto& entry : fs::directory_iterator(dir_path)) {
 				const auto file_path = entry.path().wstring();
+				if (dir_type == HoneyType::kHoneyBlendIn) {
+					wstring name = ulti::ToLower(manager::GetFileNameNoExt(entry.path().filename()));
+					auto h = GetWstrHash(name);
+					if (s.find(h) == s.end()) {
+						continue;
+					}
+				}
 				files.push_back(file_path);
 			}
 		}
 		catch (...) { }
 
-		std::vector<std::vector<std::string>> vvs;
+		vector<vector<string>> dvvs;
 		for (auto& file_path : files)
 		{
 #ifdef _M_IX86
@@ -158,18 +170,23 @@ namespace manager {
 			{
 				continue;
 			}
-#endif // _M_IX86 
+#endif // _M_IX86
 			DWORD status;
-			vvs.push_back(kFileType->GetTypes(file_path, &status));
+			dvvs.push_back(kFileType->GetTypes(file_path, &status));
 		}
 
 		// Need config for file randomization for each dir
-		std::vector<std::string> vs(hp.GetHoneyTypes());
+		vector<vector<string>> hvvs(hp.GetHoneyTypes());
 
 		Matcher m;
-		m.SetInput(vvs, vs);
+		m.SetInput(dvvs, hvvs);
 		auto ans = m.Solve();
 		
+		if (BelowTypeThreshold((size_t)ans, (files.size())) == false)
+		{
+			return true;
+		}
+
 		return false;
 	}
 

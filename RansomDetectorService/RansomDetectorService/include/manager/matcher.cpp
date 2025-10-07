@@ -1,67 +1,67 @@
 #include "matcher.h"
 
-#include <unordered_map>
-#include <unordered_set>
-#include <queue>
-#include <limits>
-
 void Matcher::SetInput(
-    const std::vector<std::vector<std::string>>& vectors,
-    const std::vector<std::string>& b_strings) {
+    const vector<vector<string>>& vectors,
+    const vector<vector<string>>& b_strings) {
     num_vectors_ = static_cast<int>(vectors.size());
     num_b_strings_ = static_cast<int>(b_strings.size());
 
     // Build map from string to list of vector indices that contain it.
-    std::unordered_map<std::string, std::vector<int>> string_to_vector_indices;
-    string_to_vector_indices.reserve(num_vectors_ * 2);
+    unordered_map<string, vector<int>> string_to_vector_indices;
+    string_to_vector_indices.reserve((size_t)num_vectors_ * 2);
 
-    for (int vector_index = 0; vector_index < num_vectors_; ++vector_index) {
-        std::unordered_set<std::string> seen;
-        for (const auto& s : vectors[vector_index]) {
+    for (int i = 0; i < num_vectors_; ++i) {
+        unordered_set<string> seen;
+        for (const auto& s : vectors[i]) {
             if (seen.insert(s).second) {
-                string_to_vector_indices[s].push_back(vector_index);
+                string_to_vector_indices[s].push_back(i);
             }
         }
     }
 
     // Build adjacency.
-    adj_.assign(num_b_strings_, std::vector<int>());
-    for (int b_index = 0; b_index < num_b_strings_; ++b_index) {
-        const auto& b_str = b_strings[b_index];
-        auto it = string_to_vector_indices.find(b_str);
-        if (it != string_to_vector_indices.end()) {
-            adj_[b_index] = it->second;
+    adj_.assign(num_b_strings_, vector<int>());
+    for (int i = 0; i < num_b_strings_; ++i) {
+        for (const auto& str : b_strings[i])
+        {
+            auto it = string_to_vector_indices.find(str);
+            if (it != string_to_vector_indices.end()) {
+                ulti::AddVectorsInPlace(adj_[i], it->second);
+            }
         }
+        set<int> s(adj_[i].begin(), adj_[i].end());
+        vector<int> v(s.begin(), s.end());
+        adj_[i] = std::move(v);
     }
 }
 
 bool Matcher::Bfs() {
-    std::queue<int> bfs_queue;
+    queue<int> bfs_queue;
     const int kInfDistance = INT_MAX;
     dist_.assign(num_b_strings_, kInfDistance);
 
     // All free b-vertices are distance 0.
-    for (int b_index = 0; b_index < num_b_strings_; ++b_index) {
+    for (int i = 0; i < num_b_strings_; ++i) {
         bool is_matched = false;
-        for (int vector_index : adj_[b_index]) {
-            if (match_right_[vector_index] == b_index) {
+        for (int i : adj_[i]) {
+            if (match_right_[i] == i) {
                 is_matched = true;
                 break;
             }
         }
         if (!is_matched) {
-            dist_[b_index] = 0;
-            bfs_queue.push(b_index);
+            dist_[i] = 0;
+            bfs_queue.push(i);
         }
     }
 
     bool reachable_free = false;
     while (!bfs_queue.empty()) {
-        int b_index = bfs_queue.front();
+        int i = bfs_queue.front();
         bfs_queue.pop();
-        int next_dist = dist_[b_index] + 1;
-        for (int vector_index : adj_[b_index]) {
-            int matched_b = match_right_[vector_index];
+        int next_dist = dist_[i] + 1;
+        for (int i : adj_[i]) {
+            int matched_b = match_right_[i];
             if (matched_b == -1) {
                 reachable_free = true;
             }
@@ -74,16 +74,16 @@ bool Matcher::Bfs() {
     return reachable_free;
 }
 
-bool Matcher::Dfs(int b_index) {
-    for (int vector_index : adj_[b_index]) {
-        int matched_b = match_right_[vector_index];
+bool Matcher::Dfs(int i) {
+    for (int i : adj_[i]) {
+        int matched_b = match_right_[i];
         if (matched_b == -1 ||
-            (dist_[matched_b] == dist_[b_index] + 1 && Dfs(matched_b))) {
-            match_right_[vector_index] = b_index;
+            (dist_[matched_b] == dist_[i] + 1 && Dfs(matched_b))) {
+            match_right_[i] = i;
             return true;
         }
     }
-    dist_[b_index] = std::numeric_limits<int>::max();
+    dist_[i] = numeric_limits<int>::max();
     return false;
 }
 
@@ -93,16 +93,16 @@ int Matcher::Solve() {
 
     // Repeatedly find augmenting paths
     while (Bfs()) {
-        for (int b_index = 0; b_index < num_b_strings_; ++b_index) {
-            // Check if b_index is free (not matched as right partner)
+        for (int i = 0; i < num_b_strings_; ++i) {
+            // Check if i is free (not matched as right partner)
             bool is_matched = false;
-            for (int vector_index : adj_[b_index]) {
-                if (match_right_[vector_index] == b_index) {
+            for (int i : adj_[i]) {
+                if (match_right_[i] == i) {
                     is_matched = true;
                     break;
                 }
             }
-            if (!is_matched && Dfs(b_index)) {
+            if (!is_matched && Dfs(i)) {
                 matching_count++;
             }
         }
