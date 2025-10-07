@@ -103,7 +103,8 @@ namespace honeypot {
                 if (!entry.is_regular_file()) continue;
                 std::wstring file_path = entry.path().wstring();
                 DWORD status = 0;
-                honey_types_.push_back(kFileType->GetTypes(file_path, &status));
+                ull fize_size = 0;
+                honey_types_.push_back(kFileType->GetTypes(file_path, &status, &fize_size)); // should be in config
             }
             catch (...) {
 
