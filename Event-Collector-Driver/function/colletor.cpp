@@ -121,6 +121,8 @@ namespace collector
         }
 
         const auto& create_params = data->Iopb->Parameters.Create;
+        bool is_delete_on_close = FlagOn(create_params.Options, FILE_DELETE_ON_CLOSE);
+        bool is_created = (data->IoStatus.Information == FILE_CREATED);
         bool has_write_access = create_params.SecurityContext->DesiredAccess & (FILE_WRITE_DATA | FILE_APPEND_DATA);
         bool has_delete_access = create_params.SecurityContext->DesiredAccess & DELETE;
 
@@ -260,6 +262,19 @@ namespace collector
                 FltReleaseFileNameInformation(name_info);
             }
         }
+        else if (file_info_class == FileDispositionInformation || file_info_class == FileDispositionInformationEx)
+        {
+
+        }
+        else if (file_info_class == FileAllocationInformation)
+        {
+
+        }
+        else if (file_info_class == FileEndOfFileInformation)
+        {
+
+        }
+
 
         FltReleaseContext(p_handle_context);
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
