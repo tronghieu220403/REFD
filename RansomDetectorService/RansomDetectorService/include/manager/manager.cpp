@@ -182,12 +182,7 @@ namespace manager {
 		m.SetInput(dvvs, hvvs);
 		auto ans = m.Solve();
 		
-		if (BelowTypeThreshold((size_t)ans, (files.size())) == false)
-		{
-			return true;
-		}
-
-		return false;
+		return BelowTypeThreshold((size_t)ans, (files.size()));
 	}
 
 	bool Evaluator::DiscardEventByPid(ULONG issuing_pid)

@@ -36,54 +36,53 @@ void Matcher::SetInput(
 }
 
 bool Matcher::Bfs() {
-    queue<int> bfs_queue;
+    queue<int> q;
     const int kInfDistance = INT_MAX;
     dist_.assign(num_b_strings_, kInfDistance);
 
     // All free b-vertices are distance 0.
-    for (int i = 0; i < num_b_strings_; ++i) {
+    for (int u = 0; u < num_b_strings_; ++u) {
         bool is_matched = false;
-        for (int i : adj_[i]) {
-            if (match_right_[i] == i) {
+        for (int v : adj_[u]) {
+            if (match_right_[v] == u) {
                 is_matched = true;
                 break;
             }
         }
         if (!is_matched) {
-            dist_[i] = 0;
-            bfs_queue.push(i);
+            dist_[u] = 0;
+            q.push(u);
         }
     }
 
     bool reachable_free = false;
-    while (!bfs_queue.empty()) {
-        int i = bfs_queue.front();
-        bfs_queue.pop();
-        int next_dist = dist_[i] + 1;
-        for (int i : adj_[i]) {
-            int matched_b = match_right_[i];
-            if (matched_b == -1) {
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        int nd = dist_[u] + 1;
+        for (int v : adj_[u]) {
+            int matched_u = match_right_[v];
+            if (matched_u == -1) {
                 reachable_free = true;
             }
-            else if (dist_[matched_b] == kInfDistance) {
-                dist_[matched_b] = next_dist;
-                bfs_queue.push(matched_b);
+            else if (dist_[matched_u] == kInfDistance) {
+                dist_[matched_u] = nd;
+                q.push(matched_u);
             }
         }
     }
     return reachable_free;
 }
 
-bool Matcher::Dfs(int i) {
-    for (int i : adj_[i]) {
-        int matched_b = match_right_[i];
-        if (matched_b == -1 ||
-            (dist_[matched_b] == dist_[i] + 1 && Dfs(matched_b))) {
-            match_right_[i] = i;
+bool Matcher::Dfs(int u) {
+    for (int v : adj_[u]) {
+        int matched_u = match_right_[v];
+        if (matched_u == -1 ||
+            (dist_[matched_u] == dist_[v] + 1 && Dfs(matched_u))) {
+            match_right_[v] = u;
             return true;
         }
     }
-    dist_[i] = numeric_limits<int>::max();
+    dist_[u] = INT_MAX;
     return false;
 }
 
@@ -93,16 +92,16 @@ int Matcher::Solve() {
 
     // Repeatedly find augmenting paths
     while (Bfs()) {
-        for (int i = 0; i < num_b_strings_; ++i) {
+        for (int u = 0; u < num_b_strings_; ++u) {
             // Check if i is free (not matched as right partner)
             bool is_matched = false;
-            for (int i : adj_[i]) {
-                if (match_right_[i] == i) {
+            for (int v : adj_[u]) {
+                if (match_right_[v] == u) {
                     is_matched = true;
                     break;
                 }
             }
-            if (!is_matched && Dfs(i)) {
+            if (!is_matched && Dfs(u)) {
                 matching_count++;
             }
         }
