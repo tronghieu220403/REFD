@@ -1,7 +1,7 @@
 #ifdef _WIN32
 
-#ifndef ETWSERVICE_SERVICE_SERVICE_H_
-#define ETWSERVICE_SERVICE_SERVICE_H_
+#ifndef SERVICE_SERVICE_H_
+#define SERVICE_SERVICE_H_
 
 #include "ulti/support.h"
 #include "ulti/debug.h"
@@ -37,6 +37,6 @@ namespace srv
 	void InitServiceCtrlHandler(const wchar_t* service_name);
 }
 
-#endif
+#endif // SERVICE_SERVICE_H_
 
-#endif
+#endif // _WIN32

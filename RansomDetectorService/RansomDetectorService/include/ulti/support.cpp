@@ -281,9 +281,8 @@ namespace ulti
         // Compute sleep time based on desired CPU usage
         ULONGLONG sleep_100ns = cpu_time * 100 / ((ULONGLONG)(cpu_perc * 1000) / 1000) - wall_time;
         ULONGLONG sleep_ms = (ULONGLONG)sleep_100ns / 10000;
-        if (sleep_ms >= 1.0)
+        if (sleep_ms >= 1.0 && sleep_ms <= 3600000ULL)
         {
-            cout << "Sleep for " << (DWORD)sleep_ms << "ms" << endl;
             Sleep((DWORD)sleep_ms);
         }
     }

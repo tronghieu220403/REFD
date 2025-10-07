@@ -1,5 +1,5 @@
-#ifndef MATCHER_H_
-#define MATCHER_H_
+#ifndef MANAGER_MATCHER_H_
+#define MANAGER_MATCHER_H_
 #include <vector>
 #include <string>
 
@@ -36,4 +36,4 @@ private:
     bool Dfs(int b_index);
 };
 
-#endif  // MATCHER_H_
+#endif  // MANAGER_MATCHER_H_

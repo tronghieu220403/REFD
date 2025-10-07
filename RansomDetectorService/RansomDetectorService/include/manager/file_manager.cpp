@@ -37,10 +37,16 @@ namespace manager
     {
         FileIoInfo file_io_info;
         
+        if (file_io_queue_.size() > 10000)
+        {
+            PrintDebugW(L"Discard I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid, raw_file_io_info->path);
+            return;
+        }
+
         file_io_info.path = GetLongDosPath(GetDosPath(raw_file_io_info->path));
         ulti::ToLowerOverride(file_io_info.path);
 
-        PrintDebugW(L"File I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid,raw_file_io_info->path);
+        //PrintDebugW(L"File I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid,raw_file_io_info->path);
 
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
         file_io_queue_.push(std::move(file_io_info));

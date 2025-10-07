@@ -1,55 +1,137 @@
 #include "honeypot.h"
 #include "../ulti/debug.h"
+#include "../ulti/support.h"
+#include "../manager/known_folder.h"
+#include "../manager/file_type_iden.h"
+#include "../manager/file_manager.h"
 
-#include <filesystem>
-#include <iostream>
 namespace honeypot {
 
-    void HoneyPot::Init(const std::vector<std::wstring>& target_dirs,
+    bool HoneyPot::Init(const std::vector<std::wstring>& target_known_folders,
         const std::wstring& source_dir) {
         namespace fs = std::filesystem;
 
         try {
             // Ensure source directory exists.
             if (!fs::exists(source_dir) || !fs::is_directory(source_dir)) {
-                PrintDebugW(L"[HoneyPot] Source directory does not exist: %ws",
+                PrintDebugW(L"Source directory does not exist: %ws",
                     source_dir.c_str());
-                return;
+                return false;
+            }
+            source_dir_ = source_dir;
+            for (const auto& dir : target_known_folders)
+            {
+                honey_folders_.insert({ ulti::ToLower(dir), HoneyType::kHoneyBlendIn });
+                honey_folders_.insert({ ulti::ToLower(dir) + L"\\avhpot", HoneyType::kHoneyIsolated});
             }
 
-            // Iterate all files in the source directory.
-            for (const auto& entry : fs::directory_iterator(source_dir)) {
-                if (!entry.is_regular_file()) continue;
+            // Iterate all tar_dir directories first, then copy all files into each tar_dir.
+            for (const auto& target : honey_folders_)
+            {
+                const auto& tar_dir = target.first;
+                try {
+                    // Create tar_dir directory if it doesn't exist (do this once per tar_dir).
+                    if (!fs::exists(tar_dir)) {
+                        fs::create_directories(tar_dir);
+                    }
+                }
+                catch (const std::exception& e) {
+                    PrintDebugW(L"Failed to create target dir %ws: %hs", tar_dir.c_str(), e.what());
+                    // Skip this tar_dir if we can't create it.
+                    continue;
+                }
 
-                std::wstring filename = entry.path().filename().wstring();
-
-                // Copy each file into all target directories.
-                for (const auto& target : target_dirs) {
+                // Iterate all files in the source directory and copy into current tar_dir.
+                for (const auto& entry : fs::directory_iterator(source_dir)) {
                     try {
-                        // Create target directory if it doesn't exist.
-                        if (!fs::exists(target)) {
-                            fs::create_directories(target);
-                        }
+                        if (!entry.is_regular_file()) continue;
 
-                        fs::path dest = fs::path(target) / filename;
+                        std::wstring filename = entry.path().filename().wstring();
+                        fs::path dest = fs::path(tar_dir) / filename;
 
-                        // Copy honeypot file.
-                        fs::copy_file(entry.path(), dest,
-                            fs::copy_options::overwrite_existing);
+                        // Copy honeypot file (overwrite if exists).
+                        fs::copy_file(entry.path(), dest, fs::copy_options::overwrite_existing);
 
-                        PrintDebugW(L"[HoneyPot] Copied %ws to %ws",
-                            filename.c_str(), target.c_str());
+                        PrintDebugW(L"Copied %ws to %ws", filename.c_str(), tar_dir.c_str());
                     }
                     catch (const std::exception& e) {
-                        PrintDebugW(L"[HoneyPot] Failed to copy to %ws: %hs",
-                            target.c_str(), e.what());
+                        PrintDebugW(L"Failed to copy %ws to %ws: %hs",
+                            entry.path().filename().wstring().c_str(),
+                            tar_dir.c_str(),
+                            e.what());
+                        // continue with next file
                     }
                 }
             }
         }
         catch (const std::exception& e) {
-            PrintDebugW(L"[HoneyPot] Error initializing honeypot: %hs", e.what());
+            PrintDebugW(L"Error initializing honeypot: %hs", e.what());
+            return false;
         }
+        return true;
+    }
+
+    HoneyType HoneyPot::GetHoneyFolderType(const std::wstring& file_path)
+    {
+        auto file_path_lower = KnownFolderChecker::NormalizePath(fs::path(file_path).parent_path().wstring());
+        if (honey_folders_.find(file_path_lower) != honey_folders_.end())
+        {
+            return honey_folders_[file_path_lower];
+        }
+        return HoneyType::kNotHoney;
+    }
+
+    vector<pair<wstring, HoneyType>> HoneyPot::GetHoneyFolders()
+    {
+        vector<pair<wstring, HoneyType>> dirs;
+
+        for (const auto& dir_info : honey_folders_)
+        {
+            dirs.push_back(dir_info);
+        }
+        return dirs;
+    }
+
+    vector<string> HoneyPot::GetHoneyTypes()
+    {
+        if (honey_types_.size() != 0)
+        {
+            return honey_types_;
+        }
+        for (const auto& entry : fs::directory_iterator(source_dir_)) {
+            try {
+                if (!entry.is_regular_file()) continue;
+                std::wstring file_path = entry.path().wstring();
+                DWORD status = 0;
+                ulti::AddVectorsInPlace(honey_types_, kFileType->GetTypes(file_path, &status));
+            }
+            catch (...) {
+
+            }
+        }
+
+        return honey_types_;
+    }
+
+    vector<wstring> HoneyPot::GetHoneyNames()
+    {
+        if (honey_names_.size() != 0)
+        {
+            return honey_names_;
+        }
+        for (const auto& entry : fs::directory_iterator(source_dir_)) {
+            try {
+                if (!entry.is_regular_file()) continue;
+                std::wstring name = ulti::ToLower(manager::GetFileName(entry.path().filename()));
+                DWORD status = 0;
+                honey_names_.push_back(name);
+            }
+            catch (...) {
+
+            }
+        }
+
+        return honey_names_;
     }
 
 }  // namespace honeypot

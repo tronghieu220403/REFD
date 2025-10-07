@@ -1,5 +1,5 @@
-#ifndef TYPE_IDEN_PDF_H_
-#define TYPE_IDEN_PDF_H_
+#ifndef FILE_TYPE_PDF_H_
+#define FILE_TYPE_PDF_H_
 
 #include "../ulti/include.h"
 
@@ -11,4 +11,4 @@ namespace type_iden {
 
 }  // namespace type_iden
 
-#endif  // TYPE_IDEN_PDF_H_
+#endif  // FILE_TYPE_PDF_H_

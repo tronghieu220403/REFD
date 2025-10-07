@@ -1,5 +1,5 @@
-﻿#ifndef FILE_MANAGER_H_
-#define FILE_MANAGER_H_
+﻿#ifndef MANAGER_FILE_MANAGER_H_
+#define MANAGER_FILE_MANAGER_H_
 
 #include "../ulti/support.h"
 #include "../ulti/debug.h"
@@ -41,6 +41,8 @@
 
 #define DEVICE_CACHE_USAGE_COUNT_MAX 10
 #define DEVICE_CACHE_USAGE_SECOND_MAX 10
+
+#define FILE_IO_FILTER_QUEUE_SIZE_MAX 10000
 
 namespace manager {
 
@@ -119,4 +121,4 @@ namespace manager {
 	std::vector<std::pair<std::wstring, std::vector<std::string>>> GetTypes(const std::vector<std::wstring>& file_list);
 
 }
-#endif  // FILE_MANAGER_H_
+#endif  // MANAGER_FILE_MANAGER_H_

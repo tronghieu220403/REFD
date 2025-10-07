@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef ETWSERVICE_ULTI_DEBUG_H_
-#define ETWSERVICE_ULTI_DEBUG_H_
+#ifndef ULTI_DEBUG_H_
+#define ULTI_DEBUG_H_
 
 #include "include.h"
 
@@ -30,4 +30,4 @@ namespace debug {
 #define PrintDebugW(str, ...) \
     debug::DebugPrintW(L"[%ws:%d] " str L"\n", __FUNCTIONW__, __LINE__, __VA_ARGS__)
 
-#endif
+#endif // ULTI_DEBUG_H_

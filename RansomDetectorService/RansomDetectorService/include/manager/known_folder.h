@@ -1,5 +1,5 @@
-#ifndef KNOWN_FOLDER_H_
-#define KNOWN_FOLDER_H_
+#ifndef MANAGER_KNOWN_FOLDER_H_
+#define MANAGER_KNOWN_FOLDER_H_
 
 #define _CRT_SECURE_NO_DEPRECATE
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
@@ -56,10 +56,12 @@ public:
     void Init(const std::wstring& config_file);
     bool IsPathInKnownFolders(const std::wstring& file_path) const;
     std::vector<std::wstring> GetKnownFolders();
+
+    static std::wstring NormalizePath(const std::wstring& path);
+
 private:
     std::vector<FolderRule> rules_;
 
-    static std::wstring NormalizePath(const std::wstring& path);
     static bool IsBuiltInUser(const std::wstring& user);
     static FolderRule PathToRule(const std::wstring& fullpath);
     static std::vector<GUID> LoadConfig(const std::wstring& file);
@@ -70,6 +72,6 @@ private:
         std::unordered_map<GUID, bool, GuidHash>& visiting);
 };
 
-inline KnownFolderChecker kf_checker;
+inline KnownFolderChecker kfc;
 
-#endif  // KNOWN_FOLDER_H_
+#endif  // MANAGER_KNOWN_FOLDER_H_

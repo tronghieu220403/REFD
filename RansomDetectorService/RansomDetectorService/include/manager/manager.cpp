@@ -2,6 +2,7 @@
 #include "file_type_iden.h"
 #include "known_folder.h"
 #include "matcher.h"
+#include "../honey/honeypot.h"
 
 namespace manager {
 
@@ -33,43 +34,104 @@ namespace manager {
 
 	void Evaluator::Evaluate()
 	{
-		auto current_time = std::chrono::steady_clock::now();
+		struct QueueInfo {
+			honeypot::HoneyType type = honeypot::HoneyType::kNotHoney;
+			int change_count = 0; // change_count > 0 -> push in to queue
+			LONGLONG last_scan = 0;
+			LONGLONG first_add = 0;
+		};
 
-		std::queue<FileIoInfo> file_io_list;
-		kFileIoManager->LockMutex();
-		kFileIoManager->MoveQueue(file_io_list);
-		kFileIoManager->UnlockMutex();
-		
-		if (file_io_list.empty()) {
-			return;
+		auto get_now = []() -> int64_t {
+			return std::chrono::steady_clock::now().time_since_epoch().count();
+			};
+
+		unordered_map<wstring, QueueInfo> mp;
+
+		for (const auto& x : hp.GetHoneyFolders())
+		{
+			QueueInfo info = {};
+			info.type = x.second;
+;			mp.insert({ x.first , info });
 		}
 
-		// Store events grouped by requestor_pid
-		std::unordered_map<ULONG, std::vector<FileIoInfo>> events_by_pid;
-		
-		// Move events from the queue into the map grouped by requestor_pid
-		while (file_io_list.empty() == false)
+		auto now = get_now();
+		while (true)
 		{
-			FileIoInfo event(std::move(file_io_list.front()));
-			file_io_list.pop();
-
-			auto pid = event.requestor_pid;
-			if (DiscardEventByPid(pid) == true)
+			if (now - get_now() >= 3600LL * 2LL)
 			{
-				continue;
+				for (auto& x : mp) {
+					auto& info = x.second;
+					info.change_count = 0;
+					info.last_scan = 0;
+					info.first_add = 0;
+				}
 			}
-			if (kf_checker.IsPathInKnownFolders(event.path) == true && GetFileName(event.path).find(L"hieunt-") != std::wstring::npos)
-			{
-				PrintDebugW(L"In known folder: %ws", event.path.c_str());
-				events_by_pid[pid].push_back(std::move(event));
-			}
-		}
 
-		// Xử lí chỉ cần mang tính local, cụ thể là tìm xem pid này thay đổi những folder nào rồi đem ra phân tích các folder (bỏ qua nếu trong cache chưa quá hạn hoặc trực tiếp đánh giá rồi cập nhật cache) chứ không lưu lại các lần xử lí sau.
-		// Iterate through each group of events with the same requestor_pid
-		for (auto& pid_events : events_by_pid)
-		{
-			
+			std::queue<FileIoInfo> file_io_list;
+			kFileIoManager->LockMutex();
+			kFileIoManager->MoveQueue(file_io_list);
+			kFileIoManager->UnlockMutex();
+
+			if (file_io_list.empty()) {
+				Sleep(500);
+			}
+
+			std::vector<FileIoInfo> events;
+
+			// Move events from the queue into the map grouped by requestor_pid
+			while (file_io_list.empty() == false)
+			{
+				FileIoInfo event(std::move(file_io_list.front()));
+				file_io_list.pop();
+
+				const auto& path = fs::path(event.path).parent_path().wstring();
+
+				auto pid = event.requestor_pid;
+				if (DiscardEventByPid(pid) == true)
+				{
+					continue;
+				}
+				auto verdict = hp.GetHoneyFolderType(path);
+				if (verdict == honeypot::HoneyType::kNotHoney)
+				{
+					continue;
+				}
+				auto& ele = mp[path];
+				ele.change_count++;
+				if (ele.first_add == 0) ele.first_add = get_now();
+			}
+			vector<pair<wstring, QueueInfo>> v;
+			for (const auto& x : mp)
+			{
+				if (get_now() - x.second.last_scan >= 60LL * 5)
+				{
+					v.push_back({ x.first, x.second });
+				}
+			}
+			std::sort(v.begin(), v.end(),
+				[](const pair<wstring, QueueInfo>& a, const pair<wstring, QueueInfo>& b) {
+					const auto& a_ele = a.second;
+					const auto& b_ele = b.second;
+					if (a_ele.type != b_ele.type) {
+						return a_ele.type > b_ele.type;
+					}
+					else if (a_ele.first_add != b_ele.first_add) {
+						return a_ele.first_add < b_ele.first_add;
+					}
+					return a_ele.change_count > b_ele.change_count;
+				});
+			auto& x = mp[v[0].first];
+			if (get_now() - x.first_add >= (x.type == honeypot::HoneyType::kHoneyIsolated ? 5 : 60))
+			{
+				if (IsDirAttackedByRansomware(v[0].first) == true)
+				{
+					debug::DebugPrintW(L"Some process is ransomware. It attacked %ws", v[0].first.c_str());
+				}
+				x.change_count = 0;
+				x.first_add = 0;
+				x.last_scan = get_now();
+			}
+			ulti::ThreadPerfCtrlSleep();
 		}
 	}
 
@@ -81,14 +143,8 @@ namespace manager {
 		}
 		try {
 			for (const auto& entry : fs::directory_iterator(dir_path)) {
-				try {
-					const auto file_path = entry.path().wstring();
-					const auto sz = manager::GetFileSize(file_path);
-					if (sz != 0 && sz <= FILE_MAX_SIZE_SCAN) {
-						files.push_back(file_path);
-					}
-				}
-				catch (...) {}
+				const auto file_path = entry.path().wstring();
+				files.push_back(file_path);
 			}
 		}
 		catch (...) { }
@@ -107,8 +163,8 @@ namespace manager {
 			vvs.push_back(kFileType->GetTypes(file_path, &status));
 		}
 
-		// Cần config để lấy vs thay vì ví dụ thế này
-		std::vector<std::string> vs(60, "txt");
+		// Need config for file randomization for each dir
+		std::vector<std::string> vs(hp.GetHoneyTypes());
 
 		Matcher m;
 		m.SetInput(vvs, vs);

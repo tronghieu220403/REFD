@@ -1,5 +1,5 @@
-﻿#ifndef ETWSERVICE_ETWSERVICE_MAIN
-#define ETWSERVICE_ETWSERVICE_MAIN
+﻿#ifndef RDS_RDS_MAIN
+#define RDS_RDS_MAIN
 
 /*
 C/C++ -> General -> Additional Include Dir -> $(ProjectDir)include
@@ -46,6 +46,7 @@ static void StartEventCollector()
 
 		while (true)
 		{
+			/*
 			//PrintDebugW(L"Check every 6 seconds");
             auto current_time = std::chrono::steady_clock::now();
             auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(current_time - last_process_time);
@@ -56,7 +57,7 @@ static void StartEventCollector()
 				manager::kEvaluator->UnlockMutex();
                 last_process_time = current_time;
 			}
-
+			*/
 			//PrintDebugW(L"Wait for a message from the communication port");
 			hr = com_port.Get((PFILTER_MESSAGE_HEADER)buffer, buffer_size);
 			if (SUCCEEDED(hr))
@@ -113,7 +114,7 @@ static void ServiceMain()
 	try {
 		// Cần config động, thư mục nào là honeypot folder (chỉ toàn honeypot file), thư mục nào có honeypot file lẩn giữa các file khác
 		// Sửa cấu trúc của config.
-		kf_checker.Init(L"E:\\hieunt210330\\hieunt210330\\knownfolders.json");
+		kfc.Init(L"E:\\hieunt210330\\hieunt210330\\knownfolders.json");
 	}
 	catch (std::exception& ex) {
 		PrintDebugW("KnownFolderChecker error: %ws", ulti::StrToWstr(ex.what()).c_str());
@@ -122,7 +123,10 @@ static void ServiceMain()
 
 	// Cần config động, thư mục này có gì có những file nào
 	// Cần file config v2 để lưu
-	honeypot::HoneyPot::Init(kf_checker.GetKnownFolders(), L"E:\\hieunt210330\\honeypot");
+	if (hp.Init(kfc.GetKnownFolders(), L"E:\\hieunt210330\\honeypot") == false)
+	{
+		return;
+	}
 
 	auto last_process_time = std::chrono::steady_clock::now();
 

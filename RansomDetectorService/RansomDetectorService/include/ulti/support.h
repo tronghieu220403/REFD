@@ -2,9 +2,8 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 
-#ifndef ETWSERVICE_ULTI_SUPPORT_H_
-#define ETWSERVICE_ULTI_SUPPORT_H_
-
+#ifndef ULTI_SUPPORT_H_
+#define ULTI_SUPPORT_H_
 #include "include.h"
 
 namespace ulti
@@ -64,4 +63,4 @@ namespace ulti
 
 }
 
-#endif
+#endif // ULTI_SUPPORT_H_

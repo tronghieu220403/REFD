@@ -14,7 +14,7 @@ namespace type_iden {
         }
 
         int corrupt_count = 0;
-        int total_objects = 0;
+        size_t total_objects = 0;
         int stream_count = 0;
         try {
             QPDF pdf;

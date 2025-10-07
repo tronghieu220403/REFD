@@ -1,22 +1,42 @@
-#ifndef HONEYPOT_H_
-#define HONEYPOT_H_
+#ifndef HONEY_HONEYPOT_H_
+#define HONEY_HONEYPOT_H_
 
-#include <string>
-#include <vector>
+#include "../ulti/include.h"
 
-namespace honeypot {
+namespace honeypot
+{
+    // Folder scan result verdict.
+    enum class HoneyType {
+        kNotHoney,
+        kHoneyBlendIn,
+        kHoneyIsolated
+    };
 
     // HoneyPot is responsible for deploying honeypot files
     // into target directories from a source directory.
-    class HoneyPot {
+    class HoneyPot
+    {
+    private:
+        unordered_map<wstring, HoneyType> honey_folders_;
+        vector<string> honey_types_;
+        vector<wstring> honey_names_;
+        wstring source_dir_;
     public:
         // Initializes honeypots in the given target directories.
-        // - target_dirs: list of directories where honeypots should be deployed.
+        // - target_known_folders: list of directories where honeypots should be deployed.
         // - source_dir: directory containing the original honeypot files.
-        static void Init(const std::vector<std::wstring>& target_dirs,
+        bool Init(const std::vector<std::wstring>& target_known_folders,
             const std::wstring& source_dir);
+
+        HoneyType GetHoneyFolderType(const std::wstring& file_path);
+        vector<pair<wstring, HoneyType>> GetHoneyFolders();
+        vector<string> GetHoneyTypes();
+        vector<wstring> GetHoneyNames();
     };
+
 
 }  // namespace honeypot
 
-#endif  // HONEYPOT_H_
+inline honeypot::HoneyPot hp;
+
+#endif  // HONEY_HONEYPOT_H_

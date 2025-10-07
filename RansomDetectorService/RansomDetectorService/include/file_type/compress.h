@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FILE_TYPE_COMPRESS_H_
+#define FILE_TYPE_COMPRESS_H_
 #include "../ulti/include.h"
 
 namespace type_iden
@@ -77,3 +78,5 @@ namespace type_iden
     vector<string> GetZlibTypes(const std::span<UCHAR>& data);
 
 }
+
+#endif // FILE_TYPE_COMPRESS_H_

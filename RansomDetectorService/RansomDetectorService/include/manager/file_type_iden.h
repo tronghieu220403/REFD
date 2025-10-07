@@ -2,8 +2,8 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 
-#ifndef RDS_MANAGER_FILE_TYPE_IDEN_H_
-#define RDS_MANAGER_FILE_TYPE_IDEN_H_
+#ifndef MANAGER_FILE_TYPE_IDEN_H_
+#define MANAGER_FILE_TYPE_IDEN_H_
 
 #include "../ulti/include.h"
 #ifdef _M_IX86
@@ -83,4 +83,4 @@ namespace type_iden
 
 inline type_iden::FileType* kFileType = nullptr;
 
-#endif
+#endif // MANAGER_FILE_TYPE_IDEN_H_

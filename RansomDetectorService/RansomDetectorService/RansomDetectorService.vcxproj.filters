@@ -63,13 +63,7 @@
     <ClCompile Include="include\file_type\txt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\file_type\zip.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\trid\trid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\file_type\7z.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\file_type\ole.cpp">
@@ -78,19 +72,13 @@
     <ClCompile Include="include\file_type\pdf.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\file_type\rar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\file_type\gzip.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\file_type\av.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\file_type\zlib.cpp">
+    <ClCompile Include="include\file_type\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\file_type\image.cpp">
+    <ClCompile Include="include\file_type\compress.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -143,13 +131,7 @@
     <ClInclude Include="include\file_type\txt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\file_type\zip.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\trid\trid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\file_type\7z.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\file_type\ole.h">
@@ -161,19 +143,13 @@
     <ClInclude Include="include\file_type\pdf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\file_type\rar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\file_type\gzip.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\file_type\av.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\file_type\zlib.h">
+    <ClInclude Include="include\file_type\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\file_type\image.h">
+    <ClInclude Include="include\file_type\compress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
