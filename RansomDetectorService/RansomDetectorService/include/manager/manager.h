@@ -1,6 +1,6 @@
 #pragma once
-#ifndef MANAGER_H_
-#define MANAGER_H_
+#ifndef MANAGER_MANAGER_H_
+#define MANAGER_MANAGER_H_
 
 #include "../ulti/support.h"
 #include "file_manager.h"
@@ -35,4 +35,4 @@ namespace manager {
 
 	inline Evaluator* kEvaluator = nullptr;
 }
-#endif  // MANAGER_H_
+#endif  // MANAGER_MANAGER_H_

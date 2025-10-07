@@ -162,7 +162,6 @@
     <ClCompile Include="include\file_type\pdf.cpp" />
     <ClCompile Include="include\file_type\txt.cpp" />
     <ClCompile Include="include\honey\honeypot.cpp" />
-    <ClCompile Include="include\manager\cache.cpp" />
     <ClCompile Include="include\manager\file_manager.cpp" />
     <ClCompile Include="include\manager\file_type_iden.cpp" />
     <ClCompile Include="include\manager\known_folder.cpp" />
@@ -186,7 +185,6 @@
     <ClInclude Include="include\file_type\pdf.h" />
     <ClInclude Include="include\file_type\txt.h" />
     <ClInclude Include="include\honey\honeypot.h" />
-    <ClInclude Include="include\manager\cache.h" />
     <ClInclude Include="include\manager\file_manager.h" />
     <ClInclude Include="include\manager\file_type_iden.h" />
     <ClInclude Include="include\manager\known_folder.h" />
@@ -199,7 +197,6 @@
     <ClInclude Include="include\ulti\debug.h" />
     <ClInclude Include="include\ulti\include.h" />
     <ClInclude Include="include\ulti\support.h" />
-    <ClInclude Include="pdf.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

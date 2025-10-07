@@ -54,9 +54,6 @@
     <ClCompile Include="include\honey\honeypot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\manager\cache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\manager\matcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -122,9 +119,6 @@
     <ClInclude Include="include\honey\honeypot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\manager\cache.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\manager\matcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -135,9 +129,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\file_type\ole.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pdf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\file_type\pdf.h">
