@@ -519,8 +519,14 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
                 //DebugMessage("File: %ws, no operation, do not send to user mode", p_handle_context->current_path);
                 return;
             }
-            DebugMessage("Sending event to user mode: PID %d, is_modified %d, is_renamed %d, path %ws", p_handle_context->requestor_pid, p_handle_context->is_modified, p_handle_context->is_renamed, p_handle_context->path);
-            com::kComPort->Send(p_handle_context, sizeof(collector::HANDLE_CONTEXT));
+            if (com::kComPort->Send(p_handle_context, sizeof(collector::HANDLE_CONTEXT)) != STATUS_SUCCESS)
+            {
+                DebugMessage("Send failed, event to user mode: PID %d, is_modified %d, is_renamed %d, path %ws", p_handle_context->requestor_pid, p_handle_context->is_modified, p_handle_context->is_renamed, p_handle_context->path);
+            }
+            else
+            {
+                DebugMessage("Send oke, event to user mode: PID %d, is_modified %d, is_renamed %d, path %ws", p_handle_context->requestor_pid, p_handle_context->is_modified, p_handle_context->is_renamed, p_handle_context->path);
+            }
         }
     }
     else

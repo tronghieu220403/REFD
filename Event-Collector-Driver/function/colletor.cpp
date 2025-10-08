@@ -126,21 +126,21 @@ namespace collector
         bool has_write_access = create_params.SecurityContext->DesiredAccess & (FILE_WRITE_DATA | FILE_APPEND_DATA);
         bool has_delete_access = create_params.SecurityContext->DesiredAccess & DELETE;
 
+        bool is_created = (data->IoStatus.Information == FILE_CREATED);
+
         // Not interested in files without write and delete access
-        if (!has_write_access && !is_delete_on_close && !has_delete_access)
+        if (!is_created && !has_write_access && !is_delete_on_close && !has_delete_access)
         {
+            /*
+            if (current_path.FindFirstOf(L"hieunt-0075") != ULL_MAX)
+            {
+                DebugMessage("File: %ws, Not interested in files without create, write and delete access", current_path.Data());
+            }
+            */
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
 
         ULONG options = create_params.Options;
-        bool is_created = (data->IoStatus.Information == FILE_CREATED);
-
-        // Not interested in new files without write access
-        if (is_created && !has_write_access)
-        {
-            //DebugMessage("File: %ws, created without write access", current_path.Data());
-            return FLT_POSTOP_FINISHED_PROCESSING;
-        }
 
         PHANDLE_CONTEXT p_handle_context = nullptr;
         NTSTATUS status = FltAllocateContext(flt_objects->Filter, FLT_STREAMHANDLE_CONTEXT, sizeof(HANDLE_CONTEXT), NonPagedPool, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
