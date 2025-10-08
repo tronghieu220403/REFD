@@ -209,8 +209,8 @@ static void RunProgram()
 	RunService();
 	//ServiceMain();
 #else
-	//RunService();
-	ServiceMain();
+	RunService();
+	//ServiceMain();
 #endif // _DEBUG
 }
 

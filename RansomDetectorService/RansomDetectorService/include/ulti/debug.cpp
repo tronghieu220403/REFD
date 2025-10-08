@@ -121,7 +121,7 @@ namespace debug {
 
 		// Null-terminated already, safe to print
 		OutputDebugStringW(buffer.data());
-		//WriteDebugToFileW(buffer.data());
+		WriteDebugToFileW(buffer.data());
 	}
 
 

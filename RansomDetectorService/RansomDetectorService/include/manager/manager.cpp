@@ -85,7 +85,7 @@ namespace manager {
 				FileIoInfo event(move(file_io_list.front()));
 				file_io_list.pop();
 
-				const auto& path = fs::path(event.path).parent_path().wstring();
+				const auto& dir_path = fs::path(event.path).parent_path().wstring();
 				kFileCache->Erase(event.path);
 
 				if (DiscardEventByPid(event.requestor_pid) == true
@@ -93,20 +93,20 @@ namespace manager {
 					continue;
 				}
 
-				auto verdict = hp.GetHoneyFolderType(path);
+				auto verdict = hp.GetHoneyFolderType(dir_path);
 				if (verdict == honeypot::HoneyType::kNotHoney) {
 					continue;
 				}
-				PrintDebugW(L"PID % d, path:% ws", event.requestor_pid, event.path.c_str());
+				PrintDebugW(L"PID % d, path:% ws", event.requestor_pid, dir_path.c_str());
 
-				auto& ele = mp[path];
+				auto& ele = mp[dir_path];
 				ele.change_count++;
 				if (ele.first_add == 0) ele.first_add = get_now();
 			}
 
 			vector<pair<wstring, QueueInfo>> v;
 			for (const auto& x : mp) {
-				if (get_now() - x.second.last_scan >= 60LL * 5) {
+				if (x.second.change_count != 0 && get_now() - x.second.last_scan >= 60LL * 5) {
 					v.push_back({ x.first, x.second });
 				}
 			}
@@ -122,7 +122,7 @@ namespace manager {
 					}
 					return a_ele.change_count < b_ele.change_count;
 				});
-			if (it == v.end())
+			if (it == v.end() || v.size() == 0)
 			{
 				Sleep(100);
 				continue;
@@ -188,7 +188,7 @@ namespace manager {
 		{
 #ifdef _M_IX86
 			// Compatible with TRID
-			if (ulti::StrToWstr(ulti::WstrToStr(path)) != path)
+			if (ulti::StrToWstr(ulti::WstrToStr(dir_path)) != dir_path)
 			{
 				continue;
 			}

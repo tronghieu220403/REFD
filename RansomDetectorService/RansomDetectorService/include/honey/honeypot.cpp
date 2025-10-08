@@ -23,6 +23,18 @@ namespace honeypot {
             {
                 honey_folders_.insert({ ulti::ToLower(dir), HoneyType::kHoneyBlendIn });
                 honey_folders_.insert({ ulti::ToLower(dir) + L"\\avhpot", HoneyType::kHoneyIsolated});
+                /*
+                try
+                {
+                    fs::remove_all(ulti::ToLower(dir) + L"\\avhpot");
+                }
+                catch (...) {}
+                */
+            }
+
+            for (const auto& hdir : honey_folders_)
+            {
+                //PrintDebugW(L"%ws", hdir.first.c_str());
             }
 
             // Iterate all tar_dir directories first, then copy all files into each tar_dir.
@@ -50,9 +62,9 @@ namespace honeypot {
                         fs::path dest = fs::path(tar_dir) / filename;
 
                         // Copy honeypot file (overwrite if exists).
-                        fs::copy_file(entry.path(), dest, fs::copy_options::overwrite_existing);
-
-                        PrintDebugW(L"Copied %ws to %ws", filename.c_str(), tar_dir.c_str());
+                        fs::copy_file(entry.path(), dest, fs::copy_options::skip_existing);
+                        //fs::remove(dest);
+                        //PrintDebugW(L"Copied %ws to %ws", filename.c_str(), tar_dir.c_str());
                     }
                     catch (const std::exception& e) {
                         PrintDebugW(L"Failed to copy %ws to %ws: %hs",
@@ -71,12 +83,13 @@ namespace honeypot {
         return true;
     }
 
-    HoneyType HoneyPot::GetHoneyFolderType(const std::wstring& file_path)
+    HoneyType HoneyPot::GetHoneyFolderType(const std::wstring& dir_path)
     {
-        auto file_path_lower = KnownFolderChecker::NormalizePath(fs::path(file_path).parent_path().wstring());
-        if (honey_folders_.find(file_path_lower) != honey_folders_.end())
+        auto file_path_lower = KnownFolderChecker::NormalizePath(dir_path);
+        auto it = honey_folders_.find(file_path_lower);
+        if (it != honey_folders_.end())
         {
-            return honey_folders_[file_path_lower];
+            return it->second;
         }
         return HoneyType::kNotHoney;
     }

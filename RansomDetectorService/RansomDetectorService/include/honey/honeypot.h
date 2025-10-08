@@ -28,7 +28,7 @@ namespace honeypot
         bool Init(const std::vector<std::wstring>& target_known_folders,
             const std::wstring& source_dir);
 
-        HoneyType GetHoneyFolderType(const std::wstring& file_path);
+        HoneyType GetHoneyFolderType(const std::wstring& dir_path);
         vector<pair<wstring, HoneyType>> GetHoneyFolders();
         vector<vector<string>> GetHoneyTypes();
         vector<wstring> GetHoneyNames();
