@@ -52,7 +52,7 @@ namespace manager {
 		{
 			QueueInfo info = {};
 			info.type = x.second;
-			;			mp.insert({ x.first , info });
+			mp.insert({ x.first , info });
 		}
 
 		auto now = get_now();
@@ -97,6 +97,8 @@ namespace manager {
 				if (verdict == honeypot::HoneyType::kNotHoney) {
 					continue;
 				}
+				PrintDebugW(L"PID % d, path:% ws", event.requestor_pid, event.path.c_str());
+
 				auto& ele = mp[path];
 				ele.change_count++;
 				if (ele.first_add == 0) ele.first_add = get_now();
