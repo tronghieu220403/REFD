@@ -52,7 +52,7 @@ namespace manager {
 		{
 			QueueInfo info = {};
 			info.type = x.second;
-;			mp.insert({ x.first , info });
+			;			mp.insert({ x.first , info });
 		}
 
 		auto now = get_now();
@@ -162,10 +162,10 @@ namespace manager {
 				paths.push_back(file_path);
 			}
 		}
-		catch (...) { }
+		catch (...) {}
 
 		vector<vector<string>> dvvs;
-size_t valid_total_cnt = 0;
+		size_t valid_total_cnt = 0;
 		for (auto& path : paths)
 		{
 #ifdef _M_IX86
@@ -183,7 +183,7 @@ size_t valid_total_cnt = 0;
 				auto types = kFileType->GetTypes(path, &status, &file_size);
 				if (status == ERROR_SUCCESS)
 				{
-++valid_total_cnt;
+					++valid_total_cnt;
 					dvvs.push_back(types);
 				}
 				if (file_size != 0) {
@@ -198,7 +198,7 @@ size_t valid_total_cnt = 0;
 				{
 					continue;
 				}
-++valid_total_cnt;
+				++valid_total_cnt;
 				dvvs.push_back(info.types);
 			}
 		}
@@ -209,7 +209,7 @@ size_t valid_total_cnt = 0;
 		Matcher m;
 		m.SetInput(dvvs, hvvs);
 		auto ans = m.Solve();
-		
+
 		return BelowTypeThreshold((size_t)ans, valid_total_cnt);
 	}
 
