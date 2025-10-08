@@ -210,7 +210,7 @@ size_t valid_total_cnt = 0;
 		m.SetInput(dvvs, hvvs);
 		auto ans = m.Solve();
 		
-		return BelowTypeThreshold((size_t)ans, (paths.size()));
+		return BelowTypeThreshold((size_t)ans, valid_total_cnt);
 	}
 
 	bool Evaluator::DiscardEventByPid(ULONG issuing_pid)
