@@ -121,31 +121,43 @@ namespace collector
         }
 
         const auto& create_params = data->Iopb->Parameters.Create;
+
         bool is_delete_on_close = FlagOn(create_params.Options, FILE_DELETE_ON_CLOSE);
-        bool is_created = (data->IoStatus.Information == FILE_CREATED);
         bool has_write_access = create_params.SecurityContext->DesiredAccess & (FILE_WRITE_DATA | FILE_APPEND_DATA);
         bool has_delete_access = create_params.SecurityContext->DesiredAccess & DELETE;
 
         // Not interested in files without write and delete access
-        if (!has_write_access && ! has_delete_access)
+        if (!has_write_access && !is_delete_on_close && !has_delete_access)
         {
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
 
-        PHANDLE_CONTEXT handle_context = nullptr;
-        NTSTATUS status = FltAllocateContext(flt_objects->Filter, FLT_STREAMHANDLE_CONTEXT, sizeof(HANDLE_CONTEXT), NonPagedPool, reinterpret_cast<PFLT_CONTEXT*>(&handle_context));
+        ULONG options = create_params.Options;
+        bool is_created = (data->IoStatus.Information == FILE_CREATED);
+
+        // Not interested in new files without write access
+        if (is_created && !has_write_access)
+        {
+            //DebugMessage("File: %ws, created without write access", current_path.Data());
+            return FLT_POSTOP_FINISHED_PROCESSING;
+        }
+
+        PHANDLE_CONTEXT p_handle_context = nullptr;
+        NTSTATUS status = FltAllocateContext(flt_objects->Filter, FLT_STREAMHANDLE_CONTEXT, sizeof(HANDLE_CONTEXT), NonPagedPool, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
         if (!NT_SUCCESS(status))
         {
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
 
-        memset(handle_context, 0, sizeof(HANDLE_CONTEXT));
-        handle_context->requestor_pid = FltGetRequestorProcessId(data);
-        RtlCopyMemory(handle_context->path, current_path.Data(), current_path.Size() * sizeof(WCHAR));
+        memset(p_handle_context, 0, sizeof(HANDLE_CONTEXT));
+        p_handle_context->requestor_pid = FltGetRequestorProcessId(data);
+        p_handle_context->is_created = is_created;
+        p_handle_context->is_deleted = is_delete_on_close;
+        RtlCopyMemory(p_handle_context->path, current_path.Data(), current_path.Size() * sizeof(WCHAR));
         
-        status = FltSetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, FLT_SET_CONTEXT_KEEP_IF_EXISTS, reinterpret_cast<PFLT_CONTEXT>(handle_context), nullptr);
+        status = FltSetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, FLT_SET_CONTEXT_KEEP_IF_EXISTS, reinterpret_cast<PFLT_CONTEXT>(p_handle_context), nullptr);
 
-        FltReleaseContext(handle_context);
+        FltReleaseContext(p_handle_context);
         
         return FLT_POSTOP_FINISHED_PROCESSING;
     }
@@ -264,7 +276,7 @@ namespace collector
         }
         else if (file_info_class == FileDispositionInformation || file_info_class == FileDispositionInformationEx)
         {
-
+            p_handle_context->is_deleted = true;
         }
         else if (file_info_class == FileAllocationInformation)
         {

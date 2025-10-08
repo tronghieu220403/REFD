@@ -49,6 +49,10 @@ namespace manager
         //PrintDebugW(L"File I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid,raw_file_io_info->path);
 
         file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
+        file_io_info.is_created = raw_file_io_info->is_created;
+        file_io_info.is_renamed = raw_file_io_info->is_renamed;
+        file_io_info.is_modified = raw_file_io_info->is_modified;
+        file_io_info.is_deleted = raw_file_io_info->is_deleted;
         file_io_queue_.push(std::move(file_io_info));
     }
 

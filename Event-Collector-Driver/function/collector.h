@@ -16,9 +16,11 @@ namespace collector
 {
     typedef struct _HANDLE_CONTEXT
     {
-		ULONG requestor_pid = 0;
-		bool is_modified = false;
-		bool is_renamed = false;
+        ULONG requestor_pid = 0;
+        bool is_modified = false;
+        bool is_renamed = false;
+        bool is_created = false;
+        bool is_deleted = false;
         WCHAR path[HIEUNT_MAX_PATH] = { 0 };
     } HANDLE_CONTEXT, * PHANDLE_CONTEXT;
 

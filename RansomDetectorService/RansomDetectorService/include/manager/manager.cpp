@@ -58,6 +58,7 @@ namespace manager {
 		auto now = get_now();
 		while (true)
 		{
+			defer{ ulti::ThreadPerfCtrlSleep(); };
 			if (now - get_now() >= 3600LL * 2LL) {
 				for (auto& x : mp) {
 					auto& info = x.second;
@@ -85,15 +86,17 @@ namespace manager {
 				file_io_list.pop();
 
 				const auto& path = fs::path(event.path).parent_path().wstring();
-				auto pid = event.requestor_pid;
-				if (DiscardEventByPid(pid) == true) {
+				kFileCache->Erase(event.path);
+
+				if (DiscardEventByPid(event.requestor_pid) == true
+					|| event.is_modified == false) {
 					continue;
 				}
+
 				auto verdict = hp.GetHoneyFolderType(path);
 				if (verdict == honeypot::HoneyType::kNotHoney) {
 					continue;
 				}
-				kFileCache->Erase(event.path);
 				auto& ele = mp[path];
 				ele.change_count++;
 				if (ele.first_add == 0) ele.first_add = get_now();
@@ -105,24 +108,33 @@ namespace manager {
 					v.push_back({ x.first, x.second });
 				}
 			}
-			sort(v.begin(), v.end(),
+			auto it = std::max_element(v.begin(), v.end(),
 				[](const pair<wstring, QueueInfo>& a, const pair<wstring, QueueInfo>& b) {
 					const auto& a_ele = a.second;
 					const auto& b_ele = b.second;
 					if (a_ele.type != b_ele.type) {
-						return a_ele.type > b_ele.type;
+						return a_ele.type < b_ele.type;
 					}
 					else if (a_ele.first_add != b_ele.first_add) {
-						return a_ele.first_add < b_ele.first_add;
+						return a_ele.first_add > b_ele.first_add;
 					}
-					return a_ele.change_count > b_ele.change_count;
+					return a_ele.change_count < b_ele.change_count;
 				});
-			auto& x = mp[v[0].first];
+			if (it == v.end())
+			{
+				Sleep(100);
+				continue;
+			}
+			auto& x = mp[it->first];
 			if (get_now() - x.first_add >= (x.type == HoneyType::kHoneyIsolated ? 10 : 60))
 			{
-				if (IsDirAttackedByRansomware(v[0].first, x.type) == true)
+				if (IsDirAttackedByRansomware(it->first, x.type) == true)
 				{
-					debug::DebugPrintW(L"Some process is ransomware. It attacked %ws", v[0].first.c_str());
+					debug::DebugPrintW(L"Some process is ransomware. It attacked %ws", it->first.c_str());
+				}
+				else
+				{
+					PrintDebugW(L"Scanned %ws, no problem", it->first.c_str());
 				}
 				x.change_count = 0;
 				x.first_add = 0;
@@ -131,8 +143,8 @@ namespace manager {
 			else
 			{
 				Sleep(100);
+				continue;
 			}
-			ulti::ThreadPerfCtrlSleep();
 		}
 	}
 
@@ -160,6 +172,10 @@ namespace manager {
 					}
 				}
 				paths.push_back(file_path);
+				if (paths.size() > 30)
+				{
+					break;
+				}
 			}
 		}
 		catch (...) {}

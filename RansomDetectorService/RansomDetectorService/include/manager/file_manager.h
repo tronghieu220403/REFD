@@ -48,12 +48,18 @@ namespace manager {
 		ULONG requestor_pid = 0;
 		bool is_modified = false;
 		bool is_renamed = false;
+		bool is_created = false;
+		bool is_deleted = false;
 		WCHAR path[HIEUNT_MAX_PATH] = { 0 };
 	};
 
 	struct FileIoInfo
 	{
 		ULONG requestor_pid = 0;
+		bool is_modified = false;
+		bool is_renamed = false;
+		bool is_created = false;
+		bool is_deleted = false;
 		ULONG type_match = TYPE_MATCH_NOT_EVALUATED;
 		std::wstring path;
 	};
