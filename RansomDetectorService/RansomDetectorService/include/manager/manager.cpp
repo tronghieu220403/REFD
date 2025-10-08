@@ -165,6 +165,7 @@ namespace manager {
 		catch (...) { }
 
 		vector<vector<string>> dvvs;
+size_t valid_total_cnt = 0;
 		for (auto& path : paths)
 		{
 #ifdef _M_IX86
@@ -182,6 +183,7 @@ namespace manager {
 				auto types = kFileType->GetTypes(path, &status, &file_size);
 				if (status == ERROR_SUCCESS)
 				{
+++valid_total_cnt;
 					dvvs.push_back(types);
 				}
 				if (file_size != 0) {
@@ -196,6 +198,7 @@ namespace manager {
 				{
 					continue;
 				}
+++valid_total_cnt;
 				dvvs.push_back(info.types);
 			}
 		}
