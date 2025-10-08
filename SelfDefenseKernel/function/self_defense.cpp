@@ -11,7 +11,7 @@ namespace self_defense {
     struct ProcessInfo
     {
         HANDLE pid = 0;
-        String<WCHAR> process_path;
+        std::WString process_path;
         bool is_protected = false;
         LARGE_INTEGER start_time = { 0 };
     };
@@ -25,8 +25,8 @@ namespace self_defense {
     static Map<HANDLE, ProcessInfo>* kProcessMap;
     static Mutex kProcessMapMutex;
 
-    static Vector<String<WCHAR>>* kProtectedDirList;
-    static Vector<String<WCHAR>>* kProtectedFileList;
+    static Vector<std::WString>* kProtectedDirList;
+    static Vector<std::WString>* kProtectedFileList;
     static Mutex kFileMutex;
     static PVOID kHandleRegistration;
     static bool kEnableProtectFile;
@@ -38,14 +38,14 @@ namespace self_defense {
         kProcessMapMutex.Create();
 
 		kFileMutex.Lock();
-        kProtectedDirList = new Vector<String<WCHAR>>();
-		Vector<String<WCHAR>> default_protected_dirs = GetDefaultProtectedDirs();
+        kProtectedDirList = new Vector<std::WString>();
+		Vector<std::WString> default_protected_dirs = GetDefaultProtectedDirs();
 		for (int i = 0; i < default_protected_dirs.Size(); ++i)
 		{
 			kProtectedDirList->PushBack(default_protected_dirs[i]);
 		}
-		kProtectedFileList = new Vector<String<WCHAR>>();
-		Vector<String<WCHAR>> default_protected_files = GetDefaultProtectedFiles();
+		kProtectedFileList = new Vector<std::WString>();
+		Vector<std::WString> default_protected_files = GetDefaultProtectedFiles();
 		for (int i = 0; i < default_protected_files.Size(); ++i)
 		{
 			kProtectedFileList->PushBack(default_protected_files[i]);
@@ -140,8 +140,8 @@ namespace self_defense {
     {
         DebugMessage("Begin %ws", __FUNCTIONW__);
 
-        String<WCHAR> file_path1(file::NormalizeDevicePathStr(L"\\??\\C:\\Users\\hieu\\Documents\\ggez.txt"));
-        String<WCHAR> file_path2(file::NormalizeDevicePathStr(L"\\??\\E:\\hieunt210330\\ggez.txt"));
+        std::WString file_path1(file::NormalizeDevicePathStr(L"\\??\\C:\\Users\\hieu\\Documents\\ggez.txt"));
+        std::WString file_path2(file::NormalizeDevicePathStr(L"\\??\\E:\\hieunt210330\\ggez.txt"));
         if (file::ZwIsFileExist(file_path1) == true || file::ZwIsFileExist(file_path2) == true)
         {
             DebugMessage("Magic files exist, so we allow the driver to unload");
@@ -163,19 +163,19 @@ namespace self_defense {
         {
             // Process is being created
 			auto ppid = PsGetCurrentProcessId();
-            const String<WCHAR>& process_path = GetProcessImageName(pid);
-            const String<WCHAR>& parent_process_path = GetProcessImageName(ppid);
+            const std::WString& process_path = GetProcessImageName(pid);
+            const std::WString& parent_process_path = GetProcessImageName(ppid);
             DebugMessage("Creation, pid %llu, path %ws, ppid %llu, parent path %ws", (ull)pid, process_path.Data(), (ull)ppid, parent_process_path.Data());
 
             bool is_protected = IsProtectedFile(process_path); // check if process is protected
 
             
-            if (parent_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX)
+            if (parent_process_path.FindFirstOf(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX)
             {   // Only allow vmtoolsd.exe to be created by services.exe (testing purpose)
                 is_protected = true;
             }
             
-            if ((parent_process_path.Find(L"cmd.exe") != ULL_MAX || parent_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX) && process_path.Find(L"ownloads\\") != ULL_MAX)
+            if ((parent_process_path.FindFirstOf(L"cmd.exe") != ULL_MAX || parent_process_path.FindFirstOf(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX) && process_path.FindFirstOf(L"ownloads\\") != ULL_MAX)
             {   // cmd.exe run malware (testing purpose)
                 is_protected = false;
             }
@@ -263,7 +263,7 @@ namespace self_defense {
 			return FLT_PREOP_SUCCESS_NO_CALLBACK;
 		}
 
-        String<WCHAR> file_path(flt::GetFileFullPathName(data));
+        std::WString file_path(flt::GetFileFullPathName(data));
         if (file_path.Size() == 0 || IsProtectedFile(file_path) == false)
         {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
@@ -316,7 +316,7 @@ namespace self_defense {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-        String<WCHAR> file_path(flt::GetFileFullPathName(data));
+        std::WString file_path(flt::GetFileFullPathName(data));
 		//DebugMessage("SetInformationFile: %ws", file_path.Data());
         if (IsProtectedFile(file_path) == false)
         {
@@ -360,7 +360,7 @@ namespace self_defense {
             if (NT_SUCCESS(status))
             {
                 //DebugMessage("Rename file: %wZ", name_info->Name);
-                if (IsProtectedFile(String<WCHAR>(name_info->Name))) {
+                if (IsProtectedFile(std::WString(name_info->Name))) {
                     DebugMessage("Rename blocked, path %ws, pid %d, process path %ws, FileInformationClass %d", file_path.Data(), (int)PsGetCurrentProcessId(), GetProcessImageName(PsGetCurrentProcessId()).Data(), data->Iopb->Parameters.SetFileInformation.FileInformationClass);
                     FltReleaseFileNameInformation(name_info);
                     data->IoStatus.Status = STATUS_ACCESS_DENIED;
@@ -425,17 +425,17 @@ namespace self_defense {
 			}
 		}
 
-        String<WCHAR> target_process_path = GetProcessImageName(source_pid);
-        if (target_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX)
+        std::WString target_process_path = GetProcessImageName(source_pid);
+        if (target_process_path.FindFirstOf(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX)
         {
             //return OB_PREOP_SUCCESS;
         }
-        String<WCHAR> source_process_path = GetProcessImageName(target_pid);
+        std::WString source_process_path = GetProcessImageName(target_pid);
 
 		if (operation_information->ObjectType == *PsProcessType)
 		{
             
-            if (target_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX && source_process_path.Find(L"\\Device\\HarddiskVolume3\\Windows\\System32\\csrss.exe") != ULL_MAX)
+            if (target_process_path.FindFirstOf(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX && source_process_path.FindFirstOf(L"\\Device\\HarddiskVolume3\\Windows\\System32\\csrss.exe") != ULL_MAX)
             {
                 return OB_PREOP_SUCCESS;
             }
@@ -500,7 +500,7 @@ namespace self_defense {
 		else if (operation_information->ObjectType == *PsThreadType)
 		{
             
-            if (target_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX && source_process_path.Find(L"\\Device\\HarddiskVolume3\\Windows\\System32\\lsass.exe") != ULL_MAX)
+            if (target_process_path.FindFirstOf(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX && source_process_path.FindFirstOf(L"\\Device\\HarddiskVolume3\\Windows\\System32\\lsass.exe") != ULL_MAX)
             {
                 return OB_PREOP_SUCCESS;
             }
@@ -552,7 +552,7 @@ namespace self_defense {
 	}
 
 	// Kiểm tra xem thư mục có nằm trong danh sách bảo vệ không
-	bool IsProtectedFile(const String<WCHAR>& path)
+	bool IsProtectedFile(const std::WString& path)
 	{
 		//DebugMessage("Checking file: %ws", path.Data());
 		kFileMutex.Lock();
@@ -600,7 +600,7 @@ namespace self_defense {
         return is_protected;
     }
 
-	bool IsInProtectedFile(const String<WCHAR>& path)
+	bool IsInProtectedFile(const std::WString& path)
 	{
 		return false;
 	}
@@ -628,7 +628,7 @@ namespace self_defense {
 			//DebugMessage("PID %llu is not in process map", (ull)pid);
 
             // Process không có trong cache, lấy thông tin mới
-            String<WCHAR> process_path = GetProcessImageName(pid);
+            std::WString process_path = GetProcessImageName(pid);
             is_protected = IsProtectedFile(process_path);
 
             // Lưu vào cache
@@ -648,7 +648,7 @@ namespace self_defense {
         return is_protected;
     }
 
-    String<WCHAR> GetProcessImageName(HANDLE pid)
+    std::WString GetProcessImageName(HANDLE pid)
     {
         auto it = kProcessMap->Find(pid);
         if (it != kProcessMap->End())
@@ -656,14 +656,14 @@ namespace self_defense {
             return it->second.process_path;
         }
 
-        String<WCHAR> process_image_name;
+        std::WString process_image_name;
         NTSTATUS status = STATUS_UNSUCCESSFUL;
         PEPROCESS eproc;
         status = PsLookupProcessByProcessId(pid, &eproc);
         if (!NT_SUCCESS(status))
         {
             DebugMessage("PsLookupProcessByProcessId for pid %p Failed: %08x\n", pid, status);
-            return String<WCHAR>();
+            return std::WString();
         }
 
         PUNICODE_STRING process_name = NULL;
@@ -694,7 +694,7 @@ namespace self_defense {
         if (!NT_SUCCESS(status))
         {
             DebugMessage("ObOpenObjectByPointer Failed: %08x\n", status);
-            return String<WCHAR>();
+            return std::WString();
         }
 
         if (ZwQueryInformationProcess == NULL)
@@ -745,15 +745,15 @@ namespace self_defense {
 		L"\\Device\\Harddisk0\\DR0",
 	};
 
-	Vector<String<WCHAR>> GetDefaultProtectedDirs()
+	Vector<std::WString> GetDefaultProtectedDirs()
     {
         /*
         Warning: when the minifilter started as boot (SERVICE_BOOT_START), ZwOpenSymbolicLinkObject will always return STATUS_OBJECT_NAME_NOT_FOUND
         */
         /*
-		Vector<String<WCHAR>> protected_dirs;
+		Vector<std::WString> protected_dirs;
 		for (int i = 0; i < sizeof(kDevicePathDirList) / sizeof(kDevicePathDirList[0]); ++i) {
-			String<WCHAR> nomalized_path_str(file::NormalizeDevicePathStr(kDevicePathDirList[i]));
+			std::WString nomalized_path_str(file::NormalizeDevicePathStr(kDevicePathDirList[i]));
 			if (nomalized_path_str.Size() > 0)
 			{
 				protected_dirs.PushBack(nomalized_path_str);
@@ -766,7 +766,7 @@ namespace self_defense {
 		}
         */
         // Hence this is a workaround (only for testing purpose)
-        Vector<String<WCHAR>> protected_dirs;
+        Vector<std::WString> protected_dirs;
         protected_dirs.PushBack(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\");
         protected_dirs.PushBack(L"\\Device\\HarddiskVolume4\\hieunt210330\\");
         protected_dirs.PushBack(L"\\Device\\Harddisk0\\DR0");
@@ -780,16 +780,16 @@ namespace self_defense {
 		L"\\??\\C:\\Windows\\System32\\csrss.exe",
 	};
 
-	Vector<String<WCHAR>> GetDefaultProtectedFiles()
+	Vector<std::WString> GetDefaultProtectedFiles()
 	{
         /*
         Warning: when the minifilter started as boot (SERVICE_BOOT_START), ZwOpenSymbolicLinkObject will always return STATUS_OBJECT_NAME_NOT_FOUND
         */
         /*
 
-		Vector<String<WCHAR>> protected_files;
+		Vector<std::WString> protected_files;
 		for (int i = 0; i < sizeof(kDevicePathFileList) / sizeof(kDevicePathFileList[0]); ++i) {
-			String<WCHAR> nomalized_path_str(file::NormalizeDevicePathStr(kDevicePathFileList[i]));
+			std::WString nomalized_path_str(file::NormalizeDevicePathStr(kDevicePathFileList[i]));
 			if (nomalized_path_str.Size() > 0)
 			{
 				protected_files.PushBack(nomalized_path_str);
@@ -802,7 +802,7 @@ namespace self_defense {
 		}
         */
         // Hence this is a workaround (only for testing purpose)
-        Vector<String<WCHAR>> protected_files;
+        Vector<std::WString> protected_files;
         protected_files.PushBack(L"\\Device\\HarddiskVolume3\\Windows\\System32\\drivers\\SelfDefenseKernel.sys");
         protected_files.PushBack(L"\\Device\\HarddiskVolume3\\Windows\\System32\\drivers\\EventCollectorDriver.sys");
 		return protected_files;

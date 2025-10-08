@@ -2,7 +2,7 @@
 
 
 #include "../std/vector/vector.h"
-#include "../std/string/string.h"
+#include "../std/string/wstring.h"
 #include "../std/sync/mutex.h"
 #include "../std/map/map.h"
 #include "../std/memory/pair.h"
@@ -18,9 +18,9 @@ namespace flt
 {
 	bool IsTrustedRequestor(PFLT_CALLBACK_DATA data);
 
-	String<char> DebugIrpFlags(ULONG flag);
+	std::WString DebugIrpFlags(ULONG flag);
 
-	String<WCHAR> GetFileFullPathName(PFLT_CALLBACK_DATA data);
+	std::WString GetFileFullPathName(PFLT_CALLBACK_DATA data);
 
 	class FileInfoShort
 	{

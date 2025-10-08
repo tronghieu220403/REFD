@@ -2,7 +2,7 @@
 #define SELF_DEFENSE_H
 
 #include <fltKernel.h>
-#include "../../std/string/string.h"
+#include "../../std/string/wstring.h"
 #include "../../std/vector/vector.h"
 
 namespace self_defense {
@@ -26,13 +26,13 @@ namespace self_defense {
     );
 
     // Các hàm trợ giúp
-    bool IsProtectedFile(const String<WCHAR>& path);
-    bool IsInProtectedFile(const String<WCHAR>& path);
+    bool IsProtectedFile(const std::WString& path);
+    bool IsInProtectedFile(const std::WString& path);
     bool IsProtectedProcess(HANDLE pid);
 
-    String<WCHAR> GetProcessImageName(HANDLE pid);
-	Vector<String<WCHAR>> GetDefaultProtectedDirs();
-	Vector<String<WCHAR>> GetDefaultProtectedFiles();
+    std::WString GetProcessImageName(HANDLE pid);
+	Vector<std::WString> GetDefaultProtectedDirs();
+	Vector<std::WString> GetDefaultProtectedFiles();
 
 } // namespace self_defense
 
