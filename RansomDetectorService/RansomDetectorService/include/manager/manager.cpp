@@ -43,7 +43,8 @@ namespace manager {
 		};
 
 		auto get_now = []() -> int64_t {
-			return chrono::steady_clock::now().time_since_epoch().count();
+			using namespace std::chrono;
+			return duration_cast<seconds>(steady_clock::now().time_since_epoch()).count();
 			};
 
 		unordered_map<wstring, QueueInfo> mp;
@@ -97,7 +98,7 @@ namespace manager {
 				if (verdict == honeypot::HoneyType::kNotHoney) {
 					continue;
 				}
-				PrintDebugW(L"PID % d, path:% ws", event.requestor_pid, dir_path.c_str());
+				PrintDebugW(L"PID % d, path: %ws", event.requestor_pid, dir_path.c_str());
 
 				auto& ele = mp[dir_path];
 				ele.change_count++;
@@ -106,7 +107,8 @@ namespace manager {
 
 			vector<pair<wstring, QueueInfo>> v;
 			for (const auto& x : mp) {
-				if (x.second.change_count != 0 && get_now() - x.second.last_scan >= 60LL * 5) {
+				if (x.second.change_count != 0 
+					&& get_now() - x.second.last_scan >= 60LL * 5) {
 					v.push_back({ x.first, x.second });
 				}
 			}
@@ -144,7 +146,7 @@ namespace manager {
 			}
 			else
 			{
-				Sleep(100);
+				Sleep(500);
 				continue;
 			}
 		}
@@ -166,7 +168,8 @@ namespace manager {
 		try {
 			for (const auto& entry : fs::directory_iterator(dir_path)) {
 				const auto file_path = entry.path().wstring();
-				if (dir_type == HoneyType::kHoneyBlendIn) {
+				if (dir_type == HoneyType::kHoneyBlendIn)
+				{
 					wstring name = ulti::ToLower(manager::GetFileNameNoExt(entry.path().filename()));
 					auto h = GetWstrHash(name);
 					if (s.find(h) == s.end()) {
@@ -199,6 +202,7 @@ namespace manager {
 			if (kFileCache->Get(path, info) == false)
 			{
 				auto types = kFileType->GetTypes(path, &status, &file_size);
+				defer{ ulti::ThreadPerfCtrlSleep(10.0); };
 				if (status == ERROR_SUCCESS)
 				{
 					++valid_total_cnt;
@@ -206,6 +210,7 @@ namespace manager {
 				}
 				if (file_size != 0) {
 					info.size = file_size;
+					info.types = types;
 					kFileCache->Add(path, info);
 				}
 			}
