@@ -40,6 +40,7 @@
 #define DEVICE_CACHE_USAGE_SECOND_MAX 10
 
 #define FILE_IO_FILTER_QUEUE_SIZE_MAX 10000
+#define FILE_CACHE_SIZE_MAX 1000
 
 namespace manager {
 
@@ -60,7 +61,6 @@ namespace manager {
 		bool is_renamed = false;
 		bool is_created = false;
 		bool is_deleted = false;
-		ULONG type_match = TYPE_MATCH_NOT_EVALUATED;
 		std::wstring path;
 	};
 
@@ -91,8 +91,20 @@ namespace manager {
 
 	class FileCache {
 	private:
-		unordered_map<ull, FileCacheInfo> cache_;
-		std::shared_mutex mt_;
+		// Internal node to track FileCacheInfo and its timestamp iterator
+		struct Node {
+			FileCacheInfo info;
+			std::multimap<ull, ull>::iterator time_it; // iterator in time_index_
+		};
+
+		// Primary data containers
+		std::unordered_map<ull, Node> cache_;  // hash -> Node
+		std::multimap<ull, ull> time_index_;   // time -> hash (sorted ascending)
+
+		// Separate locks for higher concurrency
+		mutable std::shared_mutex mt_cache_;   // protects cache_
+		mutable std::shared_mutex mt_time_;    // protects time_index_
+		void RemoveOldestUnlocked();
 	public:
 		bool Add(const wstring& path, const FileCacheInfo& info);
 		bool Get(const wstring& path, FileCacheInfo& info);

@@ -26,6 +26,8 @@ namespace ulti
     std::vector<std::string> SplitString(const std::string& input,
         const std::string& delimiter);
 
+    ull GetCurrentSteadyTimeInSec();
+
     uint32_t ComputeCRC32(const unsigned char* buf, size_t len);
 
     bool IsCurrentX86Process();

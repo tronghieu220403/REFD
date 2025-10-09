@@ -56,35 +56,84 @@ namespace manager
         file_io_queue_.push(std::move(file_io_info));
     }
 
+    void FileCache::RemoveOldestUnlocked()
+    {
+        if (time_index_.empty()) return;
+        auto oldest_it = time_index_.begin();
+        ull oldest_hash = oldest_it->second;
+        cache_.erase(oldest_hash);
+        time_index_.erase(oldest_it);
+    }
+
     bool FileCache::Add(const wstring& path, const FileCacheInfo& info)
     {
-        auto h = GetWstrHash(path);
-        std::unique_lock lock(mt_);
+        ull h = GetWstrHash(path);
+        ull now = ulti::GetCurrentSteadyTimeInSec();
+
+        // Lock cache_ for writing
+        std::unique_lock lock_cache(mt_cache_);
+
+        // Already exists
         if (cache_.find(h) != cache_.end())
-        {
             return false;
+
+        // If full, must also modify time_index_ -> lock both
+        if (cache_.size() >= FILE_CACHE_SIZE_MAX) {
+            std::unique_lock lock_time(mt_time_);
+            RemoveOldestUnlocked();
         }
-        cache_.insert({ h, info });
+
+        // Insert new timestamp entry
+        std::unique_lock lock_time(mt_time_);
+        auto it_time = time_index_.insert({ now, h });
+
+        // Insert into cache
+        cache_[h] = Node{ info, it_time };
         return true;
     }
 
     bool FileCache::Get(const wstring& path, FileCacheInfo& info)
     {
-        auto h = GetWstrHash(path);
-        std::shared_lock lock(mt_);
-        if (cache_.find(h) == cache_.end())
+        ull h = GetWstrHash(path);
+        ull now = ulti::GetCurrentSteadyTimeInSec();
+
+        // Shared read lock for cache_
         {
-            return false;
+            std::shared_lock read_lock(mt_cache_);
+            auto it = cache_.find(h);
+            if (it == cache_.end())
+                return false;
+
+            info = it->second.info;
         }
-        info = cache_[h];
+
+        // Need to update timestamp
+        {
+            std::unique_lock lock_cache(mt_cache_);
+            auto it = cache_.find(h);
+            if (it == cache_.end())
+                return false;
+
+            std::unique_lock lock_time(mt_time_);
+            time_index_.erase(it->second.time_it);
+            it->second.time_it = time_index_.insert({ now, h });
+        }
+
         return true;
     }
 
-    bool FileCache::Erase(const wstring& path)
+    bool FileCache::Erase(const std::wstring& path)
     {
-        auto h = GetWstrHash(path);
-        std::unique_lock lock(mt_);
-        cache_.erase(h);
+        ull h = GetWstrHash(path);
+
+        std::unique_lock lock_cache(mt_cache_);
+        auto it = cache_.find(h);
+        if (it == cache_.end())
+            return false;
+
+        std::unique_lock lock_time(mt_time_);
+        time_index_.erase(it->second.time_it);
+        cache_.erase(it);
         return true;
     }
 

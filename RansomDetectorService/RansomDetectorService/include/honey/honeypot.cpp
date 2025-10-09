@@ -148,4 +148,18 @@ namespace honeypot {
         return honey_names_;
     }
 
+    set<ull> HoneyPot::GetHoneyNameHashes()
+    {
+        if (honey_name_hashes_.size() != 0)
+        {
+            return honey_name_hashes_;
+        }
+        for (const auto& name : honey_names_)
+        {
+            honey_name_hashes_.insert(manager::GetWstrHash(name));
+        }
+
+        return set<ull>();
+    }
+
 }  // namespace honeypot

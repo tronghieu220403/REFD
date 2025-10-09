@@ -92,6 +92,11 @@ namespace ulti
         return result;
     }
 
+    ull GetCurrentSteadyTimeInSec()
+    {
+        return (ull)(duration_cast<seconds>(steady_clock::now().time_since_epoch()).count());
+    }
+
     // Compute CRC32 with zlib
     uint32_t ComputeCRC32(const unsigned char* buf, size_t len) {
         return crc32(0L, buf, static_cast<uInt>(len));
@@ -283,6 +288,7 @@ namespace ulti
         ull sleep_ms = (ull)sleep_100ns / 10000;
         if (sleep_ms >= 1.0 && sleep_ms <= 3600000ULL)
         {
+            PrintDebugW("Sleep %d ms", sleep_ms);
             Sleep((DWORD)sleep_ms);
         }
     }

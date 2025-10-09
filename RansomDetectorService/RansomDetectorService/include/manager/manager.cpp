@@ -42,11 +42,6 @@ namespace manager {
 			ll first_add = 0;
 		};
 
-		auto get_now = []() -> int64_t {
-			using namespace std::chrono;
-			return duration_cast<seconds>(steady_clock::now().time_since_epoch()).count();
-			};
-
 		unordered_map<wstring, QueueInfo> mp;
 
 		for (const auto& x : hp.GetHoneyFolders())
@@ -56,11 +51,15 @@ namespace manager {
 			mp.insert({ x.first , info });
 		}
 
-		auto now = get_now();
+		auto cache_last_clear = ulti::GetCurrentSteadyTimeInSec();
 		while (true)
 		{
 			defer{ ulti::ThreadPerfCtrlSleep(); };
-			if (now - get_now() >= 3600LL * 2LL) {
+			defer{ Sleep(500); };
+
+			auto now = ulti::GetCurrentSteadyTimeInSec();
+
+			if (now - cache_last_clear >= 3600LL * 2LL) { // 2 hours
 				for (auto& x : mp) {
 					auto& info = x.second;
 					info.change_count = 0;
@@ -73,12 +72,6 @@ namespace manager {
 			kFileIoManager->LockMutex();
 			kFileIoManager->MoveQueue(file_io_list);
 			kFileIoManager->UnlockMutex();
-
-			if (file_io_list.empty()) {
-				Sleep(500);
-			}
-
-			vector<FileIoInfo> events;
 
 			// Move events from the queue into the map grouped by requestor_pid
 			while (file_io_list.empty() == false)
@@ -102,16 +95,17 @@ namespace manager {
 
 				auto& ele = mp[dir_path];
 				ele.change_count++;
-				if (ele.first_add == 0) ele.first_add = get_now();
+				if (ele.first_add == 0) ele.first_add = now;
 			}
 
 			vector<pair<wstring, QueueInfo>> v;
 			for (const auto& x : mp) {
 				if (x.second.change_count != 0 
-					&& get_now() - x.second.last_scan >= 60LL * 5) {
+					&& now - x.second.last_scan >= 60LL * 5) {
 					v.push_back({ x.first, x.second });
 				}
 			}
+
 			auto it = std::max_element(v.begin(), v.end(),
 				[](const pair<wstring, QueueInfo>& a, const pair<wstring, QueueInfo>& b) {
 					const auto& a_ele = a.second;
@@ -124,30 +118,21 @@ namespace manager {
 					}
 					return a_ele.change_count < b_ele.change_count;
 				});
-			if (it == v.end() || v.size() == 0)
+			if (it != v.end() && v.size() != 0)
 			{
-				Sleep(100);
-				continue;
-			}
-			auto& x = mp[it->first];
-			if (get_now() - x.first_add >= (x.type == HoneyType::kHoneyIsolated ? 10 : 60))
-			{
-				if (IsDirAttackedByRansomware(it->first, x.type) == true)
+				auto& x = mp[it->first];
+				if (now - x.first_add >= (x.type == HoneyType::kHoneyIsolated ? 10 : 60))
 				{
-					debug::DebugPrintW(L"Some process is ransomware. It attacked %ws", it->first.c_str());
+					if (IsDirAttackedByRansomware(it->first, x.type) == true) {
+						debug::DebugPrintW(L"Some process is ransomware. It attacked %ws", it->first.c_str());
+					}
+					else {
+						PrintDebugW(L"Scanned %ws, no problem", it->first.c_str());
+					}
+					x.change_count = 0;
+					x.first_add = 0;
+					x.last_scan = ulti::GetCurrentSteadyTimeInSec();
 				}
-				else
-				{
-					PrintDebugW(L"Scanned %ws, no problem", it->first.c_str());
-				}
-				x.change_count = 0;
-				x.first_add = 0;
-				x.last_scan = get_now();
-			}
-			else
-			{
-				Sleep(500);
-				continue;
 			}
 		}
 	}
@@ -159,31 +144,30 @@ namespace manager {
 			return false;
 		}
 		auto honey_names(hp.GetHoneyNames());
-		set<ull> s;
-		for (const auto& name : honey_names)
-		{
-			s.insert(GetWstrHash(name));
-		}
+		set<ull> s(hp.GetHoneyNameHashes());
 
 		try {
 			for (const auto& entry : fs::directory_iterator(dir_path)) {
 				const auto file_path = entry.path().wstring();
 				if (dir_type == HoneyType::kHoneyBlendIn)
 				{
-					wstring name = ulti::ToLower(manager::GetFileNameNoExt(entry.path().filename()));
+					if (paths.size() > 30) {
+						break;
+					}
+					wstring name(ulti::ToLower(manager::GetFileNameNoExt(entry.path().filename())));
 					auto h = GetWstrHash(name);
 					if (s.find(h) == s.end()) {
 						continue;
 					}
 				}
 				paths.push_back(file_path);
-				if (paths.size() > 30)
-				{
-					break;
-				}
 			}
 		}
 		catch (...) {}
+
+		if (paths.size() == 0) {
+			return false;
+		}
 
 		vector<vector<string>> dvvs;
 		size_t valid_total_cnt = 0;
@@ -224,6 +208,17 @@ namespace manager {
 				++valid_total_cnt;
 				dvvs.push_back(info.types);
 			}
+		}
+
+		bool all_is_valid = true;
+		for (const auto& x : dvvs) {
+			if (x.size() == 0) {
+				all_is_valid = false;
+			}
+		}
+
+		if (all_is_valid == true) {
+			return false;
 		}
 
 		// Need config for file randomization for each dir

@@ -20,6 +20,7 @@ namespace honeypot
         unordered_map<wstring, HoneyType> honey_folders_;
         vector<vector<string>> honey_types_;
         vector<wstring> honey_names_;
+        set<ull> honey_name_hashes_;
         wstring source_dir_;
     public:
         // Initializes honeypots in the given target directories.
@@ -32,6 +33,7 @@ namespace honeypot
         vector<pair<wstring, HoneyType>> GetHoneyFolders();
         vector<vector<string>> GetHoneyTypes();
         vector<wstring> GetHoneyNames();
+        set<ull> GetHoneyNameHashes();
     };
 
 
