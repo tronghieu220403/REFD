@@ -210,16 +210,16 @@ namespace manager {
 			}
 		}
 
-		bool all_is_valid = true;
-		for (const auto& x : dvvs) {
-			if (x.size() == 0) {
-				all_is_valid = false;
-			}
-		}
+		//bool all_is_valid = true;
+		//for (const auto& x : dvvs) {
+		//	if (x.size() == 0) {
+		//		all_is_valid = false;
+		//	}
+		//}
 
-		if (all_is_valid == true) {
-			return false;
-		}
+		//if (all_is_valid == true) {
+		//	return false;
+		//}
 
 		// Need config for file randomization for each dir
 		vector<vector<string>> hvvs(hp.GetHoneyTypes());
