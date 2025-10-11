@@ -66,6 +66,7 @@ namespace manager {
 					info.last_scan = 0;
 					info.first_add = 0;
 				}
+				cache_last_clear = now;
 			}
 
 			queue<FileIoInfo> file_io_list;
