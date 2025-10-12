@@ -124,8 +124,9 @@ namespace manager {
 				auto& x = mp[it->first];
 				if (now - x.first_add >= (x.type == HoneyType::kHoneyIsolated ? 10 : 60))
 				{
+					PrintDebugW(L"Scanning %ws", it->first.c_str());
 					if (IsDirAttackedByRansomware(it->first, x.type) == true) {
-						debug::DebugPrintW(L"Some process is ransomware. It attacked %ws", it->first.c_str());
+						PrintDebugW(L"Ransomware is found. It attacked %ws", it->first.c_str());
 					}
 					else {
 						PrintDebugW(L"Scanned %ws, no problem", it->first.c_str());
@@ -185,7 +186,7 @@ namespace manager {
 			ull file_size = 0;
 			FileCacheInfo info = {};
 			if (kFileCache->Get(path, info) == false)
-			{
+			{ // Not in cache
 				auto types = kFileType->GetTypes(path, &status, &file_size);
 				defer{ ulti::ThreadPerfCtrlSleep(10.0); };
 				if (status == ERROR_SUCCESS)
@@ -200,7 +201,7 @@ namespace manager {
 				}
 			}
 			else
-			{
+			{ // In cache
 				file_size = info.size;
 				if (file_size < FILE_MIN_SIZE_SCAN || file_size > FILE_MAX_SIZE_SCAN)
 				{

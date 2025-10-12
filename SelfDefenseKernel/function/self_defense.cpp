@@ -153,81 +153,6 @@ namespace self_defense {
 
     }
 
-    // Process notification callback
-    VOID ProcessNotifyCallback(
-        PEPROCESS process,
-        HANDLE pid,
-        PPS_CREATE_NOTIFY_INFO create_info
-    )
-    {
-        if (create_info)
-        {
-            // Process is being created
-			auto ppid = PsGetCurrentProcessId();
-            const std::WString& process_path = GetProcessImageName(pid);
-            const std::WString& parent_process_path = GetProcessImageName(ppid);
-            DebugMessage("Creation, pid %llu, path %ws, ppid %llu, parent path %ws", (ull)pid, process_path.Data(), (ull)ppid, parent_process_path.Data());
-
-            bool is_protected = IsProtectedFile(process_path); // check if process is protected
-
-            if (parent_process_path.HasPrefix(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") == true)
-            {   // Only allow vmtoolsd.exe to be created by services.exe (testing purpose)
-                is_protected = true;
-            }
-            if (parent_process_path.HasPrefix(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") == true)
-            {   // Only allow vmtoolsd.exe to be created by services.exe (testing purpose)
-                is_protected = true;
-            }
-            /*
-            if ((parent_process_path.FindFirstOf(L"cmd.exe") != ULL_MAX || parent_process_path.FindFirstOf(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX) && process_path.FindFirstOf(L"ownloads\\") != ULL_MAX)
-            {   // cmd.exe run malware (testing purpose)
-                is_protected = false;
-            }
-            */
-            //else
-            if (is_protected == false)
-            {
-                // If parent process is protected, then child process is also protected
-                kProcessMapMutex.Lock();
-                auto it = kProcessMap->Find(ppid);
-                if (it != kProcessMap->End())
-                {
-                    if (it->second.is_protected == true)
-                    {
-                        is_protected = true;
-                    }
-                    else
-                    {
-                        is_protected = false;
-                    }
-                }
-                else
-                {
-                    is_protected = IsProtectedFile(parent_process_path);
-                }
-                kProcessMapMutex.Unlock();
-            }
-			if (is_protected == true)
-			{
-				DebugMessage("Protected process %llu: %ws", (ull)pid, process_path.Data());
-			}
-            LARGE_INTEGER start_time;
-            KeQuerySystemTime(&start_time);
-            kProcessMapMutex.Lock();
-
-            kProcessMap->Insert(pid, { pid, process_path, is_protected, start_time }); // lưu vào cache với trạng thái bảo vệ
-            kProcessMapMutex.Unlock();
-        }
-        else
-        {
-            // Process kết thúc, xóa khỏi cache
-            kProcessMapMutex.Lock();
-            DebugMessage("Termination, pid %llu, path %ws", (ull)pid, GetProcessImageName(pid).Data());
-            kProcessMap->Erase(pid);
-            kProcessMapMutex.Unlock();
-        }
-    }
-
     // Kiểm tra quyền truy cập file
     FLT_PREOP_CALLBACK_STATUS PreCreateFile(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
     {
@@ -381,6 +306,55 @@ namespace self_defense {
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
     }
 
+    // Process notification callback
+    VOID ProcessNotifyCallback(
+        PEPROCESS process,
+        HANDLE pid,
+        PPS_CREATE_NOTIFY_INFO create_info
+    )
+    {
+        if (create_info)
+        {
+            // Process is being created
+            auto ppid = PsGetCurrentProcessId();
+            const std::WString& process_path = GetProcessImageName(pid);
+            const std::WString& parent_process_path = GetProcessImageName(ppid);
+            DebugMessage("Creation, pid %llu, path %ws, ppid %llu, parent path %ws", (ull)pid, process_path.Data(), (ull)ppid, parent_process_path.Data());
+
+            bool is_protected = IsProtectedFile(process_path) || IsProtectedFile(parent_process_path); // check if process is protected
+
+            if (is_protected == false)
+            {
+                // If parent process is protected, then child process is also protected
+                kProcessMapMutex.Lock();
+                auto it = kProcessMap->Find(ppid);
+                if (it != kProcessMap->End())
+                {
+                    is_protected = it->second.is_protected;
+                }
+                kProcessMapMutex.Unlock();
+            }
+            if (is_protected == true)
+            {
+                DebugMessage("Protected process %llu: %ws", (ull)pid, process_path.Data());
+            }
+            LARGE_INTEGER start_time;
+            KeQuerySystemTime(&start_time);
+            kProcessMapMutex.Lock();
+
+            kProcessMap->Insert(pid, { pid, process_path, is_protected, start_time }); // lưu vào cache với trạng thái bảo vệ
+            kProcessMapMutex.Unlock();
+        }
+        else
+        {
+            // Process kết thúc, xóa khỏi cache
+            kProcessMapMutex.Lock();
+            DebugMessage("Termination, pid %llu, path %ws", (ull)pid, GetProcessImageName(pid).Data());
+            kProcessMap->Erase(pid);
+            kProcessMapMutex.Unlock();
+        }
+    }
+
     // Bảo vệ process và thread qua callback
     OB_PREOP_CALLBACK_STATUS PreObCallback(PVOID registration_context, POB_PRE_OPERATION_INFORMATION operation_information)
     {
@@ -397,11 +371,12 @@ namespace self_defense {
 			target_pid = PsGetProcessId((PEPROCESS)operation_information->Object);
 		}
 
+        // Do check parent-child if you want to enable copy (Ctrl V and Ctrl C)
         if (source_pid == target_pid)
         {
             return OB_PREOP_SUCCESS;
         }
-
+        /*
         // Nếu source process là protected, cho phép hành động
         if (IsProtectedProcess(source_pid))
         {
@@ -426,9 +401,31 @@ namespace self_defense {
 		{
 			return OB_PREOP_SUCCESS;
 		}
+        */
 
-        std::WString source_process_path = GetProcessImageName(target_pid);
-        if (source_process_path.HasPrefix(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") == true)
+        std::WString source_process_path = GetProcessImageName(source_pid);
+
+        if (source_process_path.EqualCi(L"\\Device\\HarddiskVolume3\\Windows\\System32\\services.exe") == true)
+        {
+            //DebugMessage("source_process_path %ws is services", source_process_path.Data());
+            return OB_PREOP_SUCCESS;
+        }
+
+        std::WString target_process_path = GetProcessImageName(target_pid);
+        if (target_process_path.HasCiSuffix(L"RansomDetectorService.exe") == false &&
+            target_process_path.FindFirstOf(L"VMware") == std::WString::kNPos)
+        {
+            //DebugMessage("target_process_path %ws is whitelisted", target_process_path.Data());
+            return OB_PREOP_SUCCESS;
+        }
+
+        if (IsProtectedFile(source_process_path) == true)
+        {
+            //DebugMessage("source_process_path %ws is protected", source_process_path.Data());
+            return OB_PREOP_SUCCESS;
+        }
+        /*
+        if (source_process_path.HasPrefix(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\") == true)
         {
             return OB_PREOP_SUCCESS;
         }
@@ -436,8 +433,7 @@ namespace self_defense {
         {
             return OB_PREOP_SUCCESS;
         }
-
-        std::WString target_process_path = GetProcessImageName(source_pid);
+        */
 
 		if (operation_information->ObjectType == *PsProcessType)
 		{
@@ -730,7 +726,7 @@ namespace self_defense {
 
 	const WCHAR* kDevicePathDirList[] = {
 		L"\\??\\E:\\hieunt210330\\",
-		//L"\\??\\C:\\Program Files\\VMware\\VMware Tools\\",
+		L"\\??\\C:\\Program Files\\VMware\\VMware Tools\\",
 		L"\\Device\\Harddisk0\\DR0",
 	};
 
@@ -763,9 +759,10 @@ namespace self_defense {
 
 	const WCHAR* kDevicePathFileList[] = {
 		L"\\??\\C:\\Windows\\System32\\drivers\\SelfDefenseKernel.sys",
-		L"\\??\\C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys"
+		L"\\??\\C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys",
+		L"\\??\\C:\\Windows\\System32\\vm3dservice.exe",
 		L"\\??\\C:\\Windows\\System32\\lsass.exe",
-		L"\\??\\C:\\Windows\\System32\\csrss.exe",
+		L"\\??\\C:\\Windows\\System32\\csrss.exe"
 	};
 
 	Vector<std::WString> GetDefaultProtectedFiles()

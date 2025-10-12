@@ -6,7 +6,9 @@
 #include "ulti/support.h"
 #include "ulti/debug.h"
 
-constexpr auto SERVICE_CONTROL_START = 128;
+#define SERVICE_CONTROL_START 128
+#define SERVICE_CONTROL_HIEUNT_ACCEPT_STOP 129
+#define SERVICE_CONTROL_HIEUNT_BLOCK_STOP 130
 
 namespace srv
 {

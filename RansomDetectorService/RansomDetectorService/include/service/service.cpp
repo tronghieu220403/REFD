@@ -175,8 +175,17 @@ namespace srv
 		PrintDebugW(L"Control code %d", ctrl_code);
 		PrintDebugW(L"dwControlsAccepted: %x", service_status.dwControlsAccepted);
 		service_status.dwWin32ExitCode = NO_ERROR;
-
-		if (ctrl_code == SERVICE_CONTROL_STOP)
+		if (ctrl_code == SERVICE_CONTROL_HIEUNT_ACCEPT_STOP)
+		{
+			service_status.dwControlsAccepted |= SERVICE_ACCEPT_STOP;
+			SetServiceStatus(status_handle, &service_status);
+		}
+		else if (ctrl_code == SERVICE_CONTROL_HIEUNT_BLOCK_STOP)
+		{
+			service_status.dwControlsAccepted &= ~SERVICE_ACCEPT_STOP;
+			SetServiceStatus(status_handle, &service_status);
+		}
+		else if (ctrl_code == SERVICE_CONTROL_STOP)
 		{
 			/*
 			Here is a quote from MSDN regarding SERVICE_CONTROL_STOP and it explains why you won't receive ANY messages after a SERVICE_CONTROL_STOP message:
@@ -229,7 +238,7 @@ namespace srv
 		service_status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
 		service_status.dwWin32ExitCode = NO_ERROR;
 		service_status.dwWaitHint = 0;
-		service_status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN | SERVICE_ACCEPT_STOP;
+		service_status.dwControlsAccepted = SERVICE_USER_DEFINED_CONTROL | SERVICE_ACCEPT_SHUTDOWN;
 
 		status_handle = RegisterServiceCtrlHandlerW(service_name, (LPHANDLER_FUNCTION)ServiceCtrlHandler);
 		if (status_handle == NULL)
