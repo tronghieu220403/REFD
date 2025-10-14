@@ -64,7 +64,7 @@ namespace debug {
 
 			DWORD bytes_written = 0;
 			WriteFile(log_file_handle, buffer, size * sizeof(wchar_t), &bytes_written, nullptr);
-			FlushFileBuffers(log_file_handle);
+			//FlushFileBuffers(log_file_handle);
 
 			if (debug_count >= DEBUG_LOG_THRESHOLD) {
 				CleanupDebugLog();

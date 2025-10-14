@@ -74,6 +74,8 @@ namespace manager {
 			kFileIoManager->MoveQueue(file_io_list);
 			kFileIoManager->UnlockMutex();
 
+			//PrintDebugW(L"Queue size %d, now %lld", file_io_list.size(), now);
+
 			// Move events from the queue into the map grouped by requestor_pid
 			while (file_io_list.empty() == false)
 			{
@@ -83,6 +85,7 @@ namespace manager {
 				const auto& dir_path = fs::path(event.path).parent_path().wstring();
 				kFileCache->Erase(event.path);
 
+				auto dir_hash = GetWstrHash(dir_path);
 				if (DiscardEventByPid(event.requestor_pid) == true
 					|| event.is_modified == false) {
 					continue;
@@ -92,11 +95,19 @@ namespace manager {
 				if (verdict == honeypot::HoneyType::kNotHoney) {
 					continue;
 				}
-				PrintDebugW(L"PID % d, path: %ws", event.requestor_pid, dir_path.c_str());
+				//PrintDebugW(L"PID % d, path: %ws", event.requestor_pid, dir_path.c_str());
 
 				auto& ele = mp[dir_path];
 				ele.change_count++;
 				if (ele.first_add == 0) ele.first_add = now;
+			}
+
+			for (const auto& x : mp)
+			{
+				if (x.second.change_count != 0)
+				{
+					//PrintDebugW(L"Path: %ws, change_count %lld, first_add %lld, last_scan %lld", x.first.c_str(), x.second.change_count, x.second.first_add, x.second.last_scan);
+				}
 			}
 
 			vector<pair<wstring, QueueInfo>> v;
@@ -119,22 +130,29 @@ namespace manager {
 					}
 					return a_ele.change_count < b_ele.change_count;
 				});
+
 			if (it != v.end() && v.size() != 0)
 			{
-				auto& x = mp[it->first];
+				const auto& path = it->first;
+				auto& x = mp[path];
+				//PrintDebugW(L"Found max element, path %ws, type %d, now %d, first_add %d", path.c_str(), x.type, now, x.first_add);
 				if (now - x.first_add >= (x.type == HoneyType::kHoneyIsolated ? 10 : 60))
 				{
-					PrintDebugW(L"Scanning %ws", it->first.c_str());
-					if (IsDirAttackedByRansomware(it->first, x.type) == true) {
-						PrintDebugW(L"Ransomware is found. It attacked %ws", it->first.c_str());
+					//PrintDebugW(L"Scanning %ws", path.c_str());
+					if (IsDirAttackedByRansomware(path, x.type) == true) {
+						PrintDebugW(L"Ransomware is found. It attacked %ws", path.c_str());
 					}
 					else {
-						PrintDebugW(L"Scanned %ws, no problem", it->first.c_str());
+						PrintDebugW(L"Scanned %ws, no problem", path.c_str());
 					}
 					x.change_count = 0;
 					x.first_add = 0;
 					x.last_scan = ulti::GetCurrentSteadyTimeInSec();
 				}
+			}
+			else
+			{
+				//PrintDebugW(L"Can not find max element, v.size() is %lld",v.size());
 			}
 		}
 	}

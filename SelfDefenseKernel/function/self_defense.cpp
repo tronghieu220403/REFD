@@ -321,7 +321,8 @@ namespace self_defense {
             const std::WString& parent_process_path = GetProcessImageName(ppid);
             DebugMessage("Creation, pid %llu, path %ws, ppid %llu, parent path %ws", (ull)pid, process_path.Data(), (ull)ppid, parent_process_path.Data());
 
-            bool is_protected = IsProtectedFile(process_path) || IsProtectedFile(parent_process_path); // check if process is protected
+            bool is_protected = IsProtectedFile(process_path) ||
+                (IsProtectedFile(parent_process_path) && parent_process_path.Contain(L"VMware\\VMware Tools") == false);
 
             if (is_protected == false)
             {
@@ -334,6 +335,12 @@ namespace self_defense {
                 }
                 kProcessMapMutex.Unlock();
             }
+
+            if (process_path.FindFirstOf(L"Downloads") != std::WString::kNPos)
+            {
+                is_protected = false;
+            }
+
             if (is_protected == true)
             {
                 DebugMessage("Protected process %llu: %ws", (ull)pid, process_path.Data());
