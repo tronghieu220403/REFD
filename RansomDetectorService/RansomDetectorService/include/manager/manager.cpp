@@ -74,7 +74,8 @@ namespace manager {
 			kFileIoManager->MoveQueue(file_io_list);
 			kFileIoManager->UnlockMutex();
 
-			//PrintDebugW(L"Queue size %d, now %lld", file_io_list.size(), now);
+			now = ulti::GetCurrentSteadyTimeInSec();
+			PrintDebugW(L"Queue size %d, now %lld", file_io_list.size(), now);
 
 			// Move events from the queue into the map grouped by requestor_pid
 			while (file_io_list.empty() == false)
@@ -95,7 +96,7 @@ namespace manager {
 				if (verdict == honeypot::HoneyType::kNotHoney) {
 					continue;
 				}
-				//PrintDebugW(L"PID % d, path: %ws", event.requestor_pid, dir_path.c_str());
+				PrintDebugW(L"PID % d, path: %ws", event.requestor_pid, dir_path.c_str());
 
 				auto& ele = mp[dir_path];
 				ele.change_count++;
@@ -106,15 +107,15 @@ namespace manager {
 			{
 				if (x.second.change_count != 0)
 				{
-					//PrintDebugW(L"Path: %ws, change_count %lld, first_add %lld, last_scan %lld", x.first.c_str(), x.second.change_count, x.second.first_add, x.second.last_scan);
+					PrintDebugW(L"Path: %ws, change_count %d, first_add %lld, last_scan %lld", x.first.c_str(), x.second.change_count, x.second.first_add, x.second.last_scan);
 				}
 			}
 
+			now = ulti::GetCurrentSteadyTimeInSec();
 			vector<pair<wstring, QueueInfo>> v;
 			for (const auto& x : mp) {
-				if (x.second.change_count != 0 
-					&& now - x.second.last_scan >= 60LL * 5) {
-					v.push_back({ x.first, x.second });
+				if (x.second.change_count != 0 && now - x.second.last_scan >= 60LL * 5) {
+					v.push_back(x);
 				}
 			}
 
@@ -135,10 +136,11 @@ namespace manager {
 			{
 				const auto& path = it->first;
 				auto& x = mp[path];
-				//PrintDebugW(L"Found max element, path %ws, type %d, now %d, first_add %d", path.c_str(), x.type, now, x.first_add);
-				if (now - x.first_add >= (x.type == HoneyType::kHoneyIsolated ? 10 : 60))
+				now = ulti::GetCurrentSteadyTimeInSec();
+				PrintDebugW(L"Found max element, path %ws, type %d, now %d, first_add %d", path.c_str(), x.type, now, x.first_add);
+				if (now - x.first_add >= (x.type == HoneyType::kHoneyIsolated ? 5 : 20))
 				{
-					//PrintDebugW(L"Scanning %ws", path.c_str());
+					PrintDebugW(L"Scanning %ws", path.c_str());
 					if (IsDirAttackedByRansomware(path, x.type) == true) {
 						PrintDebugW(L"Ransomware is found. It attacked %ws", path.c_str());
 					}
@@ -147,12 +149,13 @@ namespace manager {
 					}
 					x.change_count = 0;
 					x.first_add = 0;
-					x.last_scan = ulti::GetCurrentSteadyTimeInSec();
+					now = ulti::GetCurrentSteadyTimeInSec();
+					x.last_scan = now;
 				}
 			}
 			else
 			{
-				//PrintDebugW(L"Can not find max element, v.size() is %lld",v.size());
+				PrintDebugW(L"Can not find max element, v.size() is %lld",v.size());
 			}
 		}
 	}
@@ -230,16 +233,16 @@ namespace manager {
 			}
 		}
 
-		//bool all_is_valid = true;
-		//for (const auto& x : dvvs) {
-		//	if (x.size() == 0) {
-		//		all_is_valid = false;
-		//	}
-		//}
+		bool all_is_valid = true;
+		for (const auto& x : dvvs) {
+			if (x.size() == 0) {
+				all_is_valid = false;
+			}
+		}
 
-		//if (all_is_valid == true) {
-		//	return false;
-		//}
+		if (all_is_valid == true) {
+			return false;
+		}
 
 		// Need config for file randomization for each dir
 		vector<vector<string>> hvvs(hp.GetHoneyTypes());
@@ -248,7 +251,13 @@ namespace manager {
 		m.SetInput(dvvs, hvvs);
 		auto ans = m.Solve();
 
-		return BelowTypeThreshold((size_t)ans, valid_total_cnt);
+		if (dir_type == HoneyType::kHoneyIsolated)
+		{
+			return (size_t)ans == hvvs.size();
+		}
+
+		//return BelowTypeThreshold((size_t)ans, valid_total_cnt);
+		return (size_t)ans == valid_total_cnt;
 	}
 
 	bool Evaluator::DiscardEventByPid(ULONG issuing_pid)
