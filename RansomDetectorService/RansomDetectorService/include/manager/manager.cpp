@@ -123,6 +123,7 @@ namespace manager {
 				[](const pair<wstring, QueueInfo>& a, const pair<wstring, QueueInfo>& b) {
 					const auto& a_ele = a.second;
 					const auto& b_ele = b.second;
+					// More: auto make max if "now - first in range" or "change_count pass threshold in honey dir"
 					if (a_ele.type != b_ele.type) {
 						return a_ele.type < b_ele.type;
 					}

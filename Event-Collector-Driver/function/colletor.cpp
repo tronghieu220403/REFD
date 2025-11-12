@@ -68,15 +68,17 @@ namespace collector
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
 
         // Skip kernel mode
-        if (data->RequestorMode == KernelMode)
-        {
+        if (data->RequestorMode == KernelMode) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        if (IoGetTopLevelIrp() != NULL) {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
         ULONG_PTR stack_low;
         ULONG_PTR stack_high;
         PFILE_OBJECT file_obj = data->Iopb->TargetFileObject;
-
         IoGetStackLimits(&stack_low, &stack_high);
         if (((ULONG_PTR)file_obj > stack_low) &&
             ((ULONG_PTR)file_obj < stack_high))
@@ -168,6 +170,10 @@ namespace collector
         if (FsRtlIsPagingFile(flt_objects->FileObject))
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
 
+        if (IoGetTopLevelIrp() != NULL) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
         std::WString current_path = flt::GetFileFullPathName(data);
         if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1)
         {
@@ -217,8 +223,11 @@ namespace collector
     {
         NTSTATUS status;
 
-        if (data->RequestorMode == KernelMode)
-        {
+        if (data->RequestorMode == KernelMode) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        if (IoGetTopLevelIrp() != NULL) {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
@@ -317,10 +326,13 @@ namespace collector
 
     FLT_PREOP_CALLBACK_STATUS PreFileAcquireForSectionSync(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
     {
-		if (data->RequestorMode == KernelMode)
-		{
+		if (data->RequestorMode == KernelMode) {
 			return FLT_PREOP_SUCCESS_NO_CALLBACK;
 		}
+
+        if (IoGetTopLevelIrp() != NULL) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
 
         auto& acquire_params = data->Iopb->Parameters.AcquireForSectionSynchronization;
 

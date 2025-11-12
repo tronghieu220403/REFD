@@ -514,7 +514,7 @@ void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
         if (p_handle_context != nullptr)
         {
             //DebugMessage("FLT_X_CONTEXT. File: %ws, handle context %p", p_handle_context->current_path, p_handle_context);
-            if ((p_handle_context->is_modified + p_handle_context->is_renamed + p_handle_context->is_created + p_handle_context->is_created) == 0)
+            if ((p_handle_context->is_modified + p_handle_context->is_renamed + p_handle_context->is_created + p_handle_context->is_deleted) == 0)
             {
                 //DebugMessage("File: %ws, no operation, do not send to user mode", p_handle_context->current_path);
                 return;
