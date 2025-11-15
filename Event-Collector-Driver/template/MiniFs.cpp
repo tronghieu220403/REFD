@@ -381,6 +381,7 @@ MiniFsUnload(
 	NTSTATUS status = STATUS_SUCCESS;
 
 	status = reg::FltUnload();
+
 	if (status == STATUS_FLT_DO_NOT_DETACH)
 	{
 		DebugMessage("Do not unload: STATUS_FLT_DO_NOT_DETACH");
@@ -407,7 +408,7 @@ MiniFsPreOperation (
     }
     /*
 #ifdef _DEBUG
-    String<WCHAR> current_path = flt::GetFileFullPathName(data);
+    std::WString current_path = flt::GetFileFullPathName(data);
 
     if (current_path.Find(L"test\\") == ULL_MAX)
     {
@@ -507,35 +508,25 @@ MiniFsPostOperation (
 
 void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
 {
-    if (context_type == FLT_STREAMHANDLE_CONTEXT)
+    if (context_type == FLT_STREAMHANDLE_CONTEXT || context_type == FLT_FILE_CONTEXT)
     {
-        collector::HANDLE_CONTEXT* handle_context = (collector::HANDLE_CONTEXT*)context;
-        if (handle_context != nullptr)
+        collector::HANDLE_CONTEXT* p_handle_context = (collector::HANDLE_CONTEXT*)context;
+        if (p_handle_context != nullptr)
         {
-            //DebugMessage("FLT_STREAMHANDLE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
-            if (handle_context->is_modified + handle_context->is_deleted + handle_context->is_created + handle_context->is_renamed == 0)
+            //DebugMessage("FLT_X_CONTEXT. File: %ws, handle context %p", p_handle_context->current_path, p_handle_context);
+            if ((p_handle_context->is_modified + p_handle_context->is_renamed + p_handle_context->is_created + p_handle_context->is_deleted) == 0)
             {
-                //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
+                //DebugMessage("File: %ws, no operation, do not send to user mode", p_handle_context->current_path);
                 return;
             }
-            //DebugMessage("Sending event to user mode: PID %d, is_modified %d, is_deleted %d, is_created %d, is_renamed %d, current_path %ws, new_path %ws", handle_context->requestor_pid, handle_context->is_modified, handle_context->is_deleted, handle_context->is_created, handle_context->is_renamed, handle_context->current_path, handle_context->new_path);
-
-            com::kComPort->Send(handle_context, sizeof(collector::HANDLE_CONTEXT));
-        }
-    }
-    else if (context_type == FLT_FILE_CONTEXT)
-    {
-        collector::HANDLE_CONTEXT* handle_context = (collector::HANDLE_CONTEXT*)context;
-        if (handle_context != nullptr)
-        {
-            //DebugMessage("FLT_FILE_CONTEXT. File: %ws, handle context %p", handle_context->current_path, handle_context);
-            if (handle_context->is_modified + handle_context->is_deleted + handle_context->is_created + handle_context->is_renamed == 0)
+            if (com::kComPort->Send(p_handle_context, sizeof(collector::HANDLE_CONTEXT)) != STATUS_SUCCESS)
             {
-                //DebugMessage("File: %ws, no operation, do not send to user mode", handle_context->current_path);
-                return;
+                DebugMessage("Send failed, event to user mode: PID %d, is_modified %d, is_renamed %d, path %ws", p_handle_context->requestor_pid, p_handle_context->is_modified, p_handle_context->is_renamed, p_handle_context->path);
             }
-            //DebugMessage("Sending event to user mode: PID %d, is_modified %d, is_deleted %d, is_created %d, is_renamed %d, current_path %ws, new_path %ws", handle_context->requestor_pid, handle_context->is_modified, handle_context->is_deleted, handle_context->is_created, handle_context->is_renamed, handle_context->current_path, handle_context->new_path);
-            com::kComPort->Send(handle_context, sizeof(collector::HANDLE_CONTEXT));
+            else
+            {
+                DebugMessage("Send oke, event to user mode: PID %d, is_modified %d, is_renamed %d, path %ws", p_handle_context->requestor_pid, p_handle_context->is_modified, p_handle_context->is_renamed, p_handle_context->path);
+            }
         }
     }
     else

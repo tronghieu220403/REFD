@@ -3,7 +3,7 @@
 
 namespace file
 {
-	ZwFile::ZwFile(const String<WCHAR>& current_path) :
+	ZwFile::ZwFile(const std::WString& current_path) :
 		file_path_(current_path)
 	{
 
@@ -95,7 +95,7 @@ namespace file
 		Close();
 	}
 
-	FileFlt::FileFlt(const String<WCHAR>& current_path, const PFLT_FILTER p_filter_handle, const PFLT_INSTANCE p_instance, const PFILE_OBJECT p_file_object, ULONG create_disposition) :
+	FileFlt::FileFlt(const std::WString& current_path, const PFLT_FILTER p_filter_handle, const PFLT_INSTANCE p_instance, const PFILE_OBJECT p_file_object, ULONG create_disposition) :
 		file_path_(current_path),
 		p_filter_handle_(p_filter_handle),
 		p_instance_(p_instance),
@@ -316,7 +316,7 @@ namespace file
 		Close();
 	}
 
-	bool ZwIsFileExist(const String<WCHAR>& file_path_str)
+	bool ZwIsFileExist(const std::WString& file_path_str)
 	{
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
@@ -541,10 +541,10 @@ namespace file
 		return STATUS_SUCCESS;
 	}
 
-	String<WCHAR> NormalizeDevicePathStr(const String<WCHAR>& path)
+	std::WString NormalizeDevicePathStr(const std::WString& path)
 	{
 		UNICODE_STRING path_uni_str = { path.Size() * sizeof(WCHAR), path.Size() * sizeof(WCHAR) , (PWCH)path.Data() };
-		String<WCHAR> normalized;
+		std::WString normalized;
 		normalized.Resize(path.Size() * 2);
 		UNICODE_STRING normalized_uni_str = { normalized.Size() * sizeof(WCHAR), normalized.Size() * sizeof(WCHAR) , (PWCH)normalized.Data() };
 		if (NT_SUCCESS(NormalizeDevicePath(&path_uni_str, &normalized_uni_str)))

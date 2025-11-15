@@ -5,13 +5,14 @@
 #include "../../template/register.h"
 #include "../../template/flt-ex.h"
 #include "../../std/file/file.h"
+#include "../../std/ulti/def.h"
 
 namespace self_defense {
 
     struct ProcessInfo
     {
         HANDLE pid = 0;
-        String<WCHAR> process_path;
+        std::WString process_path;
         bool is_protected = false;
         LARGE_INTEGER start_time = { 0 };
     };
@@ -25,8 +26,8 @@ namespace self_defense {
     static Map<HANDLE, ProcessInfo>* kProcessMap;
     static Mutex kProcessMapMutex;
 
-    static Vector<String<WCHAR>>* kProtectedDirList;
-    static Vector<String<WCHAR>>* kProtectedFileList;
+    static Vector<std::WString>* kProtectedDirList;
+    static Vector<std::WString>* kProtectedFileList;
     static Mutex kFileMutex;
     static PVOID kHandleRegistration;
     static bool kEnableProtectFile;
@@ -38,14 +39,14 @@ namespace self_defense {
         kProcessMapMutex.Create();
 
 		kFileMutex.Lock();
-        kProtectedDirList = new Vector<String<WCHAR>>();
-		Vector<String<WCHAR>> default_protected_dirs = GetDefaultProtectedDirs();
+        kProtectedDirList = new Vector<std::WString>();
+		Vector<std::WString> default_protected_dirs = GetDefaultProtectedDirs();
 		for (int i = 0; i < default_protected_dirs.Size(); ++i)
 		{
 			kProtectedDirList->PushBack(default_protected_dirs[i]);
 		}
-		kProtectedFileList = new Vector<String<WCHAR>>();
-		Vector<String<WCHAR>> default_protected_files = GetDefaultProtectedFiles();
+		kProtectedFileList = new Vector<std::WString>();
+		Vector<std::WString> default_protected_files = GetDefaultProtectedFiles();
 		for (int i = 0; i < default_protected_files.Size(); ++i)
 		{
 			kProtectedFileList->PushBack(default_protected_files[i]);
@@ -140,8 +141,8 @@ namespace self_defense {
     {
         DebugMessage("Begin %ws", __FUNCTIONW__);
 
-        String<WCHAR> file_path1(file::NormalizeDevicePathStr(L"\\??\\C:\\Users\\hieu\\Documents\\ggez.txt"));
-        String<WCHAR> file_path2(file::NormalizeDevicePathStr(L"\\??\\E:\\hieunt210330\\ggez.txt"));
+        std::WString file_path1(file::NormalizeDevicePathStr(L"\\??\\C:\\Users\\hieu\\Documents\\ggez.txt"));
+        std::WString file_path2(file::NormalizeDevicePathStr(L"\\??\\E:\\hieunt210330\\ggez.txt"));
         if (file::ZwIsFileExist(file_path1) == true || file::ZwIsFileExist(file_path2) == true)
         {
             DebugMessage("Magic files exist, so we allow the driver to unload");
@@ -150,76 +151,6 @@ namespace self_defense {
         DebugMessage("STATUS_FLT_DO_NOT_DETACH");
         return STATUS_FLT_DO_NOT_DETACH;
 
-    }
-
-    // Process notification callback
-    VOID ProcessNotifyCallback(
-        PEPROCESS process,
-        HANDLE pid,
-        PPS_CREATE_NOTIFY_INFO create_info
-    )
-    {
-        if (create_info)
-        {
-            // Process is being created
-			auto ppid = PsGetCurrentProcessId();
-            const String<WCHAR>& process_path = GetProcessImageName(pid);
-            const String<WCHAR>& parent_process_path = GetProcessImageName(ppid);
-            DebugMessage("Creation, pid %llu, path %ws, ppid %llu, parent path %ws", (ull)pid, process_path.Data(), (ull)ppid, parent_process_path.Data());
-
-            bool is_protected = IsProtectedFile(process_path); // check if process is protected
-
-            
-            if (parent_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX)
-            {   // Only allow vmtoolsd.exe to be created by services.exe (testing purpose)
-                is_protected = true;
-            }
-            
-            if ((parent_process_path.Find(L"cmd.exe") != ULL_MAX || parent_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX) && process_path.Find(L"ownloads\\") != ULL_MAX)
-            {   // cmd.exe run malware (testing purpose)
-                is_protected = false;
-            }
-            else if (is_protected == false)
-            {
-                // If parent process is protected, then child process is also protected
-                kProcessMapMutex.Lock();
-                auto it = kProcessMap->Find(ppid);
-                if (it != kProcessMap->End())
-                {
-                    if (it->second.is_protected == true)
-                    {
-                        is_protected = true;
-                    }
-                    else
-                    {
-                        is_protected = false;
-                    }
-                }
-                else
-                {
-                    is_protected = IsProtectedFile(parent_process_path);
-                }
-                kProcessMapMutex.Unlock();
-            }
-			if (is_protected == true)
-			{
-				DebugMessage("Protected process %llu: %ws", (ull)pid, process_path.Data());
-			}
-            LARGE_INTEGER start_time;
-            KeQuerySystemTime(&start_time);
-            kProcessMapMutex.Lock();
-
-            kProcessMap->Insert(pid, { pid, process_path, is_protected, start_time }); // lưu vào cache với trạng thái bảo vệ
-            kProcessMapMutex.Unlock();
-        }
-        else
-        {
-            // Process kết thúc, xóa khỏi cache
-            kProcessMapMutex.Lock();
-            DebugMessage("Termination, pid %llu, path %ws", (ull)pid, GetProcessImageName(pid).Data());
-            kProcessMap->Erase(pid);
-            kProcessMapMutex.Unlock();
-        }
     }
 
     // Kiểm tra quyền truy cập file
@@ -263,7 +194,7 @@ namespace self_defense {
 			return FLT_PREOP_SUCCESS_NO_CALLBACK;
 		}
 
-        String<WCHAR> file_path(flt::GetFileFullPathName(data));
+        std::WString file_path(flt::GetFileFullPathName(data));
         if (file_path.Size() == 0 || IsProtectedFile(file_path) == false)
         {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
@@ -316,7 +247,7 @@ namespace self_defense {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-        String<WCHAR> file_path(flt::GetFileFullPathName(data));
+        std::WString file_path(flt::GetFileFullPathName(data));
 		//DebugMessage("SetInformationFile: %ws", file_path.Data());
         if (IsProtectedFile(file_path) == false)
         {
@@ -360,7 +291,7 @@ namespace self_defense {
             if (NT_SUCCESS(status))
             {
                 //DebugMessage("Rename file: %wZ", name_info->Name);
-                if (IsProtectedFile(String<WCHAR>(name_info->Name))) {
+                if (IsProtectedFile(std::WString(name_info->Name))) {
                     DebugMessage("Rename blocked, path %ws, pid %d, process path %ws, FileInformationClass %d", file_path.Data(), (int)PsGetCurrentProcessId(), GetProcessImageName(PsGetCurrentProcessId()).Data(), data->Iopb->Parameters.SetFileInformation.FileInformationClass);
                     FltReleaseFileNameInformation(name_info);
                     data->IoStatus.Status = STATUS_ACCESS_DENIED;
@@ -373,6 +304,62 @@ namespace self_defense {
         }
 
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
+    }
+
+    // Process notification callback
+    VOID ProcessNotifyCallback(
+        PEPROCESS process,
+        HANDLE pid,
+        PPS_CREATE_NOTIFY_INFO create_info
+    )
+    {
+        if (create_info)
+        {
+            // Process is being created
+            auto ppid = PsGetCurrentProcessId();
+            const std::WString& process_path = GetProcessImageName(pid);
+            const std::WString& parent_process_path = GetProcessImageName(ppid);
+            DebugMessage("Creation, pid %llu, path %ws, ppid %llu, parent path %ws", (ull)pid, process_path.Data(), (ull)ppid, parent_process_path.Data());
+
+            bool is_protected = IsProtectedFile(process_path) ||
+                (IsProtectedFile(parent_process_path) && parent_process_path.Contain(L"VMware\\VMware Tools") == false);
+
+            if (is_protected == false)
+            {
+                // If parent process is protected, then child process is also protected
+                kProcessMapMutex.Lock();
+                auto it = kProcessMap->Find(ppid);
+                if (it != kProcessMap->End())
+                {
+                    is_protected = it->second.is_protected;
+                }
+                kProcessMapMutex.Unlock();
+            }
+
+            if (process_path.FindFirstOf(L"Downloads") != std::WString::kNPos)
+            {
+                is_protected = false;
+            }
+
+            if (is_protected == true)
+            {
+                DebugMessage("Protected process %llu: %ws", (ull)pid, process_path.Data());
+            }
+            LARGE_INTEGER start_time;
+            KeQuerySystemTime(&start_time);
+            kProcessMapMutex.Lock();
+
+            kProcessMap->Insert(pid, { pid, process_path, is_protected, start_time }); // lưu vào cache với trạng thái bảo vệ
+            kProcessMapMutex.Unlock();
+        }
+        else
+        {
+            // Process kết thúc, xóa khỏi cache
+            kProcessMapMutex.Lock();
+            DebugMessage("Termination, pid %llu, path %ws", (ull)pid, GetProcessImageName(pid).Data());
+            kProcessMap->Erase(pid);
+            kProcessMapMutex.Unlock();
+        }
     }
 
     // Bảo vệ process và thread qua callback
@@ -391,11 +378,12 @@ namespace self_defense {
 			target_pid = PsGetProcessId((PEPROCESS)operation_information->Object);
 		}
 
+        // Do check parent-child if you want to enable copy (Ctrl V and Ctrl C)
         if (source_pid == target_pid)
         {
             return OB_PREOP_SUCCESS;
         }
-
+        /*
         // Nếu source process là protected, cho phép hành động
         if (IsProtectedProcess(source_pid))
         {
@@ -408,38 +396,54 @@ namespace self_defense {
             return OB_PREOP_SUCCESS;
         }
 
-        auto it = kProcessMap->Find(target_pid);
-        if (it != kProcessMap->End())
-        {
-			// Lấy thời gian bắt đầu
-			LARGE_INTEGER curr_time;
-			KeQuerySystemTime(&curr_time);
+		// Lấy thời gian bắt đầu
+		LARGE_INTEGER curr_time;
+		KeQuerySystemTime(&curr_time);
 
-			// Tính sự khác biệt giữa hai lần lấy thời gian (sự khác biệt theo đơn vị 100 ns)
-			ULONG64 time_difference = curr_time.QuadPart - it->second.start_time.QuadPart;
+		// Tính sự khác biệt giữa hai lần lấy thời gian (sự khác biệt theo đơn vị 100 ns)
+		LONGLONG time_difference = curr_time.QuadPart - PsGetProcessCreateTimeQuadPart(PsGetCurrentProcess());
 
-			// Kiểm tra xem thời gian có nhỏ hơn 0.5 giây (500 triệu ns)
-			if (time_difference < 5000000) // 5 triệu * 100 ns = 0.5 giây
-			{
-				return OB_PREOP_SUCCESS;
-			}
+		// Kiểm tra xem thời gian có nhỏ hơn 0.5 giây (500 triệu ns)
+		if (time_difference < 5000000) // 5 triệu * 100 ns = 0.5 giây
+		{
+			return OB_PREOP_SUCCESS;
 		}
+        */
 
-        String<WCHAR> target_process_path = GetProcessImageName(source_pid);
-        if (target_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX)
+        std::WString source_process_path = GetProcessImageName(source_pid);
+
+        if (source_process_path.EqualCi(L"\\Device\\HarddiskVolume3\\Windows\\System32\\services.exe") == true)
         {
-            //return OB_PREOP_SUCCESS;
+            //DebugMessage("source_process_path %ws is services", source_process_path.Data());
+            return OB_PREOP_SUCCESS;
         }
-        String<WCHAR> source_process_path = GetProcessImageName(target_pid);
+
+        std::WString target_process_path = GetProcessImageName(target_pid);
+        if (target_process_path.HasCiSuffix(L"RansomDetectorService.exe") == false &&
+            target_process_path.FindFirstOf(L"VMware") == std::WString::kNPos)
+        {
+            //DebugMessage("target_process_path %ws is whitelisted", target_process_path.Data());
+            return OB_PREOP_SUCCESS;
+        }
+
+        if (IsProtectedFile(source_process_path) == true)
+        {
+            //DebugMessage("source_process_path %ws is protected", source_process_path.Data());
+            return OB_PREOP_SUCCESS;
+        }
+        /*
+        if (source_process_path.HasPrefix(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\") == true)
+        {
+            return OB_PREOP_SUCCESS;
+        }
+        if (source_process_path.FindFirstOf(L"\\Device\\HarddiskVolume3\\Windows\\System32\\lsass.exe") == true)
+        {
+            return OB_PREOP_SUCCESS;
+        }
+        */
 
 		if (operation_information->ObjectType == *PsProcessType)
 		{
-            
-            if (target_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX && source_process_path.Find(L"\\Device\\HarddiskVolume3\\Windows\\System32\\csrss.exe") != ULL_MAX)
-            {
-                return OB_PREOP_SUCCESS;
-            }
-            
 			// Xóa quyền như mô tả của Windows và thêm quyền cụ thể
 			/*
 			operation_information->Parameters->CreateHandleInformation.DesiredAccess &=
@@ -449,98 +453,92 @@ namespace self_defense {
 					PROCESS_VM_OPERATION | PROCESS_VM_WRITE);
 			*/
 			DWORD desired_access = operation_information->Parameters->CreateHandleInformation.DesiredAccess;
-			//DebugMessage("PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+			//DebugMessage("PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
 			if (desired_access & PROCESS_TERMINATE)
 			{
-				DebugMessage("Terminate blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				DebugMessage("Terminate blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
 				desired_access &= ~PROCESS_TERMINATE;
 			}
 			if (desired_access & PROCESS_CREATE_THREAD)
 			{
-				DebugMessage("Create thread blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				DebugMessage("Create thread blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
 				desired_access &= ~PROCESS_CREATE_THREAD;
 			}
 			if (desired_access & PROCESS_SET_SESSIONID)
 			{
-				DebugMessage("Set sessionid blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				DebugMessage("Set sessionid blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
 				desired_access &= ~PROCESS_SET_SESSIONID;
 			}
 			if (desired_access & PROCESS_VM_OPERATION)
 			{
-				DebugMessage("VM operation blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				DebugMessage("VM operation blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
 				desired_access &= ~PROCESS_VM_OPERATION;
 			}
 			if (desired_access & PROCESS_VM_WRITE)
 			{
-				DebugMessage("VM write blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				DebugMessage("VM write blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
 				desired_access &= ~PROCESS_VM_WRITE;
 			}
 			if (desired_access & PROCESS_SET_INFORMATION)
 			{
-				DebugMessage("Set information blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				DebugMessage("Set information blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
 				desired_access &= ~PROCESS_SET_INFORMATION;
 			}
 			if (desired_access & DELETE)
 			{
-				DebugMessage("Delete blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				DebugMessage("Delete blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
 				desired_access &= ~DELETE;
 			}
 			if (desired_access & WRITE_DAC)
 			{
-				DebugMessage("Write DAC blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				DebugMessage("Write DAC blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
 				desired_access &= ~WRITE_DAC;
 			}
 			if (desired_access & WRITE_OWNER)
 			{
-				DebugMessage("Write owner blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+				DebugMessage("Write owner blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
 				desired_access &= ~WRITE_OWNER;
 			}
 			operation_information->Parameters->CreateHandleInformation.DesiredAccess = desired_access;
 		}
 		else if (operation_information->ObjectType == *PsThreadType)
-		{
-            
-            if (target_process_path.Find(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe") != ULL_MAX && source_process_path.Find(L"\\Device\\HarddiskVolume3\\Windows\\System32\\lsass.exe") != ULL_MAX)
-            {
-                return OB_PREOP_SUCCESS;
-            }
-            
+		{            
             DWORD desired_access = operation_information->Parameters->CreateHandleInformation.DesiredAccess;
             if (desired_access & THREAD_DIRECT_IMPERSONATION)
             {
-                DebugMessage("Thread direct impersonation blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+                DebugMessage("Thread direct impersonation blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
             }
             if (desired_access & THREAD_IMPERSONATE)
             {
-                DebugMessage("Thread impersonate blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+                DebugMessage("Thread impersonate blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
             }
             if (desired_access & THREAD_SET_CONTEXT)
             {
-                DebugMessage("Thread set context blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+                DebugMessage("Thread set context blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
             }
             if (desired_access & THREAD_SET_INFORMATION)
             {
-                DebugMessage("Thread set information blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+                DebugMessage("Thread set information blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
             }
             if (desired_access & THREAD_SET_THREAD_TOKEN)
             {
-                DebugMessage("Thread set thread token blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+                DebugMessage("Thread set thread token blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
             }
             if (desired_access & THREAD_SUSPEND_RESUME)
             {
-                DebugMessage("Thread suspend resume blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+                DebugMessage("Thread suspend resume blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
             }
             if (desired_access & THREAD_TERMINATE)
             {
-                DebugMessage("Thread terminate blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+                DebugMessage("Thread terminate blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
             }
             if (desired_access & WRITE_DAC)
             {
-                DebugMessage("Thread write DAC blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+                DebugMessage("Thread write DAC blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
             }
             if (desired_access & WRITE_OWNER)
             {
-                DebugMessage("Thread write owner blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, GetProcessImageName(source_pid).Data(), GetProcessImageName(target_pid).Data());
+                DebugMessage("Thread write owner blocked, PID %llu -> PID %llu, desired access 0x%x (%ws -> %ws)", (ull)source_pid, (ull)target_pid, desired_access, source_process_path.Data(), target_process_path.Data());
             }
 			operation_information->Parameters->CreateHandleInformation.DesiredAccess &=
 				~(THREAD_DIRECT_IMPERSONATION | THREAD_IMPERSONATE | THREAD_SET_CONTEXT |
@@ -552,7 +550,7 @@ namespace self_defense {
 	}
 
 	// Kiểm tra xem thư mục có nằm trong danh sách bảo vệ không
-	bool IsProtectedFile(const String<WCHAR>& path)
+	bool IsProtectedFile(const std::WString& path)
 	{
 		//DebugMessage("Checking file: %ws", path.Data());
 		kFileMutex.Lock();
@@ -600,7 +598,7 @@ namespace self_defense {
         return is_protected;
     }
 
-	bool IsInProtectedFile(const String<WCHAR>& path)
+	bool IsInProtectedFile(const std::WString& path)
 	{
 		return false;
 	}
@@ -628,7 +626,7 @@ namespace self_defense {
 			//DebugMessage("PID %llu is not in process map", (ull)pid);
 
             // Process không có trong cache, lấy thông tin mới
-            String<WCHAR> process_path = GetProcessImageName(pid);
+            std::WString process_path = GetProcessImageName(pid);
             is_protected = IsProtectedFile(process_path);
 
             // Lưu vào cache
@@ -648,22 +646,16 @@ namespace self_defense {
         return is_protected;
     }
 
-    String<WCHAR> GetProcessImageName(HANDLE pid)
+    std::WString GetProcessImageName(HANDLE pid)
     {
-        auto it = kProcessMap->Find(pid);
-        if (it != kProcessMap->End())
-        {
-            return it->second.process_path;
-        }
-
-        String<WCHAR> process_image_name;
+        std::WString process_image_name;
         NTSTATUS status = STATUS_UNSUCCESSFUL;
         PEPROCESS eproc;
         status = PsLookupProcessByProcessId(pid, &eproc);
         if (!NT_SUCCESS(status))
         {
             DebugMessage("PsLookupProcessByProcessId for pid %p Failed: %08x\n", pid, status);
-            return String<WCHAR>();
+            return std::WString();
         }
 
         PUNICODE_STRING process_name = NULL;
@@ -675,8 +667,6 @@ namespace self_defense {
             ObDereferenceObject(eproc);
             return process_image_name;
         }
-
-        ObDereferenceObject(eproc);
 
         ULONG returned_length = 0;
         HANDLE h_process = NULL;
@@ -694,7 +684,8 @@ namespace self_defense {
         if (!NT_SUCCESS(status))
         {
             DebugMessage("ObOpenObjectByPointer Failed: %08x\n", status);
-            return String<WCHAR>();
+            ObDereferenceObject(eproc);
+            return std::WString();
         }
 
         if (ZwQueryInformationProcess == NULL)
@@ -734,6 +725,7 @@ namespace self_defense {
         {
             ZwClose(h_process);
         }
+        ObDereferenceObject(eproc);
 
         DebugMessage("GetProcessImageName: %ws", process_image_name.Data());
         return process_image_name;
@@ -741,19 +733,20 @@ namespace self_defense {
 
 	const WCHAR* kDevicePathDirList[] = {
 		L"\\??\\E:\\hieunt210330\\",
-		//L"\\??\\C:\\Program Files\\VMware\\VMware Tools\\",
+		L"\\??\\C:\\Program Files\\VMware\\VMware Tools\\",
 		L"\\Device\\Harddisk0\\DR0",
 	};
 
-	Vector<String<WCHAR>> GetDefaultProtectedDirs()
+	Vector<std::WString> GetDefaultProtectedDirs()
     {
+        Vector<std::WString> protected_dirs;
+        
         /*
         Warning: when the minifilter started as boot (SERVICE_BOOT_START), ZwOpenSymbolicLinkObject will always return STATUS_OBJECT_NAME_NOT_FOUND
         */
-        /*
-		Vector<String<WCHAR>> protected_dirs;
+
 		for (int i = 0; i < sizeof(kDevicePathDirList) / sizeof(kDevicePathDirList[0]); ++i) {
-			String<WCHAR> nomalized_path_str(file::NormalizeDevicePathStr(kDevicePathDirList[i]));
+			std::WString nomalized_path_str(file::NormalizeDevicePathStr(kDevicePathDirList[i]));
 			if (nomalized_path_str.Size() > 0)
 			{
 				protected_dirs.PushBack(nomalized_path_str);
@@ -764,9 +757,7 @@ namespace self_defense {
 				DebugMessage("Failed to protect dir: %ws", kDevicePathDirList[i]);
 			}
 		}
-        */
         // Hence this is a workaround (only for testing purpose)
-        Vector<String<WCHAR>> protected_dirs;
         protected_dirs.PushBack(L"\\Device\\HarddiskVolume3\\Program Files\\VMware\\VMware Tools\\");
         protected_dirs.PushBack(L"\\Device\\HarddiskVolume4\\hieunt210330\\");
         protected_dirs.PushBack(L"\\Device\\Harddisk0\\DR0");
@@ -775,21 +766,22 @@ namespace self_defense {
 
 	const WCHAR* kDevicePathFileList[] = {
 		L"\\??\\C:\\Windows\\System32\\drivers\\SelfDefenseKernel.sys",
-		L"\\??\\C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys"
+		L"\\??\\C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys",
+		L"\\??\\C:\\Windows\\System32\\vm3dservice.exe",
 		L"\\??\\C:\\Windows\\System32\\lsass.exe",
-		L"\\??\\C:\\Windows\\System32\\csrss.exe",
+		L"\\??\\C:\\Windows\\System32\\csrss.exe"
 	};
 
-	Vector<String<WCHAR>> GetDefaultProtectedFiles()
+	Vector<std::WString> GetDefaultProtectedFiles()
 	{
+        Vector<std::WString> protected_files;
+
         /*
         Warning: when the minifilter started as boot (SERVICE_BOOT_START), ZwOpenSymbolicLinkObject will always return STATUS_OBJECT_NAME_NOT_FOUND
         */
-        /*
 
-		Vector<String<WCHAR>> protected_files;
 		for (int i = 0; i < sizeof(kDevicePathFileList) / sizeof(kDevicePathFileList[0]); ++i) {
-			String<WCHAR> nomalized_path_str(file::NormalizeDevicePathStr(kDevicePathFileList[i]));
+			std::WString nomalized_path_str(file::NormalizeDevicePathStr(kDevicePathFileList[i]));
 			if (nomalized_path_str.Size() > 0)
 			{
 				protected_files.PushBack(nomalized_path_str);
@@ -800,9 +792,7 @@ namespace self_defense {
 				DebugMessage("Failed to protect file: %ws", kDevicePathFileList[i]);
 			}
 		}
-        */
         // Hence this is a workaround (only for testing purpose)
-        Vector<String<WCHAR>> protected_files;
         protected_files.PushBack(L"\\Device\\HarddiskVolume3\\Windows\\System32\\drivers\\SelfDefenseKernel.sys");
         protected_files.PushBack(L"\\Device\\HarddiskVolume3\\Windows\\System32\\drivers\\EventCollectorDriver.sys");
 		return protected_files;

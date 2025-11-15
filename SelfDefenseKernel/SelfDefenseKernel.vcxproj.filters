@@ -80,9 +80,6 @@
     <ClInclude Include="std\set\set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="std\string\string.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="std\sync\mutex.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -1,0 +1,14 @@
+{
+  "name": "test-project",
+  "version-string": "0.1.0",
+  "dependencies": [
+	"zlib",
+	"bzip2",
+	"liblzma",
+	"libjpeg-turbo",
+	"libarchive",
+	"qpdf",
+	"libwebp",
+	"ffmpeg"
+  ]
+}

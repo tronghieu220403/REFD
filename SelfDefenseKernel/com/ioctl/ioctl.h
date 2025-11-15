@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../std/memory/memory.h"
-#include "../../std/string/string.h"
+#include "../../std/string/wstring.h"
 #include "../../std/vector/vector.h"
 #include "../../std/sync/mutex.h"
 #include "../../template/register.h"

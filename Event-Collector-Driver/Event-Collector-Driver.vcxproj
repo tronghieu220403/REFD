@@ -26,7 +26,7 @@
     <Configuration>Debug</Configuration>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
     <RootNamespace>Event_Collector_Driver</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <ProjectName>EventCollectorDriver</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -36,7 +36,6 @@
     <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>WDM</DriverType>
-    <Driver_SpectreMitigation>Spectre</Driver_SpectreMitigation>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <TargetVersion>Windows10</TargetVersion>
@@ -97,6 +96,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <TreatWarningAsError>false</TreatWarningAsError>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
     </ClCompile>
     <Link>
       <AdditionalDependencies>FltMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -113,9 +113,12 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <ControlFlowGuard>false</ControlFlowGuard>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <AdditionalDependencies>FltMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -157,11 +160,10 @@
   <ItemGroup>
     <ClCompile Include="com\comport\comport.cpp" />
     <ClCompile Include="com\ioctl\ioctl.cpp" />
-    <ClCompile Include="function\backup.cpp" />
     <ClCompile Include="function\colletor.cpp" />
-    <ClCompile Include="function\detector.cpp" />
     <ClCompile Include="std\file\file.cpp" />
     <ClCompile Include="std\memory\memory.cpp" />
+    <ClCompile Include="std\string\wstring.cpp" />
     <ClCompile Include="std\sync\mutex.cpp" />
     <ClCompile Include="template\flt-ex.cpp" />
     <ClCompile Include="template\MiniFs.cpp" />
@@ -172,9 +174,7 @@
     <ClInclude Include="com\common.h" />
     <ClInclude Include="com\comport\comport.h" />
     <ClInclude Include="com\ioctl\ioctl.h" />
-    <ClInclude Include="function\backup.h" />
     <ClInclude Include="function\collector.h" />
-    <ClInclude Include="function\detector.h" />
     <ClInclude Include="std\algo\hash.h" />
     <ClInclude Include="std\algo\kmp.h" />
     <ClInclude Include="std\file\file.h" />
@@ -184,7 +184,7 @@
     <ClInclude Include="std\memory\pair.h" />
     <ClInclude Include="std\memory\sharedptr.h" />
     <ClInclude Include="std\set\set.h" />
-    <ClInclude Include="std\string\string.h" />
+    <ClInclude Include="std\string\wstring.h" />
     <ClInclude Include="std\sync\mutex.h" />
     <ClInclude Include="std\ulti\def.h" />
     <ClInclude Include="std\vector\vector.h" />

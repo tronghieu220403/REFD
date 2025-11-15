@@ -1,5 +1,5 @@
-﻿#ifndef ETWSERVICE_ETWSERVICE_MAIN
-#define ETWSERVICE_ETWSERVICE_MAIN
+﻿#ifndef RDS_RDS_MAIN
+#define RDS_RDS_MAIN
 
 /*
 C/C++ -> General -> Additional Include Dir -> $(ProjectDir)include
@@ -9,6 +9,9 @@ C/C++ -> General -> Additional Include Dir -> $(ProjectDir)include
 #include "manager/manager.h"
 #include "com/minifilter_comm.h"
 #include "manager/file_type_iden.h"
+#include "manager/known_folder.h"
+
+#include "honey/honeypot.h"
 
 constexpr auto SERVICE_NAME = L"REFD";
 
@@ -32,38 +35,34 @@ static void StartEventCollector()
 
 	while (true)
 	{
-		if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
-		{
-			PrintDebugW(L"ggez.txt detected, terminate service");
-			ExitProcess(0);
-		}
-
-		PrintDebugW(L"Creating communication port %ws", PORT_NAME);
+		//PrintDebugW(L"Creating communication port %ws", PORT_NAME);
 		HRESULT hr = com_port.Create(PORT_NAME);
 		if (FAILED(hr))
 		{
-			PrintDebugW(L"Failed to create communication port: %08X", hr);
+			PrintDebugW(L"Failed to create communication port: 0x%08X", hr);
 			Sleep(1000); // Retry after 1 second
 		}
+		//PrintDebugW(L"Communication port created");
 
 		while (true)
 		{
+			/*
+			//PrintDebugW(L"Check every 6 seconds");
             auto current_time = std::chrono::steady_clock::now();
             auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(current_time - last_process_time);
 			if (elapsed.count() >= 6) // Check every 6 seconds
 			{
-                //Sleep(100); // Sleep for 0.1 second before checking again
 				manager::kEvaluator->LockMutex();
-				manager::kEvaluator->ProcessDataQueue();
-				//last_process_time = std::chrono::steady_clock::now();
+				manager::kEvaluator->Evaluate();
 				manager::kEvaluator->UnlockMutex();
                 last_process_time = current_time;
 			}
+			*/
 			//PrintDebugW(L"Wait for a message from the communication port");
 			hr = com_port.Get((PFILTER_MESSAGE_HEADER)buffer, buffer_size);
 			if (SUCCEEDED(hr))
 			{
-				//PrintDebugW(L"Received message from communication port");
+				//PrintDebugW(L"Message received, size %d", ((PFILTER_MESSAGE_HEADER)buffer)->ReplyLength);
 				COMPORT_MESSAGE* msg = (COMPORT_MESSAGE*)buffer;
 				// Process the message
 				manager::RawFileIoInfo* raw_file_io_info = &msg->raw_file_io_info;
@@ -74,7 +73,7 @@ static void StartEventCollector()
 			}
 			else
 			{
-				//PrintDebugW(L"Failed to receive message: %08X", hr);
+				//PrintDebugW(L"Failed to receive message: 0x%08X", hr);
 				break; // Exit the loop on failure
 			}
 		}
@@ -84,9 +83,8 @@ static void StartEventCollector()
 static void ServiceMain()
 {
 	PrintDebugW(L"ServiceMain, current pid %d", GetCurrentProcessId());
-#ifdef _DEBUG
+	
 	srv::InitServiceCtrlHandler(SERVICE_NAME);
-#endif // _DEBUG
 
 	/*
 	if (ulti::CreateDir(MAIN_DIR) == false)
@@ -98,19 +96,47 @@ static void ServiceMain()
 
 	debug::InitDebugLog();
 
-	manager::Init();
-
+#ifdef _M_IX86
 	if (ulti::CreateDir(TEMP_DIR) == false)
 	{
 		PrintDebugW(L"Create temp dir %ws failed", TEMP_DIR);
 		return;
 	}
-	kTrID = new type_iden::TrID();
-	if (kTrID == nullptr || kTrID->Init(PRODUCT_PATH, (std::wstring(PRODUCT_PATH) + L"TrIDLib.dll").c_str()) == false)
+#endif // _M_IX86
+
+	kFileType = new type_iden::FileType();
+	if (kFileType == nullptr)
+	{
+		PrintDebugW(L"kFileType init failed");
+		return;
+	}
+#ifdef _M_IX86
+	std::wstring trid_dir = std::wstring(PRODUCT_PATH) + L"TrID";
+	if (kFileType->InitTrid(trid_dir, trid_dir + L"TrIDLib.dll") == false)
 	{
 		PrintDebugW(L"TrID init failed");
 		return;
 	}
+#endif // _M_IX86
+
+	try {
+		// Cần config động, thư mục nào là honeypot folder (chỉ toàn honeypot file), thư mục nào có honeypot file lẩn giữa các file khác
+		// Sửa cấu trúc của config.
+		kfc.Init(L"E:\\hieunt210330\\hieunt210330\\knownfolders.json");
+	}
+	catch (std::exception& ex) {
+		PrintDebugW("KnownFolderChecker error: %ws", ulti::StrToWstr(ex.what()).c_str());
+		return;
+	}
+
+	// Cần config động, thư mục này có gì có những file nào
+	// Cần file config v2 để lưu
+	if (hp.Init(kfc.GetKnownFolders(), L"E:\\hieunt210330\\honeypot") == false)
+	{
+		return;
+	}
+
+	manager::Init();
 
 	auto last_process_time = std::chrono::steady_clock::now();
 
@@ -118,58 +144,23 @@ static void ServiceMain()
 		while (true)
 		{
 			StartEventCollector();
-			if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
-			{
-				PrintDebugW(L"ggez.txt detected, terminate service");
-				ExitProcess(0);
-			}
 			Sleep(50);
 		}
 		}));
 
 	std::thread processing_thread([&last_process_time]() {
-        manager::ClearTmpFiles();
 		while (true)
 		{
 			manager::kEvaluator->LockMutex();
-			manager::kEvaluator->ProcessDataQueue();
+			manager::kEvaluator->Evaluate();
             last_process_time = std::chrono::steady_clock::now();
 			manager::kEvaluator->UnlockMutex();
-			if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
-			{
-				PrintDebugW(L"ggez.txt detected, terminate service");
-				ExitProcess(0);
-			}
 			Sleep(1000);
 		}
 		});
 
-	std::jthread manager_thread([]() {
-		while (true)
-		{
-			auto start_time = std::chrono::high_resolution_clock::now();
-			/*
-			manager::kEvaluator->LockMutex();
-			//manager::kEvaluator->EvaluateProcesses();
-			manager::kEvaluator->UnlockMutex();
-			if (manager::FileExist(L"C:\\Users\\hieu\\Documents\\ggez.txt"))
-			{
-				PrintDebugW(L"ggez.txt detected, terminate service");
-				ExitProcess(0);
-			}
-			
-			auto end_time = std::chrono::high_resolution_clock::now();
-			DWORD duration = (DWORD)std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-			DWORD sleep_ms = duration < (DWORD)EVALUATATION_INTERVAL_MS ? EVALUATATION_INTERVAL_MS - duration : 0;
-			PrintDebugW(L"Evaluation took %d ms, sleeping for %d ms", duration, sleep_ms);
-			Sleep(sleep_ms);
-			*/
-			Sleep(1000);
-		}
-		});
 	processing_thread.join();
 	collector_thread.join();
-	manager_thread.join();
 	debug::CleanupDebugLog();
 }
 
@@ -218,8 +209,8 @@ static void RunProgram()
 	RunService();
 	//ServiceMain();
 #else
-	//RunService();
-	ServiceMain();
+	RunService();
+	//ServiceMain();
 #endif // _DEBUG
 }
 

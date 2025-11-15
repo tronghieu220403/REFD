@@ -23,7 +23,7 @@ namespace manager
         return file_io_info;
     }
 
-    uint64_t FileIoManager::GetQueueSize()
+    ull FileIoManager::GetQueueSize()
     {
         return file_io_queue_.size();
     }
@@ -37,24 +37,104 @@ namespace manager
     {
         FileIoInfo file_io_info;
         
-        PrintDebugW(L"File I/O event before: PID: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d, current_path: %ws, new_path: %ws, backup_name: %ws", raw_file_io_info->requestor_pid,(int)raw_file_io_info->is_modified, (int)raw_file_io_info->is_deleted, (int)raw_file_io_info->is_created, (int)raw_file_io_info->is_renamed, raw_file_io_info->current_path, raw_file_io_info->new_path, raw_file_io_info->backup_name);
-
-        file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
-        file_io_info.is_modified = raw_file_io_info->is_modified;
-        file_io_info.is_deleted = raw_file_io_info->is_deleted;
-        file_io_info.is_created = raw_file_io_info->is_created;
-        file_io_info.is_renamed = raw_file_io_info->is_renamed;
-        file_io_info.path_list.push_back(std::move(ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->current_path)))));
-        std::wstring backup_name = raw_file_io_info->backup_name;
-        file_io_info.backup_name_list.push_back(TEMP_DIR + std::to_wstring(GetPathHash(raw_file_io_info->current_path)));
-
-        if (raw_file_io_info->is_renamed == true)
+        if (file_io_queue_.size() > 10000)
         {
-            file_io_info.path_list.push_back(std::move(ulti::ToLower(GetLongDosPath(GetDosPath(raw_file_io_info->new_path)))));
-            file_io_info.backup_name_list.push_back(TEMP_DIR + std::to_wstring(GetPathHash(raw_file_io_info->new_path)));
+            PrintDebugW(L"Discard I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid, raw_file_io_info->path);
+            return;
         }
 
+        file_io_info.path = GetLongDosPath(GetDosPath(raw_file_io_info->path));
+        ulti::ToLowerOverride(file_io_info.path);
+
+        //PrintDebugW(L"File I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid,raw_file_io_info->path);
+
+        file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
+        file_io_info.is_created = raw_file_io_info->is_created;
+        file_io_info.is_renamed = raw_file_io_info->is_renamed;
+        file_io_info.is_modified = raw_file_io_info->is_modified;
+        file_io_info.is_deleted = raw_file_io_info->is_deleted;
         file_io_queue_.push(std::move(file_io_info));
+    }
+
+    void FileCache::RemoveOldestUnlocked()
+    {
+        if (time_index_.empty()) return;
+        auto oldest_it = time_index_.begin();
+        ull oldest_hash = oldest_it->second;
+        cache_.erase(oldest_hash);
+        time_index_.erase(oldest_it);
+    }
+
+    bool FileCache::Add(const wstring& path, const FileCacheInfo& info)
+    {
+        ull h = GetWstrHash(path);
+        ull now = ulti::GetCurrentSteadyTimeInSec();
+
+        // Lock cache_ for writing
+        std::unique_lock lock_cache(mt_cache_);
+
+        // Already exists
+        if (cache_.find(h) != cache_.end())
+            return false;
+
+        // If full, must also modify time_index_ -> lock both
+        if (cache_.size() >= FILE_CACHE_SIZE_MAX) {
+            std::unique_lock lock_time(mt_time_);
+            RemoveOldestUnlocked();
+        }
+
+        // Insert new timestamp entry
+        std::unique_lock lock_time(mt_time_);
+        auto it_time = time_index_.insert({ now, h });
+
+        // Insert into cache
+        cache_[h] = Node{ info, it_time };
+        return true;
+    }
+
+    bool FileCache::Get(const wstring& path, FileCacheInfo& info)
+    {
+        ull h = GetWstrHash(path);
+        ull now = ulti::GetCurrentSteadyTimeInSec();
+
+        // Shared read lock for cache_
+        {
+            std::shared_lock read_lock(mt_cache_);
+            auto it = cache_.find(h);
+            if (it == cache_.end())
+                return false;
+
+            info = it->second.info;
+        }
+
+        // Need to update timestamp
+        {
+            std::unique_lock lock_cache(mt_cache_);
+            auto it = cache_.find(h);
+            if (it == cache_.end())
+                return false;
+
+            std::unique_lock lock_time(mt_time_);
+            time_index_.erase(it->second.time_it);
+            it->second.time_it = time_index_.insert({ now, h });
+        }
+
+        return true;
+    }
+
+    bool FileCache::Erase(const std::wstring& path)
+    {
+        ull h = GetWstrHash(path);
+
+        std::unique_lock lock_cache(mt_cache_);
+        auto it = cache_.find(h);
+        if (it == cache_.end())
+            return false;
+
+        std::unique_lock lock_time(mt_time_);
+        time_index_.erase(it->second.time_it);
+        cache_.erase(it);
+        return true;
     }
 
     void InitDosDeviceCache()
@@ -65,8 +145,8 @@ namespace manager
             std::wstring drive_str = std::wstring(1, drive) + L":";
             if (QueryDosDeviceW(drive_str.c_str(), device_path, MAX_PATH)) {
                 std::wstring device_name = device_path;
-                kDosPath.insert({device_name, drive_str});
-                kNativePath.insert({ drive_str, device_name });
+                kDosPathCache.insert({device_name, drive_str});
+                kNativePathCache.insert({ drive_str, device_name });
                 PrintDebugW(L"Cached: %ws -> %ws", device_name.c_str(), drive_str.c_str());
             }
         }
@@ -75,13 +155,21 @@ namespace manager
     std::wstring GetNativePath(const std::wstring& dos_path)
     {
         std::wstring drive_name = dos_path.substr(0, dos_path.find_first_of('\\'));
-        if (kNativePath.find(drive_name) != kNativePath.end())
+        
+        using namespace std::chrono;
+
+        auto now = steady_clock::now();
+        defer{ kLastNativeQueryTime = now; };
+        auto elapsed = duration_cast<seconds>(now - kLastNativeQueryTime).count();
+        bool allow_cache = (elapsed < DEVICE_CACHE_USAGE_SECOND_MAX && kNativeOpCnt < DEVICE_CACHE_USAGE_COUNT_MAX);
+        if (allow_cache && kNativePathCache.find(drive_name) != kNativePathCache.end())
         {
-            return kNativePath[drive_name] + dos_path.substr(drive_name.length());
+            ++kNativeOpCnt;
+            return kNativePathCache[drive_name] + dos_path.substr(drive_name.length());
         }
 
         std::wstring device_name;
-        device_name.resize(MAX_PATH);
+        device_name.resize(30);
         DWORD status;
         while (QueryDosDeviceW(drive_name.data(), (WCHAR*)device_name.data(), (DWORD)device_name.size()) == 0)
         {
@@ -94,13 +182,18 @@ namespace manager
             device_name.resize(device_name.size() * 2);
         }
         device_name.resize(wcslen(device_name.data()));
-        kNativePath.insert({ drive_name, device_name });
+        kNativePathCache.insert({ drive_name, device_name });
+
+        kNativeOpCnt = 0;
+
         return device_name + dos_path.substr(dos_path.find_first_of('\\'));
     }
 
     std::wstring GetDosPathCaseSensitive(const std::wstring& nt_path)
     {
-        // If the file_path is empty or it does not start with "\\" (not a device file_path), return as-is
+        using namespace std::chrono;
+
+        // If the ws is empty or it does not start with "\\" (not a device ws), return as-is
         if (nt_path.empty() || nt_path[0] != L'\\') {
             return nt_path;
         }
@@ -111,10 +204,20 @@ namespace manager
             return clean_path.substr(4); // Remove "\\?\" or "\\.\"
         }
 
-        std::wstring device_name = nt_path.substr(0, nt_path.find(L'\\', sizeof("\\Device\\") - 1)); // Extract device name
-        auto it = kDosPath.find(device_name);
-        if (it != kDosPath.end()) {
-            return it->second + clean_path.substr(device_name.length());
+        auto now = steady_clock::now();
+        defer{ kLastDosQueryTime = now; };
+        auto elapsed = duration_cast<seconds>(now - kLastDosQueryTime).count();
+        bool allow_cache = (elapsed < DEVICE_CACHE_USAGE_SECOND_MAX && kDosOpCnt < DEVICE_CACHE_USAGE_COUNT_MAX);
+
+        if (allow_cache)
+        {
+            std::wstring device_name = nt_path.substr(0, nt_path.find(L'\\', sizeof("\\Device\\") - 1)); // Extract device name
+            auto it = kDosPathCache.find(device_name);
+            if (it != kDosPathCache.end())
+            {
+                ++kDosOpCnt;
+                return it->second + clean_path.substr(device_name.length());
+            }
         }
 
         // Try all drive letters to find the matching device path
@@ -126,12 +229,12 @@ namespace manager
                 std::wstring device_name = device_path;
                 if (clean_path.find(device_name) == 0) {
                     dos_path = drive_str + clean_path.substr(device_name.length());
-                    kDosPath.insert({device_name, drive_str}); // Cache
+                    kDosPathCache.insert({device_name, drive_str}); // Cache
                     break;
                 }
             }
         }
-
+        kDosOpCnt = 0;
         return dos_path;
     }
 
@@ -159,9 +262,9 @@ namespace manager
         return long_path;
     }
 
-    bool FileExist(const std::wstring& file_path)
+    bool FileExist(const std::wstring& ws)
     {
-        DWORD file_attributes = GetFileAttributesW(file_path.c_str());
+        DWORD file_attributes = GetFileAttributesW(ws.c_str());
         if (file_attributes == INVALID_FILE_ATTRIBUTES || FlagOn(file_attributes, FILE_ATTRIBUTE_DIRECTORY) == true) {
             return false;
         }
@@ -177,18 +280,34 @@ namespace manager
         return true;
     }
 
-    uint64_t GetFileSize(const std::wstring& file_path)
+    ull GetFileSize(const std::wstring& ws)
     {
         WIN32_FILE_ATTRIBUTE_DATA fad;
-        if (!GetFileAttributesEx(file_path.c_str(), GetFileExInfoStandard, &fad))
+        if (!GetFileAttributesEx(ws.c_str(), GetFileExInfoStandard, &fad))
         {
-            PrintDebugW(L"GetFileSize failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
+            PrintDebugW(L"GetFileSize failed for file %ws, error %s", ws.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
             return 0;
         }
         LARGE_INTEGER size;
         size.HighPart = fad.nFileSizeHigh;
         size.LowPart = fad.nFileSizeLow;
         return size.QuadPart;
+    }
+
+    std::wstring GetFileName(const std::wstring& path)
+    {
+        size_t pos = path.find_last_of(L"\\/");
+        if (pos == std::string::npos) return path;
+        return path.substr(pos + 1);
+    }
+
+    std::wstring GetFileNameNoExt(const std::wstring& path)
+    {
+        auto file_name = GetFileName(path);
+        size_t dot = file_name.find_first_of(L'.');
+        if (dot == std::wstring::npos)
+            return file_name;
+        return file_name.substr(0, dot);
     }
 
     // Function to get file extension
@@ -201,23 +320,56 @@ namespace manager
         return std::move(ulti::ToLower(std::move(file_name.substr(dot_pos + 1)))); // Return the file extension
     }
 
-	ull GetPathHash(const std::wstring& file_path)
+    std::vector<std::wstring> GetFileExtensions(const std::wstring& file_name)
+    {
+        std::vector<std::wstring> extensions;
+
+        size_t name_pos = file_name.find_last_of(L"\\/");
+        std::wstring just_name = (name_pos != std::wstring::npos) ? file_name.substr(name_pos + 1) : file_name;
+
+        // Đếm số dấu chấm
+        size_t first_dot = just_name.find(L'.');
+        if (first_dot == std::wstring::npos) {
+            return extensions;
+        }
+
+        size_t start = first_dot + 1;
+        while (start < just_name.length()) {
+            size_t next_dot = just_name.find(L'.', start);
+            std::wstring ext;
+            if (next_dot == std::wstring::npos) {
+                ext = just_name.substr(start);
+            }
+            else {
+                ext = just_name.substr(start, next_dot - start);
+            }
+
+            extensions.push_back(ulti::ToLower(std::move(ext)));
+
+            if (next_dot == std::wstring::npos) break;
+            start = next_dot + 1;
+        }
+
+        return extensions;
+    }
+
+	ull GetWstrHash(const std::wstring& ws)
 	{
         ull backup_hash = 0;
-		for (auto& c : file_path)
+		for (auto& c : ws)
 		{
 			backup_hash += (backup_hash * 65535 + c) % (10000000007);
 		}
 		return backup_hash;
 	}
 
-    std::wstring CopyToTmp(const std::wstring& file_path, bool create_new_if_duplicate)
+    std::wstring CopyToTmp(const std::wstring& ws, bool create_new_if_duplicate)
 	{
-		std::wstring base_tmp_name = std::to_wstring(GetPathHash(file_path));
+		std::wstring base_tmp_name = std::to_wstring(GetWstrHash(ws));
         std::wstring dest = TEMP_DIR + base_tmp_name;
         if (create_new_if_duplicate == false)
         {
-            PrintDebugW(L"Copying file %ws to %ws", file_path.c_str(), dest.c_str());
+            PrintDebugW(L"Copying file %ws to %ws", ws.c_str(), dest.c_str());
             if (FileExist(dest) == true)
             {
                 PrintDebugW(L"File %ws already exists", dest.c_str());
@@ -237,12 +389,12 @@ namespace manager
                 counter++;
             }
             base_tmp_name = tmp_name;
-            PrintDebugW(L"Copying file %ws to %ws", file_path.c_str(), dest.c_str());
+            PrintDebugW(L"Copying file %ws to %ws", ws.c_str(), dest.c_str());
         }
-        HANDLE h_src = CreateFileW(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+        HANDLE h_src = CreateFileW(ws.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
         if (h_src == INVALID_HANDLE_VALUE)
         {
-            PrintDebugW(L"CreateFile failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
+            PrintDebugW(L"CreateFile failed for file %ws, error %s", ws.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
             return L"";
         }
         HANDLE h_dest = CreateFileW(dest.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -255,11 +407,11 @@ namespace manager
 		ull tmp_file_size = 0;
 		if (::GetFileSizeEx(h_src, (PLARGE_INTEGER)&tmp_file_size) == 0 || tmp_file_size > INT_MAX)
 		{
-            PrintDebugW(L"GetFileSizeEx failed for file %ws, error %s, tmp_file_size %lld", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str(), tmp_file_size);
+            PrintDebugW(L"GetFileSizeEx failed for file %ws, error %s, tmp_file_size %lld", ws.c_str(), debug::GetErrorMessage(GetLastError()).c_str(), tmp_file_size);
 			return L"";
 		}
 		std::vector<UCHAR> data;
-		data.resize(min((size_t)tmp_file_size, BEGIN_WIDTH + END_WIDTH));
+		data.resize((std::min)((size_t)tmp_file_size, (size_t)BEGIN_WIDTH + END_WIDTH));
 		// Read and write the first BEGIN_WIDTH bytes and last END_WIDTH bytes
 		DWORD bytes_cnt = 0;
 
@@ -268,7 +420,7 @@ namespace manager
 			if (!ReadFile(h_src, data.data(), (DWORD)tmp_file_size, &bytes_cnt, NULL) || bytes_cnt != tmp_file_size 
 				|| !WriteFile(h_dest, data.data(), bytes_cnt, &bytes_cnt, NULL) || bytes_cnt != tmp_file_size)
 			{
-                PrintDebugW(L"ReadFile or WriteFile failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
+                PrintDebugW(L"ReadFile or WriteFile failed for file %ws, error %s", ws.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
 				CloseHandle(h_src);
 				CloseHandle(h_dest);
 				return L"";
@@ -284,7 +436,7 @@ namespace manager
 				|| !WriteFile(h_dest, data.data(), bytes_cnt, &bytes_cnt, NULL) || bytes_cnt != END_WIDTH
 				)
 			{
-                PrintDebugW(L"ReadFile or WriteFile failed for file %ws, error %s", file_path.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
+                PrintDebugW(L"ReadFile or WriteFile failed for file %ws, error %s", ws.c_str(), debug::GetErrorMessage(GetLastError()).c_str());
 				CloseHandle(h_src);
 				CloseHandle(h_dest);
 				return L"";
@@ -294,14 +446,14 @@ namespace manager
 		// Close both files after completion
 		CloseHandle(h_src);
 		CloseHandle(h_dest);
-        PrintDebugW(L"File %ws copied to %ws", file_path.c_str(), dest.c_str());
+        PrintDebugW(L"File %ws copied to %ws", ws.c_str(), dest.c_str());
 		return base_tmp_name;
     }
 
     // Function to clear temporary files
     void ClearTmpFiles() {
         std::filesystem::path tmp_dir = TEMP_DIR;
-        // Convert file_path to wstring for Windows API
+        // Convert ws to wstring for Windows API
         std::wstring temp_path = tmp_dir.wstring();
         if (temp_path[temp_path.size() - 1] != L'\\') {
             temp_path += L"\\";
@@ -322,16 +474,16 @@ namespace manager
                 continue;
             }
 
-            // Create full file_path to file or directory
+            // Create full ws to file or directory
             std::wstring full_path = temp_path + find_file_data.cFileName;
 
             // Check and delete file or directory
             if (find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                // If it's a directory, delete it (not recursive)
+                // If it'ws a directory, delete it (not recursive)
                 RemoveDirectoryW(full_path.c_str());
             }
             else {
-                // If it's a file, delete it
+                // If it'ws a file, delete it
                 DeleteFileW(full_path.c_str());
             }
         } while (FindNextFileW(h_find, &find_file_data) != 0);
@@ -339,11 +491,4 @@ namespace manager
         // Close search handle
         FindClose(h_find);
     }
-
-	std::vector<std::pair<std::wstring, std::vector<std::string>>> GetTypes(const std::vector<std::wstring>& file_list) // -> vector<file_path, list of ext>>
-	{
-		// Remember to cache
-		return std::vector<std::pair<std::wstring, std::vector<std::string>>>();
-	}
-
 }

@@ -1,12 +1,14 @@
 #ifdef _WIN32
 
-#ifndef ETWSERVICE_SERVICE_SERVICE_H_
-#define ETWSERVICE_SERVICE_SERVICE_H_
+#ifndef SERVICE_SERVICE_H_
+#define SERVICE_SERVICE_H_
 
 #include "ulti/support.h"
 #include "ulti/debug.h"
 
-constexpr auto SERVICE_CONTROL_START = 128;
+#define SERVICE_CONTROL_START 128
+#define SERVICE_CONTROL_HIEUNT_ACCEPT_STOP 129
+#define SERVICE_CONTROL_HIEUNT_BLOCK_STOP 130
 
 namespace srv
 {
@@ -37,6 +39,6 @@ namespace srv
 	void InitServiceCtrlHandler(const wchar_t* service_name);
 }
 
-#endif
+#endif // SERVICE_SERVICE_H_
 
-#endif
+#endif // _WIN32

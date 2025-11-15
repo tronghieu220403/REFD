@@ -1,9 +1,7 @@
-﻿#ifndef DRIVER_COMM_H
-#define DRIVER_COMM_H
+﻿#ifndef COM_DRIVER_COMM_H
+#define COM_DRIVER_COMM_H
 
-#include <Windows.h>
-#include <string>
-#include <vector>
+#include "../ulti/include.h"
 
 enum class IOCTL_CMD_CLASS
 {

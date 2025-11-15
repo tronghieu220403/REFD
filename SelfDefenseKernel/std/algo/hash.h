@@ -1,9 +1,9 @@
 #ifndef HASH_H
 #define HASH_H
 
-#include "../string/string.h"
+#include "../string/wstring.h"
 
-inline unsigned long long HashWstring(const String<WCHAR>& str)
+inline unsigned long long HashWstring(const std::WString& str)
 {
     unsigned long long hash = 5381; // Magic number 5381 is used in DJB2 hash function
     for (int i = 0; i < str.Size(); i++) {
@@ -13,7 +13,7 @@ inline unsigned long long HashWstring(const String<WCHAR>& str)
     return hash;
 }
 
-inline unsigned long long HashString(const String<char>& str)
+inline unsigned long long HashString(const WString& str)
 {
     unsigned long long hash = 5381; // Magic number 5381 is used in DJB2 hash function
     for (int i = 0; i < str.Size(); i++) {

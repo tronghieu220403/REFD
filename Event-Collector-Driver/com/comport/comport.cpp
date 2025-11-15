@@ -44,22 +44,21 @@ namespace com
 			return STATUS_CONNECTION_INVALID;
 		}
 		LARGE_INTEGER timeout;
-		timeout.QuadPart = -150000000; // 15s
+		timeout.QuadPart = -100000; // 10ms
 		NTSTATUS status = FltSendMessage(p_filter_handle_,
 			&client_port_,
 			sender_buffer,
 			sender_buffer_length,
-			reply_buffer,
-			&reply_buffer_length,
+			nullptr,
+			NULL,
 			&timeout
 		);
 		if (status != STATUS_SUCCESS && status != 0x11)
 		{
-			DebugMessage("SendMessage failed: %x", status);
+			DebugMessage("status 0x%x", status);
 		}
 		else
 		{
-			DebugMessage("SendMessage success: %x", status);
 			status = STATUS_SUCCESS;
 		}
 		return status;

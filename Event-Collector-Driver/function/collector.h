@@ -3,26 +3,25 @@
 #ifndef COLLECTOR_H
 #define COLLECTOR_H
 #include <fltKernel.h>
-#include "../../std/string/string.h"
+#include "../../std/string/wstring.h"
 #include "../../std/vector/vector.h"
 #include "../../std/map/map.h"
 #include "../../std/sync/mutex.h"
 #include "../../template/register.h"
 #include "../../template/flt-ex.h"
-#include "detector.h"
+
+#define HIEUNT_MAX_PATH 1024
 
 namespace collector
 {
     typedef struct _HANDLE_CONTEXT
     {
-		ULONG requestor_pid = 0;
-		bool is_modified = false;
-		bool is_deleted = false;
-		bool is_created = false;
+        ULONG requestor_pid = 0;
+        bool is_modified = false;
         bool is_renamed = false;
-        WCHAR current_path[HIEUNT_MAX_PATH] = { 0 };
-        WCHAR new_path[HIEUNT_MAX_PATH] = { 0 };
-        WCHAR backup_name[HIEUNT_MAX_PATH] = { 0 };
+        bool is_created = false;
+        bool is_deleted = false;
+        WCHAR path[HIEUNT_MAX_PATH] = { 0 };
     } HANDLE_CONTEXT, * PHANDLE_CONTEXT;
 
     void DrvRegister();

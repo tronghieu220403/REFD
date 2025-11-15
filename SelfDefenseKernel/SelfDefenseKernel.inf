@@ -22,7 +22,7 @@ MiniFilter.DriverFiles  = 12            ;%windir%\system32\drivers
 ;; Default install sections
 ;;
 
-[DefaultInstall]
+[DefaultInstall.NTamd64]
 OptionDesc          = %ServiceDescription%
 CopyFiles           = MiniFilter.DriverFiles
 
@@ -33,8 +33,9 @@ AddService          = %ServiceName%,,MiniFilter.Service
 ;; Default uninstall sections
 ;;
 
-[DefaultUninstall]
+[DefaultUninstall.NTamd64]
 DelFiles   = MiniFilter.DriverFiles
+LegacyUninstall = 1
 
 [DefaultUninstall.Services]
 DelService = %ServiceName%,0x200      ;Ensure service is stopped before deleting
@@ -49,7 +50,7 @@ Description      = %ServiceDescription%
 ServiceBinary    = %12%\%DriverName%.sys        ;%windir%\system32\drivers\
 Dependencies     = "FltMgr"
 ServiceType      = 2                            ;SERVICE_FILE_SYSTEM_DRIVER
-StartType        = 0                            ;SERVICE_BOOT_START  
+StartType        = 1                            ;SERVICE_SYSTEM_START  
 ErrorControl     = 1                            ;SERVICE_ERROR_NORMAL
 ; TODO - Change the Load Order Group value
 LoadOrderGroup = "FSFilter Activity Monitor"

@@ -1,3 +1,5 @@
+#ifdef _M_IX86
+
 #include "trid_api.h"
 
 int __stdcall TridApi::Analyze()
@@ -37,3 +39,5 @@ TridApi::~TridApi()
 {
 	FreeLibrary(hm);
 }
+
+#endif // _M_IX86

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -31,6 +31,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -44,6 +45,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -70,6 +72,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -96,6 +101,11 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,7 +127,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,6 +139,11 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,12 +155,21 @@
   <ItemGroup>
     <ClCompile Include="include\com\driver_comm.cpp" />
     <ClCompile Include="include\com\minifilter_com.cpp" />
+    <ClCompile Include="include\file_type\av.cpp" />
+    <ClCompile Include="include\file_type\compress.cpp" />
+    <ClCompile Include="include\file_type\image.cpp" />
+    <ClCompile Include="include\file_type\ole.cpp" />
+    <ClCompile Include="include\file_type\pdf.cpp" />
+    <ClCompile Include="include\file_type\txt.cpp" />
+    <ClCompile Include="include\honey\honeypot.cpp" />
     <ClCompile Include="include\manager\file_manager.cpp" />
     <ClCompile Include="include\manager\file_type_iden.cpp" />
+    <ClCompile Include="include\manager\known_folder.cpp" />
     <ClCompile Include="include\manager\manager.cpp" />
-    <ClCompile Include="include\manager\process_manager.cpp" />
+    <ClCompile Include="include\manager\matcher.cpp" />
     <ClCompile Include="include\mutex\mutex.cpp" />
     <ClCompile Include="include\service\service.cpp" />
+    <ClCompile Include="include\trid\trid.cpp" />
     <ClCompile Include="include\trid\trid_api.cpp" />
     <ClCompile Include="include\ulti\debug.cpp" />
     <ClCompile Include="include\ulti\support.cpp" />
@@ -154,12 +178,21 @@
   <ItemGroup>
     <ClInclude Include="include\com\driver_comm.h" />
     <ClInclude Include="include\com\minifilter_comm.h" />
+    <ClInclude Include="include\file_type\av.h" />
+    <ClInclude Include="include\file_type\compress.h" />
+    <ClInclude Include="include\file_type\image.h" />
+    <ClInclude Include="include\file_type\ole.h" />
+    <ClInclude Include="include\file_type\pdf.h" />
+    <ClInclude Include="include\file_type\txt.h" />
+    <ClInclude Include="include\honey\honeypot.h" />
     <ClInclude Include="include\manager\file_manager.h" />
     <ClInclude Include="include\manager\file_type_iden.h" />
+    <ClInclude Include="include\manager\known_folder.h" />
     <ClInclude Include="include\manager\manager.h" />
-    <ClInclude Include="include\manager\process_manager.h" />
+    <ClInclude Include="include\manager\matcher.h" />
     <ClInclude Include="include\mutex\mutex.h" />
     <ClInclude Include="include\service\service.h" />
+    <ClInclude Include="include\trid\trid.h" />
     <ClInclude Include="include\trid\trid_api.h" />
     <ClInclude Include="include\ulti\debug.h" />
     <ClInclude Include="include\ulti\include.h" />

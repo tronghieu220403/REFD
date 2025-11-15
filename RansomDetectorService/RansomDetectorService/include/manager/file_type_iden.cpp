@@ -2,18 +2,24 @@
 #include "ulti/support.h"
 #include "ulti/debug.h"
 #include "file_manager.h"
+#include "../file_type/txt.h"
+#include "../file_type/compress.h"
+#include "../file_type/image.h"
+#include "../file_type/pdf.h"
+#include "../file_type/av.h"
+//#include "../file_type/ole.h"
 
 namespace type_iden
 {
 	// Checks whether two vectors of strings have any common element.
 	// Returns true if there is at least one string that appears in both vectors.
-	bool HasCommonType(const std::vector<std::string>& types1, const std::vector<std::string>& types2) {
+	bool HasCommonType(const vector<string>& types1, const vector<string>& types2) {
 		// To optimize, insert the smaller vector into a hash set for faster lookup.
-		const std::vector<std::string>& smaller = (types1.size() < types2.size()) ? types1 : types2;
-		const std::vector<std::string>& larger = (types1.size() < types2.size()) ? types2 : types1;
+		const vector<string>& smaller = (types1.size() < types2.size()) ? types1 : types2;
+		const vector<string>& larger = (types1.size() < types2.size()) ? types2 : types1;
 
 		// Create a set from the smaller vector for O(1) lookups
-		std::unordered_set<std::string> type_set(smaller.begin(), smaller.end());
+		unordered_set<string> type_set(smaller.begin(), smaller.end());
 
 		// Check if any element in the larger vector exists in the set
 		for (const auto& type : larger) {
@@ -26,352 +32,120 @@ namespace type_iden
 		return false;
 	}
 
-	bool CheckPrintableUTF16(const std::vector<unsigned char>& buffer)
+	wstring CovertTypesToString(const vector<string>& types)
 	{
-		if (buffer.size() == 0) {
-			return true;
-		}
-
-		std::streamsize printable_chars = 0;
-		std::streamsize total_chars = buffer.size() / sizeof(wchar_t);
-
-		for (size_t i = 0; i < buffer.size(); i += 2)
-		{
-			wchar_t c = *(wchar_t*)&buffer[i];
-			if (iswprint(c) || iswspace(c)) {
-				printable_chars++;
-			}
-		}
-
-		if (total_chars == 0) {
-			return false;
-		}
-
-		return !BelowTextThreshold(printable_chars, total_chars);
-	}
-
-	bool CheckPrintableUTF8(const std::vector<unsigned char>& buffer)
-	{
-		if (buffer.size() == 0) {
-			return true;
-		}
-
-		std::streamsize printable_chars = 0;
-		std::streamsize total_chars = 0;
-		size_t i = 0;
-		while (i < buffer.size()) {
-
-			unsigned char c = buffer[i];
-			if (c < 0x80) { // 1-byte ASCII (7-bit)
-				total_chars++;
-				if (isprint(c) || isspace(c)) {
-					printable_chars++;
-				}
-				i++;
-			}
-			else if ((c & 0xE0) == 0xC0) { // 2-byte UTF-8
-				if (i + 1 < buffer.size()) {
-					wchar_t wchar = ((c & 0x1F) << 6) | (buffer[i + 1] & 0x3F);
-					total_chars++;
-					if (iswprint(wchar) || iswspace(wchar)) {
-						printable_chars++;
-					}
-				}
-				i += 2;
-				/*
-				// Should be like this:
-				if (i + 1 < buffer.size()) {
-					if (buffer.size() == BEGIN_WIDTH + BEGIN_WIDTH && i < BEGIN_WIDTH && i + 1 >= BEGIN_WIDTH) // Char between the merge may not correct
-					{
-						i = BEGIN_WIDTH;
-						continue;
-					}
-					wchar_t wchar = ((c & 0x1F) << 6) | (buffer[i + 1] & 0x3F);
-					if (iswprint(wchar) || iswspace(wchar)) {
-						total_chars += 2;
-						printable_chars += 2;
-						i += 2;
-					}
-					else
-					{
-						if (buffer.size() == BEGIN_WIDTH + BEGIN_WIDTH && i >= BEGIN_WIDTH && i <= BEGIN_WIDTH + 2) // May be there is a first char in UTF-8 char disappeared.
-						{
-							i += 1;
-						}
-						else
-						{
-							total_chars += 2;
-							i += 2;
-						}
-					}
-				}
-				*/
-			}
-			else if ((c & 0xF0) == 0xE0) { // 3-byte UTF-8
-				if (i + 2 < buffer.size()) {
-					wchar_t wchar = ((c & 0x0F) << 12) | ((buffer[i + 1] & 0x3F) << 6) | (buffer[i + 2] & 0x3F);
-					total_chars++;
-					if (iswprint(wchar) || iswspace(wchar)) {
-						printable_chars++;
-					}
-				}
-				i += 3;
-			}
-			else if ((c & 0xF8) == 0xF0) { // 4-byte UTF-8
-				if (i + 3 < buffer.size()) {
-					wchar_t wchar = ((c & 0x07) << 18) | ((buffer[i + 1] & 0x3F) << 12) | ((buffer[i + 2] & 0x3F) << 6) | (buffer[i + 3] & 0x3F);
-					total_chars++;
-					if (iswprint(wchar) || iswspace(wchar)) {
-						printable_chars++;
-					}
-				}
-				i += 4;
-			}
-			else {
-				i++; // Skip invalid bytes
-			}
-		}
-
-		if (total_chars == 0) {
-			return false;
-		}
-
-		return !BelowTextThreshold(printable_chars, total_chars);
-	}
-
-	bool CheckPrintableANSI(const std::vector<unsigned char>& buffer)
-	{
-		if (buffer.size() == 0) {
-			return true;
-		}
-
-		std::streamsize printable_chars = 0;
-		std::streamsize total_chars = 0;
-
-		for (unsigned char c : buffer) {
-			total_chars++;
-			if (isprint(c) || isspace(c)) {
-				printable_chars++;
-			}
-		}
-
-		if (total_chars == 0) {
-			return false;
-		}
-
-		return !BelowTextThreshold(printable_chars, total_chars);
-	}
-
-	bool IsPrintableFile(const fs::path& file_path)
-	{
-		try
-		{
-			auto file_size = manager::GetFileSize(file_path);
-			if (file_size == 0 || file_size > FILE_MAX_SIZE_SCAN) {
-				return false;
-			}
-			std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
-			if (!file.is_open()) {
-				return false; // File cannot be opened
-			}
-
-			std::vector<unsigned char> buffer(file_size); // Buffer to hold file data
-			file.read(reinterpret_cast<char*>(buffer.data()), file_size); // Read all data into buffer
-			file.close();
-
-			// Check against different encodings and return true if any matches
-			if (CheckPrintableUTF8(buffer) || CheckPrintableUTF16(buffer) || CheckPrintableANSI(buffer)) {
-				return true;
-			}
-		}
-		catch (...)
-		{
-
-		}
-		return false; // If no encoding matches, return false
-	}
-
-	TrID::~TrID()
-	{
-		if (trid_api != nullptr)
-		{
-			delete trid_api;
-			trid_api = nullptr;
-		}
-		issue_thread_id = 0;
-	}
-
-	bool TrID::Init(const std::wstring& defs_dir, const std::wstring& trid_dll_path)
-	{
-		std::lock_guard<std::mutex> lock(m_mutex);
-		if (ulti::IsCurrentX86Process() == false)
-		{
-			PrintDebugW(L"Current process is not a x86 process");
-			return false;
-		}
-		if (trid_api != nullptr)
-		{
-			delete trid_api;
-			trid_api = nullptr;
-		}
-		try
-		{
-			trid_api = new TridApi(ulti::WstrToStr(defs_dir).c_str(), trid_dll_path.c_str());
-		}
-		catch (int trid_error_code)
-		{
-			if (trid_error_code == TRID_MISSING_LIBRARY)
-			{
-				PrintDebugW(L"TrIDLib.dll not found");
-			}
-			if (trid_api != nullptr)
-			{
-				delete trid_api;
-				trid_api = nullptr;
-			}
-			return false;
-		}
-		issue_thread_id = GetCurrentThreadId();
-		return true;
-	}
-
-	std::vector<std::string> TrID::GetTypes(const fs::path& file_path)
-	{
-		std::lock_guard<std::mutex> lock(m_mutex);
-		//PrintDebugW(L"Getting types of file: %ws", file_path.wstring().c_str());
-		/*
-		if (issue_thread_id != GetCurrentThreadId())
-		{
-			PrintDebugW(L"TrID API is not thread-safe");
-			return {};
-		}
-		*/
-		if (trid_api == nullptr)
-		{
-			PrintDebugW(L"TrID API is not initialized");
-			return {};
-		}
-		if (file_path.empty())
-		{
-			PrintDebugW(L"File path is empty");
-			return {};
-		}
-		int ret;
-		std::vector<std::string> types;
-
-        std::vector<char> buf(4096); // Buffer for TrID API results
-
-		trid_api->SubmitFileA(file_path.string().c_str());
-		ret = trid_api->Analyze();
-		if (ret)
-		{
-			ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
-            //PrintDebugW(L"TrID analysis successful for file %ws, result code: %d", file_path.c_str(), ret);
-			ret = trid_api->GetInfo(TRID_GET_RES_NUM, 0, buf.data());
-			for (int i = ret + 1; i--;)
-			{
-				ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
-				try
-				{
-					trid_api->GetInfo(TRID_GET_RES_FILETYPE, i, buf.data());
-				}
-				catch (...)
-				{
-					continue;
-				}
-				std::string type_str(buf.data());
-				if (type_str.size() == 0)
-				{
-					continue;
-				}
-				if (type_str.find("ransom") != std::string::npos || type_str.find("ncrypt") != std::string::npos)
-				{
-					continue;
-				}
-				ZeroMemory(buf.data(), buf.size()); // Clear buffer for next use
-				try
-				{
-					trid_api->GetInfo(TRID_GET_RES_FILEEXT, i, buf.data());
-				}
-				catch (...)
-				{
-					continue;
-				}
-				std::string ext_str(buf.data());
-				if (ext_str.size() == 0)
-				{
-					continue;
-				}
-
-				if (ext_str.size() > 0)
-				{
-					std::stringstream ss(ext_str);
-					std::string ext;
-					while (std::getline(ss, ext, '/'))
-					{
-						ulti::ToLowerOverride(ext);
-						types.push_back(ext); // Save found extension
-					}
-				}
-				else
-				{
-					if (type_str.size() > 0)
-					{
-						ulti::ToLowerOverride(type_str);
-						types.push_back(type_str);
-					}
-				}
-			}
-		}
-		else
-		{
-		}
-		// Read all bytes of the file
-		try
-		{
-			std::ifstream file(file_path, std::ios::binary); // Open file in binary mode
-			if (file.is_open()) {
-				if (IsPrintableFile(file_path))
-				{
-					types.push_back("txt");
-				}
-			}
-			else
-			{
-				//PrintDebugW(L"File %ws cannot be opened", file_path.c_str());
-			}
-            file.close();
-		}
-		catch (...)
-		{
-
-		}
-
-		if (types.size() == 0)
-		{
-			types.push_back("");
-		}
-#ifdef _DEBUG
-		std::string types_str = "<";
-		for (const auto& type : types)
-		{
-			types_str += "\"" + type + "\", ";
-		}
-		types_str[types_str.size() - 2] = '>';
-		//PrintDebugW(L"File types: %ws", ulti::StrToWstr(types_str).c_str());
-#endif // _DEBUG
-
-		return types;
-	}
-
-	std::wstring CovertTypesToString(const std::vector<std::string>& types)
-	{
-		std::string types_str = "<";
+		string types_str = "<";
 		for (const auto& type : types)
 		{
 			types_str += "\"" + type + "\", ";
 		}
         types_str += ">";
         return ulti::StrToWstr(types_str);
+	}
+
+	FileType::~FileType()
+	{
+#ifdef _M_IX86
+		if (trid_ != nullptr)
+		{
+			delete trid_;
+			trid_ = nullptr;
+		}
+#endif // _M_IX86
+	}
+
+	bool FileType::InitTrid(const wstring& defs_dir, const wstring& trid_dll_path)
+	{
+#ifdef _M_IX86
+		trid_ = new type_iden::TrID();
+		if (trid_ == nullptr || trid_->Init(defs_dir, trid_dll_path) == false)
+		{
+			PrintDebugW(L"TrID init failed");
+			return false;
+		}
+#endif // _M_IX86
+
+		return true;
+	}
+
+	vector<string> FileType::GetTypes(const wstring& file_path, DWORD* p_status, ull* p_file_size)
+	{
+		vector<string> types;
+		if (p_status == nullptr)
+		{
+			return types;
+		}
+
+		*p_status = ERROR_SUCCESS;
+
+#ifdef _M_IX86
+		defer
+		{
+			if (types.size() == 0 && file_size > 0 && file_size <= FILE_MAX_SIZE_SCAN)
+			{
+				ulti::AddVectorsInPlace(types, trid_->GetTypes(file_path));
+			}
+		};
+#endif // _M_IX86 
+
+		HANDLE file_handle = CreateFileW(file_path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+			nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+		if (file_handle == INVALID_HANDLE_VALUE) {
+			*p_status = GetLastError();
+			return types;
+		}
+		defer{ CloseHandle(file_handle); };
+
+		LARGE_INTEGER li_size{};
+		if (!GetFileSizeEx(file_handle, &li_size)) {
+			*p_status = GetLastError();
+			return types;
+		}
+
+		*p_file_size = static_cast<size_t>(li_size.QuadPart);
+		if (*p_file_size < FILE_MIN_SIZE_SCAN || *p_file_size > FILE_MAX_SIZE_SCAN) {
+			*p_status = ERROR_FILE_TOO_LARGE;
+			return types;
+		}
+
+		HANDLE mapping_handle = CreateFileMappingW(file_handle, nullptr,
+			PAGE_READONLY, 0, li_size.LowPart, nullptr);
+		if (!mapping_handle) {
+			*p_status = GetLastError();
+			return types;
+		}
+		defer{ CloseHandle(mapping_handle); };
+
+		UCHAR* data = (UCHAR *)MapViewOfFile(mapping_handle, FILE_MAP_READ, 0, 0, li_size.LowPart);
+		if (!data) {
+			*p_status = GetLastError();
+			return types;
+		}
+		defer{ UnmapViewOfFile(data); };
+
+		const span<UCHAR> span_data(data, *p_file_size);
+
+		auto TryGetTypes = [&](auto&& fn) -> void {
+			if (types.size() > 0) return; 
+			auto new_type = fn(span_data);
+			if (!new_type.empty()) {
+				ulti::AddVectorsInPlace(types, new_type);
+			}
+		};
+
+		TryGetTypes(GetPdfTypes);
+		TryGetTypes(GetZipTypes);
+		TryGetTypes(GetRarTypes);
+		TryGetTypes(GetPngTypes);
+		TryGetTypes(GetJpgTypes);
+		TryGetTypes(GetAudioVideoTypes);
+		TryGetTypes(Get7zTypes);
+		TryGetTypes(GetTxtTypes);
+		TryGetTypes(GetZlibTypes);
+		TryGetTypes(GetGzipTypes);
+
+		//TryGetTypes(GetWebpTypes); // Bad performance, do not use.
+		//TryGetTypes(GetOleTypes); // Bad performance, do not implement.
+		return types;
 	}
 }

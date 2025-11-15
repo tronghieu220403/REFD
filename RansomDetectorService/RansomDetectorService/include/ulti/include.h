@@ -3,9 +3,11 @@
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
 #define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 
-#ifndef ETWSERVICE_ULTI_INCLUDE_H_
-#define ETWSERVICE_ULTI_INCLUDE_H_
+#ifndef ULTI_INCLUDE_H_
+#define ULTI_INCLUDE_H_
+#define NOMINMAX
 #include <Windows.h>
+#include <limits>
 #include <iphlpapi.h>
 #include <TlHelp32.h>
 #include <Psapi.h>
@@ -18,6 +20,7 @@
 #include <wtsapi32.h>
 #include <userenv.h>
 
+#include <zlib.h>
 #include <memory>
 #include <iostream>
 #include <string>
@@ -45,6 +48,9 @@
 #include <cctype>
 #include <codecvt>
 #include <cwctype>
+#include <span>
+#include <cstdint>
+#include <csetjmp>
 
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "FltLib.lib")
@@ -89,6 +95,7 @@ struct {
 typedef unsigned int uint32;
 
 typedef unsigned long long ull;
+typedef long long ll;
 
 #define FlagOn(_Flag, _Bit)  (((_Flag) & (_Bit)) != 0)
 
@@ -98,4 +105,9 @@ typedef unsigned long long ull;
 
 namespace fs = std::filesystem;
 
-#endif // ETWSERVICE_ULTI_INCLUDE_H_
+using namespace std;
+using namespace std::chrono;
+
+#define PRODUCT_PATH L"E:\\hieunt210330\\hieunt210330\\"
+
+#endif // ULTI_INCLUDE_H_

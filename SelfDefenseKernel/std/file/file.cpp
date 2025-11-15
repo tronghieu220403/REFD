@@ -3,7 +3,7 @@
 
 namespace file
 {
-	ZwFile::ZwFile(const String<WCHAR>& current_path) :
+	ZwFile::ZwFile(const std::WString& current_path) :
 		file_path_(current_path)
 	{
 
@@ -82,10 +82,10 @@ namespace file
 		{
 			return;
 		}
-        if (file_handle_ == nullptr)
-        {
-            return;
-        }
+		if (file_handle_ == nullptr)
+		{
+			return;
+		}
 		ZwClose(file_handle_);
 		file_handle_ = nullptr;
 	}
@@ -95,7 +95,7 @@ namespace file
 		Close();
 	}
 
-	FileFlt::FileFlt(const String<WCHAR>& current_path, const PFLT_FILTER p_filter_handle, const PFLT_INSTANCE p_instance, const PFILE_OBJECT p_file_object, ULONG create_disposition) :
+	FileFlt::FileFlt(const std::WString& current_path, const PFLT_FILTER p_filter_handle, const PFLT_INSTANCE p_instance, const PFILE_OBJECT p_file_object, ULONG create_disposition) :
 		file_path_(current_path),
 		p_filter_handle_(p_filter_handle),
 		p_instance_(p_instance),
@@ -179,19 +179,19 @@ namespace file
 
 		// Word around to avoid STATUS_INVALID_OFFSET_ALIGNMENT (0xC0000474) error.
 		ull new_length;
-        PVOID new_buffer;
-        ull new_offset = offset / 4 * 4;
+		PVOID new_buffer;
+		ull new_offset = offset / 4 * 4;
 		if (new_offset < offset)
 		{
 			new_length = length + (offset - new_offset);
 			new_buffer = new UCHAR[new_length];
 		}
-        else
-        {
-            new_offset = offset;
-            new_length = length;
-            new_buffer = buffer;
-        }
+		else
+		{
+			new_offset = offset;
+			new_length = length;
+			new_buffer = buffer;
+		}
 
 		LARGE_INTEGER byte_offset;
 		byte_offset.QuadPart = new_offset;
@@ -215,7 +215,7 @@ namespace file
 			}
 		}
 
-        // Copy the data from new_buffer to the old buffer
+		// Copy the data from new_buffer to the old buffer
 		if (new_offset < offset)
 		{
 			memcpy(buffer, (PUCHAR)new_buffer + (offset - new_offset), bytes_read - (offset - new_offset));
@@ -266,7 +266,7 @@ namespace file
 		{
 			return true;
 		}
-        //DebugMessage("FltCreateFile %ws returned error: %x", file_path_.Data(), status);
+		//DebugMessage("FltCreateFile %ws returned error: %x", file_path_.Data(), status);
 		return false;
 	}
 
@@ -274,14 +274,16 @@ namespace file
 	{
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
-			//DebugMessage("KeGetCurrentIrql != PASSIVE_LEVEL");
+			DebugMessage("KeGetCurrentIrql != PASSIVE_LEVEL");
 			return ULL_MAX;
 		}
-		if (is_open_ == false)
+
+		if (is_open_ == false && pre_alloc_file_object_ == false)
 		{
 			DebugMessage("File is not opened");
 			return ULL_MAX;
 		}
+
 		NTSTATUS status;
 		LARGE_INTEGER li_file_size = { 0 };
 		if (NT_SUCCESS((status = FsRtlGetFileSize(p_file_object_, &li_file_size))))
@@ -314,7 +316,7 @@ namespace file
 		Close();
 	}
 
-	bool ZwIsFileExist(const String<WCHAR>& file_path_str)
+	bool ZwIsFileExist(const std::WString& file_path_str)
 	{
 		if (KeGetCurrentIrql() != PASSIVE_LEVEL)
 		{
@@ -442,7 +444,7 @@ namespace file
 
 			// Open symlink
 
-			InitializeObjectAttributes(&attribs, &sub_Path, OBJ_KERNEL_HANDLE | OBJ_CASE_INSENSITIVE, NULL, NULL);
+			InitializeObjectAttributes(&attribs, &sub_Path, OBJ_KERNEL_HANDLE, NULL, NULL);
 
 			status = ZwOpenSymbolicLinkObject(&hsym_link, GENERIC_READ, &attribs);
 			if (!NT_SUCCESS(status))
@@ -539,33 +541,19 @@ namespace file
 		return STATUS_SUCCESS;
 	}
 
-	String<WCHAR> NormalizeDevicePathStr(const String<WCHAR>& path)
+	std::WString NormalizeDevicePathStr(const std::WString& path)
 	{
 		UNICODE_STRING path_uni_str = { path.Size() * sizeof(WCHAR), path.Size() * sizeof(WCHAR) , (PWCH)path.Data() };
-		String<WCHAR> normalized;
-		normalized.Resize(max(path.Size() * 2, 1024));
-		while (true)
+		std::WString normalized;
+		normalized.Resize(path.Size() * 2);
+		UNICODE_STRING normalized_uni_str = { normalized.Size() * sizeof(WCHAR), normalized.Size() * sizeof(WCHAR) , (PWCH)normalized.Data() };
+		if (NT_SUCCESS(NormalizeDevicePath(&path_uni_str, &normalized_uni_str)))
 		{
-			UNICODE_STRING normalized_uni_str = { normalized.Size() * sizeof(WCHAR), normalized.Size() * sizeof(WCHAR) , (PWCH)normalized.Data() };
-			NTSTATUS status = NormalizeDevicePath(&path_uni_str, &normalized_uni_str);
-			if (NT_SUCCESS(status))
-			{
-				normalized.Resize(wcsnlen(normalized.Data(), normalized.Size()));
-				break;
-			}
-			else if (status == STATUS_BUFFER_OVERFLOW && normalized.Size() <= 32767)
-            {
-                // Resize the buffer to twice its current size
-                DebugMessage("NormalizeDevicePath: STATUS_BUFFER_OVERFLOW, resizing buffer to %llu", normalized.Size() * 2);
-                normalized.Resize(normalized.Size() * 2);
-                continue;
-            }
-            else
-			{
-				DebugMessage("NormalizeDevicePath failed: %x", status);
-				normalized.Clear();
-				break;
-			}
+			normalized.Resize(wcsnlen(normalized.Data(), normalized.Size()));
+		}
+		else
+		{
+			normalized.Clear();
 		}
 		return normalized;
 	}

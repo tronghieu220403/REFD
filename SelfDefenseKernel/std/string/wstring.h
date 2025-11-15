@@ -34,8 +34,6 @@ namespace std
         // Move assignment
         WString& operator=(WString&&) noexcept;
 
-		friend WString& Move(WString&&) noexcept;
-
         // Move assignment from UNICODE_STRING reference
         // DANGEROUS: Never implement this function, it will move the UNICODE_STRING to the WString. If the string buffer is in stack or predefined, the destructor will free an invalid memory address.
         // WString& operator=(const UNICODE_STRING&& u) noexcept;

@@ -1,6 +1,6 @@
 
-#ifndef ETWSERVICE_MUTEX_MUTEX_H_
-#define ETWSERVICE_MUTEX_MUTEX_H_
+#ifndef MUTEX_MUTEX_H_
+#define MUTEX_MUTEX_H_
 
 #include "ulti/support.h"
 

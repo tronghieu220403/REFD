@@ -212,18 +212,6 @@ namespace std
         return *this;
 	}
 
-	WString& Move(WString&& other) noexcept
-	{
-        WString tmp;
-        tmp.size_ = other.size_;
-        tmp.capacity_ = other.capacity_;
-        tmp.elements_ = other.elements_;
-		other.size_ = 0;
-		other.capacity_ = 0;
-		other.elements_ = nullptr;
-		return tmp;
-	}
-
 	// Destructor
 	WString::~WString()
 	{
@@ -650,7 +638,10 @@ namespace std
 	WCHAR* WString::Allocate(size_t n)
 	{
 		WCHAR* p = new WCHAR[n + 1];
-		p[n] = L'\0';
+		if (p != nullptr)
+		{
+			p[n] = L'\0';
+		}
 		return p;
 	}
 
@@ -725,7 +716,7 @@ namespace std
         return str;
     }
 
-	static WString ToWstring(unsigned long long num)
+	WString ToWstring(unsigned long long num)
     {
         WString str;
         str.Resize(32);

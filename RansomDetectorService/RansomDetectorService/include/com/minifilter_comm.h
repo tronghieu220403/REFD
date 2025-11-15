@@ -1,5 +1,5 @@
-#ifndef MINIFILTER_COMM_H
-#define MINIFILTER_COMM_H
+#ifndef COM_MINIFILTER_COMM_H
+#define COM_MINIFILTER_COMM_H
 
 #include <Windows.h>
 #include <fltuser.h>
