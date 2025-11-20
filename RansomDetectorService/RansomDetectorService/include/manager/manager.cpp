@@ -75,7 +75,7 @@ namespace manager {
 			kFileIoManager->UnlockMutex();
 
 			now = ulti::GetCurrentSteadyTimeInSec();
-			PrintDebugW(L"Queue size %d, now %lld", file_io_list.size(), now);
+			//PrintDebugW(L"Queue size %d, now %lld", file_io_list.size(), now);
 
 			// Move events from the queue into the map grouped by requestor_pid
 			while (file_io_list.empty() == false)
@@ -156,7 +156,7 @@ namespace manager {
 			}
 			else
 			{
-				PrintDebugW(L"Can not find max element, v.size() is %lld",v.size());
+				//PrintDebugW(L"Can not find max element, v.size() is %lld",v.size());
 			}
 		}
 	}

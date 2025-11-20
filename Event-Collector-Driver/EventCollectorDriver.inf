@@ -10,7 +10,7 @@ Signature   = "$Windows NT$"
 Class       = "ActivityMonitor"             ;This is determined by the work this filter driver does
 ClassGuid   = {b86dff51-a31e-4bac-b3cf-e8cfe75c9fc2}    ;This value is determined by the Class
 Provider    = %ManufacturerName%
-DriverVer   = 
+DriverVer = 11/17/2025,22.1.10.937
 CatalogFile = EventCollectorDriver.cat
 PnpLockDown=1
 
@@ -26,7 +26,7 @@ MiniFilter.DriverFiles  = 12            ;%windir%\system32\drivers
 OptionDesc          = %ServiceDescription%
 CopyFiles           = MiniFilter.DriverFiles
 
-[DefaultInstall.Services]
+[DefaultInstall.NTamd64.Services]
 AddService          = %ServiceName%,,MiniFilter.Service
 
 ;;
@@ -37,7 +37,7 @@ AddService          = %ServiceName%,,MiniFilter.Service
 DelFiles   = MiniFilter.DriverFiles
 LegacyUninstall = 1
 
-[DefaultUninstall.Services]
+[DefaultInstall.NTamd64.Services]
 DelService = %ServiceName%,0x200      ;Ensure service is stopped before deleting
 
 ;
