@@ -13,3 +13,5 @@
 /SelfDefenseKernel/AntiRansomKernel/x64
 /RansomDetectorService/RansomDetectorService/Release
 /RansomDetectorService/vcpkg_installed
+/EventCollectorDriver/x64
+/EventCollectorDriver/.vs

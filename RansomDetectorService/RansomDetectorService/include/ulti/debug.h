@@ -25,7 +25,7 @@ namespace debug {
     // Retrieves a formatted error message from a Windows error code.
     std::wstring GetErrorMessage(DWORD errorCode);
 
-}  // namespace debug
+}  // namespace debug 
 
 #define PrintDebugW(str, ...) \
     debug::DebugPrintW(L"[%ws:%d] " str L"\n", __FUNCTIONW__, __LINE__, __VA_ARGS__)

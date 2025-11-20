@@ -111,10 +111,12 @@ namespace self_defense {
         if (kIsProcessNotifyCallbackRegistered == true)
         {
             PsSetCreateProcessNotifyRoutineEx(ProcessNotifyCallback, TRUE);
+            kIsProcessNotifyCallbackRegistered = false;
         }
         if (kIsObCallbackRegistered == true)
         {
             ObUnRegisterCallbacks(kHandleRegistration);
+            kIsObCallbackRegistered = false;
         }
 
         kProcessMapMutex.Lock();
