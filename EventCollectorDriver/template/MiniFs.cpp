@@ -311,6 +311,13 @@ DriverEntry (
 
     DebugMessage("%ws", __FUNCTIONW__);
 
+    NTSTATUS status = InitDebugSystem();
+
+    if (!NT_SUCCESS(status)) {
+        DebugMessage("Failed InitDebugSystem(), status %x", status);
+        return status;
+    }
+
     DebugMessage("GetSystemRoutineAddresses");
     GetSystemRoutineAddresses();
 
@@ -364,6 +371,7 @@ DriverUnload(
 {
     DebugMessage("%ws", __FUNCTIONW__);
     reg::DrvUnload(driver_object);
+    CloseDebugSystem();
 
     DebugMessage("Successfully unloaded driver");
     return STATUS_SUCCESS;
@@ -406,16 +414,7 @@ MiniFsPreOperation (
     {
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
     }
-    /*
-#ifdef _DEBUG
-    std::WString current_path = flt::GetFileFullPathName(data);
 
-    if (current_path.Find(L"test\\") == ULL_MAX)
-    {
-        return FLT_PREOP_SUCCESS_NO_CALLBACK;
-    }
-#endif // _DEBUG
-    */
     reg::Context* p = nullptr;
     if ((*completion_context) == nullptr)
     {
@@ -508,31 +507,6 @@ MiniFsPostOperation (
 
 void MiniFsContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
 {
-    if (context_type == FLT_STREAMHANDLE_CONTEXT || context_type == FLT_FILE_CONTEXT)
-    {
-        collector::HANDLE_CONTEXT* p_handle_context = (collector::HANDLE_CONTEXT*)context;
-        if (p_handle_context != nullptr)
-        {
-            //DebugMessage("FLT_X_CONTEXT. File: %ws, handle context %p", p_handle_context->current_path, p_handle_context);
-            if ((p_handle_context->is_modified + p_handle_context->is_renamed + p_handle_context->is_created + p_handle_context->is_deleted) == 0)
-            {
-                //DebugMessage("File: %ws, no operation, do not send to user mode", p_handle_context->current_path);
-                return;
-            }
-            if (com::kComPort->Send(p_handle_context, sizeof(collector::HANDLE_CONTEXT)) != STATUS_SUCCESS)
-            {
-                DebugMessage("Send failed, event to user mode: PID %d, is_modified %d, is_renamed %d, path %ws", p_handle_context->requestor_pid, p_handle_context->is_modified, p_handle_context->is_renamed, p_handle_context->path);
-            }
-            else
-            {
-                DebugMessage("Send oke, event to user mode: PID %d, is_modified %d, is_renamed %d, path %ws", p_handle_context->requestor_pid, p_handle_context->is_modified, p_handle_context->is_renamed, p_handle_context->path);
-            }
-        }
-    }
-    else
-    {
-        //DebugMessage("Unknown context type: %d", context_type);
-    }
-    return;
+    collector::ContextCleanup(context, context_type);
 }
 

@@ -57,6 +57,12 @@
     <ClCompile Include="std\string\wstring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="template\debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="template\common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="com\comport\comport.h">
@@ -123,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="std\string\wstring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="template\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

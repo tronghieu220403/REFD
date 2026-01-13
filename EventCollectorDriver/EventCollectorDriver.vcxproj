@@ -165,6 +165,8 @@
     <ClCompile Include="std\memory\memory.cpp" />
     <ClCompile Include="std\string\wstring.cpp" />
     <ClCompile Include="std\sync\mutex.cpp" />
+    <ClCompile Include="template\common.cpp" />
+    <ClCompile Include="template\debug.cpp" />
     <ClCompile Include="template\flt-ex.cpp" />
     <ClCompile Include="template\MiniFs.cpp" />
     <ClCompile Include="template\register.cpp" />
@@ -188,6 +190,7 @@
     <ClInclude Include="std\sync\mutex.h" />
     <ClInclude Include="std\ulti\def.h" />
     <ClInclude Include="std\vector\vector.h" />
+    <ClInclude Include="template\common.h" />
     <ClInclude Include="template\debug.h" />
     <ClInclude Include="template\flt-ex.h" />
     <ClInclude Include="template\MiniFs.h" />

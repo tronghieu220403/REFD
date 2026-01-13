@@ -1,22 +1,51 @@
 ﻿#include "collector.h"
 #include "../std/file/file.h"   
+#include "../std/algo/entropy.h"
+#include "../std/algo/hash.h"
+#include "../template/common.h"
 
 namespace collector
 {
+    bool kIsProcessNotifyCallbackRegistered = false;
+    bool kIsObCallbackRegistered = false;
 
-    // Đăng ký các callback bảo vệ process và thread
+    // Register process and thread callbacks.
     void DrvRegister()
     {
-        
+        DebugMessage("%ws", __FUNCTIONW__);
+        // Register process creation and termination callback
+        NTSTATUS status = PsSetCreateProcessNotifyRoutineEx(ProcessNotifyCallback, FALSE);
+        if (!NT_SUCCESS(status))
+        {
+            DebugMessage("Fail to register process notify callback: %x", status);
+        }
+        else
+        {
+            DebugMessage("Process notify callback registered");
+            kIsProcessNotifyCallbackRegistered = true;
+        }
     }
 
-    // Huỷ đăng ký các callback bảo vệ process và thread
+    // Unregister process and thread callbacks.
     void DrvUnload()
     {
-
+        DebugMessage("%ws", __FUNCTIONW__);
+        if (kIsProcessNotifyCallbackRegistered == true)
+        {
+            PsSetCreateProcessNotifyRoutineEx(ProcessNotifyCallback, TRUE);
+            kIsProcessNotifyCallbackRegistered = false;
+        }
     }
 
-    // Đăng ký các bộ lọc bảo vệ file
+    // Process notification callback
+    void ProcessNotifyCallback(
+        PEPROCESS process,
+        HANDLE pid,
+        PPS_CREATE_NOTIFY_INFO create_info
+    )
+    {
+    }
+
     void FltRegister()
     {
         //DebugMessage("%ws", __FUNCTIONW__);
@@ -24,6 +53,7 @@ namespace collector
         reg::kFltFuncVector->PushBack({ IRP_MJ_CREATE, PreFileCreate, PostFileCreate });
         reg::kFltFuncVector->PushBack({ IRP_MJ_CLOSE, PreFileClose, PostFileClose });
         reg::kFltFuncVector->PushBack({ IRP_MJ_WRITE, PreWriteFile, PostFileWrite });
+        reg::kFltFuncVector->PushBack({ IRP_MJ_READ, PreReadFile, PostReadFile });
         reg::kFltFuncVector->PushBack({ IRP_MJ_ACQUIRE_FOR_SECTION_SYNCHRONIZATION, PreFileAcquireForSectionSync, PostFileAcquireForSectionSync });
         reg::kFltFuncVector->PushBack({ IRP_MJ_SET_INFORMATION, PreFileSetInformation, PostFileSetInformation });
 
@@ -87,10 +117,8 @@ namespace collector
         }
 
         std::WString current_path(flt::GetFileFullPathName(data));
-
-        if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1 || current_path.HasCiPrefix(L"\\Device\\HarddiskVolume4\\hieunt210330") == true)
-        {
-            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        if (current_path.Size() == 0 || current_path.HasCiSuffix(L"\\EventCollectorDriver.log")) {
+            return FLT_PREOP_SUCCESS_WITH_CALLBACK;
         }
 
         return FLT_PREOP_SUCCESS_WITH_CALLBACK;
@@ -100,17 +128,12 @@ namespace collector
     {
         UNREFERENCED_PARAMETER(completion_context);
 
-        if (!NT_SUCCESS(data->IoStatus.Status))
-        {
-            return FLT_POSTOP_FINISHED_PROCESSING;
-        }
+        UNREFERENCED_PARAMETER(completion_context);
 
-        if (flags & FLTFL_POST_OPERATION_DRAINING)
-        {
-            return FLT_POSTOP_FINISHED_PROCESSING;
-        }
-
-        if (!FltSupportsStreamHandleContexts(flt_objects->FileObject))
+        if (!NT_SUCCESS(data->IoStatus.Status) ||
+            (flags & FLTFL_POST_OPERATION_DRAINING) ||
+            !FltSupportsStreamHandleContexts(flt_objects->FileObject)
+            )
         {
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
@@ -124,98 +147,227 @@ namespace collector
 
         const auto& create_params = data->Iopb->Parameters.Create;
 
+        bool is_created = (data->IoStatus.Information == FILE_CREATED);
         bool is_delete_on_close = FlagOn(create_params.Options, FILE_DELETE_ON_CLOSE);
+
+        /*
         bool has_write_access = create_params.SecurityContext->DesiredAccess & (FILE_WRITE_DATA | FILE_APPEND_DATA);
         bool has_delete_access = create_params.SecurityContext->DesiredAccess & DELETE;
-
-        bool is_created = (data->IoStatus.Information == FILE_CREATED);
-
         // Not interested in files without write and delete access
         if (!is_created && !has_write_access && !is_delete_on_close && !has_delete_access)
         {
-            /*
-            if (current_path.FindFirstOf(L"hieunt-0075") != ULL_MAX)
-            {
-                DebugMessage("File: %ws, Not interested in files without create, write and delete access", current_path.Data());
-            }
-            */
+            DebugMessage("File: %ws, Not interested in files without create, write and delete access", current_path.Data());
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
-
+        */
         ULONG options = create_params.Options;
 
-        PHANDLE_CONTEXT p_handle_context = nullptr;
-        NTSTATUS status = FltAllocateContext(flt_objects->Filter, FLT_STREAMHANDLE_CONTEXT, sizeof(HANDLE_CONTEXT), NonPagedPool, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
-        if (!NT_SUCCESS(status))
-        {
+        PHANDLE_CONTEXT p_hc = nullptr;
+        NTSTATUS status = FltAllocateContext(flt_objects->Filter, FLT_STREAMHANDLE_CONTEXT, sizeof(HANDLE_CONTEXT), NonPagedPool, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
+        if (!NT_SUCCESS(status)) {
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
 
-        memset(p_handle_context, 0, sizeof(HANDLE_CONTEXT));
-        p_handle_context->requestor_pid = FltGetRequestorProcessId(data);
-        p_handle_context->is_created = is_created;
-        p_handle_context->is_deleted = is_delete_on_close;
-        RtlCopyMemory(p_handle_context->path, current_path.Data(), current_path.Size() * sizeof(WCHAR));
-        
-        status = FltSetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, FLT_SET_CONTEXT_KEEP_IF_EXISTS, reinterpret_cast<PFLT_CONTEXT>(p_handle_context), nullptr);
+        memset(p_hc, 0, sizeof(HANDLE_CONTEXT));
+        p_hc->requestor_pid = FltGetRequestorProcessId(data);
+        p_hc->is_created = is_created;
+        p_hc->is_deleted = is_delete_on_close;
+        p_hc->path = current_path;
 
-        FltReleaseContext(p_handle_context);
-        
+        LARGE_INTEGER li_file_size = { 0, 0 };
+        FsRtlGetFileSize(flt_objects->FileObject, &li_file_size);
+        p_hc->file_size = li_file_size.QuadPart;
+
+        status = FltSetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, FLT_SET_CONTEXT_KEEP_IF_EXISTS, reinterpret_cast<PFLT_CONTEXT>(p_hc), nullptr);
+        FltReleaseContext(p_hc);
         return FLT_POSTOP_FINISHED_PROCESSING;
     }
 
     FLT_PREOP_CALLBACK_STATUS PreWriteFile(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
     {
-        // not interested in writes to the paging file 
-        if (FsRtlIsPagingFile(flt_objects->FileObject))
-            return FLT_PREOP_SUCCESS_NO_CALLBACK;
-
-        if (IoGetTopLevelIrp() != NULL) {
+        if (data->RequestorMode == KernelMode ||
+            FsRtlIsPagingFile(flt_objects->FileObject) ||        // not interested in writes to the paging file 
+            IoGetTopLevelIrp() != NULL) {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-        std::WString current_path = flt::GetFileFullPathName(data);
-        if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1)
-        {
-            //DebugMessage("File: %ws, size %llu is an error", current_path.Data(), current_path.Size());
-            return FLT_PREOP_SUCCESS_NO_CALLBACK;
-        }
-
-        PHANDLE_CONTEXT p_handle_context = nullptr;
+        PHANDLE_CONTEXT p_hc = nullptr;
 
         bool is_file_context = false;
 
         if (FlagOn(data->Iopb->IrpFlags, IRP_NOCACHE) && FlagOn(data->Iopb->IrpFlags, IRP_PAGING_IO))
-        // If noncached paging I/O and not to the pagefile
+            // If noncached paging I/O and not to the pagefile
         {
             // We do not ignore kernel mode writes here because this is where memory-mapped writes occur.
-            NTSTATUS status = FltGetFileContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
-            if (!NT_SUCCESS(status))
-            {
+            NTSTATUS status = FltGetFileContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
+            if (!NT_SUCCESS(status)) {
                 return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
-            FltDeleteContext(p_handle_context);
-        }
-        else
-        {
-            if (data->RequestorMode == KernelMode)
-            {
-                return FLT_PREOP_SUCCESS_NO_CALLBACK;
-            }
-            NTSTATUS status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
-            if (!NT_SUCCESS(status))
-            {
-				return FLT_PREOP_SUCCESS_NO_CALLBACK;
-            }
-            p_handle_context->is_modified = true;
+            p_hc->is_mmap_modified = true;
+            FltDeleteContext(p_hc);
+            FltReleaseContext(p_hc);
+            // Not calculate entropy yet.
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-        FltReleaseContext(p_handle_context);
+        if (data->RequestorMode == KernelMode) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+        NTSTATUS status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
+        if (!NT_SUCCESS(status)) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+        defer(FltReleaseContext(p_hc););
+
+        const auto& write_params = data->Iopb->Parameters.Write;
+        UCHAR* buffer = nullptr;
+
+        if (write_params.MdlAddress != nullptr) {
+            buffer = (unsigned char*)MmGetSystemAddressForMdlSafe(write_params.MdlAddress,
+                NormalPagePriority | MdlMappingNoExecute);
+            if (buffer == nullptr) {
+                data->IoStatus.Status = STATUS_INSUFFICIENT_RESOURCES;
+                data->IoStatus.Information = 0;
+                return FLT_PREOP_COMPLETE;
+            }
+        }
+        else {
+            __try {
+                buffer = (UCHAR*)write_params.WriteBuffer;
+                ProbeForRead(buffer, write_params.Length, 1);
+            }
+            __except (EXCEPTION_EXECUTE_HANDLER) {
+                buffer = nullptr;
+            }
+        }
+        if (buffer == nullptr) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        auto freq_write = new LONGLONG[256];
+        RtlZeroMemory(freq_write, sizeof(LONGLONG) * 256);
+        defer(delete[] freq_write;);
+
+        ULONG length = write_params.Length;
+        if (length == 0) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        __try {
+            for (ULONG i = 0; i < length; i++) {
+                ++freq_write[buffer[i]];
+            }
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        p_hc->is_modified = true;
+        p_hc->write_cnt_bytes += length;
+        auto write_entropy = math::ComputeByteEntropyFromFreq(freq_write, length);
+        p_hc->write_entropy = (p_hc->write_entropy * p_hc->write_cnt_times + write_entropy) / (p_hc->write_cnt_times + 1);
+        p_hc->write_cnt_times += 1;
+        auto t = GetNtSystemTime();
+        if (p_hc->first_write_timestamp == 0) {
+            p_hc->first_write_timestamp = t;
+        }
+        p_hc->last_write_timestamp = t;
+
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
     }
 
     FLT_POSTOP_CALLBACK_STATUS PostFileWrite(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID completion_context, FLT_POST_OPERATION_FLAGS flags)
     {
+        return FLT_POSTOP_FINISHED_PROCESSING;
+    }
+
+    FLT_PREOP_CALLBACK_STATUS PreReadFile(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* p_completion_context)
+    {
+        if (data->RequestorMode == KernelMode ||
+            FsRtlIsPagingFile(flt_objects->FileObject) ||
+            IoGetTopLevelIrp() != NULL) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        if (p_completion_context == nullptr) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        PHANDLE_CONTEXT p_hc = nullptr;
+
+        NTSTATUS status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
+        if (!NT_SUCCESS(status)) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
+        *p_completion_context = p_hc;
+
+        return FLT_PREOP_SUCCESS_WITH_CALLBACK;
+    }
+
+    FLT_POSTOP_CALLBACK_STATUS PostReadFile(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID p_completion_context, FLT_POST_OPERATION_FLAGS flags)
+    {
+        if (p_completion_context == nullptr) {
+            return FLT_POSTOP_FINISHED_PROCESSING;
+        }
+        PHANDLE_CONTEXT p_hc = (PHANDLE_CONTEXT)(p_completion_context);
+        defer(FltReleaseContext(p_hc););
+
+        if (!NT_SUCCESS(data->IoStatus.Status))
+            return FLT_POSTOP_FINISHED_PROCESSING;
+
+        UCHAR* buffer = nullptr;
+
+        const auto& read_params = data->Iopb->Parameters.Read;
+        if (read_params.MdlAddress != nullptr) {
+            buffer = (unsigned char*)MmGetSystemAddressForMdlSafe(read_params.MdlAddress,
+                NormalPagePriority | MdlMappingNoExecute);
+            if (buffer == nullptr) {
+                return FLT_POSTOP_FINISHED_PROCESSING;
+            }
+        }
+        else {
+            __try {
+                buffer = (UCHAR*)read_params.ReadBuffer;
+                ProbeForRead(buffer, read_params.Length, 1);
+            }
+            __except (EXCEPTION_EXECUTE_HANDLER) {
+                buffer = nullptr;
+            }
+        }
+        if (buffer == nullptr) {
+            return FLT_POSTOP_FINISHED_PROCESSING;
+        }
+
+        auto freq_read = new LONGLONG[256];
+        RtlZeroMemory(freq_read, sizeof(LONGLONG) * 256);
+        defer(delete[] freq_read;);
+
+        ULONG length = min(read_params.Length, (ULONG)data->IoStatus.Information);
+
+        if (length == 0) {
+            return FLT_POSTOP_FINISHED_PROCESSING;
+        }
+
+        __try {
+            for (ULONG i = 0; i < length; i++) {
+                ++freq_read[buffer[i]];
+            }
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER) {
+            return FLT_POSTOP_FINISHED_PROCESSING;
+        }
+        p_hc->is_read = true;
+        p_hc->read_cnt_bytes += length;
+        auto read_entropy = math::ComputeByteEntropyFromFreq(freq_read, length);
+        p_hc->read_entropy = (p_hc->read_entropy * p_hc->read_cnt_times + read_entropy) / (p_hc->read_cnt_times + 1);
+        p_hc->read_cnt_times += 1;
+        auto t = GetNtSystemTime();
+        if (p_hc->first_read_timestamp == 0) {
+            p_hc->first_read_timestamp = t;
+        }
+        p_hc->last_read_timestamp = t;
+
         return FLT_POSTOP_FINISHED_PROCESSING;
     }
 
@@ -233,9 +385,9 @@ namespace collector
 
         //DebugMessage("File %ws, instance %p, file object %p, pid %d", flt::GetFileFullPathName(data).Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
-        PHANDLE_CONTEXT p_handle_context = nullptr;
+        PHANDLE_CONTEXT p_hc = nullptr;
 
-        status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
+        status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
         if (!NT_SUCCESS(status))
         {
             if (status != STATUS_NOT_FOUND) {
@@ -254,7 +406,7 @@ namespace collector
             || file_info_class == FileRenameInformationExBypassAccessCheck)
         {
             PFILE_RENAME_INFORMATION target_info = (PFILE_RENAME_INFORMATION)data->Iopb->Parameters.SetFileInformation.InfoBuffer;
-            PFLT_FILE_NAME_INFORMATION name_info;
+            PFLT_FILE_NAME_INFORMATION p_name_info;
 
             status = FltGetDestinationFileNameInformation(
                 flt_objects->Instance,
@@ -263,64 +415,37 @@ namespace collector
                 target_info->FileName,
                 target_info->FileNameLength,
                 FLT_FILE_NAME_NORMALIZED | FLT_FILE_NAME_QUERY_DEFAULT,
-                &name_info
+                &p_name_info
             );
 
             if (NT_SUCCESS(status))
             {
-                //DebugMessage("File: %ws, renamed to %ws", p_handle_context->path, name_info->Name.Buffer);
+                //DebugMessage("File: %ws, renamed to %ws", p_hc->path, name_info->Name.Buffer);
 
-                p_handle_context->is_renamed = true;
-                if (name_info->Name.Length > 0 && name_info->Name.Length < (HIEUNT_MAX_PATH - 1) * sizeof(WCHAR))
-                {
-                    RtlCopyMemory(p_handle_context->path, name_info->Name.Buffer, name_info->Name.Length);
-                    p_handle_context->path[name_info->Name.Length / sizeof(WCHAR)] = L'\0';
-                }
-                else
-                {
-                    RtlZeroMemory(p_handle_context->path, sizeof(p_handle_context->path));
-                }
-                FltReleaseFileNameInformation(name_info);
+                p_hc->is_renamed = true;
+                p_hc->new_path = p_name_info->Name;
+                FltReleaseFileNameInformation(p_name_info);
             }
         }
         else if (file_info_class == FileDispositionInformation || file_info_class == FileDispositionInformationEx)
         {
-            p_handle_context->is_deleted = true;
+            p_hc->is_deleted = true;
         }
         else if (file_info_class == FileAllocationInformation)
         {
-
+            p_hc->is_alloc = true;
         }
         else if (file_info_class == FileEndOfFileInformation)
         {
-
+            p_hc->is_eof = true;
         }
 
-
-        FltReleaseContext(p_handle_context);
+        FltReleaseContext(p_hc);
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
     }
 
     FLT_POSTOP_CALLBACK_STATUS PostFileSetInformation(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID completion_context, FLT_POST_OPERATION_FLAGS flags)
     {
-        /*
-        //DebugMessage("%ws, instance %p, file object %p, pid %d", __FUNCTIONW__, flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
-        if (!NT_SUCCESS(data->IoStatus.Status))
-        {
-            return FLT_POSTOP_FINISHED_PROCESSING;
-        }
-
-        if (flags & FLTFL_POST_OPERATION_DRAINING)
-        {
-            return FLT_POSTOP_FINISHED_PROCESSING;
-        }
-
-        if (data->RequestorMode == KernelMode)
-        {
-            return FLT_POSTOP_FINISHED_PROCESSING;
-        }
-        */
-
         return FLT_POSTOP_FINISHED_PROCESSING;
     }
 
@@ -339,38 +464,35 @@ namespace collector
         if (acquire_params.SyncType == SyncTypeCreateSection &&
             (acquire_params.PageProtection == PAGE_READWRITE || acquire_params.PageProtection == PAGE_EXECUTE_READWRITE))
         {
-            PHANDLE_CONTEXT handle_context = nullptr;
+            PHANDLE_CONTEXT p_hc = nullptr;
 
             std::WString current_path = flt::GetFileFullPathName(data);
-            if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1)
-            {
+            if (current_path.Size() == 0) {
                 return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
 
-            NTSTATUS status = FltGetFileContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&handle_context));
+            NTSTATUS status = FltGetFileContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
             if (!NT_SUCCESS(status))
             {
-                status = FltAllocateContext(flt_objects->Filter, FLT_FILE_CONTEXT, sizeof(HANDLE_CONTEXT), NonPagedPool, reinterpret_cast<PFLT_CONTEXT*>(&handle_context));
-                if (!NT_SUCCESS(status))
-                {
+                status = FltAllocateContext(flt_objects->Filter, FLT_FILE_CONTEXT, sizeof(HANDLE_CONTEXT), NonPagedPool, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
+                if (!NT_SUCCESS(status)) {
                     return FLT_PREOP_SUCCESS_NO_CALLBACK;
                 }
                 
-                memset(handle_context, 0, sizeof(HANDLE_CONTEXT));
+                memset(p_hc, 0, sizeof(HANDLE_CONTEXT));
 
-                RtlCopyMemory(handle_context->path, current_path.Data(), current_path.Size() * sizeof(WCHAR));
-                handle_context->requestor_pid = FltGetRequestorProcessId(data);
-                handle_context->is_modified = true;
-                status = FltSetFileContext(flt_objects->Instance, flt_objects->FileObject, FLT_SET_CONTEXT_KEEP_IF_EXISTS, reinterpret_cast<PFLT_CONTEXT>(handle_context), nullptr);
-                if (!NT_SUCCESS(status))
-                {
+                p_hc->path = current_path;
+                p_hc->requestor_pid = FltGetRequestorProcessId(data);
+                p_hc->is_mmap_open = true;
+                status = FltSetFileContext(flt_objects->Instance, flt_objects->FileObject, FLT_SET_CONTEXT_KEEP_IF_EXISTS, reinterpret_cast<PFLT_CONTEXT>(p_hc), nullptr);
+                if (!NT_SUCCESS(status)) {
                     //DebugMessage("FltSetFileContext failed: %x", status);
                 }
 
-                FltReleaseContext(handle_context);
+                FltReleaseContext(p_hc);
                 return FLT_PREOP_SUCCESS_NO_CALLBACK;
             }
-            FltReleaseContext(handle_context);
+            FltReleaseContext(p_hc);
         }
 
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
@@ -380,35 +502,23 @@ namespace collector
     {
 		//DebugMessage("File %ws, instance %p, file object %p, pid %d", flt::GetFileFullPathName(data).Data(), flt_objects->Instance, flt_objects->FileObject, FltGetRequestorProcessId(data));
 
-        if (!NT_SUCCESS(data->IoStatus.Status))
-        {
-            return FLT_POSTOP_FINISHED_PROCESSING;
-        }
-
-        if (flags & FLTFL_POST_OPERATION_DRAINING)
-        {
-            return FLT_POSTOP_FINISHED_PROCESSING;
-        }
-
         return FLT_POSTOP_FINISHED_PROCESSING;
     }
 
     FLT_PREOP_CALLBACK_STATUS PreFileClose(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
     {
-        PHANDLE_CONTEXT p_handle_context = nullptr;
-        NTSTATUS status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_handle_context));
-        if (!NT_SUCCESS(status))
-        {
+        PHANDLE_CONTEXT p_hc = nullptr;
+        NTSTATUS status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
+        if (!NT_SUCCESS(status)) {
             //if (status != STATUS_NOT_FOUND) { //DebugMessage("FltGetStreamHandleContext failed: %x", status); }
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
-        else
-        {
-            //DebugMessage("FltGetStreamHandleContext success: handle context %p", p_handle_context);
+        else {
+            //DebugMessage("FltGetStreamHandleContext success: handle context %p", p_hc);
         }
 
-        //DebugMessage("File: %ws, requestor pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d", p_handle_context->current_path, p_handle_context->requestor_pid, p_handle_context->is_modified, p_handle_context->is_deleted, p_handle_context->is_created, p_handle_context->is_renamed);
-        FltReleaseContext(p_handle_context);
+        //DebugMessage("File: %ws, requestor pid: %d, is_modified: %d, is_deleted: %d, is_created: %d, is_renamed: %d", p_hc->current_path, p_hc->requestor_pid, p_hc->is_modified, p_hc->is_deleted, p_hc->is_created, p_hc->is_renamed);
+        FltReleaseContext(p_hc);
 
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
     }
@@ -419,5 +529,44 @@ namespace collector
         //PFLT_DEFERRED_IO_WORKITEM EvalWorkItem = FltAllocateDeferredIoWorkItem();
 
         return FLT_POSTOP_FINISHED_PROCESSING;
+    }
+
+    static void LogFileEvent(const collector::HANDLE_CONTEXT* p_hc)
+    {
+        //PushToLogQueue(L"");
+    }
+
+    void ContextCleanup(PFLT_CONTEXT context, FLT_CONTEXT_TYPE context_type)
+    {
+        if (context_type == FLT_STREAMHANDLE_CONTEXT || context_type == FLT_FILE_CONTEXT)
+        {
+            collector::HANDLE_CONTEXT* p_hc = (collector::HANDLE_CONTEXT*)context;
+            if (p_hc != nullptr)
+            {
+                auto action_cnt = p_hc->is_modified +
+                    p_hc->is_read +
+                    p_hc->is_renamed +
+                    p_hc->is_deleted +
+                    p_hc->is_alloc +
+                    p_hc->is_eof +
+                    p_hc->is_mmap_modified;
+
+                if (action_cnt == 0) {
+                    return;
+                }
+                LogFileEvent(p_hc);
+
+                if (action_cnt == 1 && p_hc->is_read == true) {
+                    return;
+                }
+                
+                com::kComPort->Send(p_hc->path.Data(), (p_hc->path.Size() + 1) * sizeof(WCHAR));
+                if (p_hc->is_renamed == true) {
+                    com::kComPort->Send(p_hc->new_path.Data(), (p_hc->new_path.Size() + 1) * sizeof(WCHAR));
+                }
+
+            }
+        }
+        return;
     }
 } // namespace collector
