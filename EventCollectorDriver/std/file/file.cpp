@@ -1,5 +1,6 @@
 #include "file.h"
 #include <Fltkernel.h>
+#include "../../template/debug.h"
 
 namespace file
 {
@@ -23,7 +24,8 @@ namespace file
 		RtlInitUnicodeString(&uni_str, file_path);
 		InitializeObjectAttributes(&obj_attr, &uni_str, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
 
-		NTSTATUS status = ZwCreateFile(&file_handle_, FILE_ALL_ACCESS, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, 0, create_disposition, FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT, NULL, 0);
+		NTSTATUS status = ZwCreateFile(&file_handle_, FILE_ALL_ACCESS, &obj_attr, &io_status_block, NULL, FILE_ATTRIBUTE_NORMAL, 0, create_disposition, FILE_NON_DIRECTORY_FILE, // Do not FILE_SYNCHRONOUS_* because deadlock
+			NULL, 0);
 		return status;
 	}
 

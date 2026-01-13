@@ -9,6 +9,7 @@ Write a class in Windows Kernel Driver that have the following operation on a fi
 #include "../string/wstring.h"
 
 #include <ntddk.h>
+#include <fltKernel.h>
 
 namespace file
 {

@@ -6,7 +6,6 @@ typedef unsigned long long ull;
 #include <ntdef.h>
 #include <wdm.h>
 #include "../ulti/def.h"
-#include "../../template/debug.h"
 
 #pragma warning(disable:4100)
 
@@ -69,8 +68,7 @@ namespace krnl_std
 
     inline void Free(void* p)
     {
-        if (p == nullptr)
-        {
+        if (p == nullptr) {
             return;
         }
         ExFreePoolWithTag(p, 0x22042003);

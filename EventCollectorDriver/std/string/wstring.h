@@ -149,9 +149,9 @@ namespace std
 
 		WString& ConverToDowncase();
 
-		WString GetUpcase();
+		WString GetUpcase() const;
 
-		WString GetDowncase();
+		WString GetDowncase() const;
 
 		/*----------------------------*/
 
@@ -159,7 +159,7 @@ namespace std
 
 		/* ----- ELEMENT ACCESS ----- */
 
-		static const size_t kNPos = static_cast<size_t>(-1);
+		static const size_t kNPos = static_cast<size_t>(-1ULL);
 
 		// Access elements with bounds checking.
 		WCHAR& At(size_t n);
@@ -271,7 +271,10 @@ namespace std
 
 	protected:
 		WCHAR* Allocate(size_t);
-		void Deallocate();
+		void Deallocate(PVOID buf);
+		void Reset();
+		void Repair();
+		const bool IsInvalid() const;
 	private:
 		size_t size_ = 0;
 		size_t capacity_ = 0;
@@ -286,7 +289,4 @@ namespace std
 	WString ToWString(unsigned long);
     WString ToWString(long long);
     WString ToWString(unsigned long long);
-
-	
-
 }

@@ -13,7 +13,7 @@ inline unsigned long long HashWstring(const std::WString& str)
     return hash;
 }
 
-inline unsigned long long HashString(const WString& str)
+inline unsigned long long HashString(const std::WString& str)
 {
     unsigned long long hash = 5381; // Magic number 5381 is used in DJB2 hash function
     for (int i = 0; i < str.Size(); i++) {
