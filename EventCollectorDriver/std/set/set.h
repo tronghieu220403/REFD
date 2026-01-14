@@ -55,7 +55,7 @@ private:
     Node* Successor(Node* node) const;
     Node* Predecessor(Node* node) const;
     void Clear(Node* node);
-    Node* Copy(Node* node, Node* parent);
+    Node* Copy(Node* node, Node* parent, Node* other_nil);
 
 public:
     // Type definitions
@@ -181,7 +181,7 @@ bool DefaultCompare(const Key& a, const Key& b) {
 
 template <typename Key, typename Compare>
 Set<Key, Compare>::Set() : size_(0) {
-    compare_ = DefaultCompare;
+    compare_ = &DefaultCompare<Key>;
     nil_ = new Node(Key());
     nil_->is_red = false;
     nil_->left = nil_->right = nil_->parent = nil_;
@@ -221,7 +221,7 @@ Set<Key, Compare>::Set(InputIterator first, InputIterator last, void* /*alloc pl
 template <typename Key, typename Compare>
 Set<Key, Compare>::Set(const Set& other) : Set(other.compare_) {
     if (other.root_ != other.nil_) {
-        root_ = Copy(other.root_, nil_);
+        root_ = Copy(other.root_, nil_, other.nil_);
         size_ = other.size_;
     }
 }
@@ -267,7 +267,7 @@ Set<Key, Compare>& Set<Key, Compare>::operator=(const Set& other) {
         Clear();
         compare_ = other.compare_;
         if (other.root_ != other.nil_) {
-            root_ = Copy(other.root_, nil_);
+            root_ = Copy(other.root_, nil_, other.nil_);
             size_ = other.size_;
         }
         else {
@@ -438,9 +438,10 @@ void Set<Key, Compare>::Insert(InitializerList<value_type> il) {
 template <typename Key, typename Compare>
 typename Set<Key, Compare>::iterator Set<Key, Compare>::Erase(const_iterator position) {
     if (position == End()) {
-        return iterator();
+        return End();
     }
     Node* z = position.node_;
+    Node* next = Successor(z);
     Node* y = z;
     Node* x = nullptr;
     bool y_original_color = y->is_red;
@@ -478,7 +479,7 @@ typename Set<Key, Compare>::iterator Set<Key, Compare>::Erase(const_iterator pos
         DeleteFixup(x);
     }
 
-    return iterator(x, this);
+    return iterator(next, this);
 }
 
 template <typename Key, typename Compare>
@@ -811,9 +812,10 @@ void Set<Key, Compare>::Clear(Node* node) {
 }
 
 template <typename Key, typename Compare>
-typename Set<Key, Compare>::Node* Set<Key, Compare>::Copy(Node* node, Node* parent) {
-    if (node == nil_) {
-        return nil_;
+typename Set<Key, Compare>::Node*
+Set<Key, Compare>::Copy(Node* node, Node* parent, Node* other_nil) {
+    if (node == other_nil) {
+        return nil_;   // map other.nil_ -> this->nil_
     }
     Node* new_node = new Node(node->key);
     new_node->is_red = node->is_red;

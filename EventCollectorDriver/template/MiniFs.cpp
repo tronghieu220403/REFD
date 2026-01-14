@@ -71,12 +71,12 @@ CONST FLT_OPERATION_REGISTRATION kCallbacks[] = {
       0,
       (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
       (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-
+*/
     { IRP_MJ_FILE_SYSTEM_CONTROL,
       0,
       (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
       (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-
+/*
     { IRP_MJ_DEVICE_CONTROL,
       0,
       (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
@@ -305,8 +305,6 @@ DriverEntry (
     _In_ PUNICODE_STRING registry_path
     )
 {
-    NTSTATUS status;
-
     UNREFERENCED_PARAMETER( registry_path );
 
     DebugMessage("%ws", __FUNCTIONW__);

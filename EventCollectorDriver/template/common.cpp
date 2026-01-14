@@ -71,7 +71,7 @@ std::WString GetProcessImageName(HANDLE pid)
     return process_image_name;
 }
 
-static __forceinline LONGLONG GetNtSystemTime()
+LONGLONG GetNtSystemTime()
 {
     LARGE_INTEGER systemTime;
     KeQuerySystemTime(&systemTime);

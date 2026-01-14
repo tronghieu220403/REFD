@@ -7,7 +7,7 @@
 class Mutex
 {
 private:
-	KGUARDED_MUTEX mutex_ = { 0 };
+	KMUTEX mutex_ = { 0 };
 public:
 
 	void Create();

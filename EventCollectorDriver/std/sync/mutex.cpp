@@ -2,23 +2,37 @@
 
 void Mutex::Create()
 {
-    KeInitializeGuardedMutex(&mutex_);
+    KeInitializeMutex(&mutex_, 0);
     return;
 }
 
 void Mutex::Lock()
 {
-    KeAcquireGuardedMutex(&mutex_);
+    KeWaitForSingleObject(
+        &mutex_,
+        Executive,
+        KernelMode,
+        FALSE,
+        NULL
+    );
 }
 
 void Mutex::Unlock()
 {
-    KeReleaseGuardedMutex(&mutex_);
+    KeReleaseMutex(&mutex_, FALSE);
 }
 
 bool Mutex::Trylock()
 {
-    return (KeTryToAcquireGuardedMutex(&mutex_) == TRUE);
+    LARGE_INTEGER zero = {};
+    NTSTATUS st = KeWaitForSingleObject(
+        &mutex_,
+        Executive,
+        KernelMode,
+        FALSE,
+        &zero
+    );
+    return (st == STATUS_SUCCESS);
 }
 
 

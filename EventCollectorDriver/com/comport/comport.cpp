@@ -1,4 +1,5 @@
 #include "comport.h"
+#include "../../template/debug.h"
 
 namespace com
 {
