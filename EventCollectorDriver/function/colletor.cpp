@@ -148,7 +148,7 @@ namespace collector
 
         std::WString current_path(flt::GetFileFullPathName(data));
         if (current_path.Size() == 0 || current_path.HasCiSuffix(L"\\EventCollectorDriver.log")) {
-            return FLT_PREOP_SUCCESS_WITH_CALLBACK;
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
         return FLT_PREOP_SUCCESS_WITH_CALLBACK;
@@ -200,6 +200,7 @@ namespace collector
 
         memset(p_hc, 0, sizeof(HANDLE_CONTEXT));
         p_hc->requestor_pid = FltGetRequestorProcessId(data);
+        p_hc->process_path = GetProcessImageName((HANDLE)p_hc->requestor_pid);
         p_hc->is_created = is_created;
         p_hc->is_deleted = is_delete_on_close;
         p_hc->path = current_path;
