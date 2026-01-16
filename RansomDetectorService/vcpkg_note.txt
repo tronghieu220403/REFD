@@ -1,3 +1,6 @@
 "path to vcpkg" install
-"path to vcpkg" install --triplet x64-windows
-"path to vcpkg" install --triplet x86-windows
+"path to vcpkg" install --triplet x64-windows-static
+"path to vcpkg" install --triplet x86-windows-static
+
+vcpkg install --triplet x64-windows-static
+vcpkg install --triplet x86-windows-static

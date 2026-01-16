@@ -75,6 +75,13 @@
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>true</VcpkgEnableManifest>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <VcpkgUseStatic>true</VcpkgUseStatic>
+    <VcpkgUseMD>false</VcpkgUseMD>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -167,6 +174,8 @@
     <ClCompile Include="include\manager\known_folder.cpp" />
     <ClCompile Include="include\manager\manager.cpp" />
     <ClCompile Include="include\manager\matcher.cpp" />
+    <ClCompile Include="include\manager\receiver.cpp" />
+    <ClCompile Include="include\manager\scanner.cpp" />
     <ClCompile Include="include\mutex\mutex.cpp" />
     <ClCompile Include="include\service\service.cpp" />
     <ClCompile Include="include\trid\trid.cpp" />
@@ -190,6 +199,8 @@
     <ClInclude Include="include\manager\known_folder.h" />
     <ClInclude Include="include\manager\manager.h" />
     <ClInclude Include="include\manager\matcher.h" />
+    <ClInclude Include="include\manager\receiver.h" />
+    <ClInclude Include="include\manager\scanner.h" />
     <ClInclude Include="include\mutex\mutex.h" />
     <ClInclude Include="include\service\service.h" />
     <ClInclude Include="include\trid\trid.h" />

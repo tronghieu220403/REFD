@@ -78,6 +78,12 @@
     <ClCompile Include="include\file_type\compress.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\manager\receiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\manager\scanner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\com\driver_comm.h">
@@ -141,6 +147,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\file_type\compress.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\manager\scanner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\manager\receiver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

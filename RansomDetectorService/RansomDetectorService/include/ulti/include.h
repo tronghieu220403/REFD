@@ -59,6 +59,13 @@
 #pragma comment(lib, "Wtsapi32.lib")
 #pragma comment(lib, "Userenv.lib")
 #pragma comment(lib, "Kernel32.lib")
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "Secur32.lib")
+#pragma comment(lib, "Bcrypt.lib")
+#pragma comment(lib, "Crypt32.lib")
+#pragma comment(lib, "Mfplat.lib")
+#pragma comment(lib, "Mfuuid.lib")
+#pragma comment(lib, "strmiids.lib")
 
 template<typename F>
 class defer_finalizer {
