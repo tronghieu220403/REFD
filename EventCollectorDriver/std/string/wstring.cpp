@@ -575,7 +575,7 @@ namespace std
 		if (Empty() == true) {
 			return true;
 		}
-		if (other.Empty() == false) {
+		if (other.Empty() == true) {
 			return false;
 		}
 		return other.size_ >= size_ &&
@@ -586,7 +586,7 @@ namespace std
 		if (Empty() == true) {
 			return true;
 		}
-		if (other.Empty() == false) {
+		if (other.Empty() == true) {
 			return false;
 		}
 		return other.size_ >= size_ &&
@@ -605,7 +605,7 @@ namespace std
 		if (Empty() == true) {
 			return true;
 		}
-		if (other.Empty() == false) {
+		if (other.Empty() == true) {
 			return false;
 		}
 		return other.size_ >= size_ &&
@@ -616,7 +616,7 @@ namespace std
 		if (Empty() == true) {
 			return true;
 		}
-		if (other.Empty() == false) {
+		if (other.Empty() == true) {
 			return false;
 		}
 		return other.size_ >= size_ &&
