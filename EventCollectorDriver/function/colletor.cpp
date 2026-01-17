@@ -84,7 +84,7 @@ namespace collector
         reg::kFltFuncVector->PushBack({ IRP_MJ_WRITE, PreWriteFile, PostFileWrite });
         reg::kFltFuncVector->PushBack({ IRP_MJ_READ, PreReadFile, PostReadFile });
         reg::kFltFuncVector->PushBack({ IRP_MJ_ACQUIRE_FOR_SECTION_SYNCHRONIZATION, PreFileAcquireForSectionSync, PostFileAcquireForSectionSync });
-        reg::kFltFuncVector->PushBack({ IRP_MJ_FILE_SYSTEM_CONTROL, PreFileAcquireForSectionSync, PostFileAcquireForSectionSync });
+        reg::kFltFuncVector->PushBack({ IRP_MJ_FILE_SYSTEM_CONTROL, PreFileSystemControl, PostFileSystemControl });
         reg::kFltFuncVector->PushBack({ IRP_MJ_SET_INFORMATION, PreFileSetInformation, PostFileSetInformation });
 
         //DebugMessage("Callbacks created.");
@@ -151,6 +151,15 @@ namespace collector
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
+        if (current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\windows\\") == true
+            || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\program files\\") == true
+            || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\program files (x86)\\") == true
+            || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\users\\hieu\\appdata\\") == true
+            || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\programdata\\") == true
+            ) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
+
         return FLT_PREOP_SUCCESS_WITH_CALLBACK;
     }
 
@@ -170,8 +179,7 @@ namespace collector
 
         std::WString current_path = flt::GetFileFullPathName(data);
 
-        if (current_path.Size() == 0 || current_path.Size() > HIEUNT_MAX_PATH - 1)
-        {
+        if (current_path.Size() == 0) {
             return FLT_POSTOP_FINISHED_PROCESSING;
         }
 
@@ -571,6 +579,7 @@ namespace collector
 
     FLT_PREOP_CALLBACK_STATUS PreFileClose(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
     {
+
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
     }
 
@@ -691,9 +700,11 @@ namespace collector
             collector::HANDLE_CONTEXT* p_hc = (collector::HANDLE_CONTEXT*)context;
             if (p_hc != nullptr)
             {
-                auto action_cnt = p_hc->is_modified +
+                int action_cnt = 
+                    p_hc->is_modified +
                     p_hc->is_read +
                     p_hc->is_renamed +
+                    p_hc->is_created +
                     p_hc->is_deleted +
                     p_hc->is_alloc +
                     p_hc->is_eof +
