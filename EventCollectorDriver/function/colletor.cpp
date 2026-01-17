@@ -81,6 +81,7 @@ namespace collector
 
         reg::kFltFuncVector->PushBack({ IRP_MJ_CREATE, PreFileCreate, PostFileCreate });
         reg::kFltFuncVector->PushBack({ IRP_MJ_CLOSE, PreFileClose, PostFileClose });
+        reg::kFltFuncVector->PushBack({ IRP_MJ_CLEANUP, PreFileClose, PostFileClose });
         reg::kFltFuncVector->PushBack({ IRP_MJ_WRITE, PreWriteFile, PostFileWrite });
         reg::kFltFuncVector->PushBack({ IRP_MJ_READ, PreReadFile, PostReadFile });
         reg::kFltFuncVector->PushBack({ IRP_MJ_ACQUIRE_FOR_SECTION_SYNCHRONIZATION, PreFileAcquireForSectionSync, PostFileAcquireForSectionSync });
@@ -579,7 +580,14 @@ namespace collector
 
     FLT_PREOP_CALLBACK_STATUS PreFileClose(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
     {
+        PHANDLE_CONTEXT p_hc = nullptr;
+        NTSTATUS status = FltGetStreamContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
+        if (!NT_SUCCESS(status)) {
+            return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        }
 
+        FltDeleteContext(p_hc);
+        FltReleaseContext(p_hc);
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
     }
 

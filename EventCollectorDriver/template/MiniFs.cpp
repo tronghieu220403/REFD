@@ -96,12 +96,12 @@ CONST FLT_OPERATION_REGISTRATION kCallbacks[] = {
       0,
       (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
       (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-
+*/
     { IRP_MJ_CLEANUP,
       0,
       (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
       (PFLT_POST_OPERATION_CALLBACK)&MiniFsPostOperation },
-
+/*
     { IRP_MJ_CREATE_MAILSLOT,
       0,
       (PFLT_PRE_OPERATION_CALLBACK)&MiniFsPreOperation,
