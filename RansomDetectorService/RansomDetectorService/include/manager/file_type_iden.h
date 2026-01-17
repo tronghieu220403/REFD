@@ -61,6 +61,11 @@ namespace type_iden
 
     class FileType
     {
+    public:
+        // Singleton accessors
+        static FileType* GetInstance();
+        static void DeleteInstance();
+
     private:
 #ifdef _M_IX86
         TrID* trid_ = nullptr;
@@ -69,6 +74,10 @@ namespace type_iden
     public:
         FileType() = default;
         ~FileType();
+
+        // Lifecycle control
+        bool Init();
+        void Uninit();
 
         bool InitTrid(const std::wstring& defs_dir, const std::wstring& trid_dll_path);
 
@@ -80,7 +89,5 @@ namespace type_iden
     std::wstring CovertTypesToString(const std::vector<std::string>& types);
 
 }
-
-inline type_iden::FileType* kFileType = nullptr;
 
 #endif // MANAGER_FILE_TYPE_IDEN_H_

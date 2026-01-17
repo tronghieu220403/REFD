@@ -92,6 +92,33 @@ namespace ulti
         return result;
     }
 
+    std::string JoinStrings(
+        const std::vector<std::string>& parts,
+        const std::string& delimiter)
+    {
+        if (parts.empty())
+            return std::string();
+
+        std::string result;
+
+        // Pre-calculate total size to reduce reallocations
+        size_t total_size = 0;
+        for (const auto& s : parts)
+            total_size += s.size();
+
+        total_size += delimiter.size() * (parts.size() - 1);
+        result.reserve(total_size);
+
+        for (size_t i = 0; i < parts.size(); ++i)
+        {
+            if (i > 0)
+                result += delimiter;
+            result += parts[i];
+        }
+
+        return result;
+    }
+
     ull GetCurrentSteadyTimeInSec()
     {
         return (ull)(duration_cast<seconds>(steady_clock::now().time_since_epoch()).count());

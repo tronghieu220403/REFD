@@ -1,7 +1,6 @@
 #include "file_type_iden.h"
 #include "ulti/support.h"
 #include "ulti/debug.h"
-#include "file_manager.h"
 #include "../file_type/txt.h"
 #include "../file_type/compress.h"
 #include "../file_type/image.h"
@@ -11,6 +10,33 @@
 
 namespace type_iden
 {
+
+	FileType* s_instance = nullptr;
+	std::mutex s_mutex;
+
+	FileType* FileType::GetInstance()
+	{
+		if (!s_instance)
+		{
+			std::lock_guard<std::mutex> lock(s_mutex);
+			if (!s_instance)   // double-checked locking
+			{
+				s_instance = new FileType();
+			}
+		}
+		return s_instance;
+	}
+
+	void FileType::DeleteInstance()
+	{
+		std::lock_guard<std::mutex> lock(s_mutex);
+		if (s_instance)
+		{
+			delete s_instance;
+			s_instance = nullptr;
+		}
+	}
+
 	// Checks whether two vectors of strings have any common element.
 	// Returns true if there is at least one string that appears in both vectors.
 	bool HasCommonType(const vector<string>& types1, const vector<string>& types2) {
@@ -45,6 +71,34 @@ namespace type_iden
 
 	FileType::~FileType()
 	{
+#ifdef _M_IX86
+		if (trid_ != nullptr)
+		{
+			delete trid_;
+			trid_ = nullptr;
+		}
+#endif // _M_IX86
+	}
+
+	bool FileType::Init() {
+#ifdef _M_IX86
+		if (ulti::CreateDir(TEMP_DIR) == false)
+		{
+			PrintDebugW(L"Create temp dir %ws failed", TEMP_DIR);
+			return false;
+		}
+		current_path = ...;
+		std::wstring trid_dir = current_path + L"TrID";
+		if (kFileType->InitTrid(trid_dir, trid_dir + L"TrIDLib.dll") == false)
+		{
+			PrintDebugW(L"TrID init failed");
+			return false;
+		}
+#endif // _M_IX86
+		return true;
+	}
+
+	void FileType::Uninit() {
 #ifdef _M_IX86
 		if (trid_ != nullptr)
 		{
@@ -102,11 +156,13 @@ namespace type_iden
 			return types;
 		}
 
+		/*
 		*p_file_size = static_cast<size_t>(li_size.QuadPart);
 		if (*p_file_size < FILE_MIN_SIZE_SCAN || *p_file_size > FILE_MAX_SIZE_SCAN) {
 			*p_status = ERROR_FILE_TOO_LARGE;
 			return types;
 		}
+		*/
 
 		HANDLE mapping_handle = CreateFileMappingW(file_handle, nullptr,
 			PAGE_READONLY, 0, li_size.LowPart, nullptr);

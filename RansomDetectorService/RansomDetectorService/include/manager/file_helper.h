@@ -1,5 +1,5 @@
-﻿#ifndef MANAGER_FILE_MANAGER_H_
-#define MANAGER_FILE_MANAGER_H_
+﻿#ifndef MANAGER_HELPER_H_
+#define MANAGER_HELPER_H_
 
 #include "../ulti/support.h"
 #include "../ulti/debug.h"
@@ -42,74 +42,7 @@
 #define FILE_IO_FILTER_QUEUE_SIZE_MAX 10000
 #define FILE_CACHE_SIZE_MAX 1000
 
-namespace manager {
-
-	struct RawFileIoInfo
-	{
-		ULONG requestor_pid = 0;
-		bool is_modified = false;
-		bool is_renamed = false;
-		bool is_created = false;
-		bool is_deleted = false;
-		WCHAR path[HIEUNT_MAX_PATH] = { 0 };
-	};
-
-	struct FileIoInfo
-	{
-		ULONG requestor_pid = 0;
-		bool is_modified = false;
-		bool is_renamed = false;
-		bool is_created = false;
-		bool is_deleted = false;
-		std::wstring path;
-	};
-
-	class FileIoManager {
-	private:
-		std::queue<FileIoInfo> file_io_queue_;
-	public:
-		
-		std::mutex file_io_mutex_;
-
-		void LockMutex();
-		void UnlockMutex();
-
-		FileIoInfo PopFileIoEvent();
-		ull GetQueueSize();
-
-		void MoveQueue(std::queue<FileIoInfo>& target_file_io_queue);
-
-		void PushFileEventToQueue(const RawFileIoInfo* raw_file_io_info);
-
-	};
-
-	struct FileCacheInfo
-	{
-		ull size;
-		vector<string> types;
-	};
-
-	class FileCache {
-	private:
-		// Internal node to track FileCacheInfo and its timestamp iterator
-		struct Node {
-			FileCacheInfo info;
-			std::multimap<ull, ull>::iterator time_it; // iterator in time_index_
-		};
-
-		// Primary data containers
-		std::unordered_map<ull, Node> cache_;  // hash -> Node
-		std::multimap<ull, ull> time_index_;   // time -> hash (sorted ascending)
-
-		// Separate locks for higher concurrency
-		mutable std::shared_mutex mt_cache_;   // protects cache_
-		mutable std::shared_mutex mt_time_;    // protects time_index_
-		void RemoveOldestUnlocked();
-	public:
-		bool Add(const wstring& path, const FileCacheInfo& info);
-		bool Get(const wstring& path, FileCacheInfo& info);
-		bool Erase(const wstring& path);
-	};
+namespace helper {
 
 	/*___________________________________________*/
 
@@ -150,4 +83,4 @@ namespace manager {
 
 	void ClearTmpFiles();
 }
-#endif  // MANAGER_FILE_MANAGER_H_
+#endif  // MANAGER_HELPER_H_

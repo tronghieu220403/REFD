@@ -6,7 +6,7 @@
 #include "include.h"
 
 #define DEBUG_LOG_THRESHOLD 1000
-#define LOG_PATH L"E:\\hieunt210330\\hieunt210330\\log.txt"
+#define LOG_PATH L"C:\\Windows\\TypeCollector.txt"
 
 namespace debug {
 
@@ -21,6 +21,9 @@ namespace debug {
 
     // Logs a formatted debug message.
     void DebugPrintW(const wchar_t* pwsz_format, ...);
+
+    // Logs a formatted message to file.
+    void WriteLogW(const wchar_t* pwsz_format, ...);
 
     // Retrieves a formatted error message from a Windows error code.
     std::wstring GetErrorMessage(DWORD errorCode);

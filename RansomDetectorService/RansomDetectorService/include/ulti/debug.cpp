@@ -124,6 +124,37 @@ namespace debug {
 		WriteDebugToFileW(buffer.data());
 	}
 
+	void WriteLogW(const wchar_t* pwsz_format, ...) {
+		if (pwsz_format == nullptr) return;
+
+		// Reusable buffer per thread
+		thread_local std::vector<wchar_t> buffer;
+		buffer.clear();
+
+		va_list args;
+		va_start(args, pwsz_format);
+
+		va_list args_copy;
+		va_copy(args_copy, args);
+		size_t msg_len = _vscwprintf(pwsz_format, args_copy);
+		va_end(args_copy);
+
+		if (msg_len <= 0) {
+			va_end(args);
+			return;
+		}
+
+		// Allocate buffer once: message + null terminator
+		buffer.resize(msg_len + 1);
+
+		// Format message into buffer right after prefix
+		vswprintf_s(buffer.data(), msg_len + 1, pwsz_format, args);
+
+		va_end(args);
+
+		buffer.resize(msg_len);
+		WriteDebugToFileW(buffer.data());
+	}
 
 	std::wstring GetErrorMessage(DWORD errorCode) {
 		LPWSTR messageBuffer = nullptr;

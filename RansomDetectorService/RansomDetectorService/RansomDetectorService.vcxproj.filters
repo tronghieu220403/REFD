@@ -27,9 +27,6 @@
     <ClCompile Include="include\manager\file_type_iden.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\manager\manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\mutex\mutex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,15 +43,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\trid\trid_api.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\manager\known_folder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\honey\honeypot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\manager\matcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\file_type\txt.cpp">
@@ -98,9 +86,6 @@
     <ClInclude Include="include\manager\file_type_iden.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\manager\manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\mutex\mutex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -117,15 +102,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\trid\trid_api.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\manager\known_folder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\honey\honeypot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\manager\matcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\file_type\txt.h">
@@ -149,10 +125,10 @@
     <ClInclude Include="include\file_type\compress.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\manager\scanner.h">
+    <ClInclude Include="include\manager\receiver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\manager\receiver.h">
+    <ClInclude Include="include\manager\scanner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -168,12 +168,8 @@
     <ClCompile Include="include\file_type\ole.cpp" />
     <ClCompile Include="include\file_type\pdf.cpp" />
     <ClCompile Include="include\file_type\txt.cpp" />
-    <ClCompile Include="include\honey\honeypot.cpp" />
-    <ClCompile Include="include\manager\file_manager.cpp" />
+    <ClCompile Include="include\manager\file_helper.cpp" />
     <ClCompile Include="include\manager\file_type_iden.cpp" />
-    <ClCompile Include="include\manager\known_folder.cpp" />
-    <ClCompile Include="include\manager\manager.cpp" />
-    <ClCompile Include="include\manager\matcher.cpp" />
     <ClCompile Include="include\manager\receiver.cpp" />
     <ClCompile Include="include\manager\scanner.cpp" />
     <ClCompile Include="include\mutex\mutex.cpp" />
@@ -193,12 +189,8 @@
     <ClInclude Include="include\file_type\ole.h" />
     <ClInclude Include="include\file_type\pdf.h" />
     <ClInclude Include="include\file_type\txt.h" />
-    <ClInclude Include="include\honey\honeypot.h" />
-    <ClInclude Include="include\manager\file_manager.h" />
+    <ClInclude Include="include\manager\file_helper.h" />
     <ClInclude Include="include\manager\file_type_iden.h" />
-    <ClInclude Include="include\manager\known_folder.h" />
-    <ClInclude Include="include\manager\manager.h" />
-    <ClInclude Include="include\manager\matcher.h" />
     <ClInclude Include="include\manager\receiver.h" />
     <ClInclude Include="include\manager\scanner.h" />
     <ClInclude Include="include\mutex\mutex.h" />

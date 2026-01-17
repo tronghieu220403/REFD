@@ -1,142 +1,7 @@
-﻿#include "file_manager.h"
+﻿#include "file_helper.h"
 
-namespace manager
+namespace helper
 {
-	void FileIoManager::LockMutex()
-    {
-        file_io_mutex_.lock();
-    }
-
-    void FileIoManager::UnlockMutex()
-    {
-        file_io_mutex_.unlock();
-    }
-
-    FileIoInfo FileIoManager::PopFileIoEvent()
-    {
-        FileIoInfo file_io_info;
-        if (!file_io_queue_.empty())
-        {
-            file_io_info = file_io_queue_.front();
-            file_io_queue_.pop();
-        }
-        return file_io_info;
-    }
-
-    ull FileIoManager::GetQueueSize()
-    {
-        return file_io_queue_.size();
-    }
-
-	void FileIoManager::MoveQueue(std::queue<FileIoInfo>& target_file_io_queue)
-	{
-		target_file_io_queue = std::move(file_io_queue_);
-	}
-
-    void FileIoManager::PushFileEventToQueue(const RawFileIoInfo* raw_file_io_info)
-    {
-        FileIoInfo file_io_info;
-        
-        if (file_io_queue_.size() > 10000)
-        {
-            PrintDebugW(L"Discard I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid, raw_file_io_info->path);
-            return;
-        }
-
-        file_io_info.path = GetLongDosPath(GetDosPath(raw_file_io_info->path));
-        ulti::ToLowerOverride(file_io_info.path);
-
-        //PrintDebugW(L"File I/O event raw: PID %d, current_path: %ws", raw_file_io_info->requestor_pid,raw_file_io_info->path);
-
-        file_io_info.requestor_pid = raw_file_io_info->requestor_pid;
-        file_io_info.is_created = raw_file_io_info->is_created;
-        file_io_info.is_renamed = raw_file_io_info->is_renamed;
-        file_io_info.is_modified = raw_file_io_info->is_modified;
-        file_io_info.is_deleted = raw_file_io_info->is_deleted;
-        file_io_queue_.push(std::move(file_io_info));
-    }
-
-    void FileCache::RemoveOldestUnlocked()
-    {
-        if (time_index_.empty()) return;
-        auto oldest_it = time_index_.begin();
-        ull oldest_hash = oldest_it->second;
-        cache_.erase(oldest_hash);
-        time_index_.erase(oldest_it);
-    }
-
-    bool FileCache::Add(const wstring& path, const FileCacheInfo& info)
-    {
-        ull h = GetWstrHash(path);
-        ull now = ulti::GetCurrentSteadyTimeInSec();
-
-        // Lock cache_ for writing
-        std::unique_lock lock_cache(mt_cache_);
-
-        // Already exists
-        if (cache_.find(h) != cache_.end())
-            return false;
-
-        // If full, must also modify time_index_ -> lock both
-        if (cache_.size() >= FILE_CACHE_SIZE_MAX) {
-            std::unique_lock lock_time(mt_time_);
-            RemoveOldestUnlocked();
-        }
-
-        // Insert new timestamp entry
-        std::unique_lock lock_time(mt_time_);
-        auto it_time = time_index_.insert({ now, h });
-
-        // Insert into cache
-        cache_[h] = Node{ info, it_time };
-        return true;
-    }
-
-    bool FileCache::Get(const wstring& path, FileCacheInfo& info)
-    {
-        ull h = GetWstrHash(path);
-        ull now = ulti::GetCurrentSteadyTimeInSec();
-
-        // Shared read lock for cache_
-        {
-            std::shared_lock read_lock(mt_cache_);
-            auto it = cache_.find(h);
-            if (it == cache_.end())
-                return false;
-
-            info = it->second.info;
-        }
-
-        // Need to update timestamp
-        {
-            std::unique_lock lock_cache(mt_cache_);
-            auto it = cache_.find(h);
-            if (it == cache_.end())
-                return false;
-
-            std::unique_lock lock_time(mt_time_);
-            time_index_.erase(it->second.time_it);
-            it->second.time_it = time_index_.insert({ now, h });
-        }
-
-        return true;
-    }
-
-    bool FileCache::Erase(const std::wstring& path)
-    {
-        ull h = GetWstrHash(path);
-
-        std::unique_lock lock_cache(mt_cache_);
-        auto it = cache_.find(h);
-        if (it == cache_.end())
-            return false;
-
-        std::unique_lock lock_time(mt_time_);
-        time_index_.erase(it->second.time_it);
-        cache_.erase(it);
-        return true;
-    }
-
     void InitDosDeviceCache()
     {
         wchar_t device_path[MAX_PATH];
@@ -248,8 +113,7 @@ namespace manager
         if (dos_path.empty()) {
             return std::wstring();
         }
-        else if (dos_path.find(L'~') == std::wstring::npos)
-        {
+        else if (dos_path.find(L'~') == std::wstring::npos) {
             return dos_path;
         }
         std::wstring long_path;
