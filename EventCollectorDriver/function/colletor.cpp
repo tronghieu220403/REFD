@@ -581,12 +581,12 @@ namespace collector
     FLT_PREOP_CALLBACK_STATUS PreFileClose(PFLT_CALLBACK_DATA data, PCFLT_RELATED_OBJECTS flt_objects, PVOID* completion_context)
     {
         PHANDLE_CONTEXT p_hc = nullptr;
-        NTSTATUS status = FltGetStreamContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
+        NTSTATUS status = FltGetStreamHandleContext(flt_objects->Instance, flt_objects->FileObject, reinterpret_cast<PFLT_CONTEXT*>(&p_hc));
         if (!NT_SUCCESS(status)) {
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-        FltDeleteContext(p_hc);
+        //FltDeleteContext(p_hc);
         FltReleaseContext(p_hc);
         return FLT_PREOP_SUCCESS_NO_CALLBACK;
     }
