@@ -285,7 +285,7 @@ VOID PushToLogQueue(PCWSTR fmt, ...)
         return;
     }
 
-    DebugMessage("%ws", p_log);
+    //DebugMessage("%ws", p_log);
 
     // push into active array
     KIRQL oldIrql = 0;

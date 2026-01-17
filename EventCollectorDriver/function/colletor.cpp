@@ -713,13 +713,24 @@ namespace collector
                     return;
                 }
                 
+                std::WString path;
+
                 if (p_hc->is_renamed == true) {
-                    com::kComPort->Send(p_hc->new_path.Data(), (p_hc->new_path.Size() + 1) * sizeof(WCHAR));
+                    path = p_hc->new_path;
                 }
                 else {
-                    com::kComPort->Send(p_hc->path.Data(), (p_hc->path.Size() + 1) * sizeof(WCHAR));
+                    path = p_hc->path;
                 }
-
+                if (path.HasCiPrefix(L"\\device\\harddiskvolume3\\windows\\") == true
+                    || path.HasCiPrefix(L"\\device\\harddiskvolume3\\program files\\") == true
+                    || path.HasCiPrefix(L"\\device\\harddiskvolume3\\program files (x86)\\") == true
+                    || path.HasCiPrefix(L"\\device\\harddiskvolume3\\users\\hieu\\appdata\\") == true
+                    || path.HasCiPrefix(L"\\device\\harddiskvolume3\\programdata\\") == true
+                    ) {
+                    return;
+                }
+                //DebugMessage("Send %ws", tmp_path.Data());
+                com::kComPort->Send(path.Data(), (path.Size() + 1) * sizeof(WCHAR));
             }
         }
         return;

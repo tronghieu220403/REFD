@@ -7,6 +7,25 @@
 
 namespace manager {
 
+    inline const std::vector<std::wstring> kPathWhitelist = {
+        L"c:\\windows\\",
+        L"c:\\program files\\",
+        L"c:\\program files (x86)\\",
+        L"c:\\programdata\\",
+        L"\\appdata\\local\\",
+    };
+
+    // Check if path contains any whitelisted substring
+    inline bool IsPathWhitelisted(const std::wstring& lower_path)
+    {
+        for (const auto& w : kPathWhitelist)
+        {
+            if (lower_path.find(w) != std::wstring::npos)
+                return true;
+        }
+        return false;
+    }
+
     class Scanner
     {
     private:

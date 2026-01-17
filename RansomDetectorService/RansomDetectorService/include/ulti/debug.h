@@ -6,7 +6,7 @@
 #include "include.h"
 
 #define DEBUG_LOG_THRESHOLD 1000
-#define LOG_PATH L"C:\\Windows\\TypeCollector.txt"
+#define LOG_PATH L"C:\\Windows\\TypeCollector.log"
 
 namespace debug {
 

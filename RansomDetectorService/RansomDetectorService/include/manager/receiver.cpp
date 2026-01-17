@@ -79,25 +79,15 @@ namespace manager
         if (file_io_queue_.size() >= MAX_QUEUE_SIZE)
             return;
 
-        if (buffer_size <= sizeof(FILTER_MESSAGE_HEADER))
+        if (buffer_size < sizeof(wchar_t))
             return;
 
-        const uint8_t* ptr = (const uint8_t*)buffer;
-
-        // skip FILTER_MESSAGE_HEADER
-        ptr += sizeof(FILTER_MESSAGE_HEADER);
-
-        size_t string_bytes = buffer_size - sizeof(FILTER_MESSAGE_HEADER);
-
-        if (string_bytes < sizeof(wchar_t))
+        if (buffer_size % sizeof(wchar_t) != 0)
             return;
 
-        if (string_bytes % sizeof(wchar_t) != 0)
-            return;
+        size_t wchar_len = buffer_size / sizeof(wchar_t);
 
-        size_t wchar_len = string_bytes / sizeof(wchar_t);
-
-        const wchar_t* raw_path = (const wchar_t*)ptr;
+        const wchar_t* raw_path = (const wchar_t*)buffer;
 
         size_t actual_len = 0;
         for (; actual_len < wchar_len; actual_len++)
@@ -140,10 +130,11 @@ namespace manager
             HRESULT hr = com_port.Create(PORT_NAME);
             if (FAILED(hr))
             {
-                PrintDebugW(L"[FileIo] Create port failed: 0x%08X", hr);
+                PrintDebugW(L"Create port failed: 0x%08X", hr);
                 Sleep(1000);
                 continue;
             }
+            PrintDebugW(L"Create port oke");
 
             while (true)
             {
@@ -156,17 +147,15 @@ namespace manager
                     buffer.size()
                 );
 
-                if (FAILED(hr))
+                if (FAILED(hr)) {
                     break;
+                }
 
-                auto hdr = (PFILTER_MESSAGE_HEADER)buffer.data();
-                size_t msg_size = hdr->ReplyLength;
-
-                if (msg_size == 0 || msg_size > buffer.size())
-                    continue;
+                const uint8_t* ptr = (const uint8_t*)buffer.data() + sizeof(FILTER_MESSAGE_HEADER);
+                size_t string_bytes = buffer.size() - sizeof(FILTER_MESSAGE_HEADER);
 
                 rcv->LockMutex();
-                rcv->PushFileEventFromBuffer(buffer.data(), msg_size);
+                rcv->PushFileEventFromBuffer(ptr, string_bytes);
                 rcv->UnlockMutex();
             }
         }

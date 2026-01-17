@@ -28,7 +28,8 @@ STOP_FILE = "E:\\Code\\Github\\REFD\\REFD2026\\vm\\ggez.txt"
 DEFAULT_NUM_PROCESSES = 1
 DEFAULT_MAX_RUN_TIME = 4  # minutes
 
-COLLECTOR_PATH = f'E:\\Code\\Github\\REFD\\EventCollectorDriver\\x64\\Debug'
+COLLECTOR_DRIVER_PATH = f'E:\\Code\\Github\\REFD\\EventCollectorDriver\\x64\\Debug'
+COLLECTOR_SERVICE_PATH = f'E:\\Code\\Github\\REFD\\RansomDetectorService\\x64\\Release'
 
 RUN_TIME_LOG_DIR = f"E:\\Code\\Github\\REFD\\REFD2026\\vm\\rtlog"
 
@@ -99,36 +100,37 @@ def vm_open(vm_path: str):
     return vm
 
 
-def vm_revert_to_current_snapshot(vm, f):
+def vm_revert_to_current_snapshot(vm: VixVM, f):
     print("Revert to snapshot", flush=True, file=f)
     cur_snap = vm.snapshot_get_current()
     vm.snapshot_revert(cur_snap)
 
 
-def vm_ensure_power_on(vm, f):
+def vm_ensure_power_on(vm: VixVM, f):
     print("Run VM", flush=True, file=f)
     if vm.power_state != VixVM.VIX_POWERSTATE_POWERED_ON:
         vm.power_on(False)
 
 
-def vm_login_as_system(vm, username: str, password: str, f):
+def vm_login_as_system(vm: VixVM, username: str, password: str, f):
     print(f"Login as {username}", flush=True, file=f)
     vm.login(username, password, False)
     print(f"Logged as {username}", flush=True, file=f)
 
 
-def vm_copy_malware_to_guest(vm, host_mal_path: str, guest_mal_path: str, f):
+def vm_copy_malware_to_guest(vm: VixVM, host_mal_path: str, guest_mal_path: str, f):
     print(f"Copy malware file: {host_mal_path} -> {guest_mal_path}", flush=True, file=f)
     vm.copy_host_to_guest(host_mal_path, guest_mal_path)
 
-def vm_run_collector(vm):
-    vm.proc_run("C:\\Windows\\System32\\cmd.exe", f'/c "fltmc load EventCollectorDriver""', True)
+def vm_run_collector(vm: VixVM):
+    vm.proc_run("C:\\Windows\\System32\\cmd.exe", f'/c C:\\Windows\\System32\\RansomDetectorService.exe', True)
+    vm.proc_run("C:\\Windows\\System32\\cmd.exe", f'/c "fltmc load EventCollectorDriver"', True)
 
-def vm_run_malware(vm, guest_mal_path: str, f):
+def vm_run_malware(vm: VixVM, guest_mal_path: str, f):
     print("Run malware", flush=True, file=f)
     vm.proc_run(guest_mal_path, None, False)
 
-def vm_safe_power_off(vm, f=None):
+def vm_safe_power_off(vm: VixVM, f=None):
     try:
         vm.power_off()
         if f:
@@ -137,7 +139,7 @@ def vm_safe_power_off(vm, f=None):
         if f:
             print("Power off VM failed (ignored)", flush=True, file=f)
 
-def pull_log(vm, guest_log_path: str, host_log_path: str, f):
+def pull_log(vm: VixVM, guest_log_path: str, host_log_path: str, f):
     tmp_path = host_log_path + "_tmp"
 
     # Remove old tmp if it exists
@@ -203,7 +205,8 @@ def evaluate_ransom(sample_name: str, vm: VixVM, f, max_run_time, done_event: th
         vm_revert_to_current_snapshot(vm, f)
         vm_ensure_power_on(vm, f)
         vm_login_as_system(vm, "hieu", "1", f)
-        vm.copy_host_to_guest(f'{COLLECTOR_PATH}\\EventCollectorDriver.sys', 'C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys')
+        vm.copy_host_to_guest(f'{COLLECTOR_DRIVER_PATH}\\EventCollectorDriver.sys', 'C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys')
+        vm.copy_host_to_guest(f'{COLLECTOR_SERVICE_PATH}\\RansomDetectorService.exe', 'C:\\Windows\\System32\\RansomDetectorService.exe')
         run_proc(vm, "del /f /q \"C:\\Windows\\Minidump\\*\"")
         vm_copy_malware_to_guest(vm, host_mal_path, guest_mal_path, f)
         vm_run_collector(vm)

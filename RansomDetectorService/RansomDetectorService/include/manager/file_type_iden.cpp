@@ -156,8 +156,8 @@ namespace type_iden
 			return types;
 		}
 
-		/*
 		*p_file_size = static_cast<size_t>(li_size.QuadPart);
+		/*
 		if (*p_file_size < FILE_MIN_SIZE_SCAN || *p_file_size > FILE_MAX_SIZE_SCAN) {
 			*p_status = ERROR_FILE_TOO_LARGE;
 			return types;

@@ -130,7 +130,11 @@ namespace manager {
 
                 auto lp = ulti::ToLower(info.path);
 
-                auto hash = helper::GetWstrHash(ulti::ToLower(info.path));
+                if (IsPathWhitelisted(lp) == true) {
+                    continue;
+                }
+
+                auto hash = helper::GetWstrHash(lp);
                 if (file_hash_scanned.find(hash) != file_hash_scanned.end()) { // Scanned -> skip
                     continue;
                 }
@@ -140,6 +144,7 @@ namespace manager {
 
                 auto types = ft->GetTypes(info.path, &status, &file_size);
                 auto types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
+                PrintDebugW(L"%ws,(%ws)\n", info.path.c_str(), types_wstr.c_str());
                 debug::WriteLogW(L"%ws,(%ws)\n", info.path.c_str(), types_wstr.c_str());
 
                 file_hash_scanned.insert(hash);
