@@ -124,6 +124,11 @@ namespace ulti
         return (ull)(duration_cast<seconds>(steady_clock::now().time_since_epoch()).count());
     }
 
+    ull GetCurrentSteadyTimeInMs()
+    {
+        return (ull)(duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count());
+    }
+
     // Compute CRC32 with zlib
     uint32_t ComputeCRC32(const unsigned char* buf, size_t len) {
         return crc32(0L, buf, static_cast<uInt>(len));

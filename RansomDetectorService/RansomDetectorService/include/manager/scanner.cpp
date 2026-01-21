@@ -2,6 +2,7 @@
 #include "receiver.h"
 #include "file_type_iden.h"
 #include "file_helper.h"
+#include "receiver.h"
 
 namespace manager {
 
@@ -118,16 +119,26 @@ namespace manager {
         while (running_)
         {
             // Move all pending events from Receiver
+            std::queue<FileIoInfo> tmp_queue;
 
             rcv->LockMutex();
-            rcv->MoveQueue(local_queue);
+            rcv->MoveQueue(tmp_queue);
             rcv->UnlockMutex();
 
+            while (!tmp_queue.empty()) {
+                local_queue.push(std::move(tmp_queue.front()));
+                tmp_queue.pop();
+            }
+            int n = local_queue.size();
             // Process events
-            while (!local_queue.empty())
+            for (int i = 0; i < n; i++)
             {
-                const FileIoInfo& info = local_queue.front();
-
+                if (local_queue.size() == 0) {
+                    break;
+                }
+                FileIoInfo info = std::move(local_queue.front());
+                local_queue.pop();
+                
                 auto lp = ulti::ToLower(info.path);
 
                 if (IsPathWhitelisted(lp) == true) {
@@ -143,12 +154,20 @@ namespace manager {
                 ull file_size = 0;
 
                 auto types = ft->GetTypes(info.path, &status, &file_size);
+                if (status == ERROR_SHARING_VIOLATION) {
+                    if (rcv != nullptr) {
+                        rcv->LockMutex();
+                        rcv->PushFileEvent(info.path);
+                        rcv->UnlockMutex();
+                    }
+                    continue;
+                }
                 auto types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
-                PrintDebugW(L"%ws,(%ws)\n", info.path.c_str(), types_wstr.c_str());
-                debug::WriteLogW(L"%ws,(%ws)\n", info.path.c_str(), types_wstr.c_str());
+                auto time_ms = ulti::GetCurrentSteadyTimeInMs();
+                PrintDebugW(L"%ws,(%ws)", info.path.c_str(), types_wstr.c_str());
+                debug::WriteLogW(L"%lld,%ws,(%ws)\n", time_ms, info.path.c_str(), types_wstr.c_str());
 
                 file_hash_scanned.insert(hash);
-                local_queue.pop();
             }
 
             // Sleep briefly to avoid busy spinning

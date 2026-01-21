@@ -51,7 +51,7 @@ namespace manager
         FileIoInfo file_io_info;
         if (!file_io_queue_.empty())
         {
-            file_io_info = file_io_queue_.front();
+            file_io_info = std::move(file_io_queue_.front());
             file_io_queue_.pop();
         }
         return file_io_info;

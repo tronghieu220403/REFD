@@ -22,11 +22,12 @@ HOST_NOT_COMPATIBLE_DIR = "D:\\MalwareBazaarRun\\not_compatible"
 
 GUEST_DOWNLOAD_DIR = "C:\\Users\\hieu\\Downloads\\"
 GUEST_LOG_PATH = "C:\\Windows\\EventCollectorDriver.log"
+GUEST_TYPE_LOG_PATH = "C:\\Windows\\TypeCollector.log"
 
 STOP_FILE = "E:\\Code\\Github\\REFD\\REFD2026\\vm\\ggez.txt"
 
 DEFAULT_NUM_PROCESSES = 1
-DEFAULT_MAX_RUN_TIME = 4  # minutes
+DEFAULT_MAX_RUN_TIME = 6  # minutes
 
 COLLECTOR_DRIVER_PATH = f'E:\\Code\\Github\\REFD\\EventCollectorDriver\\x64\\Debug'
 COLLECTOR_SERVICE_PATH = f'E:\\Code\\Github\\REFD\\RansomDetectorService\\x64\\Release'
@@ -199,6 +200,7 @@ def evaluate_ransom(sample_name: str, vm: VixVM, f, max_run_time, done_event: th
     host_mal_path = os.path.join(HOST_ROOT_MAL_DIR, sample_name)
     guest_mal_path = os.path.join(GUEST_DOWNLOAD_DIR, sample_name + ".exe")
     host_log_path = os.path.join(HOST_ROOT_LOG_DIR, sample_name + ".log")
+    host_type_log_path = os.path.join(HOST_ROOT_LOG_DIR, sample_name + ".type.log")
 
     print(f"Evaluating ransomware {sample_name}", flush=True, file=f)
     try:
@@ -221,17 +223,16 @@ def evaluate_ransom(sample_name: str, vm: VixVM, f, max_run_time, done_event: th
             done_event.set()
             return False
 
-        host_wait_sec(2 * 60, f, vm)
         open(host_log_path, "w").close()
-        if pull_log(vm, GUEST_LOG_PATH, host_log_path, f) == False or is_ransom_work(host_log_path) == False:
-            done_event.set()
-            return False
-        host_wait_sec((max_run_time - 2) * 60, f, vm)
-        if pull_log(vm, GUEST_LOG_PATH, host_log_path, f) == True and is_ransom_work(host_log_path) == True:
-            done_event.set()
-            return True
+        open(host_type_log_path, "w").close()
+        for i in range(0, max_run_time, 2):
+            host_wait_sec(2 * 60, f, vm)
+            if pull_log(vm, GUEST_LOG_PATH, host_log_path, f) == False or is_ransom_work(host_log_path) == False:
+                done_event.set()
+                return False
+            pull_log(vm, GUEST_TYPE_LOG_PATH, host_type_log_path, f)
         done_event.set()
-        return False
+        return True
     except VixError as ex:
         print(f"VIX error: {ex}, {sample_name}, {vm_path}", flush=True, file=f)
         try:
@@ -251,18 +252,23 @@ def evaluate_ransom(sample_name: str, vm: VixVM, f, max_run_time, done_event: th
 
 def evaluate_ransom_with_timeout(sample_name: str, vm: VixVM, f, max_run_time_minute, vm_path):
     host_log_path = os.path.join(HOST_ROOT_LOG_DIR, sample_name + ".log")
+    host_type_log_path = os.path.join(HOST_ROOT_LOG_DIR, sample_name + ".type.log")
     done_event = threading.Event()
     t = threading.Thread(target=evaluate_ransom, args=(sample_name, vm, f, max_run_time_minute, done_event, vm_path))
     t.start()
 
     finished = done_event.wait((max_run_time_minute + 3) * 60)
 
-    if not finished or os.path.exists(host_log_path) == False:
+    if os.path.exists(host_log_path) == False or os.path.exists(host_type_log_path) == False: 
         try:
             os.remove(host_log_path)
         except:
             pass
-        os._exit(0)
+        try:
+            os.remove(host_type_log_path)
+        except:
+            pass
+        # os._exit(0)
         return 2
     else:
         t.join()
@@ -270,6 +276,10 @@ def evaluate_ransom_with_timeout(sample_name: str, vm: VixVM, f, max_run_time_mi
             return True
         try:
             os.remove(host_log_path)
+        except:
+            pass
+        try:
+            os.remove(host_type_log_path)
         except:
             pass
         return False
@@ -299,7 +309,8 @@ def vm_process(vm_path: str, runtime_log: str, ransom_names, mutex, max_run_time
             ret = evaluate_ransom_with_timeout(name, vm, f, max_run_time_minute, vm_path)
             
             if ret == 2:
-                os._exit(0)
+                # os._exit(0)
+                pass
             vm_safe_power_off(vm, f)
             if ret is True:
                 print(f"Done {name}\n", flush=True, file=f)

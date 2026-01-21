@@ -37,7 +37,7 @@ vm = host.open_vm(vm_path)
 login_as_system()
 
 tmp_path = f'E:\\tmp'
-COLLECTOR_PATH = f'E:\\Code\\Github\\Minerva\\EventCollectorDriver\\x64\\Debug'
+COLLECTOR_DRIVER_PATH = f'E:\\Code\\Github\\REFD\\EventCollectorDriver\\x64\\Debug'
 
 def init_env():
     try:
@@ -46,7 +46,7 @@ def init_env():
     except:
         pass
     vm.copy_guest_to_host('C:\\Windows\\Minidump', f'{tmp_path}\\Minidump')
-    shutil.copyfile(f"{COLLECTOR_PATH}\\EventCollectorDriver.sys", f'{tmp_path}\\EventCollectorDriver.sys')
-    shutil.copyfile(f"{COLLECTOR_PATH}\\EventCollectorDriver.pdb", f'{tmp_path}\\EventCollectorDriver.pdb')
+    shutil.copyfile(f"{COLLECTOR_DRIVER_PATH}\\EventCollectorDriver.sys", f'{tmp_path}\\EventCollectorDriver.sys')
+    shutil.copyfile(f"{COLLECTOR_DRIVER_PATH}\\EventCollectorDriver.pdb", f'{tmp_path}\\EventCollectorDriver.pdb')
 init_env()
 

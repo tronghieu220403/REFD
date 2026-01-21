@@ -30,6 +30,7 @@ namespace ulti
         const std::string& delimiter);
 
     ull GetCurrentSteadyTimeInSec();
+    ull GetCurrentSteadyTimeInMs();
 
     uint32_t ComputeCRC32(const unsigned char* buf, size_t len);
 

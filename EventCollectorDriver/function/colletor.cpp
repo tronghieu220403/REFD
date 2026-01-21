@@ -152,14 +152,14 @@ namespace collector
             return FLT_PREOP_SUCCESS_NO_CALLBACK;
         }
 
-        if (current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\windows\\") == true
-            || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\program files\\") == true
-            || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\program files (x86)\\") == true
-            || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\users\\hieu\\appdata\\") == true
-            || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\programdata\\") == true
-            ) {
-            return FLT_PREOP_SUCCESS_NO_CALLBACK;
-        }
+        //if (current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\windows\\") == true
+        //    || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\program files\\") == true
+        //    || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\program files (x86)\\") == true
+        //    || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\users\\hieu\\appdata\\") == true
+        //    || current_path.HasCiPrefix(L"\\device\\harddiskvolume3\\programdata\\") == true
+        //    ) {
+        //    return FLT_PREOP_SUCCESS_NO_CALLBACK;
+        //}
 
         return FLT_PREOP_SUCCESS_WITH_CALLBACK;
     }
@@ -712,7 +712,7 @@ namespace collector
                     p_hc->is_modified +
                     p_hc->is_read +
                     p_hc->is_renamed +
-                    p_hc->is_created +
+                    //p_hc->is_created +
                     p_hc->is_deleted +
                     p_hc->is_alloc +
                     p_hc->is_eof +
