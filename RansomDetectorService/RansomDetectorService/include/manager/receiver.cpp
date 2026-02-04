@@ -1,5 +1,5 @@
 #include "receiver.h"
-#include "file_helper.h"
+#include "ulti/file_helper.h"
 
 namespace manager
 {
@@ -24,19 +24,10 @@ namespace manager
     }
 
     bool Receiver::Init() {
-        if (running_)
-            return true;
-
-        running_ = true;
-        collector_thread_ = std::thread(ReceiverThread);
         return true;
     }
 
     void Receiver::Uninit() {
-        running_ = false;
-
-        if (collector_thread_.joinable())
-            collector_thread_.join();
     }
 
     void Receiver::LockMutex() {
@@ -67,97 +58,8 @@ namespace manager
 
     void Receiver::PushFileEvent(std::wstring& path) {
         FileIoInfo info;
-        info.path = std::move(path);
+        info.path = helper::GetLongDosPath(helper::GetDosPath(path));
         file_io_queue_.push(std::move(info));
         return;
     }
-
-    void Receiver::PushFileEventFromBuffer(
-        const void* buffer,
-        size_t buffer_size)
-    {
-        if (file_io_queue_.size() >= MAX_QUEUE_SIZE)
-            return;
-
-        if (buffer_size < sizeof(wchar_t))
-            return;
-
-        if (buffer_size % sizeof(wchar_t) != 0)
-            return;
-
-        size_t wchar_len = buffer_size / sizeof(wchar_t);
-
-        const wchar_t* raw_path = (const wchar_t*)buffer;
-
-        size_t actual_len = 0;
-        for (; actual_len < wchar_len; actual_len++)
-        {
-            if (raw_path[actual_len] == L'\0')
-                break;
-        }
-
-        if (actual_len == 0)
-            return;
-
-        std::wstring path(raw_path, actual_len);
-
-        FileIoInfo info;
-        info.path = helper::GetLongDosPath(helper::GetDosPath(path));
-
-        file_io_queue_.push(std::move(info));
-    }
-
-	void Receiver::ReceiverThread()
-	{
-        SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
-
-        auto rcv = Receiver::GetInstance();
-        if (rcv == nullptr) {
-            return;
-        }
-
-		// Create a communication port
-		FltComPort com_port;
-
-        constexpr size_t MAX_BUFFER_SIZE = 64 * 1024;
-        std::vector<uint8_t> buffer(MAX_BUFFER_SIZE);
-
-        while (true)
-        {
-            if (rcv->running_ == false) {
-                return;
-            }
-            HRESULT hr = com_port.Create(PORT_NAME);
-            if (FAILED(hr))
-            {
-                PrintDebugW(L"Create port failed: 0x%08X", hr);
-                Sleep(1000);
-                continue;
-            }
-            PrintDebugW(L"Create port oke");
-
-            while (true)
-            {
-                if (rcv->running_ == false) {
-                    return;
-                }
-
-                hr = com_port.Get(
-                    (PFILTER_MESSAGE_HEADER)buffer.data(),
-                    buffer.size()
-                );
-
-                if (FAILED(hr)) {
-                    break;
-                }
-
-                const uint8_t* ptr = (const uint8_t*)buffer.data() + sizeof(FILTER_MESSAGE_HEADER);
-                size_t string_bytes = buffer.size() - sizeof(FILTER_MESSAGE_HEADER);
-
-                rcv->LockMutex();
-                rcv->PushFileEventFromBuffer(ptr, string_bytes);
-                rcv->UnlockMutex();
-            }
-        }
-	}
 }

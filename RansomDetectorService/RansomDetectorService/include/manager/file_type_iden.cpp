@@ -157,27 +157,24 @@ namespace type_iden
 		}
 
 		*p_file_size = static_cast<size_t>(li_size.QuadPart);
-		/*
-		if (*p_file_size < FILE_MIN_SIZE_SCAN || *p_file_size > FILE_MAX_SIZE_SCAN) {
+		if (*p_file_size > FILE_MAX_SIZE_SCAN) {
 			*p_status = ERROR_FILE_TOO_LARGE;
 			return types;
 		}
-		*/
 
-		HANDLE mapping_handle = CreateFileMappingW(file_handle, nullptr,
-			PAGE_READONLY, 0, li_size.LowPart, nullptr);
-		if (!mapping_handle) {
-			*p_status = GetLastError();
-			return types;
-		}
-		defer{ CloseHandle(mapping_handle); };
-
-		UCHAR* data = (UCHAR *)MapViewOfFile(mapping_handle, FILE_MAP_READ, 0, 0, li_size.LowPart);
+		UCHAR* data = (UCHAR*)HeapAlloc(GetProcessHeap(), 0, *p_file_size);
 		if (!data) {
+			*p_status = ERROR_OUTOFMEMORY;
+			return types;
+		}
+		defer{ HeapFree(GetProcessHeap(), 0, data); };
+
+		DWORD bytes_read = 0;
+		BOOL ok = ReadFile(file_handle, data, *p_file_size, &bytes_read, nullptr);
+		if (!ok || bytes_read != *p_file_size) {
 			*p_status = GetLastError();
 			return types;
 		}
-		defer{ UnmapViewOfFile(data); };
 
 		const span<UCHAR> span_data(data, *p_file_size);
 

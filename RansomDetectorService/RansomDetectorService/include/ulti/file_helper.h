@@ -1,8 +1,8 @@
-﻿#ifndef MANAGER_HELPER_H_
-#define MANAGER_HELPER_H_
+﻿#ifndef ULTI_HELPER_H_
+#define ULTI_HELPER_H_
 
-#include "../ulti/support.h"
-#include "../ulti/debug.h"
+#include "support.h"
+#include "debug.h"
 
 /* // TRID will not accept the extended path
 #define MAIN_DIR L"\\\\?\\E:\\hieunt210330"
@@ -11,36 +11,12 @@
 #define MAIN_DIR L"E:\\hieunt210330"
 #define TEMP_DIR L"E:\\hieunt210330\\backup\\"
 
-#define EVALUATATION_INTERVAL_MS 5000
-#define EVALUATATION_INTERVAL_SEC (EVALUATATION_INTERVAL_MS / 1000)
-
-#define MIN_TOTAL_SIZE_CHECK_PER_SEC (0)// 0MB
-#define MIN_TOTAL_SIZE_CHECK (MIN_TOTAL_SIZE_CHECK_PER_SEC * EVALUATATION_INTERVAL_SEC)
-
-#define MIN_FILE_COUNT 5
-
-#define MIN_DIR_COUNT 2
-
-#define FILE_MAX_SIZE_SCAN (5 * 1024 * 1024) // 5MB
-#define FILE_MIN_SIZE_SCAN 10
-
 #define BEGIN_WIDTH 1024
 #define END_WIDTH 1024
 #define HIEUNT_MAX_PATH (1024)
 
-#define TYPE_MATCH_NOT_EVALUATED 0
-#define TYPE_MISMATCH 1
-#define TYPE_HAS_COMMON 2
-#define TYPE_NULL 3
-#define TYPE_NOT_NULL 4
-#define TYPE_NO_EVALUATION 5
-#define TYPE_DONE_EVALUATION 6
-
 #define DEVICE_CACHE_USAGE_COUNT_MAX 10
 #define DEVICE_CACHE_USAGE_SECOND_MAX 10
-
-#define FILE_IO_FILTER_QUEUE_SIZE_MAX 10000
-#define FILE_CACHE_SIZE_MAX 1000
 
 namespace helper {
 
@@ -83,4 +59,4 @@ namespace helper {
 
 	void ClearTmpFiles();
 }
-#endif  // MANAGER_HELPER_H_
+#endif  // ULTI_HELPER_H_

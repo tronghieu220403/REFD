@@ -3,10 +3,6 @@
 
 #include "../ulti/support.h"
 #include "../ulti/debug.h"
-#include "com/minifilter_comm.h"
-
-#define PORT_NAME L"\\hieunt_mf"
-#define MAX_QUEUE_SIZE 100000
 
 namespace manager {
 
@@ -24,16 +20,10 @@ namespace manager {
 
 		std::queue<FileIoInfo> file_io_queue_;
 		std::mutex file_io_mutex_;
-
-		std::thread collector_thread_;
-		std::atomic<bool> running_{ false };
-
 	public:
 		// Singleton
 		static Receiver* GetInstance();
 		static void DeleteInstance();
-
-		static void ReceiverThread();
 
 		// Lifecycle
 		bool Init();
@@ -49,7 +39,6 @@ namespace manager {
 		void MoveQueue(std::queue<FileIoInfo>& target_file_io_queue);
 
 		void PushFileEvent(std::wstring& path);
-		void PushFileEventFromBuffer(const void* buffer, size_t buffer_size);
 	};
 
 }

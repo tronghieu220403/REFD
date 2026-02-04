@@ -151,6 +151,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PreprocessToFile>false</PreprocessToFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,15 +161,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\com\driver_comm.cpp" />
-    <ClCompile Include="include\com\minifilter_com.cpp" />
     <ClCompile Include="include\file_type\av.cpp" />
     <ClCompile Include="include\file_type\compress.cpp" />
     <ClCompile Include="include\file_type\image.cpp" />
     <ClCompile Include="include\file_type\ole.cpp" />
     <ClCompile Include="include\file_type\pdf.cpp" />
     <ClCompile Include="include\file_type\txt.cpp" />
-    <ClCompile Include="include\manager\file_helper.cpp" />
+    <ClCompile Include="include\manager\etw_controller.cpp" />
+    <ClCompile Include="include\ulti\file_helper.cpp" />
     <ClCompile Include="include\manager\file_type_iden.cpp" />
     <ClCompile Include="include\manager\receiver.cpp" />
     <ClCompile Include="include\manager\scanner.cpp" />
@@ -177,19 +177,54 @@
     <ClCompile Include="include\trid\trid.cpp" />
     <ClCompile Include="include\trid\trid_api.cpp" />
     <ClCompile Include="include\ulti\debug.cpp" />
+    <ClCompile Include="include\ulti\lru_cache.hpp" />
     <ClCompile Include="include\ulti\support.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\com\driver_comm.h" />
-    <ClInclude Include="include\com\minifilter_comm.h" />
     <ClInclude Include="include\file_type\av.h" />
     <ClInclude Include="include\file_type\compress.h" />
     <ClInclude Include="include\file_type\image.h" />
     <ClInclude Include="include\file_type\ole.h" />
     <ClInclude Include="include\file_type\pdf.h" />
     <ClInclude Include="include\file_type\txt.h" />
-    <ClInclude Include="include\manager\file_helper.h" />
+    <ClInclude Include="include\krabs\krabs.hpp" />
+    <ClInclude Include="include\krabs\krabs\client.hpp" />
+    <ClInclude Include="include\krabs\krabs\collection_view.hpp" />
+    <ClInclude Include="include\krabs\krabs\compiler_check.hpp" />
+    <ClInclude Include="include\krabs\krabs\errors.hpp" />
+    <ClInclude Include="include\krabs\krabs\etw.hpp" />
+    <ClInclude Include="include\krabs\krabs\filtering\comparers.hpp" />
+    <ClInclude Include="include\krabs\krabs\filtering\event_filter.hpp" />
+    <ClInclude Include="include\krabs\krabs\filtering\predicates.hpp" />
+    <ClInclude Include="include\krabs\krabs\filtering\view_adapters.hpp" />
+    <ClInclude Include="include\krabs\krabs\guid.hpp" />
+    <ClInclude Include="include\krabs\krabs\kernel_guids.hpp" />
+    <ClInclude Include="include\krabs\krabs\kernel_providers.hpp" />
+    <ClInclude Include="include\krabs\krabs\kt.hpp" />
+    <ClInclude Include="include\krabs\krabs\parser.hpp" />
+    <ClInclude Include="include\krabs\krabs\parse_types.hpp" />
+    <ClInclude Include="include\krabs\krabs\perfinfo_groupmask.hpp" />
+    <ClInclude Include="include\krabs\krabs\property.hpp" />
+    <ClInclude Include="include\krabs\krabs\provider.hpp" />
+    <ClInclude Include="include\krabs\krabs\schema.hpp" />
+    <ClInclude Include="include\krabs\krabs\schema_locator.hpp" />
+    <ClInclude Include="include\krabs\krabs\size_provider.hpp" />
+    <ClInclude Include="include\krabs\krabs\tdh_helpers.hpp" />
+    <ClInclude Include="include\krabs\krabs\testing\event_filter_proxy.hpp" />
+    <ClInclude Include="include\krabs\krabs\testing\extended_data_builder.hpp" />
+    <ClInclude Include="include\krabs\krabs\testing\filler.hpp" />
+    <ClInclude Include="include\krabs\krabs\testing\proxy.hpp" />
+    <ClInclude Include="include\krabs\krabs\testing\record_builder.hpp" />
+    <ClInclude Include="include\krabs\krabs\testing\record_property_thunk.hpp" />
+    <ClInclude Include="include\krabs\krabs\testing\synth_record.hpp" />
+    <ClInclude Include="include\krabs\krabs\trace.hpp" />
+    <ClInclude Include="include\krabs\krabs\trace_context.hpp" />
+    <ClInclude Include="include\krabs\krabs\ut.hpp" />
+    <ClInclude Include="include\krabs\krabs\version_helpers.hpp" />
+    <ClInclude Include="include\krabs\krabs\wstring_convert.hpp" />
+    <ClInclude Include="include\manager\etw_controller.h" />
+    <ClInclude Include="include\ulti\file_helper.h" />
     <ClInclude Include="include\manager\file_type_iden.h" />
     <ClInclude Include="include\manager\receiver.h" />
     <ClInclude Include="include\manager\scanner.h" />

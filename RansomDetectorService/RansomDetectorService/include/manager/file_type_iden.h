@@ -11,6 +11,7 @@
 #endif // _M_IX86
 
 #define HIEUNT_ERROR_FILE_NOT_FOUND_STR "HIEUNT_ERROR_FILE_NOT_FOUND_STR"
+#define FILE_MAX_SIZE_SCAN 300 * 1024 * 1024
 
 namespace type_iden
 {

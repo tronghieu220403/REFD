@@ -6,7 +6,26 @@
 #ifndef ULTI_INCLUDE_H_
 #define ULTI_INCLUDE_H_
 #define NOMINMAX
+
+#pragma comment(lib, "iphlpapi.lib")
+#pragma comment(lib, "comsupp.lib")
+#pragma comment(lib, "ntdll.lib")
+#pragma comment(lib, "Wtsapi32.lib")
+#pragma comment(lib, "Userenv.lib")
+#pragma comment(lib, "Kernel32.lib")
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "Secur32.lib")
+#pragma comment(lib, "Bcrypt.lib")
+#pragma comment(lib, "Crypt32.lib")
+#pragma comment(lib, "Mfplat.lib")
+#pragma comment(lib, "Mfuuid.lib")
+#pragma comment(lib, "strmiids.lib")
+
+#include "krabs\krabs.hpp"
+
+#define WIN32_NO_STATUS
 #include <Windows.h>
+#undef WIN32_NO_STATUS
 #include <limits>
 #include <iphlpapi.h>
 #include <TlHelp32.h>
@@ -16,7 +35,7 @@
 #include <evntcons.h>
 #include <comutil.h>
 #include <wbemidl.h>
-#include <winternl.h>
+//#include <winternl.h>
 #include <wtsapi32.h>
 #include <userenv.h>
 
@@ -51,21 +70,6 @@
 #include <span>
 #include <cstdint>
 #include <csetjmp>
-
-#pragma comment(lib, "iphlpapi.lib")
-#pragma comment(lib, "FltLib.lib")
-#pragma comment(lib, "comsupp.lib")
-#pragma comment(lib, "ntdll.lib")
-#pragma comment(lib, "Wtsapi32.lib")
-#pragma comment(lib, "Userenv.lib")
-#pragma comment(lib, "Kernel32.lib")
-#pragma comment(lib, "ws2_32.lib")
-#pragma comment(lib, "Secur32.lib")
-#pragma comment(lib, "Bcrypt.lib")
-#pragma comment(lib, "Crypt32.lib")
-#pragma comment(lib, "Mfplat.lib")
-#pragma comment(lib, "Mfuuid.lib")
-#pragma comment(lib, "strmiids.lib")
 
 template<typename F>
 class defer_finalizer {

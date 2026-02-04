@@ -9,7 +9,7 @@ C/C++ -> General -> Additional Include Dir -> $(ProjectDir)include
 #include "manager/scanner.h"
 #include "manager/receiver.h"
 #include "manager/file_type_iden.h"
-#include "manager/file_helper.h"
+#include "ulti/file_helper.h"
 
 constexpr auto SERVICE_NAME = L"REFD";
 

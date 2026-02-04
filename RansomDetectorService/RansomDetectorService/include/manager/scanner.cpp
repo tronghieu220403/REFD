@@ -1,7 +1,7 @@
 ﻿#include "scanner.h"
 #include "receiver.h"
 #include "file_type_iden.h"
-#include "file_helper.h"
+#include "ulti/file_helper.h"
 #include "receiver.h"
 
 namespace manager {
@@ -129,9 +129,9 @@ namespace manager {
                 local_queue.push(std::move(tmp_queue.front()));
                 tmp_queue.pop();
             }
-            int n = local_queue.size();
+            size_t n = local_queue.size();
             // Process events
-            for (int i = 0; i < n; i++)
+            for (size_t i = 0; i < n; i++)
             {
                 if (local_queue.size() == 0) {
                     break;

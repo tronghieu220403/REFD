@@ -217,15 +217,19 @@ namespace helper
         return extensions;
     }
 
-	ull GetWstrHash(const std::wstring& ws)
-	{
-        ull backup_hash = 0;
-		for (auto& c : ws)
-		{
-			backup_hash += (backup_hash * 65535 + c) % (10000000007);
-		}
-		return backup_hash;
-	}
+    ull GetWstrHash(const std::wstring& ws)
+    {
+        const ull FNV_OFFSET = 1469598103934665603ULL;
+        const ull FNV_PRIME = 1099511628211ULL;
+
+        ull hash = FNV_OFFSET;
+        for (wchar_t c : ws)
+        {
+            hash ^= static_cast<ull>(c);
+            hash *= FNV_PRIME;
+        }
+        return hash;
+    }
 
     std::wstring CopyToTmp(const std::wstring& ws, bool create_new_if_duplicate)
 	{
