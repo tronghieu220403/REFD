@@ -7,13 +7,6 @@
 namespace manager {
 
     // ======================================================
-    // Static members
-    // ======================================================
-
-    Scanner* Scanner::instance_ = nullptr;
-    std::mutex Scanner::instance_mutex_;
-
-    // ======================================================
     // Constructor / Destructor
     // ======================================================
 
@@ -33,21 +26,8 @@ namespace manager {
 
     Scanner* Scanner::GetInstance()
     {
-        std::lock_guard<std::mutex> lock(instance_mutex_);
-        if (!instance_)
-            instance_ = new Scanner();
-        return instance_;
-    }
-
-    void Scanner::DeleteInstance()
-    {
-        std::lock_guard<std::mutex> lock(instance_mutex_);
-        if (instance_)
-        {
-            instance_->Uninit();
-            delete instance_;
-            instance_ = nullptr;
-        }
+        static Scanner instance;
+        return &instance;
     }
 
     // ======================================================
@@ -157,7 +137,7 @@ namespace manager {
                 if (status == ERROR_SHARING_VIOLATION) {
                     if (rcv != nullptr) {
                         rcv->LockMutex();
-                        rcv->PushFileEvent(info.path);
+                        rcv->PushFileEvent(std::move(info.path), info.pid);
                         rcv->UnlockMutex();
                     }
                     continue;

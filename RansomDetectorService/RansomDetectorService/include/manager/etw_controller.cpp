@@ -1,5 +1,6 @@
 #include "etw_controller.h"
 #include "ulti/file_helper.h"
+#include "receiver.h"
 
 using namespace std;
 
@@ -189,15 +190,16 @@ void EtwController::IHCacheRelease(ULONGLONG name_hash)
 //  - Computes name_hash
 //  - Adds the entry to IHCache
 // Logging is deferred until a real file operation occurs.
-bool EtwController::AddToIHCache(ULONGLONG ts, const std::wstring& path, ULONGLONG& out_name_hash)
+bool EtwController::AddToIHCache(ULONGLONG ts, const std::wstring& path, ULONGLONG* out_name_hash)
 {
-    out_name_hash = 0;
     if (path.empty())
         return false;
 
     std::wstring lower = ulti::ToLower(path);
     ULONGLONG name_hash = helper::GetWstrHash(lower);
-    out_name_hash = name_hash;
+    if (out_name_hash != nullptr) {
+        *out_name_hash = name_hash;
+    }
 
     std::lock_guard<std::mutex> lock(m_identityMutex);
 
@@ -215,27 +217,34 @@ bool EtwController::AddToIHCache(ULONGLONG ts, const std::wstring& path, ULONGLO
 // Once printed, the entry is:
 //  - Inserted into printedNameHash LRU
 //  - Removed from IHCache regardless of ref_count
-void EtwController::MaybePrintIH(ULONGLONG name_hash)
+void EtwController::MaybePrintIH(ULONGLONG name_hash, std::wstring* p_out_name)
 {
     std::lock_guard<std::mutex> lock(m_identityMutex);
+    // Already printed -> nothing to do
+    if (m_printedNameHash.contains(name_hash) == true) {
+        if (p_out_name != nullptr) {
+            m_printedNameHash.get(name_hash, *p_out_name);
+        }
+        return;
+    }
+
     auto it = m_ihCache.find(name_hash);
     if (it == m_ihCache.end()) {
         return;
     }
 
-    // Already printed -> nothing to do
-    if (m_printedNameHash.contains(name_hash) == true) {
-        return;
-    }
-
     const auto& entry = it->second;
+
+    if (p_out_name != nullptr) {
+        *p_out_name = entry.path;
+    }
 
     std::wstringstream ss;
     ss << L"F,IH,0,0," << name_hash << L"," << entry.path;
     PushLog(ss.str());
 
     // Update printed IH LRU cache
-    m_printedNameHash.insert(name_hash);
+    m_printedNameHash.put(name_hash, std::move(entry.path));
 
     // Remove from IHCache after materialization
     m_ihCache.erase(it);
@@ -318,7 +327,7 @@ void EtwController::HandleFileCreate(ULONG pid, ULONG eid, ULONGLONG ts, krabs::
 
     // Parse done -> identity decisions first
     ULONGLONG name_hash = 0;
-    AddToIHCache(ts, path, name_hash);
+    AddToIHCache(ts, path, &name_hash);
 
     // Manage object table for later lookups
     {
@@ -330,15 +339,17 @@ void EtwController::HandleFileCreate(ULONG pid, ULONG eid, ULONGLONG ts, krabs::
     // Operation
     if (eid == KFE_CREATE_NEW_FILE)
     {
-        MaybePrintIH(name_hash);
+        MaybePrintIH(name_hash, nullptr);
         MaybePrintIO(fo, name_hash);
+        
+        manager::Receiver::GetInstance()->PushFileEvent(path, pid);
         LogFileCreateOperation(pid, eid, ts, name_hash);
     }
 
     // Delete-on-close mapped to delete operation without file key
     if ((co & 0x00001000) != 0)
     {
-        MaybePrintIH(name_hash);
+        MaybePrintIH(name_hash, nullptr);
         MaybePrintIO(fo, name_hash);
         LogFileDeleteOperation(pid, eid, ts, name_hash, fo, 0);
     }
@@ -374,8 +385,13 @@ void EtwController::HandleFileWrite(ULONG pid, ULONG eid, ULONGLONG ts, krabs::p
         if (it != m_objToNameHash.end())
             name_hash = it->second;
     }
-    MaybePrintIH(name_hash);
+
+    std::wstring path;
+
+    MaybePrintIH(name_hash, &path);
     MaybePrintIO(fo, name_hash);
+
+    manager::Receiver::GetInstance()->PushFileEvent(path, pid);
 
     // Operation
     LogFileWriteOperation(pid, eid, ts, fo);
@@ -394,7 +410,10 @@ void EtwController::HandleFileRename(ULONG pid, ULONG eid, ULONGLONG ts, krabs::
     if (eid == KFE_RENAME_PATH)
     {
         parser.try_parse<std::wstring>(L"FilePath", path);
-        AddToIHCache(ts, path, name_hash);
+        AddToIHCache(ts, path, &name_hash);
+        std::wstring path;
+        MaybePrintIH(name_hash, &path);
+        manager::Receiver::GetInstance()->PushFileEvent(path, pid);
     }
     else
     {
@@ -405,8 +424,8 @@ void EtwController::HandleFileRename(ULONG pid, ULONG eid, ULONGLONG ts, krabs::
             if (it != m_objToNameHash.end())
                 name_hash = it->second;
         }
+        MaybePrintIH(name_hash, nullptr);
     }
-    MaybePrintIH(name_hash);
 
     parser.try_parse<ULONGLONG>(L"FileKey", key);
 
@@ -438,8 +457,8 @@ void EtwController::HandleFileDelete(ULONG pid, ULONG eid, ULONGLONG ts, krabs::
 
     case KFE_DELETE_PATH:
         parser.try_parse<std::wstring>(L"FileName", path);
-        AddToIHCache(ts, path, name_hash);
-        MaybePrintIH(name_hash);
+        AddToIHCache(ts, path, &name_hash);
+        MaybePrintIH(name_hash, nullptr);
         parser.try_parse<ULONGLONG>(L"FileKey", key);
 
         // If event provides FileObject, print IO too
@@ -460,7 +479,7 @@ void EtwController::HandleFileDelete(ULONG pid, ULONG eid, ULONGLONG ts, krabs::
             if (it != m_objToNameHash.end())
                 name_hash = it->second;
         }
-        MaybePrintIH(name_hash);
+        MaybePrintIH(name_hash, nullptr);
 
         // Parse done -> identity decisions first
         MaybePrintIO(fo, name_hash);
@@ -590,7 +609,7 @@ void EtwController::Stop()
     m_trace.stop();
 
     m_stopLogger = true;
-
+                                        
     if (m_loggerThread.joinable())
         m_loggerThread.join();
 }

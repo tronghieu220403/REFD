@@ -3,7 +3,7 @@
 #include "ulti/support.h"
 #include "ulti/lru_cache.hpp"
 
-#define MAX_CACHE_SIZE 1000000
+#define MAX_CACHE_SIZE 1'000'000
 
 // ===== Forward =====
 struct EventInfo;
@@ -61,7 +61,7 @@ private:
     std::unordered_map<ULONGLONG, IHEntry> m_ihCache;
 
     // printed IH LRU
-    LruSet<ULONGLONG> m_printedNameHash{ MAX_CACHE_SIZE };
+    LruMap<ULONGLONG, std::wstring> m_printedNameHash{ MAX_CACHE_SIZE };
 
     // file_object -> name_hash
     std::unordered_map<ULONGLONG, ULONGLONG> m_objToNameHash;
@@ -77,8 +77,8 @@ private:
     // ================= IH Cache =================
     void IHCacheAdd(ULONGLONG ts, const std::wstring& lower_path, ULONGLONG name_hash);
     void IHCacheRelease(ULONGLONG name_hash);
-    bool AddToIHCache(ULONGLONG ts, const std::wstring& path, ULONGLONG& out_name_hash);
-    void MaybePrintIH(ULONGLONG name_hash);
+    bool AddToIHCache(ULONGLONG ts, const std::wstring& path, ULONGLONG* out_name_hash);
+    void MaybePrintIH(ULONGLONG name_hash, std::wstring* p_out_name);
 
     // ================= Process logging =================
     void MaybePrintProcessInfo(ULONG eid, ULONGLONG ts, ULONG pid, const std::wstring& path);

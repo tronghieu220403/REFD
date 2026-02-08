@@ -3,27 +3,15 @@
 
 namespace manager
 {
-    Receiver* Receiver::instance_ = nullptr;
-    std::mutex Receiver::instance_mutex_;
 
-    Receiver* Receiver::GetInstance() {
-        std::lock_guard<std::mutex> lock(instance_mutex_);
-        if (!instance_)
-            instance_ = new Receiver();
-        return instance_;
-    }
-
-    void Receiver::DeleteInstance() {
-        std::lock_guard<std::mutex> lock(instance_mutex_);
-        if (instance_)
-        {
-            instance_->Uninit();
-            delete instance_;
-            instance_ = nullptr;
-        }
+    Receiver* Receiver::GetInstance()
+    {
+        static Receiver instance;
+        return &instance;
     }
 
     bool Receiver::Init() {
+
         return true;
     }
 
@@ -56,7 +44,7 @@ namespace manager
         target_file_io_queue = std::move(file_io_queue_);
     }
 
-    void Receiver::PushFileEvent(std::wstring& path) {
+    void Receiver::PushFileEvent(const std::wstring& path, ULONG pid) {
         FileIoInfo info;
         info.path = helper::GetLongDosPath(helper::GetDosPath(path));
         file_io_queue_.push(std::move(info));

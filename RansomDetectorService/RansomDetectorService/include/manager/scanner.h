@@ -40,7 +40,6 @@ namespace manager {
     private:
         // Singleton instance
         static Scanner* instance_;
-        static std::mutex instance_mutex_;
 
         // Event mutex (kept for style consistency / future extension)
         std::mutex event_mutex_;
@@ -58,7 +57,6 @@ namespace manager {
     public:
         // Singleton accessors
         static Scanner* GetInstance();
-        static void DeleteInstance();
 
         // Lifecycle control
         bool Init();

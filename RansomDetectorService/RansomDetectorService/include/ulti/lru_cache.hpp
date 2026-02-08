@@ -18,10 +18,14 @@
  // ================================================================
 
 template<typename K, typename V>
-class LRUMap {
+class LruMap {
 public:
-    explicit LRUMap(size_t capacity);
+    LruMap();
+    explicit LruMap(size_t capacity);
 
+    void set_capacity(size_t capacity);
+
+    bool contains(const K& key);
     bool get(const K& key, V& outValue);
     void put(const K& key, const V& value);
     void erase(const K& key);
@@ -42,7 +46,10 @@ private:
 template<typename K>
 class LruSet {
 public:
+    LruSet();
     explicit LruSet(size_t capacity);
+
+    void set_capacity(size_t capacity);
 
     bool contains(const K& key);
     void insert(const K& key);
@@ -62,12 +69,47 @@ private:
 // ================================================================
 
 template<typename K, typename V>
-inline LRUMap<K, V>::LRUMap(size_t capacity)
+inline LruMap<K, V>::LruMap()
+    : m_capacity(0) {
+}
+
+template<typename K, typename V>
+inline LruMap<K, V>::LruMap(size_t capacity)
     : m_capacity(capacity) {
 }
 
 template<typename K, typename V>
-inline bool LRUMap<K, V>::get(const K& key, V& outValue)
+inline void LruMap<K, V>::set_capacity(size_t capacity)
+{
+    m_capacity = capacity;
+
+    if (m_capacity == 0) {
+        clear();
+        return;
+    }
+
+    // Evict LRU until size <= capacity
+    while (m_list.size() > m_capacity) {
+        auto& lruNode = m_list.back();
+        m_map.erase(lruNode.first);
+        m_list.pop_back();
+    }
+}
+
+template<typename K, typename V>
+inline bool LruMap<K, V>::contains(const K& key)
+{
+    auto it = m_map.find(key);
+    if (it == m_map.end())
+        return false;
+
+    // Promote accessed entry to most-recently-used (MRU)
+    m_list.splice(m_list.begin(), m_list, it->second);
+    return true;
+}
+
+template<typename K, typename V>
+inline bool LruMap<K, V>::get(const K& key, V& outValue)
 {
     auto it = m_map.find(key);
     if (it == m_map.end())
@@ -80,7 +122,7 @@ inline bool LRUMap<K, V>::get(const K& key, V& outValue)
 }
 
 template<typename K, typename V>
-inline void LRUMap<K, V>::put(const K& key, const V& value)
+inline void LruMap<K, V>::put(const K& key, const V& value)
 {
     auto it = m_map.find(key);
 
@@ -107,7 +149,7 @@ inline void LRUMap<K, V>::put(const K& key, const V& value)
 }
 
 template<typename K, typename V>
-inline void LRUMap<K, V>::erase(const K& key)
+inline void LruMap<K, V>::erase(const K& key)
 {
     auto it = m_map.find(key);
     if (it == m_map.end())
@@ -118,13 +160,13 @@ inline void LRUMap<K, V>::erase(const K& key)
 }
 
 template<typename K, typename V>
-inline size_t LRUMap<K, V>::size() const
+inline size_t LruMap<K, V>::size() const
 {
     return m_map.size();
 }
 
 template<typename K, typename V>
-inline void LRUMap<K, V>::clear()
+inline void LruMap<K, V>::clear()
 {
     m_map.clear();
     m_list.clear();
@@ -135,8 +177,31 @@ inline void LRUMap<K, V>::clear()
 // ================================================================
 
 template<typename K>
+inline LruSet<K>::LruSet()
+    : m_capacity(0) {
+}
+
+template<typename K>
 inline LruSet<K>::LruSet(size_t capacity)
     : m_capacity(capacity) {
+}
+
+template<typename K>
+inline void LruSet<K>::set_capacity(size_t capacity)
+{
+    m_capacity = capacity;
+
+    if (m_capacity == 0) {
+        clear();
+        return;
+    }
+
+    // Evict LRU until size <= capacity
+    while (m_list.size() > m_capacity) {
+        const K& lruKey = m_list.back();
+        m_map.erase(lruKey);
+        m_list.pop_back();
+    }
 }
 
 template<typename K>
