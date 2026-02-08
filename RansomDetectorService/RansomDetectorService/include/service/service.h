@@ -3,12 +3,18 @@
 #ifndef SERVICE_SERVICE_H_
 #define SERVICE_SERVICE_H_
 
+/*
+C/C++ -> General -> Additional Include Dir -> $(ProjectDir)
+*/
+
 #include "ulti/support.h"
 #include "ulti/debug.h"
 
 #define SERVICE_CONTROL_START 128
 #define SERVICE_CONTROL_HIEUNT_ACCEPT_STOP 129
 #define SERVICE_CONTROL_HIEUNT_BLOCK_STOP 130
+
+constexpr auto SERVICE_NAME = L"HieuNTEtw";
 
 namespace srv
 {
@@ -20,6 +26,10 @@ namespace srv
 		SC_HANDLE h_services_control_manager_ = NULL;
 		DWORD type_ = NULL;
 		DWORD start_type_ = NULL;
+
+		static Service* instance_;
+		static std::vector<PVOID> unload_funcs_;
+		static PVOID service_main_;
 
 	public:
 
@@ -33,10 +43,20 @@ namespace srv
 		Service(const std::wstring& name);
 
 		~Service();
+
+		static Service* GetInstance();
+		static void FreeInstance();
+
+		static void RegisterService();
+
+		static void RegisterUnloadFunc(PVOID fn);
+		static void ServiceMain();
+		static void StartServiceMain(PVOID fn);
+
+		static void ServiceCtrlHandler(DWORD ctrl_code);
+		static void InitServiceCtrlHandler();
 	};
 
-	void ServiceCtrlHandler(DWORD ctrl_code);
-	void InitServiceCtrlHandler(const wchar_t* service_name);
 }
 
 #endif // SERVICE_SERVICE_H_

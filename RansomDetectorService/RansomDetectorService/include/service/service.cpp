@@ -166,10 +166,86 @@ namespace srv
 		h_services_control_manager_ = 0;
 	}
 
+	Service* Service::instance_ = nullptr;
+	std::vector<PVOID> Service::unload_funcs_;
+	PVOID Service::service_main_ = nullptr;
+
+	Service* Service::GetInstance()
+	{
+		if (!instance_) instance_ = new Service(SERVICE_NAME);
+		return instance_;
+	}
+
+	void Service::FreeInstance()
+	{
+		delete instance_;
+		instance_ = nullptr;
+	}
+
+	void Service::RegisterService()
+	{
+		auto service = srv::Service::GetInstance();
+		if (service == nullptr)
+		{
+			return;
+		}
+		ShowWindow(GetConsoleWindow(), SW_HIDE);
+		service->Stop();
+		service->Delete();
+		std::wstring w_srv_path;
+		w_srv_path.resize(1024);
+		GetModuleFileNameW(nullptr, &w_srv_path[0], 1024);
+		w_srv_path.resize(wcslen(&w_srv_path[0]));
+		auto status = service->Create(w_srv_path, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START);
+		if (status == ERROR_SUCCESS || status == ERROR_DUPLICATE_SERVICE_NAME || status == ERROR_SERVICE_EXISTS)
+		{
+			auto status = service->Run();
+			if (status != ERROR_SUCCESS)
+			{
+				PrintDebugW(L"Service run failed %d", status);
+			}
+		}
+	}
+
+	void Service::RegisterUnloadFunc(PVOID fn)
+	{
+		if (fn) unload_funcs_.push_back(fn);
+	}
+
+	void Service::ServiceMain()
+	{
+		auto service = srv::Service::GetInstance();
+		if (service == nullptr)
+		{
+			return;
+		}
+		service->InitServiceCtrlHandler();
+
+		if (service_main_)
+			reinterpret_cast<void(*)()>(service_main_)();
+	}
+
+	void Service::StartServiceMain(PVOID fn)
+	{
+		service_main_ = fn;
+		SERVICE_TABLE_ENTRYW service_table[] = {
+		{ (LPWSTR)SERVICE_NAME, (LPSERVICE_MAIN_FUNCTIONW)Service::ServiceMain},
+		{ nullptr, nullptr }
+		};
+
+		if (!StartServiceCtrlDispatcher(service_table)) {
+			PrintDebugW(L"StartServiceCtrlDispatcher failed");
+		}
+		else {
+			PrintDebugW(L"StartServiceCtrlDispatcher succeeded");
+		}
+
+	}
+
 	inline SERVICE_STATUS_HANDLE status_handle = NULL;
 
 	SERVICE_STATUS service_status = { 0 };
-	void ServiceCtrlHandler(DWORD ctrl_code)
+	void Service::ServiceCtrlHandler(DWORD ctrl_code)
 	{
 		PrintDebugW(L"Control code %d", ctrl_code);
 		PrintDebugW(L"dwControlsAccepted: %x", service_status.dwControlsAccepted);
@@ -186,10 +262,27 @@ namespace srv
 		}
 		else if (ctrl_code == SERVICE_CONTROL_STOP)
 		{
+			/*
+			Here is a quote from MSDN regarding SERVICE_CONTROL_STOP and it explains why you won't receive ANY messages after a SERVICE_CONTROL_STOP message:
+			"If a service accepts this control code, it must stop upon receipt and return NO_ERROR. After the SCM sends this control code, it will not send other control codes to the service."
+			*/
+			/*
+			A little trick to prevent the service from stopping is to rebirth the service immediately (create another thread to call this exe with parameter rebirth, recreate the service, wait for the current service die and then run it again).
+			*/
 			service_status.dwCurrentState = SERVICE_STOP_PENDING;
 			SetServiceStatus(status_handle, &service_status);
+			for (auto f : unload_funcs_)
+				reinterpret_cast<void(*)()>(f)();
+			FreeInstance();
 			service_status.dwCurrentState = SERVICE_STOPPED;
 			SetServiceStatus(status_handle, &service_status);
+			/*
+			// However, for testing purposes, I will deny the stop code
+			PrintDebugW(L"Service stop");
+			service_status.dwCurrentState = SERVICE_RUNNING;
+			service_status.dwWin32ExitCode = ERROR_ACCESS_DENIED;
+			SetServiceStatus(status_handle, &service_status);
+			*/
 		}
 		else if (ctrl_code == SERVICE_CONTROL_SHUTDOWN)
 		{
@@ -216,16 +309,21 @@ namespace srv
 		}
 	}
 
-	void InitServiceCtrlHandler(const wchar_t* service_name)
+	void Service::InitServiceCtrlHandler()
 	{
 		PrintDebugW(L"Begin");
+		auto service = srv::Service::GetInstance();
+		if (service == nullptr)
+		{
+			return;
+		}
 
 		service_status.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
 		service_status.dwWin32ExitCode = NO_ERROR;
 		service_status.dwWaitHint = 0;
-		service_status.dwControlsAccepted = SERVICE_USER_DEFINED_CONTROL | SERVICE_ACCEPT_SHUTDOWN;
+		service_status.dwControlsAccepted = SERVICE_USER_DEFINED_CONTROL | SERVICE_ACCEPT_SHUTDOWN | SERVICE_ACCEPT_STOP;
 
-		status_handle = RegisterServiceCtrlHandlerW(service_name, (LPHANDLER_FUNCTION)ServiceCtrlHandler);
+		status_handle = RegisterServiceCtrlHandlerW(service->service_name_.c_str(), (LPHANDLER_FUNCTION)ServiceCtrlHandler);
 		if (status_handle == NULL)
 		{
 			PrintDebugW(L"RegisterServiceCtrlHandler failed %d", GetLastError());

@@ -15,13 +15,13 @@ public:
     // Singleton (pointer)
     static EtwController* GetInstance();
 
-    // Service lifecycle entrypoints
-    static void StartThunk();
-    static void StopThunk();
-
 #ifdef _DEBUG
     void RunDebugBlocking();
 #endif
+
+    // ===== Main lifecycle =====
+    void Start();
+    void Stop();
 
 private:
     EtwController();
@@ -30,15 +30,9 @@ private:
     EtwController(const EtwController&) = delete;
     EtwController& operator=(const EtwController&) = delete;
 
-private:
-    // ===== Main lifecycle =====
-    void Start();
-    void Stop();
-
     // ================= Logger =================
     void PushLog(const std::wstring& s);
-    void LoggerThreadProc();
-    void StartLoggerThread();
+    void StartLogger();
 
     std::queue<std::wstring> m_logQueue;
     std::mutex m_logMutex;
@@ -52,9 +46,6 @@ private:
     std::jthread m_traceThread;
 
     ULONG m_curPid;
-
-    // ================= Process tracking =================
-    std::mutex m_lockProc;
 
     // ================= Identity tables =================
     // IHCache

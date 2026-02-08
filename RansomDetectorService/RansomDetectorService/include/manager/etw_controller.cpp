@@ -11,16 +11,6 @@ EtwController* EtwController::GetInstance()
     return &inst;
 }
 
-void EtwController::StartThunk()
-{
-    GetInstance()->Start();
-}
-
-void EtwController::StopThunk()
-{
-    GetInstance()->Stop();
-}
-
 // ================= Ctor / Dtor =================
 EtwController::EtwController()
     : m_trace(L"hieunt"),
@@ -77,7 +67,7 @@ void EtwController::PushLog(const std::wstring& s)
     m_logQueue.push(s);
 }
 
-void EtwController::LoggerThreadProc()
+void EtwController::StartLogger()
 {
     while (true)
     {
@@ -108,13 +98,6 @@ void EtwController::LoggerThreadProc()
             local.pop();
         }
     }
-}
-
-void EtwController::StartLoggerThread()
-{
-    m_loggerThread = std::jthread([this]() {
-        LoggerThreadProc();
-        });
 }
 
 // ================= IH Cache =================
@@ -596,7 +579,10 @@ void EtwController::StartProviderBlocking()
 // ================= Lifecycle =================
 void EtwController::Start()
 {
-    StartLoggerThread();
+    m_loggerThread = std::jthread([this]() {
+        StartLogger();
+        });
+
 
     // https://lowleveldesign.wordpress.com/2020/08/15/fixing-empty-paths-in-fileio-events-etw
     m_traceThread = std::jthread([this]() {
