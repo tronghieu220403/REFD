@@ -4,10 +4,32 @@
 #include "ulti/lru_cache.hpp"
 
 #define MAX_CACHE_SIZE 1'000'000
+#define MAX_EVT_QUEUE  1'000'000   // prevent unbounded RAM
 
-// ===== Forward =====
-struct EventInfo;
-struct IHEntry;
+struct EventInfo
+{
+    // prov: 1 = process, 2 = file
+    ULONG prov = 0;
+
+    ULONG eid = 0;
+    ULONG pid = 0;
+    ULONGLONG ts = 0;
+
+    std::wstring path;
+
+    ULONGLONG name_hash = 0;
+    ULONGLONG file_object = 0;
+    ULONGLONG file_key = 0;
+
+    UINT32 create_options = 0;
+    bool has_create_options = false;
+}; 
+
+struct IHEntry {
+    std::wstring path;
+    size_t ref_count;
+    ULONGLONG last_used_ts;
+};
 
 class EtwController
 {
@@ -47,6 +69,17 @@ private:
 
     ULONG m_curPid;
 
+    // ================= Event worker queue =================
+    void EnqueueEvent(EventInfo&& e);
+    void EventLoop();
+    void DispatchEvent(const EventInfo& e);
+
+    std::deque<EventInfo> m_evtQueue;
+    std::mutex m_evtMutex;
+    std::condition_variable m_evtCv;
+    std::jthread m_evtThread;
+    bool m_stopEvt = false;
+
     // ================= Identity tables =================
     // IHCache
     std::unordered_map<ULONGLONG, IHEntry> m_ihCache;
@@ -84,32 +117,15 @@ private:
     void LogFileRenameOperation(ULONG pid, ULONG eid, ULONGLONG ts, ULONGLONG name_hash, ULONGLONG file_object, ULONGLONG file_key);
     void LogFileDeleteOperation(ULONG pid, ULONG eid, ULONGLONG ts, ULONGLONG name_hash, ULONGLONG file_object, ULONGLONG file_key);
 
-    // ================= File handlers =================
-    void HandleFileCreate(ULONG pid, ULONG eid, ULONGLONG ts, krabs::parser& parser);
-    void HandleFileCleanup(ULONG eid, ULONGLONG ts, krabs::parser& parser);
-    void HandleFileWrite(ULONG pid, ULONG eid, ULONGLONG ts, krabs::parser& parser);
-    void HandleFileRename(ULONG pid, ULONG eid, ULONGLONG ts, krabs::parser& parser);
-    void HandleFileDelete(ULONG pid, ULONG eid, ULONGLONG ts, krabs::parser& parser);
+    // ================= File handlers (worker thread) =================
+    void HandleFileCreate(const EventInfo& e);
+    void HandleFileCleanup(const EventInfo& e);
+    void HandleFileWrite(const EventInfo& e);
+    void HandleFileRename(const EventInfo& e);
+    void HandleFileDelete(const EventInfo& e);
 
     // ===== Debug =====
     static void PrintAllProp(krabs::schema schema, krabs::parser& parser);
-};
-
-struct IHEntry {
-    std::wstring path;
-    size_t ref_count;
-    ULONGLONG last_used_ts;
-};
-
-struct EventInfo
-{
-    ULONG prov = 0;
-    ULONG eid = 0;
-    ULONG pid = 0;
-    std::wstring path;
-    ULONGLONG name_hash = 0;
-    ULONGLONG file_object = 0;
-    ULONGLONG file_key = 0;
 };
 
 // ===== Event IDs =====

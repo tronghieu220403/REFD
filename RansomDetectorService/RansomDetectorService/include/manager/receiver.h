@@ -5,6 +5,8 @@
 #include "ulti/debug.h"
 #include "ulti/lru_cache.hpp"
 
+#define MAX_NAME_CACHE_SIZE 1'000'000
+
 namespace manager {
 
 	struct FileIoInfo {
@@ -17,7 +19,7 @@ namespace manager {
 		std::queue<FileIoInfo> file_io_queue_;
 		std::mutex file_io_mutex_;
 
-		LruMap<ULONGLONG, std::wstring> name_cache_{ 1'000'000 };
+		LruMap<ULONGLONG, std::wstring> name_cache_{ MAX_NAME_CACHE_SIZE };
 
 	public:
 		// Singleton
