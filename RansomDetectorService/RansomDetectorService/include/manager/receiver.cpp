@@ -47,6 +47,7 @@ namespace manager
     void Receiver::PushFileEvent(const std::wstring& path, ULONG pid) {
         FileIoInfo info;
         info.path = helper::GetLongDosPath(helper::GetDosPath(path));
+        info.pid = pid;
         file_io_queue_.push(std::move(info));
         return;
     }

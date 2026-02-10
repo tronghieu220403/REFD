@@ -4,6 +4,7 @@
 
 #include "../ulti/support.h"
 #include "../ulti/debug.h"
+#include "receiver.h"
 
 namespace manager {
 
@@ -49,6 +50,8 @@ namespace manager {
 
         // Running flag used to stop the thread gracefully
         std::atomic<bool> running_{ false };
+
+        std::queue<FileIoInfo> file_queues_;
 
     private:
         // Main scanner loop

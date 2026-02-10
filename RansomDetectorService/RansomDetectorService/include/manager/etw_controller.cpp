@@ -131,7 +131,7 @@ void EtwController::EventLoop()
                 });
 
             if (m_stopEvt && m_evtQueue.empty())
-                break;
+                return;
 
             e = std::move(m_evtQueue.front());
             m_evtQueue.pop_front();

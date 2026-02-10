@@ -2,7 +2,6 @@
 #include "receiver.h"
 #include "file_type_iden.h"
 #include "ulti/file_helper.h"
-#include "receiver.h"
 
 namespace manager {
 
@@ -82,9 +81,8 @@ namespace manager {
 
     void Scanner::ScannerThread()
     {
-        // Local queue used to minimize lock holding time
-        std::queue<FileIoInfo> local_queue;
         std::set<ull> file_hash_scanned;
+        std::unordered_map<ULONG, std::queue<std::wstring>> pid_queues;
 
         auto rcv = Receiver::GetInstance();
         if (rcv == nullptr) {
@@ -106,24 +104,42 @@ namespace manager {
             rcv->UnlockMutex();
 
             while (!tmp_queue.empty()) {
-                local_queue.push(std::move(tmp_queue.front()));
+                FileIoInfo ele = std::move(tmp_queue.front());
+                pid_queues[ele.pid].push(std::move(ele.path));
                 tmp_queue.pop();
             }
-            size_t n = local_queue.size();
+
+            std::vector<ULONG> pids_to_remove;
+            while (pid_queues.size() != 0) {
+                for (auto& it : pid_queues) {
+                    if (it.second.size() != 0) {
+                        FileIoInfo io;
+                        io.pid = it.first;
+                        io.path = std::move(it.second.front());
+                        file_queues_.push(std::move(io));
+                        it.second.pop();
+                    }
+                    else {
+                        pids_to_remove.push_back(it.first);
+                    }
+                }
+                for (auto pid : pids_to_remove) {
+                    pid_queues.erase(pid);
+                }
+            }
+
+            size_t n = file_queues_.size();
             // Process events
             for (size_t i = 0; i < n; i++)
             {
-                if (local_queue.size() == 0) {
-                    break;
-                }
-                FileIoInfo info = std::move(local_queue.front());
-                local_queue.pop();
+                FileIoInfo io(std::move(file_queues_.front()));
+                file_queues_.pop();
                 
-                auto lp = ulti::ToLower(info.path);
+                auto lp = ulti::ToLower(io.path);
 
-                if (IsPathWhitelisted(lp) == true) {
-                    continue;
-                }
+                //if (IsPathWhitelisted(lp) == true) {
+                //    continue;
+                //}
 
                 auto hash = helper::GetWstrHash(lp);
                 if (file_hash_scanned.find(hash) != file_hash_scanned.end()) { // Scanned -> skip
@@ -133,25 +149,23 @@ namespace manager {
                 DWORD status = ERROR_SUCCESS;
                 ull file_size = 0;
 
-                auto types = ft->GetTypes(info.path, &status, &file_size);
+                auto types = ft->GetTypes(io.path, &status, &file_size);
                 if (status == ERROR_SHARING_VIOLATION) {
-                    if (rcv != nullptr) {
-                        rcv->LockMutex();
-                        rcv->PushFileEvent(std::move(info.path), info.pid);
-                        rcv->UnlockMutex();
-                    }
+                    pid_queues[io.pid].push(std::move(io.path));
                     continue;
                 }
                 auto types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
                 auto time_ms = ulti::GetCurrentSteadyTimeInMs();
-                PrintDebugW(L"%ws,(%ws)", info.path.c_str(), types_wstr.c_str());
-                debug::WriteLogW(L"%lld,%ws,(%ws)\n", time_ms, info.path.c_str(), types_wstr.c_str());
+                PrintDebugW(L"%ws,(%ws)", io.path.c_str(), types_wstr.c_str());
+                debug::WriteLogW(L"%lld,%ws,(%ws)\n", time_ms, io.path.c_str(), types_wstr.c_str());
 
                 file_hash_scanned.insert(hash);
             }
 
-            // Sleep briefly to avoid busy spinning
-            Sleep(50);
+            if (rcv->GetQueueSize() == 0) {
+                // Sleep briefly to avoid busy spinning
+                Sleep(200);
+            }
         }
     }
 

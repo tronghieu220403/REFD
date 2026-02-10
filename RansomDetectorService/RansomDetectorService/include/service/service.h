@@ -14,7 +14,7 @@ C/C++ -> General -> Additional Include Dir -> $(ProjectDir)
 #define SERVICE_CONTROL_HIEUNT_ACCEPT_STOP 129
 #define SERVICE_CONTROL_HIEUNT_BLOCK_STOP 130
 
-constexpr auto SERVICE_NAME = L"HieuNTEtw";
+constexpr auto SERVICE_NAME = L"REFD";
 
 namespace srv
 {

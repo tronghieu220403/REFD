@@ -10,7 +10,7 @@
 namespace manager {
 
 	struct FileIoInfo {
-		ULONG pid;
+		ULONG pid = 0;
 		std::wstring path;
 	};
 
