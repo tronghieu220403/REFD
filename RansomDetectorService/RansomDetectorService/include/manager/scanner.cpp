@@ -46,8 +46,12 @@ namespace manager {
 
         running_ = true;
 
-        // Start scanner worker thread
-        scanner_thread_ = std::thread(&Scanner::ScannerThread, this);
+        scanner_thread_ = std::thread(&Scanner::QueuingThread, this);
+
+        for (size_t i = 0; i < kWorkerCount; i++) {
+            worker_threads_.emplace_back(&Scanner::WorkerThread, this);
+        }
+
         return true;
     }
 
@@ -55,10 +59,17 @@ namespace manager {
     {
         // Signal the thread to stop
         running_ = false;
+        cv_.notify_all();
 
         // Wait for the thread to exit cleanly
         if (scanner_thread_.joinable())
             scanner_thread_.join();
+
+        for (auto& t : worker_threads_) {
+            if (t.joinable())
+                t.join();
+        }
+        worker_threads_.clear();
     }
 
     // ======================================================
@@ -79,11 +90,75 @@ namespace manager {
     // Scanner worker thread
     // ======================================================
 
-    void Scanner::ScannerThread()
+    void Scanner::ResendToPidQueue(FileIoInfo&& io)
     {
-        std::set<ull> file_hash_scanned;
-        std::unordered_map<ULONG, std::queue<std::wstring>> pid_queues;
+        {
+            // Protect per-PID queue structure
+            std::lock_guard<std::mutex> lk(pid_queue_mutex_);
 
+            // Push the file back to its original PID queue
+            // This preserves round-robin fairness
+            pid_queues_[io.pid].push(std::move(io.path));
+        }
+    }
+
+    void Scanner::WorkerThread()
+    {
+        auto ft = type_iden::FileType::GetInstance();
+        if (!ft) return;
+
+        auto tid = GetCurrentThreadId();
+
+        while (running_)
+        {
+            FileIoInfo io;
+            {
+                std::unique_lock<std::mutex> lk(file_queue_mutex_);
+                cv_.wait(lk, [&] {
+                    return !running_ || !file_queues_.empty();
+                    });
+
+                if (!running_)
+                    return;
+
+                io = std::move(file_queues_.front());
+                file_queues_.pop();
+            }
+
+            //PrintDebugW("[TID %d] Scaning %ws, pid %d", tid, io.path.c_str(), io.pid);
+
+            auto lp = ulti::ToLower(io.path);
+            auto hash = helper::GetWstrHash(lp);
+
+            {
+                std::lock_guard<std::mutex> g(file_hash_mutex_);
+                if (file_hash_scanned_.count(hash))
+                {
+                    //PrintDebugW("[TID %d] Scanned %ws, pid %d", tid, io.path.c_str(), io.pid);
+                    continue;
+                }
+                file_hash_scanned_.insert(hash);
+            }
+
+            DWORD status = ERROR_SUCCESS;
+            ull file_size = 0;
+
+            auto types = ft->GetTypes(io.path, &status, &file_size);
+            if (status == ERROR_SHARING_VIOLATION) {
+                //PrintDebugW("[TID %d] Resend %ws, pid %d", tid, io.path.c_str(), io.pid);
+                ResendToPidQueue(std::move(io));
+                continue;
+            }
+
+            std::wstring types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
+            auto time_ms = ulti::GetCurrentSteadyTimeInMs();
+            PrintDebugW(L"[TID %d] %ws,(%ws)", tid, io.path.c_str(), types_wstr.c_str());
+            debug::WriteLogW(L"%lld,%ws,(%ws)\n", time_ms, io.path.c_str(), types_wstr.c_str());
+        }
+    }
+
+    void Scanner::QueuingThread()
+    {
         auto rcv = Receiver::GetInstance();
         if (rcv == nullptr) {
             return;
@@ -98,68 +173,45 @@ namespace manager {
         {
             // Move all pending events from Receiver
             std::queue<FileIoInfo> tmp_queue;
+            std::vector<ULONG> pids_to_remove;
 
             rcv->LockMutex();
             rcv->MoveQueue(tmp_queue);
             rcv->UnlockMutex();
-
-            while (!tmp_queue.empty()) {
-                FileIoInfo ele = std::move(tmp_queue.front());
-                pid_queues[ele.pid].push(std::move(ele.path));
-                tmp_queue.pop();
-            }
-
-            std::vector<ULONG> pids_to_remove;
-            while (pid_queues.size() != 0) {
-                for (auto& it : pid_queues) {
-                    if (it.second.size() != 0) {
-                        FileIoInfo io;
-                        io.pid = it.first;
-                        io.path = std::move(it.second.front());
-                        file_queues_.push(std::move(io));
-                        it.second.pop();
-                    }
-                    else {
-                        pids_to_remove.push_back(it.first);
-                    }
-                }
-                for (auto pid : pids_to_remove) {
-                    pid_queues.erase(pid);
-                }
-            }
-
-            size_t n = file_queues_.size();
-            // Process events
-            for (size_t i = 0; i < n; i++)
             {
-                FileIoInfo io(std::move(file_queues_.front()));
-                file_queues_.pop();
-                
-                auto lp = ulti::ToLower(io.path);
+                std::lock_guard<std::mutex> lk(pid_queue_mutex_);
 
-                //if (IsPathWhitelisted(lp) == true) {
-                //    continue;
-                //}
-
-                auto hash = helper::GetWstrHash(lp);
-                if (file_hash_scanned.find(hash) != file_hash_scanned.end()) { // Scanned -> skip
-                    continue;
+                while (!tmp_queue.empty()) {
+                    FileIoInfo ele = std::move(tmp_queue.front());
+                    pid_queues_[ele.pid].push(std::move(ele.path));
+                    tmp_queue.pop();
                 }
 
-                DWORD status = ERROR_SUCCESS;
-                ull file_size = 0;
-
-                auto types = ft->GetTypes(io.path, &status, &file_size);
-                if (status == ERROR_SHARING_VIOLATION) {
-                    pid_queues[io.pid].push(std::move(io.path));
-                    continue;
+                while (pid_queues_.size() != 0)
+                {
+                    for (auto& it : pid_queues_)
+                    {
+                        if (it.second.size() != 0)
+                        {
+                            FileIoInfo io;
+                            io.pid = it.first;
+                            io.path = std::move(it.second.front());
+                            file_queue_mutex_.lock();
+                            file_queues_.push(std::move(io));
+                            file_queue_mutex_.unlock();
+                            cv_.notify_one();
+                            it.second.pop();
+                        }
+                        else
+                        {
+                            pids_to_remove.push_back(it.first);
+                        }
+                    }
+                    for (auto pid : pids_to_remove)
+                    {
+                        pid_queues_.erase(pid);
+                    }
                 }
-                auto types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
-                auto time_ms = ulti::GetCurrentSteadyTimeInMs();
-                PrintDebugW(L"%ws,(%ws)", io.path.c_str(), types_wstr.c_str());
-                debug::WriteLogW(L"%lld,%ws,(%ws)\n", time_ms, io.path.c_str(), types_wstr.c_str());
-
-                file_hash_scanned.insert(hash);
             }
 
             if (rcv->GetQueueSize() == 0) {

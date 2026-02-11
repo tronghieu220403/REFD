@@ -42,20 +42,26 @@ namespace manager {
         // Singleton instance
         static Scanner* instance_;
 
-        // Event mutex (kept for style consistency / future extension)
         std::mutex event_mutex_;
-
-        // Worker thread running ScannerThread
         std::thread scanner_thread_;
-
-        // Running flag used to stop the thread gracefully
         std::atomic<bool> running_{ false };
 
+        std::mutex file_queue_mutex_;
         std::queue<FileIoInfo> file_queues_;
+        std::mutex pid_queue_mutex_;
+        std::unordered_map<ULONG, std::queue<std::wstring>> pid_queues_;
+
+        static constexpr size_t kWorkerCount = 4;
+
+        std::vector<std::thread> worker_threads_;
+        std::condition_variable cv_;
+        std::mutex file_hash_mutex_;
+        std::set<ull> file_hash_scanned_;
 
     private:
-        // Main scanner loop
-        void ScannerThread();
+        void ResendToPidQueue(FileIoInfo&& io);
+        void QueuingThread();
+        void WorkerThread();
 
     public:
         // Singleton accessors

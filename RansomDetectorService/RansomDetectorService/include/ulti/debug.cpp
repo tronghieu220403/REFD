@@ -124,37 +124,42 @@ namespace debug {
 		//WriteDebugToFileW(buffer.data());
 	}
 
-	void WriteLogW(const wchar_t* pwsz_format, ...) {
-		if (pwsz_format == nullptr) return;
+	void WriteLogW(const wchar_t* format, ...)
+	{
+		if (!format)
+			return;
 
-		// Reusable buffer per thread
-		thread_local std::vector<wchar_t> buffer;
-		buffer.clear();
+		// 8KB max message per thread
+		constexpr size_t kMaxChars = 8192;
+
+		thread_local std::wstring buffer;
+
+		// Ensure capacity once
+		if (buffer.capacity() < kMaxChars)
+			buffer.reserve(kMaxChars);
+
+		buffer.resize(kMaxChars);
 
 		va_list args;
-		va_start(args, pwsz_format);
+		va_start(args, format);
 
-		va_list args_copy;
-		va_copy(args_copy, args);
-		size_t msg_len = _vscwprintf(pwsz_format, args_copy);
-		va_end(args_copy);
-
-		if (msg_len <= 0) {
-			va_end(args);
-			return;
-		}
-
-		// Allocate buffer once: message + null terminator
-		buffer.resize(msg_len + 1);
-
-		// Format message into buffer right after prefix
-		vswprintf_s(buffer.data(), msg_len + 1, pwsz_format, args);
+		int written = vswprintf_s(
+			buffer.data(),
+			buffer.size(),
+			format,
+			args
+		);
 
 		va_end(args);
 
-		buffer.resize(msg_len);
-		WriteDebugToFileW(buffer.data());
+		if (written <= 0)
+			return;  // failed or truncated
+
+		buffer.resize(static_cast<size_t>(written));
+
+		WriteDebugToFileW(buffer.c_str());
 	}
+
 
 	std::wstring GetErrorMessage(DWORD errorCode) {
 		LPWSTR messageBuffer = nullptr;

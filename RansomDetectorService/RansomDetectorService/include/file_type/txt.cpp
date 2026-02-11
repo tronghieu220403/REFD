@@ -76,8 +76,8 @@ namespace type_iden
 		streamsize printable_chars = 0;
 		streamsize total_chars = 0;
 		size_t i = 0;
-		if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
-		{
+
+		if (buffer.size() >= 3 && buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf) {
 			i = 3; // skip UTF-8 BOM
 		}
 		while (i < buffer.size()) {

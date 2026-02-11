@@ -91,8 +91,8 @@ namespace helper
         for (wchar_t drive = L'A'; drive <= L'Z'; ++drive) {
             std::wstring drive_str = std::wstring(1, drive) + L":";
             if (QueryDosDeviceW(drive_str.c_str(), device_path, MAX_PATH)) {
-                std::wstring device_name = device_path;
-                if (clean_path.find(device_name) == 0) {
+                std::wstring device_name(ulti::ToLower(device_path));
+                if (ulti::ToLower(clean_path).find(device_name) == 0) {
                     dos_path = drive_str + clean_path.substr(device_name.length());
                     kDosPathCache.insert({device_name, drive_str}); // Cache
                     break;
@@ -111,7 +111,7 @@ namespace helper
     std::wstring GetLongDosPath(const std::wstring& dos_path)
     {
         if (dos_path.empty()) {
-            return std::wstring();
+            return dos_path;
         }
         else if (dos_path.find(L'~') == std::wstring::npos) {
             return dos_path;
