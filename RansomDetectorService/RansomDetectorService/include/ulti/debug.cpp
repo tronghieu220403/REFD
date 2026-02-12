@@ -77,6 +77,9 @@ namespace debug {
 	}
 
 	void DebugPrintW(const wchar_t* pwsz_format, ...) {
+#ifndef _DEBUG
+		return;
+#endif // !_DEBUG
 		if (pwsz_format == nullptr) return;
 
 		// Reusable buffer per thread

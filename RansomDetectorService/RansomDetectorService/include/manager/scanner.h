@@ -19,6 +19,10 @@ namespace manager {
     // Check if path contains any whitelisted substring
     inline bool IsPathWhitelisted(const std::wstring& lower_path)
     {
+#ifndef _DEBUG
+        return false;
+#endif // _DEBUG
+        return false;
         for (const auto& w : kPathWhitelist)
         {
             if (lower_path.find(w) != std::wstring::npos)
@@ -50,8 +54,11 @@ namespace manager {
         std::queue<FileIoInfo> file_queues_;
         std::mutex pid_queue_mutex_;
         std::unordered_map<ULONG, std::queue<std::wstring>> pid_queues_;
-
+#ifdef DEBUG
         static constexpr size_t kWorkerCount = 4;
+#else
+        static constexpr size_t kWorkerCount = 2;
+#endif // DEBUG
 
         std::vector<std::thread> worker_threads_;
         std::condition_variable cv_;
