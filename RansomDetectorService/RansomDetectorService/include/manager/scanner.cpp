@@ -145,6 +145,7 @@ namespace manager {
 
             auto types = ft->GetTypes(io.path, &status, &file_size);
             if (status == ERROR_SHARING_VIOLATION) {
+                Sleep(50);
                 //PrintDebugW("[TID %d] Resend %ws, pid %d", tid, io.path.c_str(), io.pid);
                 ResendToPidQueue(std::move(io));
                 continue;

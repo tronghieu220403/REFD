@@ -5,7 +5,7 @@
 #include "ulti/debug.h"
 #include "ulti/lru_cache.hpp"
 
-#define MAX_NAME_CACHE_SIZE 1'000'000
+#define MAX_NAME_CACHE_SIZE 50'000
 
 namespace manager {
 

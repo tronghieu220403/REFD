@@ -3,8 +3,8 @@
 #include "ulti/support.h"
 #include "ulti/lru_cache.hpp"
 
-#define MAX_CACHE_SIZE 1'000'000
-#define MAX_EVT_QUEUE  1'000'000   // prevent unbounded RAM
+#define MAX_CACHE_SIZE 50'000
+#define MAX_EVT_QUEUE  100'000   // prevent unbounded RAM
 
 struct EventInfo
 {
