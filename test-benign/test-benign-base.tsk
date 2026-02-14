@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?taskcoach release="1.4.6" tskversion="37"?>
+
+<tasks>
+<syncmlconfig>
+<TaskCoach-0000019c52b182c4b7f8bb11000a6c4084873ed8>
+<spds>
+<sources>
+<TaskCoach-0000019c52b182c4b7f8bb11000a6c4084873ed8.Tasks />
+<TaskCoach-0000019c52b182c4b7f8bb11000a6c4084873ed8.Notes />
+</sources>
+<syncml>
+<Auth />
+<Conn />
+</syncml>
+</spds>
+</TaskCoach-0000019c52b182c4b7f8bb11000a6c4084873ed8>
+</syncmlconfig>
+<guid>
+0000019c52b182c4b7f8bb11000a6c4084873ed8
+</guid>
+<task creationDateTime="2026-02-13 10:35:21.428000" expandedContexts="('taskviewer',)" id="064c7140-088d-11f1-b790-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:40.572000" status="1" subject="Office">
+<task creationDateTime="2026-02-13 10:35:29.330000" expandedContexts="('taskviewer',)" id="0b02311e-088d-11f1-8589-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:33.059000" status="1" subject="Words">
+<task creationDateTime="2026-02-13 10:35:33.058000" id="0d3b0a21-088d-11f1-ac71-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:38.813000" status="1" subject="Save file" />
+</task>
+<task creationDateTime="2026-02-13 10:35:40.572000" expandedContexts="('taskviewer',)" id="11b595c0-088d-11f1-8cd9-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:44.385000" status="1" subject="Excel">
+<task creationDateTime="2026-02-13 10:35:44.384000" id="13fb4000-088d-11f1-8d34-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:50.109000" status="1" subject="Save file" />
+</task>
+</task>
+<task creationDateTime="2026-02-13 10:34:27.542000" expandedContexts="('taskviewer',)" id="e62e1761-088c-11f1-b48b-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:17.944000" status="1" subject="Browser">
+<task creationDateTime="2026-02-13 10:34:33.703000" expandedContexts="('taskviewer',)" id="e9da2f70-088c-11f1-ac2f-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:07.916000" status="1" subject="Chrome">
+<task creationDateTime="2026-02-13 10:34:37.445000" id="ec152b4f-088c-11f1-9f23-d8bbc16feea2" modificationDateTime="2026-02-13 10:34:47.684000" status="1" subject="Downloads" />
+<task creationDateTime="2026-02-13 10:35:07.916000" id="fe3eacc0-088c-11f1-917e-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:10.978000" status="1" subject="Browsing" />
+</task>
+<task creationDateTime="2026-02-13 10:34:49.988000" expandedContexts="('taskviewer',)" id="f38f1440-088c-11f1-98df-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:02.752000" status="1" subject="Firefox">
+<task creationDateTime="2026-02-13 10:34:55.468000" id="f6d342c0-088c-11f1-b196-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:01.043000" status="1" subject="Downloads" />
+<task creationDateTime="2026-02-13 10:35:02.752000" id="fb2ab600-088c-11f1-9a7f-d8bbc16feea2" modificationDateTime="2026-02-13 10:35:06.669000" status="1" subject="Browsing" />
+</task>
+</task>
+</tasks>

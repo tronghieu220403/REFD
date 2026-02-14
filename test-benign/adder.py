@@ -208,10 +208,15 @@ class TaskCoachManager:
 # MAIN
 # --------------------------------------------------
 
+import os
+
 if __name__ == "__main__":
 
-    source = Path("test-benign.tsk")
-    copy_file = Path("test-benign-copy.tsk")
+    print("Done test-benign-final.tsk, you can lost all test progress when trying to re-create file test-benign-final.tsk")
+    os._exit(0)
+    
+    source = Path("test-benign-base.tsk")
+    copy_file = Path("test-benign-final.tsk")
 
     if copy_file.exists():
         copy_file.unlink()
