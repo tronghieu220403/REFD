@@ -166,13 +166,39 @@ if __name__ == "__main__":
     manager = TaskCoachManager(copy_file)
     manager.reset_tasks()
 
-    manager.add_category("Office")
-    manager.add_app("Office", "Word")
-    manager.add_testcase("Word", "Save file")
+    import json
 
-    manager.add_category("Browser")
-    manager.add_app("Browser", "Chrome")
-    manager.add_testcase("Chrome", "Downloads")
-    manager.add_testcase("Chrome", "Browsing")
+    with open("category_testcases.json", "r", encoding="utf-8") as f:
+        category_testcases = json.load(f)
+
+    csv_path = Path("apps_by_category.csv")
+
+    if not csv_path.exists():
+        raise FileNotFoundError("apps_by_category.csv not found")
+
+    import pandas as pd
+    df = pd.read_csv(csv_path)
+
+    category_apps = {}
+
+    for _, row in df.iterrows():
+        category = str(row["Category"]).strip()
+        app = str(row["App"]).strip()
+
+        if category not in category_apps:
+            category_apps[category] = []
+
+        category_apps[category].append(app)
+
+
+    for category, apps in category_apps.items():
+
+        manager.add_category(category)
+
+        for app in apps:
+            manager.add_app(category, app)
+
+            for tc in category_testcases.get(category, []):
+                manager.add_testcase(app, tc)
 
     print("Done.")

@@ -1,0 +1,501 @@
+Category,App
+Archiver / Compression,7-Zip
+Archiver / Compression,7z
+Archiver / Compression,Bandizip
+Archiver / Compression,PeaZip
+Archiver / Compression,WinRAR
+Archiver / Compression,WinZip
+Archiver / Compression,bzip2
+Archiver / Compression,gzip
+Archiver / Compression,tar
+Archiver / Compression,xz
+Audio Production / Editing,Ableton Live
+Audio Production / Editing,Audacity
+Audio Production / Editing,Audition
+Audio Production / Editing,Cubase
+Audio Production / Editing,FL Studio
+Audio Production / Editing,GoldWave
+Audio Production / Editing,Guitar Pro
+Audio Production / Editing,Guitar Rig
+Audio Production / Editing,Kontakt
+Audio Production / Editing,LMMS
+Audio Production / Editing,Mixcraft
+Audio Production / Editing,Reaper
+Audio Production / Editing,Reason
+Audio Production / Editing,WavePad
+Backup / Sync,AOMEI Backupper
+Backup / Sync,Acronis True Image
+Backup / Sync,BitTorrent Sync
+Backup / Sync,Cobian Backup
+Backup / Sync,Dropbox
+Backup / Sync,EaseUS Todo Backup
+Backup / Sync,FreeFileSync
+Backup / Sync,GoodSync
+Backup / Sync,Google Drive
+Backup / Sync,Handy Backup
+Backup / Sync,Macrium Reflect
+Backup / Sync,MegaSync
+Backup / Sync,OneDrive
+Backup / Sync,Resilio Sync
+Backup / Sync,SyncBack
+Backup / Sync,TeraCopy
+Backup / Sync,pCloud
+Backup / Sync,rclone
+Backup / Sync,robocopy
+Browser,Brave
+Browser,Chromium
+Browser,Comodo Dragon
+Browser,Epic Privacy Browser
+Browser,Google Chrome
+Browser,LibreWolf
+Browser,Maxthon
+Browser,Microsoft Edge
+Browser,Midori
+Browser,Mozilla Firefox
+Browser,Opera
+Browser,Pale Moon
+Browser,SRWare Iron
+Browser,SeaMonkey
+Browser,Slimjet
+Browser,Tor Browser
+Browser,UC Browser
+Browser,Vivaldi
+Browser,Waterfox
+Browser,Yandex Browser
+Database Tools,DBeaver
+Database Tools,HeidiSQL
+Database Tools,MariaDB
+Database Tools,MongoDB Compass
+Database Tools,MySQL
+Database Tools,PostgreSQL
+Database Tools,Redis Desktop Manager
+Database Tools,SQLiteStudio
+Database Tools,mongo
+Database Tools,mongodump
+Database Tools,mongorestore
+Database Tools,pgAdmin
+Database Tools,pg_dump
+Database Tools,pg_restore
+Database Tools,psql
+Database Tools,redis-cli
+Database Tools,sqlite3
+Dev: Build / Toolchain,bazel
+Dev: Build / Toolchain,buck
+Dev: Build / Toolchain,cargo
+Dev: Build / Toolchain,cl
+Dev: Build / Toolchain,clang
+Dev: Build / Toolchain,cmake
+Dev: Build / Toolchain,g++
+Dev: Build / Toolchain,gcc
+Dev: Build / Toolchain,go
+Dev: Build / Toolchain,gradle
+Dev: Build / Toolchain,make
+Dev: Build / Toolchain,meson
+Dev: Build / Toolchain,msbuild
+Dev: Build / Toolchain,mvn
+Dev: Build / Toolchain,ninja
+Dev: Build / Toolchain,nmake
+Dev: Build / Toolchain,node
+Dev: Build / Toolchain,npm
+Dev: Build / Toolchain,nuget
+Dev: Build / Toolchain,packer
+Dev: Build / Toolchain,pip
+Dev: Build / Toolchain,pipenv
+Dev: Build / Toolchain,pnpm
+Dev: Build / Toolchain,poetry
+Dev: Build / Toolchain,rustc
+Dev: Build / Toolchain,scons
+Dev: Build / Toolchain,terraform
+Dev: Build / Toolchain,vagrant
+Dev: Build / Toolchain,yarn
+Dev: Diff / Merge,Araxis Merge
+Dev: Diff / Merge,Beyond Compare
+Dev: Diff / Merge,DiffMerge
+Dev: Diff / Merge,WinMerge
+Dev: IDE / Editor,Android Studio
+Dev: IDE / Editor,Atom
+Dev: IDE / Editor,Brackets
+Dev: IDE / Editor,Code::Blocks
+Dev: IDE / Editor,Dev-C++
+Dev: IDE / Editor,Eclipse IDE
+Dev: IDE / Editor,Geany
+Dev: IDE / Editor,Gedit
+Dev: IDE / Editor,Kate
+Dev: IDE / Editor,NetBeans
+Dev: IDE / Editor,Notepad++
+Dev: IDE / Editor,Notepad3
+Dev: IDE / Editor,Qt Creator
+Dev: IDE / Editor,RJ TextEd
+Dev: IDE / Editor,Sublime Text
+Dev: IDE / Editor,TextPad
+Dev: IDE / Editor,Typora
+Dev: IDE / Editor,UltraEdit
+Dev: IDE / Editor,Visual Studio
+Dev: IDE / Editor,Visual Studio Code
+Dev: Version Control,Git
+Dev: Version Control,GitHub Desktop
+Dev: Version Control,GitKraken
+Dev: Version Control,SourceTree
+Dev: Version Control,TortoiseGit
+Dev: Version Control,TortoiseSVN
+Dev: Version Control,git-clone
+Dev: Version Control,git-lfs
+Dev: Version Control,hg
+Dev: Version Control,svn
+DevOps: Container / K8s / Stack,Docker Desktop
+DevOps: Container / K8s / Stack,Kubernetes Dashboard
+DevOps: Container / K8s / Stack,XAMPP
+DevOps: Container / K8s / Stack,docker
+DevOps: Container / K8s / Stack,docker-compose
+DevOps: Container / K8s / Stack,helm
+DevOps: Container / K8s / Stack,kubectl
+Disc / ISO / USB Tools,AnyBurn
+Disc / ISO / USB Tools,BurnAware
+Disc / ISO / USB Tools,CDBurnerXP
+Disc / ISO / USB Tools,Daemon Tools
+Disc / ISO / USB Tools,ImgBurn
+Disc / ISO / USB Tools,InfraRecorder
+Disc / ISO / USB Tools,PowerISO
+Disc / ISO / USB Tools,Rufus
+Disc / ISO / USB Tools,imdisk
+Disk / Partition / Recovery,DiskGenius
+Disk / Partition / Recovery,EaseUS Partition Master
+Disk / Partition / Recovery,MiniTool Partition Wizard
+Disk / Partition / Recovery,Paragon Partition Manager
+Disk / Partition / Recovery,bcdedit
+Disk / Partition / Recovery,chkdsk
+Disk / Partition / Recovery,diskpart
+Disk / Partition / Recovery,diskshadow
+Disk / Partition / Recovery,dism
+Disk / Partition / Recovery,mountvol
+Disk / Partition / Recovery,sfc
+Disk / Partition / Recovery,wbadmin
+Email / Chat / Collaboration,Claws Mail
+Email / Chat / Collaboration,Discord
+Email / Chat / Collaboration,Foxmail
+Email / Chat / Collaboration,Mailbird
+Email / Chat / Collaboration,Microsoft Teams
+Email / Chat / Collaboration,Opera Mail
+Email / Chat / Collaboration,Signal Desktop
+Email / Chat / Collaboration,Skype
+Email / Chat / Collaboration,Slack
+Email / Chat / Collaboration,Sylpheed
+Email / Chat / Collaboration,Telegram Desktop
+Email / Chat / Collaboration,Thunderbird
+Email / Chat / Collaboration,WhatsApp Desktop
+Email / Chat / Collaboration,Zoom
+Email / Chat / Collaboration,eM Client
+File Manager / Disk Usage,Directory Opus
+File Manager / Disk Usage,Double Commander
+File Manager / Disk Usage,Everything
+File Manager / Disk Usage,FolderSizes
+File Manager / Disk Usage,FreeCommander
+File Manager / Disk Usage,Multi Commander
+File Manager / Disk Usage,SpaceSniffer
+File Manager / Disk Usage,Total Commander
+File Manager / Disk Usage,TreeSize
+File Manager / Disk Usage,WinDirStat
+File Manager / Disk Usage,XYplorer
+File Rename / Copy Utility,Advanced Renamer
+File Rename / Copy Utility,Ant Renamer
+File Rename / Copy Utility,Bulk Rename Utility
+File Rename / Copy Utility,FastCopy
+Forensics / Reverse Engineering,HxD
+Forensics / Reverse Engineering,IDA
+Forensics / Reverse Engineering,WinHex
+Forensics / Reverse Engineering,certmgr
+Forensics / Reverse Engineering,certreq
+Forensics / Reverse Engineering,certutil
+Forensics / Reverse Engineering,dcfldd
+Forensics / Reverse Engineering,ewfacquire
+Forensics / Reverse Engineering,ftkimager
+Forensics / Reverse Engineering,hashcat
+Forensics / Reverse Engineering,hashdeep
+Forensics / Reverse Engineering,john
+Forensics / Reverse Engineering,makecert
+Forensics / Reverse Engineering,signtool
+Forensics / Reverse Engineering,strings
+Game Launcher / Store,Battle.net
+Game Launcher / Store,Epic Games Launcher
+Game Launcher / Store,GOG Galaxy
+Game Launcher / Store,Origin
+Game Launcher / Store,Razer Cortex
+Game Launcher / Store,Steam
+Graphics / CAD / Design,ACDSee
+Graphics / CAD / Design,Adobe Illustrator
+Graphics / CAD / Design,Adobe Photoshop
+Graphics / CAD / Design,Autodesk AutoCAD
+Graphics / CAD / Design,Blender
+Graphics / CAD / Design,CorelDRAW
+Graphics / CAD / Design,Darktable
+Graphics / CAD / Design,FastStone Image Viewer
+Graphics / CAD / Design,GIMP
+Graphics / CAD / Design,Inkscape
+Graphics / CAD / Design,IrfanView
+Graphics / CAD / Design,Krita
+Graphics / CAD / Design,Paint.NET
+Graphics / CAD / Design,PaintTool SAI
+Graphics / CAD / Design,RawTherapee
+Graphics / CAD / Design,SketchUp
+Graphics / CAD / Design,XnView
+Graphics / CAD / Design,Zoner Photo Studio
+Graphics / CAD / Design,imagemagick
+Hardware Monitoring / Drivers,AIDA64
+Hardware Monitoring / Drivers,AMD Adrenalin
+Hardware Monitoring / Drivers,CPU-Z
+Hardware Monitoring / Drivers,Corsair iCUE
+Hardware Monitoring / Drivers,CrystalDiskInfo
+Hardware Monitoring / Drivers,CrystalDiskMark
+Hardware Monitoring / Drivers,Dell SupportAssist
+Hardware Monitoring / Drivers,FurMark
+Hardware Monitoring / Drivers,GPU-Z
+Hardware Monitoring / Drivers,HP Support Assistant
+Hardware Monitoring / Drivers,HWMonitor
+Hardware Monitoring / Drivers,HWiNFO
+Hardware Monitoring / Drivers,Intel Driver &amp; Support Assistant
+Hardware Monitoring / Drivers,Lenovo Vantage
+Hardware Monitoring / Drivers,Logitech G Hub
+Hardware Monitoring / Drivers,MSI Afterburner
+Hardware Monitoring / Drivers,MemTest86
+Hardware Monitoring / Drivers,NVIDIA GeForce Experience
+Hardware Monitoring / Drivers,NZXT CAM
+Hardware Monitoring / Drivers,OCCT
+Hardware Monitoring / Drivers,Prime95
+Hardware Monitoring / Drivers,Samsung Magician
+Hardware Monitoring / Drivers,Speccy
+Hardware Monitoring / Drivers,SteelSeries GG
+Media Player / Library,AIMP
+Media Player / Library,BS.Player
+Media Player / Library,Emby
+Media Player / Library,GOM Player
+Media Player / Library,KMPlayer
+Media Player / Library,Kodi
+Media Player / Library,Media Player Classic
+Media Player / Library,MediaMonkey
+Media Player / Library,MusicBee
+Media Player / Library,Plex
+Media Player / Library,PotPlayer
+Media Player / Library,SMPlayer
+Media Player / Library,Spotify
+Media Player / Library,VLC Media Player
+Media Player / Library,foobar2000
+Media Player / Library,iTunes
+Misc,ABBYY FineReader
+Misc,AutoHotkey
+Misc,AutoIt
+Misc,BlueStacks
+Misc,Calibre
+Misc,CyberLink PowerDVD
+Misc,EmEditor
+Misc,GlassWire
+Misc,Insomnia
+Misc,JetBrains CLion
+Misc,JetBrains IntelliJ IDEA
+Misc,JetBrains PyCharm
+Misc,JetBrains WebStorm
+Misc,Mp3tag
+Misc,NetLimiter
+Misc,Postman
+Misc,TagScanner
+Misc,VirtualDJ
+Misc,WinSCP
+Misc,ansible
+Misc,ansible-playbook
+Misc,aria2c
+Misc,diskspd
+Misc,dumpbin
+Misc,ffmpeg
+Misc,fio
+Misc,jar
+Misc,java
+Misc,javac
+Misc,link
+Misc,perl
+Misc,php
+Misc,pskill
+Misc,pslist
+Misc,psshutdown
+Misc,pssuspend
+Misc,python
+Misc,ruby
+Misc,stress
+Misc,stress-ng (WSL)
+Misc,sysbench
+Misc,winrs
+Network Tools,Cyberduck
+Network Tools,Fiddler
+Network Tools,FileZilla
+Network Tools,Wireshark
+Network Tools,cloudflared
+Network Tools,curl
+Network Tools,grpcurl
+Network Tools,httpie
+Network Tools,iperf
+Network Tools,iperf3
+Network Tools,mitmproxy
+Network Tools,net
+Network Tools,netcat
+Network Tools,netstat
+Network Tools,ngrok
+Network Tools,nmap
+Network Tools,socat
+Network Tools,tcpdump
+Network Tools,tcpview
+Network Tools,tshark
+Network Tools,wget
+Notes / Reference / Mindmap,Citavi
+Notes / Reference / Mindmap,Evernote
+Notes / Reference / Mindmap,FreeMind
+Notes / Reference / Mindmap,Joplin
+Notes / Reference / Mindmap,Mendeley
+Notes / Reference / Mindmap,MindMeister
+Notes / Reference / Mindmap,Notion
+Notes / Reference / Mindmap,Obsidian
+Notes / Reference / Mindmap,Rainlendar
+Notes / Reference / Mindmap,Rainmeter
+Notes / Reference / Mindmap,Trello Desktop
+Notes / Reference / Mindmap,XMind
+Notes / Reference / Mindmap,Zotero
+Office / Productivity,Apache OpenOffice
+Office / Productivity,Excel Viewer
+Office / Productivity,LibreOffice Calc
+Office / Productivity,LibreOffice Impress
+Office / Productivity,LibreOffice Writer
+Office / Productivity,Microsoft Excel
+Office / Productivity,Microsoft OneNote
+Office / Productivity,Microsoft Outlook
+Office / Productivity,Microsoft PowerPoint
+Office / Productivity,Microsoft Word
+Office / Productivity,OnlyOffice Desktop
+Office / Productivity,PowerPoint Viewer
+Office / Productivity,WPS Office
+Office / Productivity,Word Viewer
+PDF Tools,Adobe Acrobat Reader
+PDF Tools,Bluebeam Revu
+PDF Tools,CutePDF
+PDF Tools,Foxit PDF Reader
+PDF Tools,Foxit PhantomPDF
+PDF Tools,Nitro PDF Reader
+PDF Tools,Nitro Pro
+PDF Tools,PDF-XChange Editor
+PDF Tools,PDFCreator
+PDF Tools,SumatraPDF
+PDF Tools,doPDF
+Password Manager,1Password
+Password Manager,Bitwarden
+Password Manager,KeePass
+Password Manager,KeePassXC
+Password Manager,LastPass
+Password Manager,Password Safe
+Remote Access / SSH,AnyDesk
+Remote Access / SSH,MobaXterm
+Remote Access / SSH,PuTTY
+Remote Access / SSH,TeamViewer
+Remote Access / SSH,plink
+Remote Access / SSH,pscp
+Remote Access / SSH,psexec
+Screen Capture / Recording,Action!
+Screen Capture / Recording,Bandicam
+Screen Capture / Recording,CamStudio
+Screen Capture / Recording,Camtasia
+Screen Capture / Recording,FastStone Capture
+Screen Capture / Recording,Fraps
+Screen Capture / Recording,Greenshot
+Screen Capture / Recording,Lightshot
+Screen Capture / Recording,OBS Studio
+Screen Capture / Recording,OBS VirtualCam
+Screen Capture / Recording,PlayClaw
+Screen Capture / Recording,ScreenToGif
+Screen Capture / Recording,ShareX
+Screen Capture / Recording,Snagit
+Screen Capture / Recording,XSplit
+Security: Antivirus,AVG Antivirus
+Security: Antivirus,Avira Antivirus
+Security: Antivirus,Bitdefender
+Security: Antivirus,Comodo Internet Security
+Security: Antivirus,ESET NOD32
+Security: Antivirus,Kaspersky
+Security: Antivirus,Malwarebytes
+Security: Antivirus,McAfee security
+Security: Antivirus,Sophos Home
+Security: Antivirus,ZoneAlarm
+Security: Crypto Tools,age
+Security: Crypto Tools,gpg
+Security: Crypto Tools,keytool
+Security: Crypto Tools,md5sum
+Security: Crypto Tools,minisign
+Security: Crypto Tools,openssl
+Security: Crypto Tools,sha1sum
+Security: Crypto Tools,sha256sum
+System Cleanup / Uninstaller,Advanced SystemCare
+System Cleanup / Uninstaller,BleachBit
+System Cleanup / Uninstaller,CCleaner
+System Cleanup / Uninstaller,Glary Utilities
+System Cleanup / Uninstaller,PrivaZer
+System Cleanup / Uninstaller,Revo Uninstaller
+System Cleanup / Uninstaller,Wise Care 365
+System Cleanup / Uninstaller,Wise Disk Cleaner
+System Monitoring / Sysinternals,Process Explorer
+System Monitoring / Sysinternals,Process Hacker
+System Monitoring / Sysinternals,autoruns
+System Monitoring / Sysinternals,handle
+System Monitoring / Sysinternals,procexp
+System Monitoring / Sysinternals,procmon
+System Monitoring / Sysinternals,rammap
+System Monitoring / Sysinternals,sigcheck
+System Tweaks / Utilities,7+ Taskbar Tweaker
+System Tweaks / Utilities,Classic Shell
+System Tweaks / Utilities,ClipX
+System Tweaks / Utilities,ClipboardFusion
+System Tweaks / Utilities,Ditto
+System Tweaks / Utilities,Open-Shell
+System Tweaks / Utilities,PowerToys
+Torrent / P2P,Deluge
+Torrent / P2P,Transmission
+Torrent / P2P,qBittorrent
+Torrent / P2P,uTorrent
+Video Editing / Transcoding,Adobe Premiere Pro
+Video Editing / Transcoding,DaVinci Resolve
+Video Editing / Transcoding,HandBrake
+Video Editing / Transcoding,Kdenlive
+Video Editing / Transcoding,Lightworks
+Video Editing / Transcoding,OpenShot
+Video Editing / Transcoding,Shotcut
+Video Editing / Transcoding,VirtualDub
+Virtualization / Sandbox / Encryption,Deep Freeze
+Virtualization / Sandbox / Encryption,Hyper-V Manager
+Virtualization / Sandbox / Encryption,Parallels Desktop
+Virtualization / Sandbox / Encryption,QEMU
+Virtualization / Sandbox / Encryption,Sandboxie
+Virtualization / Sandbox / Encryption,Shadow Defender
+Virtualization / Sandbox / Encryption,Time Freeze
+Virtualization / Sandbox / Encryption,TrueCrypt
+Virtualization / Sandbox / Encryption,VMware Player
+Virtualization / Sandbox / Encryption,VMware Workstation
+Virtualization / Sandbox / Encryption,VeraCrypt
+Virtualization / Sandbox / Encryption,VirtualBox
+Virtualization / Sandbox / Encryption,VirtualBox Extension Pack
+Windows System Tools (CLI),choco
+Windows System Tools (CLI),cipher
+Windows System Tools (CLI),cmd
+Windows System Tools (CLI),compact
+Windows System Tools (CLI),find
+Windows System Tools (CLI),findstr
+Windows System Tools (CLI),icacls
+Windows System Tools (CLI),logman
+Windows System Tools (CLI),more
+Windows System Tools (CLI),powershell
+Windows System Tools (CLI),pwsh
+Windows System Tools (CLI),reg
+Windows System Tools (CLI),sc
+Windows System Tools (CLI),schtasks
+Windows System Tools (CLI),scoop
+Windows System Tools (CLI),sort
+Windows System Tools (CLI),takeown
+Windows System Tools (CLI),taskkill
+Windows System Tools (CLI),tasklist
+Windows System Tools (CLI),timeout
+Windows System Tools (CLI),wevtutil
+Windows System Tools (CLI),winget
+Windows System Tools (CLI),wmic
+Windows System Tools (CLI),xcopy

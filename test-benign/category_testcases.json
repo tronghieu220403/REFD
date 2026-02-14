@@ -1,0 +1,292 @@
+{
+  "Password Manager": [
+    "Install",
+    "Create 50 password entries",
+    "Auto-fill login 100 times",
+    "Export password vault",
+    "Import password vault",
+    "Enable browser integration",
+    "Sync vault across devices"
+  ],
+
+  "Browser": [
+    "Install",
+    "Update",
+    "Heavy browsing 60 minutes",
+    "Open 30 tabs",
+    "Download 100 small files",
+    "Download 1 large file (>1GB)",
+    "Clear browsing data",
+    "Export bookmarks",
+    "Import bookmarks"
+  ],
+
+  "Office / Productivity": [
+    "Install",
+    "Open large document (>50MB)",
+    "Save file 20 times",
+    "Save As 10 different files",
+    "Export PDF",
+    "Batch open 50 documents",
+    "Enable AutoSave for 15 minutes"
+  ],
+
+  "PDF Tools": [
+    "Open 100MB PDF",
+    "Merge 50 PDFs",
+    "Split PDF",
+    "Annotate PDF",
+    "Convert PDF to DOCX",
+    "Batch convert 100 PDFs"
+  ],
+
+  "Archiver / Compression": [
+    "Extract 10k files",
+    "Compress 10k files",
+    "Encrypt archive",
+    "Rename archive multiple times",
+    "Test corrupted archive",
+    "Split archive into parts"
+  ],
+
+  "Backup / Sync": [
+    "Full backup",
+    "Incremental backup",
+    "Restore backup",
+    "Sync 10k files",
+    "Mirror mode sync",
+    "Delete source then sync",
+    "Create snapshot"
+  ],
+
+  "Disk / Partition / Recovery": [
+    "Scan disk surface",
+    "Create partition",
+    "Resize partition",
+    "Format partition",
+    "Disk clone",
+    "Run disk repair"
+  ],
+
+  "Remote Access / SSH": [
+    "Connect to remote host",
+    "Upload 1GB file",
+    "Download 1GB file",
+    "Run remote command batch",
+    "Session reconnect test"
+  ],
+
+  "Torrent / P2P": [
+    "Download 5GB torrent",
+    "Seed file 30 minutes",
+    "Pause and resume download",
+    "Force recheck",
+    "Remove torrent keep files"
+  ],
+
+  "Media Player / Library": [
+    "Play 4K video",
+    "Play large playlist (500 files)",
+    "Scan media library",
+    "Generate media thumbnails",
+    "Continuous playback 2 hours"
+  ],
+
+  "Screen Capture / Recording": [
+    "Record screen 60 minutes",
+    "Record 4K video",
+    "Take 200 screenshots",
+    "Export video file",
+    "Save project repeatedly"
+  ],
+
+  "Video Editing / Transcoding": [
+    "Import 5GB video",
+    "Render output file",
+    "Batch convert 50 videos",
+    "Export multiple formats",
+    "Save project 10 times"
+  ],
+
+  "Audio Production / Editing": [
+    "Record 30 minutes audio",
+    "Export WAV",
+    "Export MP3",
+    "Batch export 20 tracks",
+    "Save project 10 times"
+  ],
+
+  "Graphics / CAD / Design": [
+    "Open 200MB project",
+    "Export high-resolution image",
+    "Render 3D model",
+    "Save project 20 times",
+    "Batch convert 100 images"
+  ],
+
+  "Dev: IDE / Editor": [
+    "Open large project",
+    "Build project",
+    "Clean project",
+    "Rebuild project",
+    "Search and replace across project",
+    "Rename project folder"
+  ],
+
+  "Dev: Build / Toolchain": [
+    "Compile 10k source files",
+    "Incremental build",
+    "Parallel build",
+    "Clean build directory",
+    "Package binary"
+  ],
+
+  "Dev: Version Control": [
+    "Clone large repository",
+    "Commit 100 files",
+    "Push changes",
+    "Pull changes",
+    "Branch switch test"
+  ],
+
+  "DevOps: Container / K8s / Stack": [
+    "Build Docker image",
+    "Run container",
+    "Scale container replicas",
+    "Deploy to Kubernetes",
+    "Remove container stack"
+  ],
+
+  "Database Tools": [
+    "Create database",
+    "Insert 100k records",
+    "Batch update records",
+    "Export database dump",
+    "Import database dump",
+    "Vacuum optimize database"
+  ],
+
+  "Network Tools": [
+    "Large file upload",
+    "Large file download",
+    "Continuous ping 30 minutes",
+    "Port scan",
+    "Packet capture 10 minutes"
+  ],
+
+  "Email / Chat / Collaboration": [
+    "Send 500 messages",
+    "Receive file attachment 500MB",
+    "Export chat history",
+    "Sync message history",
+    "Video call 60 minutes"
+  ],
+
+  "Game Launcher / Store": [
+    "Install 50GB game",
+    "Update game",
+    "Verify game files",
+    "Download patch",
+    "Launch game"
+  ],
+
+  "Security: Antivirus": [
+    "Full disk scan",
+    "Quick scan",
+    "Real-time protection test",
+    "Update virus definitions",
+    "Quarantine file",
+    "Restore from quarantine"
+  ],
+
+  "System Cleanup / Uninstaller": [
+    "Deep clean",
+    "Registry clean",
+    "Remove 1000 temp files",
+    "Uninstall large application"
+  ],
+
+  "Hardware Monitoring / Drivers": [
+    "Continuous monitoring 60 minutes",
+    "Stress test CPU",
+    "Stress test GPU",
+    "Driver update",
+    "Log sensor data"
+  ],
+
+  "System Monitoring / Sysinternals": [
+    "Process monitoring 30 minutes",
+    "File system monitoring",
+    "Export monitoring log",
+    "Capture handle snapshot"
+  ],
+
+  "File Manager / Disk Usage": [
+    "Copy 10k files",
+    "Move folder tree",
+    "Delete large folder",
+    "Compare two folders",
+    "Search entire drive"
+  ],
+
+  "File Rename / Copy Utility": [
+    "Bulk rename 10k files",
+    "Copy 50GB folder",
+    "Move large dataset",
+    "Verify copied files"
+  ],
+
+  "Disc / ISO / USB Tools": [
+    "Create ISO image",
+    "Burn ISO to USB",
+    "Extract ISO",
+    "Verify disc integrity"
+  ],
+
+  "Forensics / Reverse Engineering": [
+    "Open 200MB binary",
+    "Dump process memory",
+    "Scan file signature",
+    "Export analysis report"
+  ],
+
+  "Windows System Tools (CLI)": [
+    "Batch file copy via CLI",
+    "Create 1000 files",
+    "Delete 1000 files",
+    "Modify registry entries",
+    "Run scheduled task"
+  ],
+
+  "Security: Crypto Tools": [
+    "Encrypt 10GB folder",
+    "Decrypt folder",
+    "Generate keypair",
+    "Sign file",
+    "Verify signature"
+  ],
+
+  "Notes / Reference / Mindmap": [
+    "Create 100 notes",
+    "Attach 1GB files",
+    "Sync notes",
+    "Export notes",
+    "Import notes"
+  ],
+
+  "Virtualization / Sandbox / Encryption": [
+    "Create virtual machine",
+    "Install operating system",
+    "Create snapshot",
+    "Restore snapshot",
+    "Clone virtual machine",
+    "Delete virtual machine"
+  ],
+
+  "System Tweaks / Utilities": [
+    "Modify system settings",
+    "Enable tweak options",
+    "Disable tweak options",
+    "Restore default configuration"
+  ]
+}
