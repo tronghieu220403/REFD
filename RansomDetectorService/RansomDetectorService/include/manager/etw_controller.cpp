@@ -88,7 +88,7 @@ void EtwController::StartLogger()
             local.swap(m_logQueue);
         }
 
-        std::wofstream ofs(L"C:\\hieunt_log.jsonl", std::ios::app);
+        std::wofstream ofs(L"C:\\hieunt_log.txt", std::ios::app);
         if (!ofs.is_open())
             continue;
 
@@ -419,7 +419,7 @@ void EtwController::HandleFileCreate(const EventInfo& e)
         MaybePrintIH(name_hash, nullptr);
         MaybePrintIO(fo, name_hash);
         
-        manager::Receiver::GetInstance()->PushFileEvent(path, pid);
+        manager::Receiver::GetInstance()->PushFileEventSync(path, pid);
         LogFileCreateOperation(pid, eid, ts, name_hash);
     }
 
@@ -471,7 +471,7 @@ void EtwController::HandleFileWrite(const EventInfo& e)
     MaybePrintIH(name_hash, &path);
     MaybePrintIO(fo, name_hash);
 
-    manager::Receiver::GetInstance()->PushFileEvent(path, pid);
+    manager::Receiver::GetInstance()->PushFileEventSync(path, pid);
 
     // Operation
     LogFileWriteOperation(pid, eid, ts, fo);
@@ -496,7 +496,7 @@ void EtwController::HandleFileRename(const EventInfo& e) // File name in 19 rena
         AddToIHCache(ts, path, &name_hash);
         std::wstring path;
         MaybePrintIH(name_hash, &path);
-        manager::Receiver::GetInstance()->PushFileEvent(path, pid);
+        manager::Receiver::GetInstance()->PushFileEventSync(path, pid);
     }
     else
     {

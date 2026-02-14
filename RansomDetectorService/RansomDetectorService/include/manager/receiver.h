@@ -36,9 +36,9 @@ namespace manager {
 		FileIoInfo PopFileIoEvent();
 		ull GetQueueSize();
 
-		void MoveQueue(std::queue<FileIoInfo>& target_file_io_queue);
+		void MoveQueueSync(std::queue<FileIoInfo>& target_file_io_queue);
 
-		void PushFileEvent(const std::wstring& path, ULONG pid);
+		void PushFileEventSync(const std::wstring& path, ULONG pid);
 	};
 
 }

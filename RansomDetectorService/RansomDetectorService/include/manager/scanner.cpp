@@ -176,9 +176,7 @@ namespace manager {
             std::queue<FileIoInfo> tmp_queue;
             std::vector<ULONG> pids_to_remove;
 
-            rcv->LockMutex();
-            rcv->MoveQueue(tmp_queue);
-            rcv->UnlockMutex();
+            rcv->MoveQueueSync(tmp_queue);
             {
                 std::lock_guard<std::mutex> lk(pid_queue_mutex_);
 

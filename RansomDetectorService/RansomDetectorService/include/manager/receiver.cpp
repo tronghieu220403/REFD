@@ -40,11 +40,13 @@ namespace manager
         return file_io_queue_.size();
     }
 
-    void Receiver::MoveQueue(std::queue<FileIoInfo>& target_file_io_queue) {
+    void Receiver::MoveQueueSync(std::queue<FileIoInfo>& target_file_io_queue) {
+        std::lock_guard<std::mutex> lk(file_io_mutex_);
         target_file_io_queue = std::move(file_io_queue_);
     }
 
-    void Receiver::PushFileEvent(const std::wstring& path, ULONG pid) {
+    void Receiver::PushFileEventSync(const std::wstring& path, ULONG pid) {
+        std::lock_guard<std::mutex> lk(file_io_mutex_);
         if (path.size() == 0) {
             return;
         }
