@@ -86,10 +86,10 @@ static void StopService() {
 
 int main()
 {
-#ifdef _DEBUG
-	ServiceMain();
-	Sleep(INFINITE);
-#else
+//#ifdef _DEBUG
+//	ServiceMain();
+//	Sleep(INFINITE);
+//#else
 	// Service mode
 	if (!ulti::IsRunningAsSystem())
 	{
@@ -100,8 +100,8 @@ int main()
 		srv::Service::RegisterUnloadFunc(StopService);
 		srv::Service::StartServiceMain(ServiceMain);
 	}
-#endif
-	return 0;
+//#endif
+//	return 0;
 }
 
 #endif

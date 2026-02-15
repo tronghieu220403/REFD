@@ -62,10 +62,15 @@ private:
     bool m_stopLogger = false;
 
     // ================= ETW =================
+    bool m_rdWork = false;
+    void RunKernelRundown();
+
     void StartProviderBlocking();
 
-    krabs::user_trace m_trace;
-    std::jthread m_traceThread;
+    krabs::user_trace m_userTrace{ L"hieunt_user" };
+    krabs::kernel_trace m_kernelTrace{ L"hieunt_kernel" };
+
+    std::jthread m_userTraceThread;
 
     ULONG m_curPid;
 
@@ -76,7 +81,6 @@ private:
 
     std::deque<EventInfo> m_evtQueue;
     std::mutex m_evtMutex;
-    std::condition_variable m_evtCv;
     std::jthread m_evtThread;
     bool m_stopEvt = false;
 
@@ -95,8 +99,6 @@ private:
 
     // printed write IO
     LruSet<ULONGLONG> m_printedWriteObj{ MAX_CACHE_SIZE };
-
-    std::mutex m_identityMutex;
 
     // ================= IH Cache =================
     void IHCacheAdd(ULONGLONG ts, const std::wstring& lower_path, ULONGLONG name_hash);

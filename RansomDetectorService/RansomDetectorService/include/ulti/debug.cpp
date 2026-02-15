@@ -53,17 +53,14 @@ namespace debug {
 			}
 			debug_count++;
 
-            size_t size = wcslen(message.c_str());
-
-            WCHAR* buffer = (WCHAR*)message.c_str();
-
-            if (size == 0 || buffer[size - 1] != L'\n') {
-                buffer[size] = L'\n';
-                size++;
-            }
+			// Never write into message.c_str(); that is undefined behavior.
+			std::wstring line = message;
+			if (line.empty() || line.back() != L'\n') {
+				line.push_back(L'\n');
+			}
 
 			DWORD bytes_written = 0;
-			WriteFile(log_file_handle, buffer, size * sizeof(wchar_t), &bytes_written, nullptr);
+			WriteFile(log_file_handle, line.data(), static_cast<DWORD>(line.size() * sizeof(wchar_t)), &bytes_written, nullptr);
 			//FlushFileBuffers(log_file_handle);
 
 			if (debug_count >= DEBUG_LOG_THRESHOLD) {
@@ -132,8 +129,8 @@ namespace debug {
 		if (!format)
 			return;
 
-		// 8KB max message per thread
-		constexpr size_t kMaxChars = 8192;
+		// 1KB max message per thread
+		constexpr size_t kMaxChars = 1024;
 
 		thread_local std::wstring buffer;
 

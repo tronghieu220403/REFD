@@ -13,8 +13,7 @@ EtwController* EtwController::GetInstance()
 
 // ================= Ctor / Dtor =================
 EtwController::EtwController()
-    : m_trace(L"hieunt"),
-    m_curPid(GetCurrentProcessId())
+    : m_curPid(GetCurrentProcessId())
 {
 }
 
@@ -103,36 +102,36 @@ void EtwController::StartLogger()
 // ================= Event worker queue =================
 void EtwController::EnqueueEvent(EventInfo&& e)
 {
-    {
-        std::lock_guard<std::mutex> lk(m_evtMutex);
+    std::lock_guard<std::mutex> lk(m_evtMutex);
 
-        // Drop oldest if too large (avoid RAM blow)
-        if (m_evtQueue.size() >= MAX_EVT_QUEUE) {
-            // keep queue moving; drop a chunk
-            size_t drop = MAX_EVT_QUEUE / 10;
-            while (drop-- && !m_evtQueue.empty()) m_evtQueue.pop_front();
-        }
-
-        m_evtQueue.emplace_back(std::move(e));
+    // Drop oldest if too large (avoid RAM blow)
+    if (m_evtQueue.size() >= MAX_EVT_QUEUE) {
+        // keep queue moving; drop a chunk
+        size_t drop = MAX_EVT_QUEUE / 10;
+        while (drop-- && !m_evtQueue.empty()) m_evtQueue.pop_front();
     }
-    m_evtCv.notify_one();
+
+    m_evtQueue.emplace_back(std::move(e));
 }
 
 void EtwController::EventLoop()
 {
     while (true)
     {
+        Sleep(200);
         EventInfo e;
 
         {
             std::unique_lock<std::mutex> lk(m_evtMutex);
-            m_evtCv.wait(lk, [&] {
-                return m_stopEvt || !m_evtQueue.empty();
-                });
 
-            if (m_stopEvt && m_evtQueue.empty())
+            if (m_stopEvt) {
                 return;
+            }
 
+            if (m_evtQueue.empty() == true) {
+                continue;
+            }
+            
             e = std::move(m_evtQueue.front());
             m_evtQueue.pop_front();
         }
@@ -275,8 +274,6 @@ bool EtwController::AddToIHCache(ULONGLONG ts, const std::wstring& path, ULONGLO
         *out_name_hash = name_hash;
     }
 
-    std::lock_guard<std::mutex> lock(m_identityMutex);
-
     // If this IH has already been printed, skip completely
     if (m_printedNameHash.contains(name_hash))
         return false;
@@ -293,7 +290,6 @@ bool EtwController::AddToIHCache(ULONGLONG ts, const std::wstring& path, ULONGLO
 //  - Removed from IHCache regardless of ref_count
 void EtwController::MaybePrintIH(ULONGLONG name_hash, std::wstring* p_out_name)
 {
-    std::lock_guard<std::mutex> lock(m_identityMutex);
     // Already printed -> nothing to do
     if (m_printedNameHash.contains(name_hash) == true) {
         if (p_out_name != nullptr) {
@@ -307,7 +303,7 @@ void EtwController::MaybePrintIH(ULONGLONG name_hash, std::wstring* p_out_name)
         return;
     }
 
-    const auto& entry = it->second;
+    auto& entry = it->second;
 
     if (p_out_name != nullptr) {
         *p_out_name = entry.path;
@@ -341,7 +337,6 @@ void EtwController::MaybePrintIO(ULONGLONG file_object, ULONGLONG name_hash)
     if (file_object == 0 || name_hash == 0)
         return;
 
-    std::lock_guard<std::mutex> lock(m_identityMutex);
     if (m_printedObj.contains(file_object) == true) {
         return;
     }
@@ -407,18 +402,15 @@ void EtwController::HandleFileCreate(const EventInfo& e)
     AddToIHCache(ts, path, &name_hash);
 
     // Manage object table for later lookups
-    {
-        std::lock_guard<std::mutex> lock(m_identityMutex);
-        m_objToNameHash[fo] = name_hash;
-        m_printedWriteObj.erase(fo);
-    }
+    m_objToNameHash[fo] = name_hash;
+    m_printedWriteObj.erase(fo);
 
     // Operation
     if (eid == KFE_CREATE_NEW_FILE)
     {
         MaybePrintIH(name_hash, nullptr);
         MaybePrintIO(fo, name_hash);
-        
+
         manager::Receiver::GetInstance()->PushFileEventSync(path, pid);
         LogFileCreateOperation(pid, eid, ts, name_hash);
     }
@@ -435,12 +427,9 @@ void EtwController::HandleFileCreate(const EventInfo& e)
 void EtwController::HandleFileCleanup(const EventInfo& e)
 {
     ULONGLONG fo = e.file_object;
-    {
-        std::lock_guard<std::mutex> lock(m_identityMutex);
-        m_objToNameHash.erase(fo);
-        m_printedObj.erase(fo);
-        m_printedWriteObj.erase(fo);
-    }
+    m_objToNameHash.erase(fo);
+    m_printedObj.erase(fo);
+    m_printedWriteObj.erase(fo);
 }
 
 void EtwController::HandleFileWrite(const EventInfo& e)
@@ -450,21 +439,15 @@ void EtwController::HandleFileWrite(const EventInfo& e)
     ULONG pid = e.pid;
     ULONGLONG ts = e.ts;
 
-    m_identityMutex.lock();
     if (m_printedWriteObj.contains(fo) == true) {
-        m_identityMutex.unlock();
         return;
     }
-    m_identityMutex.unlock();
 
     // Parse done -> identity decisions first (IO requires name_hash, resolve via obj table)
     ULONGLONG name_hash = 0;
-    {
-        std::lock_guard<std::mutex> lock(m_identityMutex);
-        auto it = m_objToNameHash.find(fo);
-        if (it != m_objToNameHash.end())
-            name_hash = it->second;
-    }
+    auto it = m_objToNameHash.find(fo);
+    if (it != m_objToNameHash.end())
+        name_hash = it->second;
 
     std::wstring path;
 
@@ -475,9 +458,7 @@ void EtwController::HandleFileWrite(const EventInfo& e)
 
     // Operation
     LogFileWriteOperation(pid, eid, ts, fo);
-    m_identityMutex.lock();
     m_printedWriteObj.insert(fo);
-    m_identityMutex.unlock();
 }
 
 void EtwController::HandleFileRename(const EventInfo& e) // File name in 19 rename to file name in event 27
@@ -501,12 +482,9 @@ void EtwController::HandleFileRename(const EventInfo& e) // File name in 19 rena
     else
     {
         fo = e.file_object;
-        {
-            std::lock_guard<std::mutex> lock(m_identityMutex);
-            auto it = m_objToNameHash.find(fo);
-            if (it != m_objToNameHash.end())
-                name_hash = it->second;
-        }
+        auto it = m_objToNameHash.find(fo);
+        if (it != m_objToNameHash.end())
+            name_hash = it->second;
         MaybePrintIH(name_hash, nullptr);
     }
 
@@ -556,14 +534,12 @@ void EtwController::HandleFileDelete(const EventInfo& e)
         break;
 
     case KFE_SET_DELETE:
+    {
         fo = e.file_object;
         key = e.file_key;
-        {
-            std::lock_guard<std::mutex> lock(m_identityMutex);
-            auto it = m_objToNameHash.find(fo);
-            if (it != m_objToNameHash.end())
-                name_hash = it->second;
-        }
+        auto it = m_objToNameHash.find(fo);
+        if (it != m_objToNameHash.end())
+            name_hash = it->second;
         MaybePrintIH(name_hash, nullptr);
 
         // Parse done -> identity decisions first
@@ -571,7 +547,7 @@ void EtwController::HandleFileDelete(const EventInfo& e)
 
         // Operation
         LogFileDeleteOperation(pid, eid, ts, name_hash, fo, key);
-
+    }
         break;
 
     default:
@@ -580,6 +556,47 @@ void EtwController::HandleFileDelete(const EventInfo& e)
 }
 
 // ================= ETW =================
+void EtwController::RunKernelRundown()
+{
+    krabs::kernel::disk_file_io_provider fileio_provider;
+    auto file_rundown_cb = [this](const EVENT_RECORD& r, const krabs::trace_context& c)
+        {
+            m_rdWork = true;
+
+            krabs::schema s(r, c.schema_locator);
+            krabs::parser parser(s);
+
+            ULONGLONG name_hash = 0;
+            ULONGLONG ts = s.timestamp().QuadPart;
+            std::wstring path;
+            ULONGLONG fo = 0;
+            try
+            {
+                path = parser.parse<std::wstring>(L"FileName");
+                fo = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
+            }
+            catch (...) {
+                return;
+            }
+            AddToIHCache(ts, path, &name_hash);
+            m_objToNameHash[fo] = name_hash;
+
+        };
+
+    fileio_provider.add_on_event_callback(file_rundown_cb);
+    m_kernelTrace.enable(fileio_provider);
+
+    std::thread t([this]() {
+        m_kernelTrace.start();
+        });
+
+    do {
+        Sleep(100);
+    } while (m_rdWork == false);
+
+    m_kernelTrace.stop();
+    t.join();
+}
 void EtwController::StartProviderBlocking()
 {
     // ===== Process provider =====
@@ -617,7 +634,7 @@ void EtwController::StartProviderBlocking()
     pf.add_on_event_callback(proc_cb);
     proc.add_filter(pf);
 
-    m_trace.enable(proc);
+    m_userTrace.enable(proc);
 
     // ===== File provider =====
     krabs::provider<> file(L"Microsoft-Windows-Kernel-File");
@@ -628,83 +645,85 @@ void EtwController::StartProviderBlocking()
         {
             krabs::schema s(r, c.schema_locator);
             krabs::parser parser(s);
-            
+
             //PrintAllProp(s, parser);
             //return;
-            
-            uint32_t pid = s.process_id();
-            if (pid == m_curPid || pid == 4) {
-                return;
-            }
-            
-            uint64_t ts = s.timestamp().QuadPart;
-            auto eid = s.event_id();
-            //PushLog(wstring(L"EID: ") + to_wstring(eid));
-            
-            EventInfo e;
-            e.prov = 2;
-            e.eid = eid;
-            e.pid = pid;
-            e.ts = ts;
-
             try {
-                switch (eid)
-                {
-                case KFE_CREATE:
-                case KFE_CREATE_NEW_FILE: // Create -> save to cache to retrieve file name event, also check for FILE_DELETE_ON_CLOSE (0x00001000) of CreateOptions
-                    e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
-                    e.path = parser.parse<std::wstring>(L"FileName");
-                    e.create_options = parser.parse<UINT32>(L"CreateOptions");
-                    e.has_create_options = true;
-                    EnqueueEvent(std::move(e));
-                    break;
-
-                case KFE_CLEANUP:
-                case KFE_CLOSE: // Close, clean up -> remove from check
-                    e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
-                    EnqueueEvent(std::move(e));
-                    break;
-
-                case KFE_WRITE: // Write
-                    e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
-                    EnqueueEvent(std::move(e));
-                    break;
-
-                case KFE_RENAME_29:
-                case KFE_RENAME:
-                    e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
-                    parser.try_parse<ULONGLONG>(L"FileKey", e.file_key);
-                    EnqueueEvent(std::move(e));
-                    break;
-
-                case KFE_RENAME_PATH: // Rename
-                    parser.try_parse<std::wstring>(L"FilePath", e.path);
-                    parser.try_parse<ULONGLONG>(L"FileKey", e.file_key);
-                    EnqueueEvent(std::move(e));
-                    break;
-
-                case KFE_NAME_DELETE: //NameDelete
-                    //parser.try_parse<std::wstring>(L"FileName", e.path);
-                    //parser.try_parse<ULONGLONG>(L"FileKey", e.file_key);
-                    //EnqueueEvent(std::move(e));
-                    break;
-
-                case KFE_SET_DELETE:
-                    e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
-                    parser.try_parse<ULONGLONG>(L"FileKey", e.file_key);
-                    EnqueueEvent(std::move(e));
-                    break;
-
-                case KFE_DELETE_PATH: // SetDelete, DeletePath
-                    parser.try_parse<std::wstring>(L"FileName", e.path);
-                    parser.try_parse<ULONGLONG>(L"FileKey", e.file_key);
-                    parser.try_parse<ULONGLONG>(L"FileObject", e.file_object);
-                    EnqueueEvent(std::move(e));
-                    break;
-
-                default:
-                    break;
+                uint32_t pid = s.process_id();
+                if (pid == m_curPid || pid == 4) {
+                    return;
                 }
+
+                uint64_t ts = s.timestamp().QuadPart;
+                auto eid = s.event_id();
+                //PushLog(wstring(L"EID: ") + to_wstring(eid));
+
+                EventInfo e;
+                e.prov = 2;
+                e.eid = eid;
+                e.pid = pid;
+                e.ts = ts;
+
+                try {
+                    switch (eid)
+                    {
+                    case KFE_CREATE:
+                    case KFE_CREATE_NEW_FILE: // Create -> save to cache to retrieve file name event, also check for FILE_DELETE_ON_CLOSE (0x00001000) of CreateOptions
+                        e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
+                        e.path = parser.parse<std::wstring>(L"FileName");
+                        e.create_options = parser.parse<UINT32>(L"CreateOptions");
+                        e.has_create_options = true;
+                        EnqueueEvent(std::move(e));
+                        break;
+
+                    case KFE_CLEANUP:
+                    case KFE_CLOSE: // Close, clean up -> remove from check
+                        e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
+                        EnqueueEvent(std::move(e));
+                        break;
+
+                    case KFE_WRITE: // Write
+                        e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
+                        EnqueueEvent(std::move(e));
+                        break;
+
+                    case KFE_RENAME_29:
+                    case KFE_RENAME:
+                        e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
+                        parser.try_parse<ULONGLONG>(L"FileKey", e.file_key);
+                        EnqueueEvent(std::move(e));
+                        break;
+
+                    case KFE_RENAME_PATH: // Rename
+                        parser.try_parse<std::wstring>(L"FilePath", e.path);
+                        parser.try_parse<ULONGLONG>(L"FileKey", e.file_key);
+                        EnqueueEvent(std::move(e));
+                        break;
+
+                    case KFE_NAME_DELETE: //NameDelete
+                        //parser.try_parse<std::wstring>(L"FileName", e.path);
+                        //parser.try_parse<ULONGLONG>(L"FileKey", e.file_key);
+                        //EnqueueEvent(std::move(e));
+                        break;
+
+                    case KFE_SET_DELETE:
+                        e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
+                        parser.try_parse<ULONGLONG>(L"FileKey", e.file_key);
+                        EnqueueEvent(std::move(e));
+                        break;
+
+                    case KFE_DELETE_PATH: // SetDelete, DeletePath
+                        parser.try_parse<std::wstring>(L"FileName", e.path);
+                        parser.try_parse<ULONGLONG>(L"FileKey", e.file_key);
+                        parser.try_parse<ULONGLONG>(L"FileObject", e.file_object);
+                        EnqueueEvent(std::move(e));
+                        break;
+
+                    default:
+                        break;
+                    }
+                }
+                catch (...) {}
             }
             catch (...) {}
         };
@@ -713,9 +732,9 @@ void EtwController::StartProviderBlocking()
     ff.add_on_event_callback(file_cb);
     file.add_filter(ff);
 
-    m_trace.enable(file);
+    m_userTrace.enable(file);
 
-    m_trace.start(); // blocking
+    m_userTrace.start(); // blocking
 }
 
 // ================= Lifecycle =================
@@ -731,7 +750,9 @@ void EtwController::Start()
         });
 
     // https://lowleveldesign.wordpress.com/2020/08/15/fixing-empty-paths-in-fileio-events-etw
-    m_traceThread = std::jthread([this]() {
+    RunKernelRundown();
+
+    m_userTraceThread = std::jthread([this]() {
         StartProviderBlocking();
         });
 }
@@ -739,14 +760,13 @@ void EtwController::Start()
 void EtwController::Stop()
 {
     // Stop trace first -> callbacks stop coming
-    m_trace.stop();
+    m_userTrace.stop();
 
     // Stop event worker
     {
         std::lock_guard<std::mutex> lk(m_evtMutex);
         m_stopEvt = true;
     }
-    m_evtCv.notify_all();
     if (m_evtThread.joinable())
         m_evtThread.join();
 
