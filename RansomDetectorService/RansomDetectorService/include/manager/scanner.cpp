@@ -153,7 +153,7 @@ namespace manager {
 
             std::wstring types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
             auto time_ms = ulti::GetCurrentSteadyTimeInMs();
-            PrintDebugW(L"[TID %d] %ws,(%ws)", tid, io.path.c_str(), types_wstr.c_str());
+            //PrintDebugW(L"[TID %d] %ws,(%ws)", tid, io.path.c_str(), types_wstr.c_str());
             debug::WriteLogW(L"%lld,%ws,(%ws)\n", time_ms, io.path.c_str(), types_wstr.c_str());
         }
     }
@@ -215,8 +215,9 @@ namespace manager {
 
             if (rcv->GetQueueSize() == 0) {
                 // Sleep briefly to avoid busy spinning
-                Sleep(200);
+                Sleep(150);
             }
+            Sleep(50);
         }
     }
 
