@@ -558,7 +558,6 @@ void EtwController::HandleFileDelete(const EventInfo& e)
 // ================= ETW =================
 void EtwController::RunKernelRundown()
 {
-    krabs::kernel::disk_file_io_provider fileio_provider;
     auto file_rundown_cb = [this](const EVENT_RECORD& r, const krabs::trace_context& c)
         {
             m_rdWork = true;
@@ -583,27 +582,37 @@ void EtwController::RunKernelRundown()
 
         };
 
+    if (m_kernelTrace != nullptr) {
+        delete m_kernelTrace;
+        m_kernelTrace = nullptr;
+    }
+    m_kernelTrace = new krabs::kernel_trace(L"hieunt_kernel");
+
+    krabs::kernel::disk_file_io_provider fileio_provider;
     fileio_provider.add_on_event_callback(file_rundown_cb);
-    m_kernelTrace.enable(fileio_provider);
+    m_kernelTrace->enable(fileio_provider);
 
     std::thread t([this]() {
-        m_kernelTrace.start();
+        try {
+            m_kernelTrace->start();
+        }
+        catch (...) {
+            m_rdWork = true;
+        }
         });
 
     do {
         Sleep(100);
     } while (m_rdWork == false);
 
-    m_kernelTrace.stop();
+    m_kernelTrace->stop();
+    delete m_kernelTrace;
+    m_kernelTrace = nullptr;
     t.join();
 }
+
 void EtwController::StartProviderBlocking()
 {
-    // ===== Process provider =====
-    krabs::provider<> proc(L"Microsoft-Windows-Kernel-Process");
-    proc.any(0x10);
-    proc.enable_rundown_events();
-
     auto proc_cb = [this](const EVENT_RECORD& r, const krabs::trace_context& c)
         {
             auto eid = r.EventHeader.EventDescriptor.Id;
@@ -629,17 +638,6 @@ void EtwController::StartProviderBlocking()
                 EnqueueEvent(std::move(e));
             }
         };
-
-    krabs::event_filter pf(krabs::predicates::any_event);
-    pf.add_on_event_callback(proc_cb);
-    proc.add_filter(pf);
-
-    m_userTrace.enable(proc);
-
-    // ===== File provider =====
-    krabs::provider<> file(L"Microsoft-Windows-Kernel-File");
-    file.any(0x10 | 0x20 | 0x80 | 0x200 | 0x400 | 0x800 | 0x1000);
-    //file.enable_rundown_events();
 
     auto file_cb = [this](const EVENT_RECORD& r, const krabs::trace_context& c)
         {
@@ -728,13 +726,34 @@ void EtwController::StartProviderBlocking()
             catch (...) {}
         };
 
+    if (m_userTrace != nullptr) {
+        delete m_userTrace;
+        m_userTrace = nullptr;
+    }
+    m_userTrace = new krabs::user_trace(L"hieunt_user");
+
+    // ===== Process provider =====
+    //krabs::provider<> proc(L"Microsoft-Windows-Kernel-Process"); -> unknown crash when calling provider_name_to_guid -> switch to direct GUID
+    krabs::provider<> proc(krabs::guid(L"{22fb2cd6-0e7b-422b-a0c7-2fad1fd0e716}"));
+    proc.any(0x10);
+    proc.enable_rundown_events();
+    krabs::event_filter pf(krabs::predicates::any_event);
+    pf.add_on_event_callback(proc_cb);
+    proc.add_filter(pf);
+
+    m_userTrace->enable(proc);
+
+    // ===== File provider =====
+    //krabs::provider<> file(L"Microsoft-Windows-Kernel-File");
+    krabs::provider<> file(krabs::guid(L"{edd08927-9cc4-4e65-b970-c2560fb5c289}"));
+    file.any(0x10 | 0x20 | 0x80 | 0x200 | 0x400 | 0x800 | 0x1000);
     krabs::event_filter ff(krabs::predicates::any_event);
     ff.add_on_event_callback(file_cb);
     file.add_filter(ff);
 
-    m_userTrace.enable(file);
+    m_userTrace->enable(file);
 
-    m_userTrace.start(); // blocking
+    m_userTrace->start(); // blocking
 }
 
 // ================= Lifecycle =================
@@ -750,17 +769,28 @@ void EtwController::Start()
         });
 
     // https://lowleveldesign.wordpress.com/2020/08/15/fixing-empty-paths-in-fileio-events-etw
-    RunKernelRundown();
 
     m_userTraceThread = std::jthread([this]() {
-        StartProviderBlocking();
-        });
+        while (true) {
+            try {
+                RunKernelRundown();
+                StartProviderBlocking();
+            }
+            catch (...) {
+                Sleep(200);
+                continue;
+            }
+            break;
+        }
+    });
 }
 
 void EtwController::Stop()
 {
     // Stop trace first -> callbacks stop coming
-    m_userTrace.stop();
+    if (m_userTrace != nullptr) {
+        m_userTrace->stop();
+    }
 
     // Stop event worker
     {

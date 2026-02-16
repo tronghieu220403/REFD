@@ -67,8 +67,8 @@ private:
 
     void StartProviderBlocking();
 
-    krabs::user_trace m_userTrace{ L"hieunt_user" };
-    krabs::kernel_trace m_kernelTrace{ L"hieunt_kernel" };
+    krabs::user_trace* m_userTrace = nullptr;
+    krabs::kernel_trace* m_kernelTrace = nullptr;
 
     std::jthread m_userTraceThread;
 
