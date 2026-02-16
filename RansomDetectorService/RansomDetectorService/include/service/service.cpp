@@ -147,6 +147,23 @@ namespace srv
 		return err;
 	}
 
+	bool Service::IsRegistered()
+	{
+		if (h_services_control_manager_ == NULL) {
+			PrintDebugW(L"Failed to open Service Control Manager");
+			return ERROR_INVALID_HANDLE;
+		}
+		SC_HANDLE service = OpenService(h_services_control_manager_, service_name_.c_str(), SERVICE_QUERY_STATUS);
+		if (!service)
+		{
+			PrintDebugW(L"OpenServiceW failed: %d", GetLastError());
+			return false;
+		}
+		CloseServiceHandle(service);
+		
+		return true;
+	}
+
 	Service::Service(const std::wstring& name)
 		: service_name_(name),
 		h_services_control_manager_(OpenSCManager(NULL, SERVICES_ACTIVE_DATABASE, SC_MANAGER_ALL_ACCESS))
@@ -196,6 +213,7 @@ namespace srv
 		w_srv_path.resize(1024);
 		GetModuleFileNameW(nullptr, &w_srv_path[0], 1024);
 		w_srv_path.resize(wcslen(&w_srv_path[0]));
+		PrintDebugW("Registering service %ws in %ws", service->service_name_.c_str(), w_srv_path.c_str());
 		auto status = service->Create(w_srv_path, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START);
 		if (status == ERROR_SUCCESS || status == ERROR_DUPLICATE_SERVICE_NAME || status == ERROR_SERVICE_EXISTS)
 		{
@@ -234,7 +252,7 @@ namespace srv
 		};
 
 		if (!StartServiceCtrlDispatcher(service_table)) {
-			PrintDebugW(L"StartServiceCtrlDispatcher failed");
+			PrintDebugW(L"StartServiceCtrlDispatcher failed, err %d", GetLastError());
 		}
 		else {
 			PrintDebugW(L"StartServiceCtrlDispatcher succeeded");

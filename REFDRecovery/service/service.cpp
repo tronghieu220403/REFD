@@ -147,6 +147,23 @@ namespace srv
 		return err;
 	}
 
+	bool Service::IsRegistered()
+	{
+		if (h_services_control_manager_ == NULL) {
+			PrintDebugW(L"Failed to open Service Control Manager");
+			return ERROR_INVALID_HANDLE;
+		}
+		SC_HANDLE service = OpenService(h_services_control_manager_, service_name_.c_str(), SERVICE_QUERY_STATUS);
+		if (!service)
+		{
+			PrintDebugW(L"OpenServiceW failed: %d", GetLastError());
+			return false;
+		}
+		CloseServiceHandle(service);
+
+		return true;
+	}
+
 	Service::Service(const std::wstring& name)
 		: service_name_(name),
 		h_services_control_manager_(OpenSCManager(NULL, SERVICES_ACTIVE_DATABASE, SC_MANAGER_ALL_ACCESS))
@@ -196,6 +213,7 @@ namespace srv
 		w_srv_path.resize(1024);
 		GetModuleFileNameW(nullptr, &w_srv_path[0], 1024);
 		w_srv_path.resize(wcslen(&w_srv_path[0]));
+		PrintDebugW("Registering service %ws in %ws", service->service_name_.c_str(), w_srv_path.c_str());
 		auto status = service->Create(w_srv_path, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START);
 		if (status == ERROR_SUCCESS || status == ERROR_DUPLICATE_SERVICE_NAME || status == ERROR_SERVICE_EXISTS)
 		{
@@ -234,7 +252,7 @@ namespace srv
 		};
 
 		if (!StartServiceCtrlDispatcher(service_table)) {
-			PrintDebugW(L"StartServiceCtrlDispatcher failed");
+			PrintDebugW(L"StartServiceCtrlDispatcher failed, err %d", GetLastError());
 		}
 		else {
 			PrintDebugW(L"StartServiceCtrlDispatcher succeeded");
@@ -262,6 +280,13 @@ namespace srv
 		}
 		else if (ctrl_code == SERVICE_CONTROL_STOP)
 		{
+			/*
+			Here is a quote from MSDN regarding SERVICE_CONTROL_STOP and it explains why you won't receive ANY messages after a SERVICE_CONTROL_STOP message:
+			"If a service accepts this control code, it must stop upon receipt and return NO_ERROR. After the SCM sends this control code, it will not send other control codes to the service."
+			*/
+			/*
+			A little trick to prevent the service from stopping is to rebirth the service immediately (create another thread to call this exe with parameter rebirth, recreate the service, wait for the current service die and then run it again).
+			*/
 			service_status.dwCurrentState = SERVICE_STOP_PENDING;
 			SetServiceStatus(status_handle, &service_status);
 			for (auto f : unload_funcs_)
@@ -269,6 +294,13 @@ namespace srv
 			FreeInstance();
 			service_status.dwCurrentState = SERVICE_STOPPED;
 			SetServiceStatus(status_handle, &service_status);
+			/*
+			// However, for testing purposes, I will deny the stop code
+			PrintDebugW(L"Service stop");
+			service_status.dwCurrentState = SERVICE_RUNNING;
+			service_status.dwWin32ExitCode = ERROR_ACCESS_DENIED;
+			SetServiceStatus(status_handle, &service_status);
+			*/
 		}
 		else if (ctrl_code == SERVICE_CONTROL_SHUTDOWN)
 		{

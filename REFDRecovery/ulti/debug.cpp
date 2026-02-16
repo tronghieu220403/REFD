@@ -4,9 +4,6 @@
 namespace debug {
 	
 	void DebugPrintW(const wchar_t* pwsz_format, ...) {
-#ifndef _DEBUG
-		return;
-#endif // !_DEBUG
 		if (pwsz_format == nullptr) return;
 
 		// Reusable buffer per thread
@@ -19,7 +16,7 @@ namespace debug {
 
 		wchar_t time_str[64];
 		int prefix_len = swprintf_s(time_str, 64,
-			L"[%d/%02d/%02d - %02d:%02d:%02d][REFD] ",
+			L"[%d/%02d/%02d - %02d:%02d:%02d][REFDRecovery] ",
 			time.wYear, time.wMonth, time.wDay,
 			time.wHour, time.wMinute, time.wSecond);
 

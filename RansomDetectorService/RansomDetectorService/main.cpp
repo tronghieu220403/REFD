@@ -93,9 +93,9 @@ int main()
 	// Service mode
 	PrintDebugW(L"In main, pid %d", GetCurrentProcessId());
 
-	if (!ulti::IsRunningAsSystem())
+	if (ulti::IsRunningAsSystem() == false || srv::Service::GetInstance()->IsRegistered() == false)
 	{
-		PrintDebugW(L"Not running as system, registering the service");
+		PrintDebugW(L"Registering the service");
 		srv::Service::RegisterService();
 	}
 	else

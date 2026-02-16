@@ -6,7 +6,6 @@
 #include "include.h"
 
 #define DEBUG_LOG_THRESHOLD 1000
-#define LOG_PATH L"C:\\hieunt_filetype.log"
 
 namespace debug {
 

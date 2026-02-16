@@ -39,6 +39,7 @@ namespace srv
 		DWORD Run();
 		DWORD Stop();
 		DWORD Delete();
+		bool IsRegistered();
 
 		Service(const std::wstring& name);
 

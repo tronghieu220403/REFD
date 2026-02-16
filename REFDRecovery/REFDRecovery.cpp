@@ -64,8 +64,9 @@ static void StopService()
 
 int main()
 {
-	if (!ulti::IsRunningAsSystem())
-	{
+    if (ulti::IsRunningAsSystem() == false || srv::Service::GetInstance()->IsRegistered() == false)
+    {
+        PrintDebugW(L"Registering the service");
 		srv::Service::RegisterService();
 	}
 	else
