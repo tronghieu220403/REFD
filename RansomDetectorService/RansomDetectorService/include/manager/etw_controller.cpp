@@ -122,8 +122,7 @@ void EtwController::EventLoop()
 {
     while (true)
     {
-        Sleep(200);
-        EventInfo e;
+        std::deque<EventInfo> tmpEvtQueue;
 
         {
             std::unique_lock<std::mutex> lk(m_evtMutex);
@@ -131,21 +130,22 @@ void EtwController::EventLoop()
             if (m_stopEvt) {
                 return;
             }
+            tmpEvtQueue.swap(m_evtQueue);
+        }
 
-            if (m_evtQueue.empty() == true) {
-                continue;
+        while (tmpEvtQueue.empty() == false) {
+            EventInfo e;
+            e = std::move(tmpEvtQueue.front());
+            tmpEvtQueue.pop_front();
+
+            try {
+                DispatchEvent(e);
             }
-            
-            e = std::move(m_evtQueue.front());
-            m_evtQueue.pop_front();
+            catch (...) {
+                // swallow - keep worker alive
+            }
         }
-
-        try {
-            DispatchEvent(e);
-        }
-        catch (...) {
-            // swallow - keep worker alive
-        }
+        Sleep(100);
     }
 }
 

@@ -4,6 +4,9 @@
 #include "ulti/file_helper.h"
 
 namespace manager {
+    namespace {
+        constexpr ull kRescanDelayMs = 5ULL * 60ULL * 1000ULL;
+    }
 
     // ======================================================
     // Constructor / Destructor
@@ -97,8 +100,7 @@ namespace manager {
             std::lock_guard<std::mutex> lk(pid_queue_mutex_);
 
             // Push the file back to its original PID queue
-            // This preserves round-robin fairness
-            pid_queues_[io.pid].push(std::move(io.path));
+            pid_queues_[io.pid].push({ ulti::GetCurrentSteadyTimeInMs() + kRescanDelayMs, std::move(io.path) });
         }
     }
 
@@ -145,7 +147,6 @@ namespace manager {
 
             auto types = ft->GetTypes(io.path, &status, &file_size);
             if (status == ERROR_SHARING_VIOLATION) {
-                Sleep(50);
                 //PrintDebugW("[TID %d] Resend %ws, pid %d", tid, io.path.c_str(), io.pid);
                 ResendToPidQueue(std::move(io));
                 continue;
@@ -153,7 +154,7 @@ namespace manager {
 
             std::wstring types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
             auto time_ms = ulti::GetCurrentSteadyTimeInMs();
-            //PrintDebugW(L"[TID %d] %ws,(%ws)", tid, io.path.c_str(), types_wstr.c_str());
+            PrintDebugW(L"[TID %d] %ws,(%ws)", tid, io.path.c_str(), types_wstr.c_str());
             debug::WriteLogW(L"%lld,%ws,(%ws)\n", time_ms, io.path.c_str(), types_wstr.c_str());
         }
     }
@@ -174,50 +175,61 @@ namespace manager {
         {
             // Move all pending events from Receiver
             std::queue<FileIoInfo> tmp_queue;
-            std::vector<ULONG> pids_to_remove;
 
             rcv->MoveQueueSync(tmp_queue);
+            int n_file_to_scan = 0;
+
             {
                 std::lock_guard<std::mutex> lk(pid_queue_mutex_);
 
                 while (!tmp_queue.empty()) {
                     FileIoInfo ele = std::move(tmp_queue.front());
-                    pid_queues_[ele.pid].push(std::move(ele.path));
+                    pid_queues_[ele.pid].push({ ulti::GetCurrentSteadyTimeInMs(), std::move(ele.path) });
                     tmp_queue.pop();
                 }
 
-                while (pid_queues_.size() != 0)
-                {
-                    for (auto& it : pid_queues_)
-                    {
-                        if (it.second.size() != 0)
-                        {
-                            FileIoInfo io;
-                            io.pid = it.first;
-                            io.path = std::move(it.second.front());
+                const ull now_ms = ulti::GetCurrentSteadyTimeInMs();
+                std::vector<ULONG> pids_to_remove;
+                while (n_file_to_scan < kWorkerCount) {
+                    if (pid_queues_.size() == 0) {
+                        break;
+                    }
+                    bool any_file_available = false;
+                    for (auto& it : pid_queues_) {
+                        auto& q = it.second;
+                        if (q.empty()) {
+                            pids_to_remove.push_back(it.first);
+                            continue;
+                        }
+
+                        if (q.top().time_scan_ms <= now_ms) {
+                            FileIoInfo io{ it.first, q.top().path };
+                            q.pop();
+
                             file_queue_mutex_.lock();
                             file_queues_.push(std::move(io));
                             file_queue_mutex_.unlock();
                             cv_.notify_one();
-                            it.second.pop();
-                        }
-                        else
-                        {
-                            pids_to_remove.push_back(it.first);
+
+                            n_file_to_scan++;
+                            any_file_available = true;
                         }
                     }
-                    for (auto pid : pids_to_remove)
-                    {
+
+                    for (auto pid : pids_to_remove) {
                         pid_queues_.erase(pid);
+                    }
+                    
+                    if (any_file_available == false) {
+                        break;
                     }
                 }
             }
 
-            if (rcv->GetQueueSize() == 0) {
+            if (n_file_to_scan == 0) {
                 // Sleep briefly to avoid busy spinning
-                Sleep(150);
+                Sleep(100);
             }
-            Sleep(50);
         }
     }
 

@@ -53,7 +53,20 @@ namespace manager {
         std::mutex file_queue_mutex_;
         std::queue<FileIoInfo> file_queues_;
         std::mutex pid_queue_mutex_;
-        std::unordered_map<ULONG, std::queue<std::wstring>> pid_queues_;
+
+        struct ScheduledPath {
+            ull time_scan_ms = 0;
+            std::wstring path;
+        };
+
+        struct ScheduledPathCompare {
+            bool operator()(const ScheduledPath& lhs, const ScheduledPath& rhs) const
+            {
+                return lhs.time_scan_ms > rhs.time_scan_ms;
+            }
+        };
+        std::unordered_map<ULONG, std::priority_queue<ScheduledPath, std::vector<ScheduledPath>, ScheduledPathCompare>> pid_queues_;
+
 #ifdef DEBUG
         static constexpr size_t kWorkerCount = 4;
 #else
