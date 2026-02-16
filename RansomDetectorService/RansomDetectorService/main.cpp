@@ -86,13 +86,16 @@ static void StopService() {
 
 int main()
 {
-//#ifdef _DEBUG
-//	ServiceMain();
-//	Sleep(INFINITE);
-//#else
+#ifdef _DEBUG
+	ServiceMain();
+	Sleep(INFINITE);
+#else
 	// Service mode
+	PrintDebugW(L"In main, pid %d", GetCurrentProcessId());
+
 	if (!ulti::IsRunningAsSystem())
 	{
+		PrintDebugW(L"Not running as system, registering the service");
 		srv::Service::RegisterService();
 	}
 	else
@@ -100,8 +103,8 @@ int main()
 		srv::Service::RegisterUnloadFunc(StopService);
 		srv::Service::StartServiceMain(ServiceMain);
 	}
-//#endif
-//	return 0;
+#endif
+	return 0;
 }
 
 #endif

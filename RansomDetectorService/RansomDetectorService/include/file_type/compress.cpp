@@ -188,9 +188,9 @@ namespace type_iden
             }
 
             // Read file data (this validates CRC)
-            char buf[8192];
+            vector<UCHAR> buf; buf.resize(8192);
             while (true) {
-                la_ssize_t r = archive_read_data(a, buf, sizeof(buf));
+                la_ssize_t r = archive_read_data(a, buf.data(), 8192);
                 if (r < 0) {
                     return types; // corrupted
                 }
@@ -243,6 +243,7 @@ namespace type_iden
 
         struct archive_entry* entry;
         bool ok = true;
+        UCHAR* buf = new UCHAR[8192];
 
         // Iterate through all entries in the archive
         while (true) {
@@ -255,9 +256,8 @@ namespace type_iden
 
             // Skip full entry data to force CRC validation
             // Do not use archive_read_data_skip
-            UCHAR buf[8192];
             while (true) {
-                auto size = archive_read_data(a, buf, sizeof(buf));
+                auto size = archive_read_data(a, buf, 8192);
                 if (size == 0) break;      // End of entry
                 if (size < 0) {
                     ok = false;
@@ -266,6 +266,7 @@ namespace type_iden
             }
             if (!ok) break;
         }
+        delete[] buf; buf = nullptr;
 
         if (ok) {
             types.push_back("rar");
@@ -295,6 +296,7 @@ namespace type_iden
 
         struct archive_entry* entry;
         bool ok = true;
+        UCHAR* buf = new UCHAR[8192];
 
         // Iterate through all entries in the archive
         while (true) {
@@ -307,9 +309,8 @@ namespace type_iden
 
             // Skip full entry data to force CRC validation
             // Do not use archive_read_data_skip
-            UCHAR buf[8192];
             while (true) {
-                auto size = archive_read_data(a, buf, sizeof(buf));
+                auto size = archive_read_data(a, buf, 8192);
                 if (size == 0) break;      // End of entry
                 if (size < 0) {
                     ok = false;
@@ -318,6 +319,7 @@ namespace type_iden
             }
             if (!ok) break;
         }
+        delete[] buf; buf = nullptr;
 
         if (ok) {
             types.push_back("7z");
@@ -348,14 +350,13 @@ namespace type_iden
 
         struct archive_entry* entry;
         bool ok = true;
-
+        UCHAR* buf = new UCHAR[8192];
         int r = archive_read_next_header(a, &entry);
         if (r == ARCHIVE_OK) {
             // Skip full entry data to force CRC validation
             // Do not use archive_read_data_skip
-            UCHAR buf[8192];
             while (true) {
-                auto size = archive_read_data(a, buf, sizeof(buf));
+                auto size = archive_read_data(a, buf, 8192);
                 if (size == 0) break;      // End of entry
                 if (size < 0) {
                     ok = false;
@@ -363,6 +364,7 @@ namespace type_iden
                 }
             }
         }
+        delete[] buf; buf = nullptr;
 
         if (ok == true)
         {
@@ -398,12 +400,13 @@ namespace type_iden
         out.reserve(8192);
 
         int ret = Z_OK;
-        UCHAR buf[8192];
+        vector<UCHAR> buf;
+        buf.resize(8192);
 
         // Decompress loop
         do {
-            strm.next_out = buf;
-            strm.avail_out = sizeof(buf);
+            strm.next_out = buf.data();
+            strm.avail_out = 8192;
 
             ret = inflate(&strm, Z_NO_FLUSH);
             if (ret == Z_DATA_ERROR || ret == Z_MEM_ERROR || ret == Z_NEED_DICT) {
@@ -412,7 +415,7 @@ namespace type_iden
             }
 
             size_t have = sizeof(buf) - strm.avail_out;
-            out.insert(out.end(), buf, buf + have);
+            out.insert(out.end(), buf.data(), buf.data() + have);
 
         } while (ret != Z_STREAM_END);
 

@@ -87,6 +87,10 @@ void EtwController::StartLogger()
             local.swap(m_logQueue);
         }
 
+        if (local.empty() == true) {
+            continue;
+        }
+
         std::wofstream ofs(L"C:\\hieunt_log.txt", std::ios::app);
         if (!ofs.is_open())
             continue;
@@ -563,6 +567,9 @@ void EtwController::RunKernelRundown()
             m_rdWork = true;
 
             krabs::schema s(r, c.schema_locator);
+            if (s.event_opcode() != 36) { // Not rundown
+                return;
+            }
             krabs::parser parser(s);
 
             ULONGLONG name_hash = 0;
@@ -594,6 +601,7 @@ void EtwController::RunKernelRundown()
 
     std::thread t([this]() {
         try {
+            PrintDebugW(L"m_kernelTrace->start");
             m_kernelTrace->start();
         }
         catch (...) {
@@ -604,11 +612,16 @@ void EtwController::RunKernelRundown()
     do {
         Sleep(100);
     } while (m_rdWork == false);
-
+    
+    PrintDebugW(L"m_kernelTrace->stop");
     m_kernelTrace->stop();
+ 
+    PrintDebugW(L"join rundown thread");
+    t.join();
+
+    PrintDebugW(L"delete m_kernelTrace");
     delete m_kernelTrace;
     m_kernelTrace = nullptr;
-    t.join();
 }
 
 void EtwController::StartProviderBlocking()
@@ -753,6 +766,7 @@ void EtwController::StartProviderBlocking()
 
     m_userTrace->enable(file);
 
+    PrintDebugW(L"m_userTrace->start");
     m_userTrace->start(); // blocking
 }
 
@@ -769,14 +783,16 @@ void EtwController::Start()
         });
 
     // https://lowleveldesign.wordpress.com/2020/08/15/fixing-empty-paths-in-fileio-events-etw
-
     m_userTraceThread = std::jthread([this]() {
         while (true) {
             try {
+                PrintDebugW(L"Calling RunKernelRundown");
                 RunKernelRundown();
+                PrintDebugW(L"Calling StartProviderBlocking");
                 StartProviderBlocking();
             }
             catch (...) {
+                PrintDebugW(L"Catch an exception.");
                 Sleep(200);
                 continue;
             }
@@ -787,9 +803,16 @@ void EtwController::Start()
 
 void EtwController::Stop()
 {
-    // Stop trace first -> callbacks stop coming
-    if (m_userTrace != nullptr) {
-        m_userTrace->stop();
+    try {
+        // Stop trace first -> callbacks stop coming
+        if (m_userTrace != nullptr) {
+            m_userTrace->stop();
+        }
+    }
+    catch (...) {}
+
+    if (m_userTraceThread.joinable()) {
+        m_userTraceThread.join();
     }
 
     // Stop event worker
@@ -797,12 +820,18 @@ void EtwController::Stop()
         std::lock_guard<std::mutex> lk(m_evtMutex);
         m_stopEvt = true;
     }
-    if (m_evtThread.joinable())
-        m_evtThread.join();
+    try {
+        if (m_evtThread.joinable())
+            m_evtThread.join();
+    }
+    catch (...) {}
 
-    m_stopLogger = true;
-    if (m_loggerThread.joinable())
-        m_loggerThread.join();
+    try {
+        m_stopLogger = true;
+        if (m_loggerThread.joinable())
+            m_loggerThread.join();
+    }
+    catch (...) {}
 }
 
 #ifdef _DEBUG
