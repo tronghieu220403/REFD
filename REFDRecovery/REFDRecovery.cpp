@@ -49,7 +49,7 @@ static void ServiceMain()
         if (IsRefdRunning() == false) {
             system("sc start REFD");
         }
-        Sleep(1000);
+        Sleep(200);
 	}
     status.store(2, std::memory_order_release);
 }
