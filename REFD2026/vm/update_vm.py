@@ -35,7 +35,6 @@ def run_cmd(cmd: str, wait: bool = True):
     vm.proc_run("C:\\Windows\\System32\\cmd.exe", '/c "' + cmd + '"', wait)
 
 vm_path = "E:\\VM\\Windows 10 and later x64\\Windows 10 and later x64.vmx"
-vm_path = f"D:\\VM\\Windows_10_test_ransom_0\\RansomTestWindows10.vmx"
 
 host = VixHost()
 vm = host.open_vm(vm_path)
@@ -43,39 +42,22 @@ vm = host.open_vm(vm_path)
 login_as_system()
 #login_as_hieu()
 
-git_path = "E:\\Code\\Github\\Minerva\\"
-
-COLLECTOR_DRIVER_PATH = f'E:\\Code\\Github\\REFD\\EventCollectorDriver\\x64\\Debug'
 COLLECTOR_SERVICE_PATH = f'E:\\Code\\Github\\REFD\\RansomDetectorService\\x64\\Release'
-GUEST_IO_LOG_PATH = "C:\\Windows\\EventCollectorDriver.log"
-GUEST_TYPE_LOG_PATH = "C:\\Windows\\TypeCollector.log"
 
 def init_env():
     print("Init env")
 
     print("Shut down services")
-    # run_cmd("type nul > \"C:\\Users\\hieu\\Downloads\\ggez.txt\"")
-    run_cmd("fltmc unload EventCollectorDriver")
-    # run_cmd("sc control REFD 129")
-    # run_cmd("sc stop REFD")
-    # run_cmd("del C:\\Users\\hieu\\Downloads\\ggez.txt")
-    # run_cmd("del C:\\Windows\\EventCollectorDriver.log")
-
-    run_cmd("del C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys")
-    # run_cmd(f"del {GUEST_IO_LOG_PATH}")
-    # run_cmd(f"del {GUEST_TYPE_LOG_PATH}")
-
+    run_cmd("sc stop REFD")
+    run_cmd("taskkill /IM RansomDetectorService.exe /F")
     print("Copy files")
-    vm.copy_host_to_guest(f'{COLLECTOR_DRIVER_PATH}\\EventCollectorDriver.sys', 'C:\\Windows\\System32\\drivers\\EventCollectorDriver.sys')
-    # vm.copy_host_to_guest(f'{COLLECTOR_DRIVER_PATH}\\EventCollectorDriver.pdb', 'E:\\hieunt210330\\EventCollectorDriver.pdb')
-
-    # run_cmd("del C:\\Windows\\System32\\RansomDetectorService.exe")
-    # vm.copy_host_to_guest(f'{COLLECTOR_SERVICE_PATH}\\RansomDetectorService.exe', 'C:\\Windows\\System32\\RansomDetectorService.exe')
+    run_cmd("del C:\\tmp\\RansomDetectorService.exe")
+    vm.copy_host_to_guest(f'{COLLECTOR_SERVICE_PATH}\\RansomDetectorService.exe', 'C:\\tmp\\RansomDetectorService.exe')
+    # vm.copy_host_to_guest(f'{COLLECTOR_SERVICE_PATH}\\RansomDetectorService.pdb', 'C:\\tmp\\RansomDetectorService.pdb')
 
     print("Start driver and service")
     
-    # run_cmd("C:\\Windows\\System32\\RansomDetectorService.exe")
-    run_cmd("fltmc load EventCollectorDriver")
+    run_cmd("C:\\tmp\\RansomDetectorService.exe")
 
 init_env()
 
