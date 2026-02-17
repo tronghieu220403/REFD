@@ -5,7 +5,7 @@
 
 namespace manager {
     namespace {
-        constexpr ull kRescanDelayMs = 5ULL * 60ULL * 1000ULL;
+        constexpr ull kRescanDelayMs = 2ULL * 60ULL * 1000ULL;
     }
 
     // ======================================================
@@ -104,6 +104,38 @@ namespace manager {
         }
     }
 
+    bool Scanner::TryQueueByCooldown(ULONG pid, std::wstring&& path, ull now_ms)
+    {
+        const auto lower_path = ulti::ToLower(path);
+        const auto hash = helper::GetWstrHash(lower_path);
+
+        ull scan_time_ms = now_ms;
+        bool queued = false;
+
+        {
+            std::lock_guard<std::mutex> g(file_scan_state_mutex_);
+            FileScanState state;
+            auto exist = file_scan_states_.get(hash, state);
+            if (exist == false || state.last_scan_ms == 0 || now_ms >= state.last_scan_ms + kRescanDelayMs) {
+                scan_time_ms = now_ms;
+                queued = true;
+            }
+            else if (!state.has_pending_rescan) {
+                scan_time_ms = state.last_scan_ms + kRescanDelayMs;
+                state.has_pending_rescan = true;
+                queued = true;
+            }
+            //PrintDebugW("queued %d, Exist %d, state.last_scan_ms %lld, state.has_pending_rescan %lld, now_ms %d, path %ws", queued, exist, state.last_scan_ms, state.has_pending_rescan, now_ms, lower_path.c_str());
+        }
+
+        if (!queued) {
+            return false;
+        }
+
+        pid_queues_[pid].push({ scan_time_ms, std::move(path) });
+        return true;
+    }
+
     void Scanner::WorkerThread()
     {
         auto ft = type_iden::FileType::GetInstance();
@@ -132,16 +164,6 @@ namespace manager {
             auto lp = ulti::ToLower(io.path);
             auto hash = helper::GetWstrHash(lp);
 
-            {
-                std::lock_guard<std::mutex> g(file_hash_mutex_);
-                if (file_hash_scanned_.count(hash))
-                {
-                    //PrintDebugW("[TID %d] Scanned %ws, pid %d", tid, io.path.c_str(), io.pid);
-                    continue;
-                }
-                file_hash_scanned_.insert(hash);
-            }
-
             DWORD status = ERROR_SUCCESS;
             ull file_size = 0;
 
@@ -153,9 +175,19 @@ namespace manager {
             }
 
             std::wstring types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
+            PrintDebugW(L"[Scan TID %d] PID %d, %ws, (%ws)", tid, io.pid, io.path.c_str(), types_wstr.c_str());
             auto time_ms = ulti::GetCurrentSteadyTimeInMs();
-            PrintDebugW(L"[TID %d] %ws,(%ws)", tid, io.path.c_str(), types_wstr.c_str());
-            debug::WriteLogW(L"%lld,%ws,(%ws)\n", time_ms, io.path.c_str(), types_wstr.c_str());
+            if (types_wstr.empty() == false) {
+                debug::WriteLogW(L"%lld,%ws,(%ws)\n", time_ms, io.path.c_str(), types_wstr.c_str());
+            }
+
+            {
+                std::lock_guard<std::mutex> g(file_scan_state_mutex_);
+                FileScanState state;
+                state.last_scan_ms = time_ms;
+                state.has_pending_rescan = false;
+                file_scan_states_.put(hash, state);
+            }
         }
     }
 
@@ -182,13 +214,16 @@ namespace manager {
             {
                 std::lock_guard<std::mutex> lk(pid_queue_mutex_);
 
+                const ull now_ms = ulti::GetCurrentSteadyTimeInMs();
                 while (!tmp_queue.empty()) {
                     FileIoInfo ele = std::move(tmp_queue.front());
-                    pid_queues_[ele.pid].push({ ulti::GetCurrentSteadyTimeInMs(), std::move(ele.path) });
+                    if (IsPathWhitelisted(ele.path) == false) {
+                        //PrintDebugW("Push path %ws", ele.path.c_str());
+                        TryQueueByCooldown(ele.pid, std::move(ele.path), now_ms);
+                    }
                     tmp_queue.pop();
                 }
 
-                const ull now_ms = ulti::GetCurrentSteadyTimeInMs();
                 std::vector<ULONG> pids_to_remove;
                 while (n_file_to_scan < kWorkerCount) {
                     if (pid_queues_.size() == 0) {

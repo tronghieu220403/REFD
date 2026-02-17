@@ -5,24 +5,23 @@
 #include "../ulti/support.h"
 #include "../ulti/debug.h"
 #include "receiver.h"
+#include "../ulti/lru_cache.hpp"
 
 namespace manager {
 
     inline const std::vector<std::wstring> kPathWhitelist = {
+#ifdef _DEBUG
         L"c:\\windows\\",
         L"c:\\program files\\",
         L"c:\\program files (x86)\\",
         L"c:\\programdata\\",
         L"\\appdata\\local\\",
+#endif // _DEBUG
     };
 
     // Check if path contains any whitelisted substring
     inline bool IsPathWhitelisted(const std::wstring& lower_path)
     {
-#ifndef _DEBUG
-        return false;
-#endif // _DEBUG
-        return false;
         for (const auto& w : kPathWhitelist)
         {
             if (lower_path.find(w) != std::wstring::npos)
@@ -75,11 +74,17 @@ namespace manager {
 
         std::vector<std::thread> worker_threads_;
         std::condition_variable cv_;
-        std::mutex file_hash_mutex_;
-        std::set<ull> file_hash_scanned_;
+        std::mutex file_scan_state_mutex_;
+
+        struct FileScanState {
+            ull last_scan_ms = 0;
+            bool has_pending_rescan = false;
+        };
+        LruMap<ull, FileScanState> file_scan_states_{ 100'000 };
 
     private:
         void ResendToPidQueue(FileIoInfo&& io);
+        bool TryQueueByCooldown(ULONG pid, std::wstring&& path, ull now_ms);
         void QueuingThread();
         void WorkerThread();
 
