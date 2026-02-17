@@ -93,47 +93,15 @@ namespace manager {
     // Scanner worker thread
     // ======================================================
 
-    void Scanner::ResendToPidQueue(FileIoInfo&& io)
+    void Scanner::ResendToPidQueue(FileIoInfo&& io, ull next_scan_ms)
     {
         {
             // Protect per-PID queue structure
             std::lock_guard<std::mutex> lk(pid_queue_mutex_);
 
             // Push the file back to its original PID queue
-            pid_queues_[io.pid].push({ ulti::GetCurrentSteadyTimeInMs() + kRescanDelayMs, std::move(io.path) });
+            pid_queues_[io.pid].push({ next_scan_ms, std::move(io.path) });
         }
-    }
-
-    bool Scanner::TryQueueByCooldown(ULONG pid, std::wstring&& path, ull now_ms)
-    {
-        const auto lower_path = ulti::ToLower(path);
-        const auto hash = helper::GetWstrHash(lower_path);
-
-        ull scan_time_ms = now_ms;
-        bool queued = false;
-
-        {
-            std::lock_guard<std::mutex> g(file_scan_state_mutex_);
-            FileScanState state;
-            auto exist = file_scan_states_.get(hash, state);
-            if (exist == false || state.last_scan_ms == 0 || now_ms >= state.last_scan_ms + kRescanDelayMs) {
-                scan_time_ms = now_ms;
-                queued = true;
-            }
-            else if (!state.has_pending_rescan) {
-                scan_time_ms = state.last_scan_ms + kRescanDelayMs;
-                state.has_pending_rescan = true;
-                queued = true;
-            }
-            //PrintDebugW("queued %d, Exist %d, state.last_scan_ms %lld, state.has_pending_rescan %lld, now_ms %d, path %ws", queued, exist, state.last_scan_ms, state.has_pending_rescan, now_ms, lower_path.c_str());
-        }
-
-        if (!queued) {
-            return false;
-        }
-
-        pid_queues_[pid].push({ scan_time_ms, std::move(path) });
-        return true;
     }
 
     void Scanner::WorkerThread()
@@ -159,10 +127,28 @@ namespace manager {
                 file_queues_.pop();
             }
 
-            //PrintDebugW("[TID %d] Scaning %ws, pid %d", tid, io.path.c_str(), io.pid);
-
             auto lp = ulti::ToLower(io.path);
             auto hash = helper::GetWstrHash(lp);
+            auto now_ms = ulti::GetCurrentSteadyTimeInMs();
+
+            {
+                std::lock_guard<std::mutex> g(file_scan_state_mutex_);
+                FileScanState state;
+                auto exist = file_scan_states_.get(hash, state);
+                //PrintDebugW("[TID %d] exist %d, state.last_scan_ms %lld, state.next_scan_ms %lld, path %ws", tid, exist, state.last_scan_ms, state.next_scan_ms, lp.c_str());
+                if (exist == true && now_ms <= state.last_scan_ms + kRescanDelayMs) {
+                    if (state.next_scan_ms <= now_ms) {
+                        state.next_scan_ms = now_ms + kRescanDelayMs;
+                        ResendToPidQueue(std::move(io), state.next_scan_ms);
+                        file_scan_states_.put(hash, state);
+                    }
+                    continue;
+                }
+                state.last_scan_ms = now_ms;
+                file_scan_states_.put(hash, state);
+            }
+
+            //PrintDebugW("[TID %d] Scaning %ws, pid %d", tid, io.path.c_str(), io.pid);
 
             DWORD status = ERROR_SUCCESS;
             ull file_size = 0;
@@ -170,23 +156,14 @@ namespace manager {
             auto types = ft->GetTypes(io.path, &status, &file_size);
             if (status == ERROR_SHARING_VIOLATION) {
                 //PrintDebugW("[TID %d] Resend %ws, pid %d", tid, io.path.c_str(), io.pid);
-                ResendToPidQueue(std::move(io));
+                ResendToPidQueue(std::move(io), now_ms + kRescanDelayMs * 2);
                 continue;
             }
 
             std::wstring types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
             PrintDebugW(L"[Scan TID %d] PID %d, %ws, (%ws)", tid, io.pid, io.path.c_str(), types_wstr.c_str());
-            auto time_ms = ulti::GetCurrentSteadyTimeInMs();
             if (types_wstr.empty() == false) {
-                debug::WriteLogW(L"%lld,%ws,(%ws)\n", time_ms, io.path.c_str(), types_wstr.c_str());
-            }
-
-            {
-                std::lock_guard<std::mutex> g(file_scan_state_mutex_);
-                FileScanState state;
-                state.last_scan_ms = time_ms;
-                state.has_pending_rescan = false;
-                file_scan_states_.put(hash, state);
+                debug::WriteLogW(L"%lld,%ws,(%ws)\n", now_ms, io.path.c_str(), types_wstr.c_str());
             }
         }
     }
@@ -218,8 +195,8 @@ namespace manager {
                 while (!tmp_queue.empty()) {
                     FileIoInfo ele = std::move(tmp_queue.front());
                     if (IsPathWhitelisted(ele.path) == false) {
-                        //PrintDebugW("Push path %ws", ele.path.c_str());
-                        TryQueueByCooldown(ele.pid, std::move(ele.path), now_ms);
+                        //PrintDebugW("Push path to pid_queues_: %ws", ele.path.c_str());
+                        pid_queues_[ele.pid].push({ now_ms, std::move(ele.path) });
                     }
                     tmp_queue.pop();
                 }
@@ -242,6 +219,7 @@ namespace manager {
                             q.pop();
 
                             file_queue_mutex_.lock();
+                            //PrintDebugW("Push path to file_queues_: %ws", io.path.c_str());
                             file_queues_.push(std::move(io));
                             file_queue_mutex_.unlock();
                             cv_.notify_one();

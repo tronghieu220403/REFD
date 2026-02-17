@@ -78,13 +78,12 @@ namespace manager {
 
         struct FileScanState {
             ull last_scan_ms = 0;
-            bool has_pending_rescan = false;
+            ull next_scan_ms = 0;
         };
         LruMap<ull, FileScanState> file_scan_states_{ 100'000 };
 
     private:
-        void ResendToPidQueue(FileIoInfo&& io);
-        bool TryQueueByCooldown(ULONG pid, std::wstring&& path, ull now_ms);
+        void ResendToPidQueue(FileIoInfo&& io, ull next_scan_ms);
         void QueuingThread();
         void WorkerThread();
 
