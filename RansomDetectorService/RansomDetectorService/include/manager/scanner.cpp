@@ -169,6 +169,11 @@ namespace manager {
             PrintDebugW(L"[Scan TID %d] PID %d, %ws, (%ws)", tid, io.pid, io.path.c_str(), types_wstr.c_str());
             if (types_wstr.empty() == false) {
                 debug::WriteLogW(L"%lld,f,%ws,(%ws),%d\n", now_ms, io.path.c_str(), types_wstr.c_str(), status);
+                continue;
+            }
+            if (status != ERROR_SUCCESS) {
+                debug::WriteLogW(L"%lld,e,%ws,%d\n", now_ms, io.path.c_str(), types_wstr.c_str(), status);
+                continue;
             }
         }
     }
