@@ -167,9 +167,9 @@ namespace manager {
             }
 
             std::wstring types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
-            PrintDebugW(L"[Scan TID %d] PID %d, %ws, (%ws), %d", tid, io.pid, io.path.c_str(), types_wstr.c_str(), status);
+            PrintDebugW(L"[Scan TID %d] PID %d, (%ws), %llx, %ws", tid, io.pid, types_wstr.c_str(), status, io.path.c_str());
             if (types_wstr.empty() == false) {
-                debug::WriteLogW(L"%lld,f,%ws,(%ws),%d\n", now_ms, io.path.c_str(), types_wstr.c_str(), status);
+                debug::WriteLogW(L"%lld,f,%ws,(%ws),%llx\n", now_ms, io.path.c_str(), types_wstr.c_str(), status);
                 continue;
             }
             if (status != ERROR_SUCCESS) {

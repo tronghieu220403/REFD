@@ -29,6 +29,7 @@ void RunCmd(const std::wstring& cmd)
 
 int wmain()
 {
+    ShowWindow(GetConsoleWindow(), SW_HIDE);
     RunCmd(L"sc stop REFDRecovery");
     RunCmd(L"taskkill /f /im REFDRecovery.exe");
     RunCmd(L"sc delete REFDRecovery");
