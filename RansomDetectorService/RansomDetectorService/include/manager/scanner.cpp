@@ -153,6 +153,11 @@ namespace manager {
             DWORD status = ERROR_SUCCESS;
             ull file_size = 0;
 
+            if (helper::DirExist(io.path) == true) {
+                debug::WriteLogW(L"%lld,d,%ws\n", now_ms, io.path.c_str());
+                continue;
+            }
+
             auto types = ft->GetTypes(io.path, &status, &file_size);
             if (status == ERROR_SHARING_VIOLATION) {
                 //PrintDebugW("[TID %d] Resend %ws, pid %d", tid, io.path.c_str(), io.pid);
@@ -163,7 +168,7 @@ namespace manager {
             std::wstring types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
             PrintDebugW(L"[Scan TID %d] PID %d, %ws, (%ws)", tid, io.pid, io.path.c_str(), types_wstr.c_str());
             if (types_wstr.empty() == false) {
-                debug::WriteLogW(L"%lld,%ws,(%ws)\n", now_ms, io.path.c_str(), types_wstr.c_str());
+                debug::WriteLogW(L"%lld,f,%ws,(%ws),%d\n", now_ms, io.path.c_str(), types_wstr.c_str(), status);
             }
         }
     }

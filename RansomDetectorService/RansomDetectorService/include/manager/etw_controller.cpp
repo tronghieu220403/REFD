@@ -396,7 +396,7 @@ void EtwController::HandleFileCreate(const EventInfo& e)
 {
     ULONGLONG fo = e.file_object;
     std::wstring path = e.path;
-    UINT32 co = e.has_create_options ? e.create_options : 0;
+    UINT32 co = e.create_options;
     ULONG eid = e.eid;
     ULONG pid = e.pid;
     ULONGLONG ts = e.ts;
@@ -683,7 +683,6 @@ void EtwController::StartProviderBlocking()
                         e.file_object = (ULONGLONG)parser.parse<PVOID>(L"FileObject");
                         e.path = parser.parse<std::wstring>(L"FileName");
                         e.create_options = parser.parse<UINT32>(L"CreateOptions");
-                        e.has_create_options = true;
                         EnqueueEvent(std::move(e));
                         break;
 
