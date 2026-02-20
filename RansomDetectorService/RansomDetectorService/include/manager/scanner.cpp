@@ -154,6 +154,7 @@ namespace manager {
             ull file_size = 0;
 
             if (helper::DirExist(io.path) == true) {
+                PrintDebugW(L"[Scan TID %d] PID %d, %ws, d", tid, io.pid, io.path.c_str());
                 debug::WriteLogW(L"%lld,d,%ws\n", now_ms, io.path.c_str());
                 continue;
             }
@@ -166,9 +167,14 @@ namespace manager {
             }
 
             std::wstring types_wstr = ulti::StrToWstr(ulti::JoinStrings(types, ","));
-            PrintDebugW(L"[Scan TID %d] PID %d, %ws, (%ws)", tid, io.pid, io.path.c_str(), types_wstr.c_str());
+            PrintDebugW(L"[Scan TID %d] PID %d, (%ws), %x, %ws", tid, io.pid, types_wstr.c_str(), status, io.path.c_str());
             if (types_wstr.empty() == false) {
-                debug::WriteLogW(L"%lld,f,%ws,(%ws),%d\n", now_ms, io.path.c_str(), types_wstr.c_str(), status);
+                debug::WriteLogW(L"%lld,f,%ws,(%ws),%x\n", now_ms, io.path.c_str(), types_wstr.c_str(), status);
+                continue;
+            }
+            if (status != ERROR_SUCCESS) {
+                debug::WriteLogW(L"%lld,e,%ws,%x\n", now_ms, io.path.c_str(), status);
+                continue;
             }
         }
     }
