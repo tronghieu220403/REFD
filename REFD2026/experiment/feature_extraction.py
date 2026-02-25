@@ -16,20 +16,19 @@ class Event:
 class FileBehaviorFeatureExtractor:
     EPS = 1e-9
     TIME_BINS = 10
-    _PATH_RULE_TEMPLATES = [
-        (r"c:\windows", "system"),
-        (r"c:\users\<username>\appdata\local\temp", "temp/cache"),
-        (r"c:\program files (x86)", "program"),
-        (r"c:\program files", "program"),
-        (r"c:\programdata", "program"),
-        (r"c:\users\<username>\appdata\locallow", "program"),
-        (r"c:\users\<username>\appdata\local", "program"),
-        (r"c:\users\<username>\appdata\roaming", "program"),
-        (r"\\", "user"),
-        (r"c:\users\public", "user"),
-        (r"c:\users\<username>", "user"),
+    _PATH_RULES = [
+        ("temp/cache", re.compile(r"^c:\\users\\[^\\]+\\appdata\\local\\temp(\\|$)")),
+        ("program", re.compile(r"^c:\\users\\[^\\]+\\appdata\\roaming(\\|$)")),
+        ("program", re.compile(r"^c:\\users\\[^\\]+\\appdata\\locallow(\\|$)")),
+        ("program", re.compile(r"^c:\\users\\[^\\]+\\appdata\\local(\\|$)")),
+        ("program", re.compile(r"^c:\\program files \(x86\)(\\|$)")),
+        ("program", re.compile(r"^c:\\program files(\\|$)")),
+        ("program", re.compile(r"^c:\\programdata(\\|$)")),
+        ("system", re.compile(r"^c:\\windows(\\|$)")),
+        ("user", re.compile(r"^c:\\users\\public(\\|$)")),
+        ("user", re.compile(r"^c:\\users\\[^\\]+(\\|$)")),
+        ("user", re.compile(r"^\\\\(\\|$)")),
     ]
-    _PATH_RULES = None
 
     _DOC_EXTS = {
         "doc", "docx", "xls", "xlsx", "ppt", "pptx", "pdf", "txt", "rtf", "odt", "ods", "odp", "csv"
@@ -441,28 +440,12 @@ class FileBehaviorFeatureExtractor:
         return cls._classify_path(path) == "system"
 
     @classmethod
-    def _ensure_path_rules(cls):
-        if cls._PATH_RULES is not None:
-            return
-
-        compiled = []
-        for path_template, rule_type in cls._PATH_RULE_TEMPLATES:
-            norm = cls._normalize_path(path_template)
-            escaped = re.escape(norm).replace("<username>", r"[^\\]+")
-            pattern = re.compile(r"^" + escaped + r"(\\|$)")
-            compiled.append((rule_type, pattern, len(norm)))
-
-        compiled.sort(key=lambda item: item[2], reverse=True)
-        cls._PATH_RULES = compiled
-
-    @classmethod
     def _classify_path(cls, path: str) -> str:
         p = cls._normalize_path(path)
         if not p:
             return "user"
 
-        cls._ensure_path_rules()
-        for rule_type, pattern, _ in cls._PATH_RULES: # type: ignore
+        for rule_type, pattern in cls._PATH_RULES:
             if pattern.match(p):
                 return rule_type
 
