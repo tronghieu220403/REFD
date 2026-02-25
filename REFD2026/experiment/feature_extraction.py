@@ -16,6 +16,20 @@ class Event:
 class FileBehaviorFeatureExtractor:
     EPS = 1e-9
     TIME_BINS = 10
+    _PATH_RULE_TEMPLATES = [
+        (r"c:\windows", "system"),
+        (r"c:\users\<username>\appdata\local\temp", "temp/cache"),
+        (r"c:\program files (x86)", "program"),
+        (r"c:\program files", "program"),
+        (r"c:\programdata", "program"),
+        (r"c:\users\<username>\appdata\locallow", "program"),
+        (r"c:\users\<username>\appdata\local", "program"),
+        (r"c:\users\<username>\appdata\roaming", "program"),
+        (r"\\", "user"),
+        (r"c:\users\public", "user"),
+        (r"c:\users\<username>", "user"),
+    ]
+    _PATH_RULES = None
 
     _DOC_EXTS = {
         "doc", "docx", "xls", "xlsx", "ppt", "pptx", "pdf", "txt", "rtf", "odt", "ods", "odp", "csv"
@@ -57,8 +71,6 @@ class FileBehaviorFeatureExtractor:
         "f23_appdata_event_count",
         "f24_temp_event_count",
         "f25_system_event_count",
-        "f26_program_files_create_write_count",
-        "f27_unc_event_count",
         "f28_unique_root_count",
         "f29_root_entropy",
         "f30_doclike_write_count",
@@ -181,8 +193,6 @@ class FileBehaviorFeatureExtractor:
         flags_appdata = [self._is_appdata(p) for p in paths]
         flags_temp = [self._is_temp(p) for p in paths]
         flags_system = [self._is_system(p) for p in paths]
-        flags_program_files = [self._is_program_files(p) for p in paths]
-        flags_unc = [self._is_unc(p) for p in paths]
 
         f19 = float(sum(flags_user_data))
         f20 = float(sum(1 for i in range(N) if ops[i] == "W" and flags_user_data[i]))
@@ -191,8 +201,6 @@ class FileBehaviorFeatureExtractor:
         f23 = float(sum(flags_appdata))
         f24 = float(sum(flags_temp))
         f25 = float(sum(flags_system))
-        f26 = float(sum(1 for i in range(N) if ops[i] in {"C", "W"} and flags_program_files[i]))
-        f27 = float(sum(flags_unc))
 
         root_counter = Counter(roots)
         f28 = float(len(root_counter))
@@ -281,7 +289,7 @@ class FileBehaviorFeatureExtractor:
         feats = np.asarray([
             f1, f2, f3, f4, f5, f6, f7, f8, f9, f10,
             f11, f12, f13, f14, f15, f16, f17, f18,
-            f19, f20, f21, f22, f23, f24, f25, f26, f27, f28, f29, f30, f31, f32,
+            f19, f20, f21, f22, f23, f24, f25, f28, f29, f30, f31, f32,
             f33, f34, f35, f36, f37, f38, f39, f40, f41, f42,
             f43, f44, f45, f46, f47, f48,
             f49, f50, f51, f52, f53,
@@ -417,38 +425,48 @@ class FileBehaviorFeatureExtractor:
         return [seg for seg in rel.split("\\") if seg]
 
     @classmethod
-    def _is_unc(cls, path: str) -> bool:
-        return path.startswith("\\\\")
-
-    @classmethod
     def _is_user_data(cls, path: str) -> bool:
-        segs = cls._path_segments(path)
-        return len(segs) >= 3 and segs[0] == "users" and segs[2] in cls._USER_DATA_FOLDERS
+        return cls._classify_path(path) == "user"
 
     @classmethod
     def _is_appdata(cls, path: str) -> bool:
-        segs = cls._path_segments(path)
-        return len(segs) >= 4 and segs[0] == "users" and segs[2] == "appdata" and segs[3] in {"roaming", "local"}
+        return cls._classify_path(path) == "program"
 
     @classmethod
     def _is_temp(cls, path: str) -> bool:
-        segs = cls._path_segments(path)
-        return len(segs) >= 5 and segs[0] == "users" and segs[2] == "appdata" and segs[3] == "local" and segs[4] == "temp"
+        return cls._classify_path(path) == "temp/cache"
 
     @classmethod
     def _is_system(cls, path: str) -> bool:
-        rel = cls._relative_after_root(path)
-        return rel == "windows" or rel.startswith("windows\\")
+        return cls._classify_path(path) == "system"
 
     @classmethod
-    def _is_program_files(cls, path: str) -> bool:
-        rel = cls._relative_after_root(path)
-        return (
-            rel == "program files"
-            or rel.startswith("program files\\")
-            or rel == "program files (x86)"
-            or rel.startswith("program files (x86)\\")
-        )
+    def _ensure_path_rules(cls):
+        if cls._PATH_RULES is not None:
+            return
+
+        compiled = []
+        for path_template, rule_type in cls._PATH_RULE_TEMPLATES:
+            norm = cls._normalize_path(path_template)
+            escaped = re.escape(norm).replace("<username>", r"[^\\]+")
+            pattern = re.compile(r"^" + escaped + r"(\\|$)")
+            compiled.append((rule_type, pattern, len(norm)))
+
+        compiled.sort(key=lambda item: item[2], reverse=True)
+        cls._PATH_RULES = compiled
+
+    @classmethod
+    def _classify_path(cls, path: str) -> str:
+        p = cls._normalize_path(path)
+        if not p:
+            return "user"
+
+        cls._ensure_path_rules()
+        for rule_type, pattern, _ in cls._PATH_RULES: # type: ignore
+            if pattern.match(p):
+                return rule_type
+
+        return "user"
 
     @classmethod
     def _extension_group(cls, ext: str) -> str:

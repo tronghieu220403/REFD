@@ -151,52 +151,42 @@ Các đúng/sai của điển hình đường dẫn “Known Folders” và bi�
 
 ### Nhóm C — Ngữ nghĩa đường dẫn & mục tiêu
 
-Các đặc trưng này dựa trên phân loại đường dẫn theo vùng Windows/UNC. Đây là cách “đưa tri thức hệ điều hành” vào features mà không cần metadata khác, phù hợp với gợi ý của bạn về Known Folders. citeturn6search0turn6search1
+Các đặc trưng này dựa trên phân loại đường dẫn theo vùng Windows. Đây là cách “đưa tri thức hệ điều hành” vào features mà không cần metadata khác, phù hợp với gợi ý của bạn về Known Folders. citeturn6search0turn6search1
 
 **f19 — Số sự kiện trong user_data (int)**  
-Định nghĩa: \(f19 = |\{i: p_i \in \text{UserDataFolders}\}|\), với UserDataFolders ≈ Documents/Desktop/Downloads/Pictures/Music/Videos dưới `\Users\<*>\`.  
+Định nghĩa: \(f19 = |\{i: p_i \in user\_data\}|\), với user_data ≈ Documents/Desktop/Downloads/Pictures/Music/Videos (và UNC/network share) dưới `\Users\<*>\`.  
 (A) Ransomware nhắm vào dữ liệu người dùng nên tương tác mạnh với các thư mục này; UNVEIL nhấn mạnh điều kiện “tamper with user’s files” để tấn công thành công. citeturn3view0turn5view0  
 (B) Bổ trợ: Kết hợp f19 với entropy theo thư mục (f38) và unique_dirs (f34) để phân biệt “editor chỉnh một thư mục” với “traversal nhiều thư mục user”.
 
 **f20 — Số Write trong user_data (int)**  
-Định nghĩa: \(f20 = |\{i: o_i=W \land p_i \in \text{UserDataFolders}\}|\).  
+Định nghĩa: \(f20 = |\{i: o_i=W \land p_i \in user\_data\}|\).  
 (A) Đây là tín hiệu trực tiếp của “sửa dữ liệu người dùng”; ransomware file locker buộc phải ghi/ghi đè. citeturn17search3turn3view0  
 (B) Bổ trợ: Nếu benign backup/sync cũng Write nhiều vào user_data, thì rename patterns (f49–f52) và “dominant extension mới” (f50) giúp giảm nhầm.
 
 **f21 — Số Delete trong user_data (int)**  
-Định nghĩa: \(f21 = |\{i: o_i=D \land p_i \in \text{UserDataFolders}\}|\).  
+Định nghĩa: \(f21 = |\{i: o_i=D \land p_i \in user\_data\}|\).  
 (A) Delete tài liệu người dùng có thể là wiper hoặc xóa bản gốc sau mã hóa; là dấu hiệu phá hoại hơn so với delete temp. citeturn17search13turn5view0  
 (B) Bổ trợ: f21 nên đi cùng f47 (Write→Delete) và f37 (Gini) để phân biệt “xóa hàng loạt” với “xóa một nhóm nhỏ theo thao tác người dùng”.
 
 **f22 — Số Rename trong user_data (int)**  
-Định nghĩa: \(f22 = |\{i: o_i=R \land p_i \in \text{UserDataFolders}\}|\) (dựa trên **old path**).  
+Định nghĩa: \(f22 = |\{i: o_i=R \land p_i \in user\_data\}|\) (dựa trên **old path**).  
 (A) Hành vi đổi tên/append extension trên tài liệu người dùng là mẫu thường gặp; nhiều đo đạc cho thấy phần lớn mẫu ransomware append extension mới khi mã hóa. citeturn15view0  
 (B) Bổ trợ: f22 mạnh hơn khi f49 cao (đổi extension), hoặc f50 cao (hầu hết rename ra cùng extension), gợi ý “đánh dấu file đã mã hóa”.
 
 **f23 — Số sự kiện trong AppData (int)**  
-Định nghĩa: \(f23 = |\{i: p_i \in \text{AppDataFolders}\}|\), AppDataFolders ≈ `\Users\<*>\AppData\Roaming\` hoặc `\Users\<*>\AppData\Local\`.  
+Định nghĩa: \(f23 = |\{i: p_i \in appdata\}|\), appdata ≈ `\Users\<*>\AppData\Roaming\` hoặc `\Users\<*>\AppData\Local\` (không bao gồm Temp).  
 (A) Nhiều benign (browser, app) hoạt động mạnh ở AppData; ngược lại, malware/persistence cũng hay thả cấu hình, payload ở đây. Do thiếu process name, f23 giúp phân biệt “hành vi nặng nhưng ở vùng hợp lệ”. citeturn6search1turn8view0  
 (B) Bổ trợ: f23 không mang tính kết luận; nó bù cho f1/f3 bằng “bối cảnh”. Ví dụ cùng mức Write, nếu phần lớn nằm ở AppData/Temp thì ít đáng ngờ hơn so với user_data.
 
 **f24 — Số sự kiện trong Temp (int)**  
-Định nghĩa: \(f24 = |\{i: p_i \in \text{TempFolders}\}|\), TempFolders ≈ `\Users\<*>\AppData\Local\Temp\` (đường dẫn điển hình được mô tả trong tài liệu biến môi trường). citeturn6search1  
+Định nghĩa: \(f24 = |\{i: p_i \in temp/cache\}|\), temp/cache ≈ `\Users\<*>\AppData\Local\Temp\` (và các vùng cache/tạm tương đương theo taxonomy). citeturn6search1  
 (A) Rất nhiều phần mềm benign ghi temp; ransomware cũng có thể dùng temp staging. Do đó cần đọc như “điểm neo benignness”, không phải “điểm malware”. citeturn15view0  
 (B) Bổ trợ: Khi f6/f3 cao nhưng f24 cũng rất cao và f20 thấp, mô hình có thể giảm điểm nghi ngờ; ngược lại, nếu f24 thấp nhưng f20 cao, tăng nghi ngờ.
 
 **f25 — Số sự kiện trong System (int)**  
-Định nghĩa: \(f25 = |\{i: p_i \in \text{SystemFolders}\}|\), SystemFolders ≈ `\Windows\` và/hoặc `\Windows\System32\`.  
+Định nghĩa: \(f25 = |\{i: p_i \in system\}|\), system ≈ \Windows\ và/hoặc \Windows\System32\.  
 (A) Sửa file hệ thống thường hiếm đối với app thường, và có thể là dấu hiệu persistence/tampering. citeturn6search0turn5view0  
-(B) Bổ trợ: Kết hợp với f26 (tạo/ghi trong Program Files) để phân biệt installer hợp lệ (có thể ghi) với hành vi bất thường khác (đặc biệt nếu đồng thời f19–f22 cao).
-
-**f26 — Số Create/Write trong Program Files (int)**  
-Định nghĩa: \(f26 = |\{i: (o_i=C \lor o_i=W) \land p_i \in \text{ProgramFilesFolders}\}|\).  
-(A) Ghi vào Program Files thường gắn với cài đặt/cập nhật (benign) hoặc malware thả payload; thiếu process name nên đây là chỉ báo “nhạy nhưng dễ nhiễu”. citeturn6search8turn8view0  
-(B) Bổ trợ: f26 cần phối hợp với temporal profile (f14/f17) và rename patterns (f49–f52): installer thường create/write theo gói và ít “append extension hàng loạt”.
-
-**f27 — Số sự kiện trên UNC/network share (int)**  
-Định nghĩa: \(f27 = |\{i: p_i \text{ bắt đầu bằng } \\\\ \}|\).  
-(A) Ransomware trong doanh nghiệp thường nhắm tới shares để tối đa thiệt hại; do đó thao tác file trên UNC có thể tăng rủi ro. citeturn7search7turn5view0  
-(B) Bổ trợ: Nhiều app hợp lệ (sync client) cũng hoạt động trên share; cần kết hợp với f49/f50 (đổi extension hàng loạt) và f33/f34 (lan rộng) để tránh nhầm.
+(B) Bổ trợ: Kết hợp với các đặc trưng ngữ cảnh vùng system/program để phân biệt installer hợp lệ (có thể ghi) với hành vi bất thường khác (đặc biệt nếu đồng thời f19–f22 cao).
 
 **f28 — Số root khác nhau (int)**  
 Định nghĩa: root(p) = drive letter (`C:`) hoặc UNC share prefix (`\\server\share`). \(f28 = |\{root(p_i)\}|\).  

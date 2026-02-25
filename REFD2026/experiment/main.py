@@ -14,7 +14,7 @@ events = [
 ]
 
 extractor = FileBehaviorFeatureExtractor(window_seconds=10.0)
-x = extractor.extract(events)  # np.ndarray, shape (53,), dtype float32
+x = extractor.extract(events)  # np.ndarray, shape (51,), dtype float32
 names = extractor.feature_names()
 print(x.shape, x.dtype)
 print(names[0], names[-1])
