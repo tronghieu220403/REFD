@@ -191,7 +191,7 @@ Các đặc trưng này dựa trên phân loại đường dẫn theo vùng Wind
 
 **f_root_entropy — Entropy theo root (float)**  
 Định nghĩa: với \(q\_r=\frac{|\{i:root(p\_i)=r\}|}{N+\varepsilon}\),  
-\(f_root_entropy = -\sum_r q_r\log_2(q_r+\varepsilon)\).  
+\(f\_root\_entropy = -\sum_r q_r\log_2(q_r+\varepsilon)\).  
 (A) Entropy cao nghĩa là hoạt động phân tán trên nhiều ổ/share; trong bối cảnh ransomware “quét” rộng, đây là dấu cấu trúc tốt hơn chỉ đếm f_unique_root_count. 
 (B) Bổ trợ: Kết hợp với f_temp_event_count/f_appdata_event_count để phân biệt “phân tán nhưng chủ yếu ở cache” vs “phân tán vào user_data/UNC”.
 
@@ -207,7 +207,7 @@ Các đặc trưng này dựa trên phân loại đường dẫn theo vùng Wind
 
 **f_write_ext_group_entropy — Entropy nhóm extension trong các Write (float)**  
 Định nghĩa: xét tập Write events, đếm theo nhóm \(k \in \{\text{doc,exe,archive,media,image,code,other}\}\):  
-\(w_k=\frac{|\{i:o_i=W \land g(ext(p_i))=k\}|}{f_write_count+\varepsilon}\),  
+\(w_k=\frac{|\{i:o_i=W \land g(ext(p_i))=k\}|}{f\_write\_count+\varepsilon}\),  
 \(f\_write\_ext\_group\_entropy=-\sum_k w_k\log_2(w_k+\varepsilon)\).  
 (A) Một số ransomware “funnel” vào nhóm file giá trị (doc/image) → entropy thấp; trong khi một số benign (backup) có thể trải rộng → entropy cao. Các thảo luận về “file type coverage” xuất hiện trong tổng quan I/O-based detection.
 (B) Bổ trợ: Vì entropy thấp cũng có thể do workflow chuyên biệt (ví dụ công cụ xử lý ảnh), nên cần kết hợp chặt với f_user_data_event_count–f_user_data_rename_count (mục tiêu thư mục) và f_rename_ext_change_ratio–f_rename_dominant_new_ext_ratio (đổi extension).
@@ -355,6 +355,28 @@ Lý do tập này mạnh:
 ## Họ đặc trưng mở rộng tùy chọn
 
 Các họ dưới đây hữu ích khi tôi muốn tăng “độ bắt được biến thể” hoặc tăng chống né tránh, đổi lại vector lớn hơn và/hoặc tính toán nặng hơn. Tất cả vẫn computable từ strict schema.
+
+### Số các ứng dụng / người dùng bị tác động
+
+Ý tưởng: Một process sẽ thường tác động hoặc thay đổi trong 1 ứng dụng, nghĩa là thay đổi 1 thư mục con trong `C:\Program Files\*` và/hoặc 1 thư mục con trong `C:\ProgramData\*` và/hoặc 1 thư mục con trong `C:\Users\<*>\AppData\Roaming`. Tương tự, process tốt thường sẽ tác động đến chỉ 1 thư mục `C:\Users\<user1>\` thay vì nhiều thư mục `C:\Users\<user2>\`, `C:\Users\<user3>\`,...
+
+Tạo đặc trưng số app bị tác động và số user bị tác động:
+
+- **f_program_apps_affected — Số ứng dụng bị tác động (int)**  
+Định nghĩa:  
+\( f_{program\_apps\_affected} = \max_{g \in \mathcal{G}_{program}} 
+\left| \{ a : \exists i,\ group(p_i)=g,\ app\_id(p_i)=a \} \right| \).  
+ Trong đó:  
+  - \( \mathcal{G}_{program} \) là tập các nhóm đường dẫn được phân loại là `program`.  
+  - \( app\_id(p) \) là định danh ứng dụng suy ra từ thư mục con cấp 1 dưới gốc của nhóm tương ứng.  
+
+- **f_user_affected — Số user bị tác động (int)**  
+Định nghĩa:  
+\( f_{user\_affected} = 
+\left| \{ u : \exists i,\ group(p_i)=user,\ user\_id(p_i)=u \} \right| \).  
+Trong đó:  
+  - \( user\_id(p) \) là định danh user suy ra từ segment user trong đường dẫn (hoặc principal tương đương).  
+  - Chỉ tính trên các sự kiện thuộc nhóm `user`. Lưu ý nếu có nhiều hơn 1 folder nằm ngoài `C:\Users\<*>\` thì chỉ tính là 1.
 
 ### Histogram mặt nạ hành vi theo file
 

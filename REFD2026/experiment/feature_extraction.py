@@ -39,10 +39,8 @@ class FileBehaviorFeatureExtractor:
     _IMAGE_EXTS = {"jpg", "jpeg", "png", "bmp", "gif", "tiff", "webp", "svg", "heic"}
     _CODE_EXTS = {
         "py", "pyw", "js", "ts", "java", "c", "cpp", "h", "hpp", "cs", "go", "rs", "php", "rb",
-        "swift", "kt", "json", "xml", "yml", "yaml", "html", "css", "sql", "sh", "ps1"
+        "swift", "kt", "json", "xml", "yml", "yaml", "html", "css", "sql", "sh", "ps1", "md"
     }
-
-    _USER_DATA_FOLDERS = {"documents", "desktop", "downloads", "pictures", "music", "videos"}
 
     _FEATURE_NAMES = [
         "f_total_events",
@@ -210,8 +208,8 @@ class FileBehaviorFeatureExtractor:
         f_exelike_write_count = float(sum(1 for g in write_groups if g == "exe"))
         group_order = ["doc", "exe", "archive", "media", "image", "code", "other"]
         write_group_counter = Counter(write_groups)
-        f32_counts = [write_group_counter.get(g, 0) for g in group_order]
-        f_write_ext_group_entropy = self._entropy_from_counts(f32_counts, w_count)
+        f_wege_counts = [write_group_counter.get(g, 0) for g in group_order]
+        f_write_ext_group_entropy = self._entropy_from_counts(f_wege_counts, w_count)
 
         file_counter = Counter(paths)
         dir_counter = Counter(dirs)
@@ -298,7 +296,7 @@ class FileBehaviorFeatureExtractor:
             f_adjacent_same_dir_ratio, f_adjacent_same_path_ratio, f_transition_create_to_write, f_transition_write_to_rename, f_transition_write_to_delete, f_longest_same_op_run,
             
             f_rename_ext_change_ratio, f_rename_dominant_new_ext_ratio, f_rename_filename_prefix_similarity, f_rename_same_dir_ratio, f_create_filename_replication,
-            
+
         ], dtype=np.float32)
         return feats
 
