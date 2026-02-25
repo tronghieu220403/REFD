@@ -2,7 +2,7 @@
 <?taskcoach release="1.4.6" tskversion="37"?>
 
 <tasks>
-<task creationDateTime="2026-02-14 12:14:57.510076" id="0895dd6f-aed7-494e-aa3b-624895a57aa1" modificationDateTime="2026-02-14 12:14:57.510087" status="1" subject="Notes / Reference / Mindmap">
+<task creationDateTime="2026-02-14 12:14:57.510076" id="0895dd6f-aed7-494e-aa3b-624895a57aa1" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Notes / Reference / Mindmap">
 <task creationDateTime="2026-02-14 12:14:57.600291" expandedContexts="('taskviewer',)" id="07b8877e-7e92-4b79-8982-399569d2dcc6" modificationDateTime="2026-02-14 12:14:57.600303" status="1" subject="Zotero">
 <task creationDateTime="2026-02-14 12:14:57.604013" id="67948c66-3a27-47c6-bbd3-29cef4cb39a6" modificationDateTime="2026-02-14 12:14:57.604023" status="1" subject="Export notes" />
 <task creationDateTime="2026-02-14 12:14:57.601506" id="74b7739f-af11-471b-b85a-e9395e6c2a37" modificationDateTime="2026-02-14 12:14:57.601517" status="1" subject="Create 100 notes" />
@@ -95,7 +95,7 @@
 <task creationDateTime="2026-02-14 12:14:57.575343" id="b459fabd-51dc-4ca9-8c16-63b87ae7839d" modificationDateTime="2026-02-14 12:14:57.575352" status="1" subject="Import notes" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:58.269498" id="08d10a6f-f1cb-4228-9179-659ec0ba0d50" modificationDateTime="2026-02-14 12:14:58.269509" status="1" subject="System Cleanup / Uninstaller">
+<task creationDateTime="2026-02-14 12:14:58.269498" id="08d10a6f-f1cb-4228-9179-659ec0ba0d50" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="System Cleanup / Uninstaller">
 <task creationDateTime="2026-02-14 12:14:58.279374" expandedContexts="('taskviewer',)" id="01896020-36c4-4929-b196-8b26790ebc9e" modificationDateTime="2026-02-14 12:14:58.279385" status="1" subject="BleachBit">
 <task creationDateTime="2026-02-14 12:14:58.280658" id="212455ff-72da-4287-ba06-c16327fbc336" modificationDateTime="2026-02-14 12:14:58.280670" status="1" subject="Deep clean" />
 <task creationDateTime="2026-02-14 12:14:58.283600" id="d56c557c-9119-460f-99bd-82334f874985" modificationDateTime="2026-02-14 12:14:58.283613" status="1" subject="Remove 1000 temp files" />
@@ -145,8 +145,8 @@
 <task creationDateTime="2026-02-14 12:14:58.321992" id="ccabe54b-8846-4748-84e2-573b55ca455d" modificationDateTime="2026-02-14 12:14:58.322002" status="1" subject="Registry clean" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.384428" id="0b12a896-6a1f-44c8-8917-621c4ae39d30" modificationDateTime="2026-02-14 12:14:56.384459" status="1" subject="Archiver / Compression">
-<task creationDateTime="2026-02-14 12:14:56.400364" expandedContexts="('taskviewer',)" id="3dc3d2e6-567e-43a4-b65e-27223293c386" modificationDateTime="2026-02-14 12:14:56.400376" status="1" subject="gzip">
+<task creationDateTime="2026-02-14 12:14:56.384428" id="0b12a896-6a1f-44c8-8917-621c4ae39d30" modificationDateTime="2026-02-20 20:23:33.066000" priority="2" status="1" subject="Archiver / Compression">
+<task creationDateTime="2026-02-14 12:14:56.400364" id="3dc3d2e6-567e-43a4-b65e-27223293c386" modificationDateTime="2026-02-14 12:14:56.400376" status="1" subject="gzip">
 <task creationDateTime="2026-02-14 12:14:56.401072" id="16c9ccd7-ec7a-4af1-9797-865521f1caa7" modificationDateTime="2026-02-14 12:14:56.401083" status="1" subject="Encrypt archive" />
 <task creationDateTime="2026-02-14 12:14:56.401701" id="17e6c14d-c44a-4143-b5b2-324c9c54aed5" modificationDateTime="2026-02-14 12:14:56.401709" status="1" subject="Split archive into parts" />
 <task creationDateTime="2026-02-14 12:14:56.401522" id="6c372271-7906-4111-86d6-fd15ae8dccab" modificationDateTime="2026-02-14 12:14:56.401530" status="1" subject="Test corrupted archive" />
@@ -154,7 +154,7 @@
 <task creationDateTime="2026-02-14 12:14:56.400797" id="afdec059-058b-49e8-ae34-51bda734a9f1" modificationDateTime="2026-02-14 12:14:56.400810" status="1" subject="Compress 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.400592" id="f3994e98-2e7e-4443-aa18-8c467c022243" modificationDateTime="2026-02-14 12:14:56.400602" status="1" subject="Extract 10k files" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.396827" expandedContexts="('taskviewer',)" id="46f107f1-b52a-416e-9009-a2dbc63e883e" modificationDateTime="2026-02-14 12:14:56.396837" status="1" subject="WinZip">
+<task creationDateTime="2026-02-14 12:14:56.396827" id="46f107f1-b52a-416e-9009-a2dbc63e883e" modificationDateTime="2026-02-14 12:14:56.396837" status="1" subject="WinZip">
 <task creationDateTime="2026-02-14 12:14:56.397038" id="0a7659c9-566e-419a-b705-29578acfede1" modificationDateTime="2026-02-14 12:14:56.397047" status="1" subject="Extract 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.398279" id="1de54a67-102d-4de2-a59d-05150e8f0b35" modificationDateTime="2026-02-14 12:14:56.398292" status="1" subject="Split archive into parts" />
 <task creationDateTime="2026-02-14 12:14:56.397947" id="5d4961fc-6254-4af9-97e3-8fde3441dcce" modificationDateTime="2026-02-14 12:14:56.397962" status="1" subject="Test corrupted archive" />
@@ -162,15 +162,23 @@
 <task creationDateTime="2026-02-14 12:14:56.397212" id="d24451b8-dc26-47dd-8aaa-3146dfd91846" modificationDateTime="2026-02-14 12:14:56.397220" status="1" subject="Compress 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.397712" id="d2fb65f7-8dba-4bff-98b0-3a2831f2400a" modificationDateTime="2026-02-14 12:14:56.397723" status="1" subject="Rename archive multiple times" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.395309" expandedContexts="('taskviewer',)" id="5178a26f-838c-45da-877f-92aa4a66120b" modificationDateTime="2026-02-14 12:14:56.395318" status="1" subject="WinRAR">
-<task creationDateTime="2026-02-14 12:14:56.395501" id="5d85f30c-7e95-4f83-9359-cb95484ef252" modificationDateTime="2026-02-14 12:14:56.395510" status="1" subject="Extract 10k files" />
-<task creationDateTime="2026-02-14 12:14:56.395708" id="ac3bf861-d726-4f65-baae-d07dfb9af1d2" modificationDateTime="2026-02-14 12:14:56.395721" status="1" subject="Compress 10k files" />
-<task creationDateTime="2026-02-14 12:14:56.396345" id="d72e0018-c082-45fb-aa8a-7be747a0ca5f" modificationDateTime="2026-02-14 12:14:56.396355" status="1" subject="Test corrupted archive" />
-<task creationDateTime="2026-02-14 12:14:56.396144" id="e97f9cfa-d4ab-4c07-9e96-78ae7463b214" modificationDateTime="2026-02-14 12:14:56.396155" status="1" subject="Rename archive multiple times" />
-<task creationDateTime="2026-02-14 12:14:56.396555" id="f7b7d0cb-c0ac-48ba-8e9d-3166b71c4d1b" modificationDateTime="2026-02-14 12:14:56.396564" status="1" subject="Split archive into parts" />
-<task creationDateTime="2026-02-14 12:14:56.395934" id="fdfe3c61-ae83-491e-9ac5-57ee54f8ff35" modificationDateTime="2026-02-14 12:14:56.395944" status="1" subject="Encrypt archive" />
+<task creationDateTime="2026-02-14 12:14:56.395309" expandedContexts="('taskviewer',)" id="5178a26f-838c-45da-877f-92aa4a66120b" modificationDateTime="2026-02-20 20:22:57.282000" status="1" subject="WinRAR">
+<task creationDateTime="2026-02-14 12:14:56.395501" id="5d85f30c-7e95-4f83-9359-cb95484ef252" modificationDateTime="2026-02-20 20:23:17.799000" status="1" subject="Extract 10k files" />
+<task creationDateTime="2026-02-14 12:14:56.395708" id="ac3bf861-d726-4f65-baae-d07dfb9af1d2" modificationDateTime="2026-02-20 20:23:02.306000" status="1" subject="Compress 10k files" />
+<task creationDateTime="2026-02-18 09:59:08.169000" id="cb002f8f-0c75-11f1-aab2-d8bbc16feea2" modificationDateTime="2026-02-20 20:23:12.466000" status="1" subject="Extract 2k file in nested folders" />
+<task creationDateTime="2026-02-14 12:14:56.396144" id="e97f9cfa-d4ab-4c07-9e96-78ae7463b214" modificationDateTime="2026-02-20 20:23:15.034000" status="1" subject="Rename archive multiple times">
+<description>
+10 times
+</description>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.393676" expandedContexts="('taskviewer',)" id="6250d066-96b7-45d1-a289-c25c576b709c" modificationDateTime="2026-02-14 12:14:56.393685" status="1" subject="PeaZip">
+<task creationDateTime="2026-02-14 12:14:56.396555" id="f7b7d0cb-c0ac-48ba-8e9d-3166b71c4d1b" modificationDateTime="2026-02-20 20:23:10.098000" status="1" subject="Split archive into parts" />
+<task creationDateTime="2026-02-14 12:14:56.395934" id="fdfe3c61-ae83-491e-9ac5-57ee54f8ff35" modificationDateTime="2026-02-20 20:23:20.402000" status="1" subject="Encrypt archive">
+<description>
+Set password
+</description>
+</task>
+</task>
+<task creationDateTime="2026-02-14 12:14:56.393676" id="6250d066-96b7-45d1-a289-c25c576b709c" modificationDateTime="2026-02-14 12:14:56.393685" status="1" subject="PeaZip">
 <task creationDateTime="2026-02-14 12:14:56.394720" id="2e25d412-d397-4555-bb64-c57d78cbc2b9" modificationDateTime="2026-02-14 12:14:56.394729" status="1" subject="Test corrupted archive" />
 <task creationDateTime="2026-02-14 12:14:56.393897" id="41702e74-531b-4400-99eb-664c87f9dd20" modificationDateTime="2026-02-14 12:14:56.393908" status="1" subject="Extract 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.394474" id="541d43a2-272c-4e21-bef9-260d79b5d76e" modificationDateTime="2026-02-14 12:14:56.394486" status="1" subject="Rename archive multiple times" />
@@ -178,7 +186,7 @@
 <task creationDateTime="2026-02-14 12:14:56.395037" id="9bb4291c-c36a-4bbb-8296-d2dda95cc8fb" modificationDateTime="2026-02-14 12:14:56.395048" status="1" subject="Split archive into parts" />
 <task creationDateTime="2026-02-14 12:14:56.394290" id="b5d66bd6-558c-44a7-879f-9f7ac31734cb" modificationDateTime="2026-02-14 12:14:56.394300" status="1" subject="Encrypt archive" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.398611" expandedContexts="('taskviewer',)" id="876b271a-05c5-4ab0-84b1-6ce8d824c2a1" modificationDateTime="2026-02-14 12:14:56.398623" status="1" subject="bzip2">
+<task creationDateTime="2026-02-14 12:14:56.398611" id="876b271a-05c5-4ab0-84b1-6ce8d824c2a1" modificationDateTime="2026-02-14 12:14:56.398623" status="1" subject="bzip2">
 <task creationDateTime="2026-02-14 12:14:56.399269" id="05dfa630-baac-448d-bd3f-c3824fa96072" modificationDateTime="2026-02-14 12:14:56.399277" status="1" subject="Encrypt archive" />
 <task creationDateTime="2026-02-14 12:14:56.398877" id="44519f8f-ed20-410a-b7d7-6ac90ae94846" modificationDateTime="2026-02-14 12:14:56.398888" status="1" subject="Extract 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.399546" id="a1c645b8-40df-40ea-89c6-0b1bde2fb12f" modificationDateTime="2026-02-14 12:14:56.399561" status="1" subject="Rename archive multiple times" />
@@ -186,7 +194,7 @@
 <task creationDateTime="2026-02-14 12:14:56.399083" id="ad3abc72-dd3f-4bdd-9314-bcb7b4423fd3" modificationDateTime="2026-02-14 12:14:56.399092" status="1" subject="Compress 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.399962" id="fa0ddf64-98d2-40fb-b533-7c41fe54c9a8" modificationDateTime="2026-02-14 12:14:56.399984" status="1" subject="Split archive into parts" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.392182" expandedContexts="('taskviewer',)" id="95bc2335-d1d6-4436-85b2-2ba9cb26e3b2" modificationDateTime="2026-02-14 12:14:56.392193" status="1" subject="Bandizip">
+<task creationDateTime="2026-02-14 12:14:56.392182" id="95bc2335-d1d6-4436-85b2-2ba9cb26e3b2" modificationDateTime="2026-02-14 12:14:56.392193" status="1" subject="Bandizip">
 <task creationDateTime="2026-02-14 12:14:56.392852" id="05ba8671-9cfa-4795-8611-6eba57025478" modificationDateTime="2026-02-14 12:14:56.392862" status="1" subject="Encrypt archive" />
 <task creationDateTime="2026-02-14 12:14:56.393257" id="1f892eb8-e72f-4737-b72b-586c85aa45ea" modificationDateTime="2026-02-14 12:14:56.393266" status="1" subject="Test corrupted archive" />
 <task creationDateTime="2026-02-14 12:14:56.392394" id="308ca80b-2421-428a-ad12-5943d964d1a2" modificationDateTime="2026-02-14 12:14:56.392404" status="1" subject="Extract 10k files" />
@@ -194,7 +202,7 @@
 <task creationDateTime="2026-02-14 12:14:56.393048" id="f238d7d5-4faa-4c4e-8985-ddabf0407896" modificationDateTime="2026-02-14 12:14:56.393059" status="1" subject="Rename archive multiple times" />
 <task creationDateTime="2026-02-14 12:14:56.393442" id="f6729c98-9283-40c5-9884-c37a459f960c" modificationDateTime="2026-02-14 12:14:56.393449" status="1" subject="Split archive into parts" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.384803" expandedContexts="('taskviewer',)" id="a82b4d56-c72a-4822-a4d8-219901985eb8" modificationDateTime="2026-02-14 12:14:56.384818" status="1" subject="7-Zip">
+<task creationDateTime="2026-02-14 12:14:56.384803" id="a82b4d56-c72a-4822-a4d8-219901985eb8" modificationDateTime="2026-02-14 12:14:56.384818" status="1" subject="7-Zip">
 <task creationDateTime="2026-02-14 12:14:56.385437" id="0b34b681-5146-441e-a8df-a3e04b07b905" modificationDateTime="2026-02-14 12:14:56.385450" status="1" subject="Compress 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.385111" id="552e3531-0738-46e2-8a30-f8cface3ea7b" modificationDateTime="2026-02-14 12:14:56.385126" status="1" subject="Extract 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.385937" id="b4ed6586-daf8-42a7-8cb6-14e67e72f0e1" modificationDateTime="2026-02-14 12:14:56.385948" status="1" subject="Rename archive multiple times" />
@@ -202,7 +210,7 @@
 <task creationDateTime="2026-02-14 12:14:56.386504" id="d922d4ba-c9b3-4255-87eb-e6f24be6abcb" modificationDateTime="2026-02-14 12:14:56.386515" status="1" subject="Split archive into parts" />
 <task creationDateTime="2026-02-14 12:14:56.386190" id="f94840dd-5205-44aa-9929-bdbe02e6b4a2" modificationDateTime="2026-02-14 12:14:56.386202" status="1" subject="Test corrupted archive" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.386809" expandedContexts="('taskviewer',)" id="aae92744-cdae-4cce-903e-164f32c0a96f" modificationDateTime="2026-02-14 12:14:56.386820" status="1" subject="7z">
+<task creationDateTime="2026-02-14 12:14:56.386809" id="aae92744-cdae-4cce-903e-164f32c0a96f" modificationDateTime="2026-02-14 12:14:56.386820" status="1" subject="7z">
 <task creationDateTime="2026-02-14 12:14:56.391858" id="38d07a7a-a542-4225-824d-bfb2021a5d4a" modificationDateTime="2026-02-14 12:14:56.391876" status="1" subject="Split archive into parts" />
 <task creationDateTime="2026-02-14 12:14:56.387867" id="460db605-ac07-41fd-8366-a3dd1345ce48" modificationDateTime="2026-02-14 12:14:56.387878" status="1" subject="Test corrupted archive" />
 <task creationDateTime="2026-02-14 12:14:56.387452" id="9310391d-589f-4bb1-a353-b7f4dbeef4b3" modificationDateTime="2026-02-14 12:14:56.387463" status="1" subject="Encrypt archive" />
@@ -210,7 +218,7 @@
 <task creationDateTime="2026-02-14 12:14:56.387243" id="c0dfd41f-b1ef-4c01-8e65-e69383876b8e" modificationDateTime="2026-02-14 12:14:56.387253" status="1" subject="Compress 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.387662" id="ef8cd8db-96fa-4a82-9604-39150d565fab" modificationDateTime="2026-02-14 12:14:56.387671" status="1" subject="Rename archive multiple times" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.403903" expandedContexts="('taskviewer',)" id="ce055366-5813-49ff-8b10-accce7fe131e" modificationDateTime="2026-02-14 12:14:56.403913" status="1" subject="xz">
+<task creationDateTime="2026-02-14 12:14:56.403903" id="ce055366-5813-49ff-8b10-accce7fe131e" modificationDateTime="2026-02-14 12:14:56.403913" status="1" subject="xz">
 <task creationDateTime="2026-02-14 12:14:56.404766" id="135f33af-a671-40a5-b344-614a79c86866" modificationDateTime="2026-02-14 12:14:56.404784" status="1" subject="Rename archive multiple times" />
 <task creationDateTime="2026-02-14 12:14:56.404534" id="2909b102-f8c7-4e6b-90ec-a4e165e517ea" modificationDateTime="2026-02-14 12:14:56.404542" status="1" subject="Encrypt archive" />
 <task creationDateTime="2026-02-14 12:14:56.405039" id="6d15e2ae-f936-4970-a9b9-0673c888191d" modificationDateTime="2026-02-14 12:14:56.405049" status="1" subject="Test corrupted archive" />
@@ -218,7 +226,7 @@
 <task creationDateTime="2026-02-14 12:14:56.404149" id="b93401d9-b56a-4154-bf97-92d163af8885" modificationDateTime="2026-02-14 12:14:56.404159" status="1" subject="Extract 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.405254" id="cf20f707-bd71-4e8c-a0ef-37395e606a1f" modificationDateTime="2026-02-14 12:14:56.405263" status="1" subject="Split archive into parts" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.401993" expandedContexts="('taskviewer',)" id="e26b12e9-91fb-4f7f-ad4b-d2ed07a85457" modificationDateTime="2026-02-14 12:14:56.402004" status="1" subject="tar">
+<task creationDateTime="2026-02-14 12:14:56.401993" id="e26b12e9-91fb-4f7f-ad4b-d2ed07a85457" modificationDateTime="2026-02-14 12:14:56.402004" status="1" subject="tar">
 <task creationDateTime="2026-02-14 12:14:56.403579" id="36433e3b-4bee-4e5d-972b-2726e9a51a87" modificationDateTime="2026-02-14 12:14:56.403590" status="1" subject="Split archive into parts" />
 <task creationDateTime="2026-02-14 12:14:56.402976" id="7e73a84e-744c-468e-ab6d-26b6f180103c" modificationDateTime="2026-02-14 12:14:56.402989" status="1" subject="Rename archive multiple times" />
 <task creationDateTime="2026-02-14 12:14:56.403258" id="826ddebd-dabc-4e68-8b55-f21ec239d966" modificationDateTime="2026-02-14 12:14:56.403269" status="1" subject="Test corrupted archive" />
@@ -227,7 +235,7 @@
 <task creationDateTime="2026-02-14 12:14:56.402513" id="f88d4718-c534-4d6e-b885-aa4f499c3139" modificationDateTime="2026-02-14 12:14:56.402525" status="1" subject="Compress 10k files" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.612151" id="0b552c6b-f18d-4c97-93e0-8e706523030b" modificationDateTime="2026-02-14 12:14:56.612161" status="1" subject="Dev: IDE / Editor">
+<task creationDateTime="2026-02-14 12:14:56.612151" id="0b552c6b-f18d-4c97-93e0-8e706523030b" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Dev: IDE / Editor">
 <task creationDateTime="2026-02-14 12:14:56.632841" expandedContexts="('taskviewer',)" id="019572dc-72bc-4fa9-ae9a-c2ab5b3c10bf" modificationDateTime="2026-02-14 12:14:56.632854" status="1" subject="Gedit">
 <task creationDateTime="2026-02-14 12:14:56.635188" id="1ac6bb42-3ac1-40e7-8da2-038344b557e9" modificationDateTime="2026-02-14 12:14:56.635198" status="1" subject="Rename project folder" />
 <task creationDateTime="2026-02-14 12:14:56.634055" id="3d29c736-cb10-41b2-a892-6602897ef82f" modificationDateTime="2026-02-14 12:14:56.634065" status="1" subject="Clean project" />
@@ -389,7 +397,7 @@
 <task creationDateTime="2026-02-14 12:14:56.667859" id="e7a92a22-7081-4e52-8659-031c248018b5" modificationDateTime="2026-02-14 12:14:56.667867" status="1" subject="Rename project folder" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.671631" id="10d604c8-fe0f-4558-98bb-aad4a208251b" modificationDateTime="2026-02-14 12:14:56.671640" status="1" subject="Dev: Version Control">
+<task creationDateTime="2026-02-14 12:14:56.671631" id="10d604c8-fe0f-4558-98bb-aad4a208251b" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Dev: Version Control">
 <task creationDateTime="2026-02-14 12:14:56.696180" expandedContexts="('taskviewer',)" id="04a12b22-0056-4c7f-89ff-f5fe6ed0474f" modificationDateTime="2026-02-14 12:14:56.696191" status="1" subject="svn">
 <task creationDateTime="2026-02-14 12:14:56.697594" id="0f995de1-9e7f-48b4-868e-f4490f66bad4" modificationDateTime="2026-02-14 12:14:56.697605" status="1" subject="Push changes" />
 <task creationDateTime="2026-02-14 12:14:56.697153" id="2c50d41a-5ac1-456d-a3bf-cce09156ee1d" modificationDateTime="2026-02-14 12:14:56.697163" status="1" subject="Commit 100 files" />
@@ -461,7 +469,7 @@
 <task creationDateTime="2026-02-14 12:14:56.694180" id="be9ea459-d0c9-4c44-a1c0-af8f711450dc" modificationDateTime="2026-02-14 12:14:56.694189" status="1" subject="Commit 100 files" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:58.398360" id="1c545edd-71ac-4507-b36f-29b7127ede4b" modificationDateTime="2026-02-14 12:14:58.398371" status="1" subject="System Tweaks / Utilities">
+<task creationDateTime="2026-02-14 12:14:58.398360" id="1c545edd-71ac-4507-b36f-29b7127ede4b" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="System Tweaks / Utilities">
 <task creationDateTime="2026-02-14 12:14:58.433614" expandedContexts="('taskviewer',)" id="27d5f645-62e6-49f7-a9de-5a60cf05eedf" modificationDateTime="2026-02-14 12:14:58.433626" status="1" subject="Ditto">
 <task creationDateTime="2026-02-14 12:14:58.438436" id="730f1dfb-b8fc-4ee5-8db3-09e5ec42e3b9" modificationDateTime="2026-02-14 12:14:58.438448" status="1" subject="Disable tweak options" />
 <task creationDateTime="2026-02-14 12:14:58.435041" id="79390eab-7533-4add-854b-7a83d56ee203" modificationDateTime="2026-02-14 12:14:58.435053" status="1" subject="Modify system settings" />
@@ -505,7 +513,7 @@
 <task creationDateTime="2026-02-14 12:14:58.454057" id="cc3cbf55-2187-40a5-a28b-9d54442fdb6a" modificationDateTime="2026-02-14 12:14:58.454068" status="1" subject="Enable tweak options" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:57.841509" id="23eeed86-bcb4-4e9a-ad9f-e116ad03747c" modificationDateTime="2026-02-14 12:14:57.841521" status="1" subject="Password Manager">
+<task creationDateTime="2026-02-14 12:14:57.841509" id="23eeed86-bcb4-4e9a-ad9f-e116ad03747c" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Password Manager">
 <task creationDateTime="2026-02-14 12:14:57.894737" expandedContexts="('taskviewer',)" id="094d167d-a6ee-4dfc-80d7-d7c1046e87d6" modificationDateTime="2026-02-14 12:14:57.894749" status="1" subject="Password Safe">
 <task creationDateTime="2026-02-14 12:14:57.899875" id="2915a8c0-5c97-4a7d-ab51-90157dcd2088" modificationDateTime="2026-02-14 12:14:57.899885" status="1" subject="Export password vault" />
 <task creationDateTime="2026-02-14 12:14:57.903969" id="4844aa99-fd70-437f-aba1-f0094a391f10" modificationDateTime="2026-02-14 12:14:57.903980" status="1" subject="Sync vault across devices" />
@@ -561,7 +569,7 @@
 <task creationDateTime="2026-02-14 12:14:57.877223" id="e0d2fbc8-109d-49d4-b896-543e796fb911" modificationDateTime="2026-02-14 12:14:57.877234" status="1" subject="Install" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.970094" id="3b4b1881-d937-465a-8c3c-fad3ab035594" modificationDateTime="2026-02-14 12:14:56.970105" status="1" subject="Graphics / CAD / Design">
+<task creationDateTime="2026-02-14 12:14:56.970094" id="3b4b1881-d937-465a-8c3c-fad3ab035594" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Graphics / CAD / Design">
 <task creationDateTime="2026-02-14 12:14:57.051773" expandedContexts="('taskviewer',)" id="1cd0e252-0c20-4101-842c-1ab49be762be" modificationDateTime="2026-02-14 12:14:57.051784" status="1" subject="Zoner Photo Studio">
 <task creationDateTime="2026-02-14 12:14:57.055872" id="a8ba134b-02da-41bf-9650-a867fe70381f" modificationDateTime="2026-02-14 12:14:57.055885" status="1" subject="Save project 20 times" />
 <task creationDateTime="2026-02-14 12:14:57.056721" id="b712793c-39ad-4e70-9dac-4736661cd999" modificationDateTime="2026-02-14 12:14:57.056732" status="1" subject="Batch convert 100 images" />
@@ -696,7 +704,7 @@
 <task creationDateTime="2026-02-14 12:14:56.986716" id="d61f8760-7cd2-483c-84ca-df6832fcad3d" modificationDateTime="2026-02-14 12:14:56.986729" status="1" subject="Render 3D model" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:57.361327" id="3c2b9025-4fb6-443a-af0b-9b7a35ac9023" modificationDateTime="2026-02-14 12:14:57.361340" status="1" subject="Network Tools">
+<task creationDateTime="2026-02-14 12:14:57.361327" id="3c2b9025-4fb6-443a-af0b-9b7a35ac9023" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Network Tools">
 <task creationDateTime="2026-02-14 12:14:57.502811" expandedContexts="('taskviewer',)" id="0abafac3-d748-4582-89af-09b319196134" modificationDateTime="2026-02-14 12:14:57.502821" status="1" subject="wget">
 <task creationDateTime="2026-02-14 12:14:57.508848" id="0963c086-05b7-447b-9b3d-abb2467748ed" modificationDateTime="2026-02-14 12:14:57.508859" status="1" subject="Packet capture 10 minutes" />
 <task creationDateTime="2026-02-14 12:14:57.506329" id="3640ddeb-618b-4bec-a0c4-dd8cf40cbfd1" modificationDateTime="2026-02-14 12:14:57.506340" status="1" subject="Continuous ping 30 minutes" />
@@ -845,7 +853,7 @@
 <task creationDateTime="2026-02-14 12:14:57.497931" id="fc96c8fa-8242-4939-a99f-28ac11aab3df" modificationDateTime="2026-02-14 12:14:57.497945" status="1" subject="Large file upload" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.945318" id="3c3ab745-8121-44a4-9c91-137f6fd19566" modificationDateTime="2026-02-14 12:14:56.945329" status="1" subject="Game Launcher / Store">
+<task creationDateTime="2026-02-14 12:14:56.945318" id="3c3ab745-8121-44a4-9c91-137f6fd19566" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Game Launcher / Store">
 <task creationDateTime="2026-02-14 12:14:56.958575" expandedContexts="('taskviewer',)" id="4c49912d-560d-447f-90c7-5426606e48be" modificationDateTime="2026-02-14 12:14:56.958586" status="1" subject="Origin">
 <task creationDateTime="2026-02-14 12:14:56.961175" id="0b3ae520-3ec9-4ba1-ac9e-1a42598d549b" modificationDateTime="2026-02-14 12:14:56.961184" status="1" subject="Download patch" />
 <task creationDateTime="2026-02-14 12:14:56.961728" id="0c43e162-7456-4b79-9c87-b33e7ee5a1be" modificationDateTime="2026-02-14 12:14:56.961738" status="1" subject="Launch game" />
@@ -889,7 +897,7 @@
 <task creationDateTime="2026-02-14 12:14:56.947817" id="96202542-e6e0-40a8-a5f6-6f681f21f5fb" modificationDateTime="2026-02-14 12:14:56.947830" status="1" subject="Update game" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.405458" id="47245789-9162-45ac-ab76-c6a5dfddb019" modificationDateTime="2026-02-14 12:14:56.405469" status="1" subject="Audio Production / Editing">
+<task creationDateTime="2026-02-14 12:14:56.405458" id="47245789-9162-45ac-ab76-c6a5dfddb019" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Audio Production / Editing">
 <task creationDateTime="2026-02-14 12:14:56.407333" expandedContexts="('taskviewer',)" id="01633231-5125-48a8-9df1-41a5405b5233" modificationDateTime="2026-02-14 12:14:56.407344" status="1" subject="Audacity">
 <task creationDateTime="2026-02-14 12:14:56.407949" id="1bd26cdb-c31e-4377-ab9b-96fc9c7fe8b0" modificationDateTime="2026-02-14 12:14:56.407962" status="1" subject="Export MP3" />
 <task creationDateTime="2026-02-14 12:14:56.408379" id="208b9e06-17e7-4bb7-aac7-26a07723a931" modificationDateTime="2026-02-14 12:14:56.408387" status="1" subject="Save project 10 times" />
@@ -989,7 +997,7 @@
 <task creationDateTime="2026-02-14 12:14:56.424804" id="e6e0245d-41a2-4a62-9597-d2fa7593d307" modificationDateTime="2026-02-14 12:14:56.424811" status="1" subject="Export WAV" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:58.333844" id="4a40ad2a-dc26-48b0-be06-5d304c9ec4c8" modificationDateTime="2026-02-14 12:14:58.333857" status="1" subject="System Monitoring / Sysinternals">
+<task creationDateTime="2026-02-14 12:14:58.333844" id="4a40ad2a-dc26-48b0-be06-5d304c9ec4c8" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="System Monitoring / Sysinternals">
 <task creationDateTime="2026-02-14 12:14:58.367072" expandedContexts="('taskviewer',)" id="4aadd8c1-eef0-41db-ac72-cae02a9ccaad" modificationDateTime="2026-02-14 12:14:58.367085" status="1" subject="procexp">
 <task creationDateTime="2026-02-14 12:14:58.372989" id="14736756-86a4-4040-9fa1-6b523a8dee46" modificationDateTime="2026-02-14 12:14:58.373001" status="1" subject="Capture handle snapshot" />
 <task creationDateTime="2026-02-14 12:14:58.368366" id="36e9ec12-b107-4b77-acbe-735e38715143" modificationDateTime="2026-02-14 12:14:58.368378" status="1" subject="Process monitoring 30 minutes" />
@@ -1039,7 +1047,7 @@
 <task creationDateTime="2026-02-14 12:14:58.338834" id="f842c9aa-dc41-448b-a05e-6e4312f0ec7d" modificationDateTime="2026-02-14 12:14:58.338847" status="1" subject="File system monitoring" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.789087" id="4fffe57f-6d9d-430d-a0f8-c734ee00c57a" modificationDateTime="2026-02-14 12:14:56.789096" status="1" subject="Email / Chat / Collaboration">
+<task creationDateTime="2026-02-14 12:14:56.789087" id="4fffe57f-6d9d-430d-a0f8-c734ee00c57a" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Email / Chat / Collaboration">
 <task creationDateTime="2026-02-14 12:14:56.797074" expandedContexts="('taskviewer',)" id="024e7615-9577-4c35-b872-cc8c7dd6aa6c" modificationDateTime="2026-02-14 12:14:56.797086" status="1" subject="Foxmail">
 <task creationDateTime="2026-02-14 12:14:56.798346" id="0db7cd92-e2f3-4915-9c9d-870f45765fbb" modificationDateTime="2026-02-14 12:14:56.798356" status="1" subject="Receive file attachment 500MB" />
 <task creationDateTime="2026-02-14 12:14:56.798873" id="20269af1-a017-4ab6-870c-0c87712b65be" modificationDateTime="2026-02-14 12:14:56.798884" status="1" subject="Export chat history" />
@@ -1146,7 +1154,7 @@
 <task creationDateTime="2026-02-14 12:14:56.819427" id="b22fdf7d-3240-4124-87bf-889437b69a93" modificationDateTime="2026-02-14 12:14:56.819438" status="1" subject="Receive file attachment 500MB" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:58.753625" id="5291b24b-b85f-4427-a381-05f7e4015263" modificationDateTime="2026-02-14 12:14:58.753638" status="1" subject="Windows System Tools (CLI)">
+<task creationDateTime="2026-02-14 12:14:58.753625" id="5291b24b-b85f-4427-a381-05f7e4015263" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Windows System Tools (CLI)">
 <task creationDateTime="2026-02-14 12:14:58.929478" expandedContexts="('taskviewer',)" id="18e48567-d65f-4209-afb2-074df5ac1b8c" modificationDateTime="2026-02-14 12:14:58.929490" status="1" subject="takeown">
 <task creationDateTime="2026-02-14 12:14:58.938137" id="4fcbd8ec-cfc4-49fc-915e-51f493658995" modificationDateTime="2026-02-14 12:14:58.938148" status="1" subject="Run scheduled task" />
 <task creationDateTime="2026-02-14 12:14:58.936434" id="a47584c2-4836-44a8-a60a-d10974ef05c9" modificationDateTime="2026-02-14 12:14:58.936446" status="1" subject="Modify registry entries" />
@@ -1316,7 +1324,7 @@
 <task creationDateTime="2026-02-14 12:14:58.944017" id="f83406bb-76df-45d5-8f2a-36c96a2243e5" modificationDateTime="2026-02-14 12:14:58.944027" status="1" subject="Create 1000 files" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.842495" id="5d7d3264-8842-47aa-9a95-08827ab12b66" modificationDateTime="2026-02-14 12:14:56.842505" status="1" subject="File Manager / Disk Usage">
+<task creationDateTime="2026-02-14 12:14:56.842495" id="5d7d3264-8842-47aa-9a95-08827ab12b66" modificationDateTime="2026-02-20 20:23:53.381000" priority="2" status="1" subject="File Manager / Disk Usage">
 <task creationDateTime="2026-02-14 12:14:56.850615" expandedContexts="('taskviewer',)" id="10185702-f967-440c-b09e-1d415962c818" modificationDateTime="2026-02-14 12:14:56.850626" status="1" subject="Everything">
 <task creationDateTime="2026-02-14 12:14:56.853388" id="6f68c3e2-5001-4475-931c-545cd664c57d" modificationDateTime="2026-02-14 12:14:56.853396" status="1" subject="Search entire drive" />
 <task creationDateTime="2026-02-14 12:14:56.851880" id="741edcc8-79af-47c3-999c-1efa9097a056" modificationDateTime="2026-02-14 12:14:56.851889" status="1" subject="Move folder tree" />
@@ -1352,12 +1360,11 @@
 <task creationDateTime="2026-02-14 12:14:56.844096" id="bf1bc640-39af-4592-8c61-35843a13aef5" modificationDateTime="2026-02-14 12:14:56.844106" status="1" subject="Copy 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.845781" id="c87af3b4-7f94-433d-8af3-6179bd0762da" modificationDateTime="2026-02-14 12:14:56.845790" status="1" subject="Compare two folders" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.871804" expandedContexts="('taskviewer',)" id="765aea47-94ba-46a5-8ea9-cd87a3501a8e" modificationDateTime="2026-02-14 12:14:56.871813" status="1" subject="TreeSize">
-<task creationDateTime="2026-02-14 12:14:56.874144" id="4c0dfce0-cca9-48a4-8878-6ce773e23f1a" modificationDateTime="2026-02-14 12:14:56.874152" status="1" subject="Compare two folders" />
-<task creationDateTime="2026-02-14 12:14:56.873628" id="a40e50c2-c1a8-4201-8cdc-aebcf045df42" modificationDateTime="2026-02-14 12:14:56.873638" status="1" subject="Delete large folder" />
-<task creationDateTime="2026-02-14 12:14:56.873115" id="c2983e56-7d91-402e-a533-1676a4e7b1f1" modificationDateTime="2026-02-14 12:14:56.873124" status="1" subject="Move folder tree" />
-<task creationDateTime="2026-02-14 12:14:56.874653" id="ee715476-1734-4aa0-8c9b-a9575acf6378" modificationDateTime="2026-02-14 12:14:56.874662" status="1" subject="Search entire drive" />
-<task creationDateTime="2026-02-14 12:14:56.872572" id="f48a462d-8347-4cca-810c-54973f289f97" modificationDateTime="2026-02-14 12:14:56.872582" status="1" subject="Copy 10k files" />
+<task creationDateTime="2026-02-14 12:14:56.871804" expandedContexts="('taskviewer',)" id="765aea47-94ba-46a5-8ea9-cd87a3501a8e" modificationDateTime="2026-02-20 20:25:08.554000" status="1" subject="TreeSize">
+<task creationDateTime="2026-02-14 12:14:56.873628" id="a40e50c2-c1a8-4201-8cdc-aebcf045df42" modificationDateTime="2026-02-20 20:25:08.554000" status="1" subject="Delete large folder" />
+<task creationDateTime="2026-02-14 12:14:56.873115" id="c2983e56-7d91-402e-a533-1676a4e7b1f1" modificationDateTime="2026-02-20 20:25:08.554000" status="1" subject="Move folder tree" />
+<task creationDateTime="2026-02-14 12:14:56.874653" id="ee715476-1734-4aa0-8c9b-a9575acf6378" modificationDateTime="2026-02-20 20:25:08.554000" status="1" subject="Search entire drive" />
+<task creationDateTime="2026-02-14 12:14:56.872572" id="f48a462d-8347-4cca-810c-54973f289f97" modificationDateTime="2026-02-20 20:25:08.554000" status="1" subject="Copy 10k files" />
 </task>
 <task creationDateTime="2026-02-14 12:14:56.854062" expandedContexts="('taskviewer',)" id="969e64e3-c1d0-410b-9712-bd4f62051ade" modificationDateTime="2026-02-14 12:14:56.854071" status="1" subject="FolderSizes">
 <task creationDateTime="2026-02-14 12:14:56.856997" id="119cb8dc-c50f-43f5-9c33-73d4cc351b6a" modificationDateTime="2026-02-14 12:14:56.857010" status="1" subject="Search entire drive" />
@@ -1395,8 +1402,8 @@
 <task creationDateTime="2026-02-14 12:14:56.866020" id="e639b828-37df-478e-99af-8749e5bf17ff" modificationDateTime="2026-02-14 12:14:56.866028" status="1" subject="Move folder tree" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.425664" id="61765cce-a46f-4b91-b182-2143bbc74b16" modificationDateTime="2026-02-14 12:14:56.425671" status="1" subject="Backup / Sync">
-<task creationDateTime="2026-02-14 12:14:56.440760" expandedContexts="('taskviewer',)" id="040441a6-92f1-43c1-a250-ab4e6a82bc9f" modificationDateTime="2026-02-14 12:14:56.440770" status="1" subject="GoodSync">
+<task creationDateTime="2026-02-14 12:14:56.425664" id="61765cce-a46f-4b91-b182-2143bbc74b16" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Backup / Sync">
+<task creationDateTime="2026-02-14 12:14:56.440760" id="040441a6-92f1-43c1-a250-ab4e6a82bc9f" modificationDateTime="2026-02-14 12:14:56.440770" status="1" subject="GoodSync">
 <task creationDateTime="2026-02-14 12:14:56.442155" id="15e9d6f9-f142-44d0-b7f1-db27b549ffea" modificationDateTime="2026-02-14 12:14:56.442164" status="1" subject="Delete source then sync" />
 <task creationDateTime="2026-02-14 12:14:56.441034" id="1a68d55a-a35d-42ff-aed6-93ad98343782" modificationDateTime="2026-02-14 12:14:56.441042" status="1" subject="Full backup" />
 <task creationDateTime="2026-02-14 12:14:56.441928" id="5ea8db89-0867-4479-9e74-5342a581ec27" modificationDateTime="2026-02-14 12:14:56.441935" status="1" subject="Mirror mode sync" />
@@ -1405,7 +1412,7 @@
 <task creationDateTime="2026-02-14 12:14:56.441712" id="a67053ce-3a2f-434f-8128-fedef9b3c32f" modificationDateTime="2026-02-14 12:14:56.441721" status="1" subject="Sync 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.442459" id="aac6d596-c724-465b-a1c6-881d9506cdd5" modificationDateTime="2026-02-14 12:14:56.442471" status="1" subject="Create snapshot" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.457326" expandedContexts="('taskviewer',)" id="26e6cc15-b11a-4a45-ae42-c44cd014149c" modificationDateTime="2026-02-14 12:14:56.457336" status="1" subject="SyncBack">
+<task creationDateTime="2026-02-14 12:14:56.457326" id="26e6cc15-b11a-4a45-ae42-c44cd014149c" modificationDateTime="2026-02-14 12:14:56.457336" status="1" subject="SyncBack">
 <task creationDateTime="2026-02-14 12:14:56.457661" id="10b9eead-0d32-457a-a788-f5410f202224" modificationDateTime="2026-02-14 12:14:56.457670" status="1" subject="Full backup" />
 <task creationDateTime="2026-02-14 12:14:56.459458" id="1d656fd0-67eb-425d-b3c7-ec99705236d2" modificationDateTime="2026-02-14 12:14:56.459467" status="1" subject="Create snapshot" />
 <task creationDateTime="2026-02-14 12:14:56.459190" id="4eece124-dded-4730-9a6f-c8003b7a5f1a" modificationDateTime="2026-02-14 12:14:56.459198" status="1" subject="Delete source then sync" />
@@ -1414,7 +1421,7 @@
 <task creationDateTime="2026-02-14 12:14:56.458630" id="c4deec8c-63be-49f1-b53d-5e7ab9a9bfac" modificationDateTime="2026-02-14 12:14:56.458641" status="1" subject="Sync 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.458928" id="cc506fdb-bd69-4065-95fa-61a59af4b455" modificationDateTime="2026-02-14 12:14:56.458937" status="1" subject="Mirror mode sync" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.442861" expandedContexts="('taskviewer',)" id="2d284c6e-1bed-45d0-b0a6-a65c93a980bd" modificationDateTime="2026-02-14 12:14:56.442871" status="1" subject="Google Drive">
+<task creationDateTime="2026-02-14 12:14:56.442861" id="2d284c6e-1bed-45d0-b0a6-a65c93a980bd" modificationDateTime="2026-02-14 12:14:56.442871" status="1" subject="Google Drive">
 <task creationDateTime="2026-02-14 12:14:56.443780" id="1f0b6ed5-774f-4970-bba1-76277fc1424b" modificationDateTime="2026-02-14 12:14:56.443790" status="1" subject="Restore backup" />
 <task creationDateTime="2026-02-14 12:14:56.443164" id="25a0cce2-04a2-4fba-9a56-17ff7fa593cd" modificationDateTime="2026-02-14 12:14:56.443174" status="1" subject="Full backup" />
 <task creationDateTime="2026-02-14 12:14:56.444559" id="63aadffd-5265-44d5-b743-33d33cf59121" modificationDateTime="2026-02-14 12:14:56.444569" status="1" subject="Delete source then sync" />
@@ -1423,7 +1430,7 @@
 <task creationDateTime="2026-02-14 12:14:56.444292" id="d7ed0b46-154b-4c01-931d-435139eb232e" modificationDateTime="2026-02-14 12:14:56.444305" status="1" subject="Mirror mode sync" />
 <task creationDateTime="2026-02-14 12:14:56.444026" id="e2b75534-0086-4dda-9762-fe5015cd7d57" modificationDateTime="2026-02-14 12:14:56.444035" status="1" subject="Sync 10k files" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.447426" expandedContexts="('taskviewer',)" id="388dae4c-5409-46de-bc32-f765c6349f56" modificationDateTime="2026-02-14 12:14:56.447435" status="1" subject="Macrium Reflect">
+<task creationDateTime="2026-02-14 12:14:56.447426" id="388dae4c-5409-46de-bc32-f765c6349f56" modificationDateTime="2026-02-14 12:14:56.447435" status="1" subject="Macrium Reflect">
 <task creationDateTime="2026-02-14 12:14:56.447980" id="2dba1c20-64ef-4cd1-84f6-3dac7f925c02" modificationDateTime="2026-02-14 12:14:56.447992" status="1" subject="Incremental backup" />
 <task creationDateTime="2026-02-14 12:14:56.448317" id="6147627e-30d1-4015-a969-0396bc8168fb" modificationDateTime="2026-02-14 12:14:56.448329" status="1" subject="Restore backup" />
 <task creationDateTime="2026-02-14 12:14:56.449220" id="6f6ec782-db60-43f2-b634-6f3bd22a8eb8" modificationDateTime="2026-02-14 12:14:56.449231" status="1" subject="Delete source then sync" />
@@ -1432,7 +1439,7 @@
 <task creationDateTime="2026-02-14 12:14:56.448648" id="d9c03e2a-a3e5-447d-910f-dec38f409edc" modificationDateTime="2026-02-14 12:14:56.448660" status="1" subject="Sync 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.448923" id="f44f81bd-3da3-42c3-8091-e51f6a0d8a29" modificationDateTime="2026-02-14 12:14:56.448933" status="1" subject="Mirror mode sync" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.430159" expandedContexts="('taskviewer',)" id="48050a18-c07b-43f0-9e37-9332614b20a3" modificationDateTime="2026-02-14 12:14:56.430168" status="1" subject="BitTorrent Sync">
+<task creationDateTime="2026-02-14 12:14:56.430159" id="48050a18-c07b-43f0-9e37-9332614b20a3" modificationDateTime="2026-02-14 12:14:56.430168" status="1" subject="BitTorrent Sync">
 <task creationDateTime="2026-02-14 12:14:56.430624" id="37ef9a36-a896-47be-a07e-0e4a2c5462c5" modificationDateTime="2026-02-14 12:14:56.430631" status="1" subject="Incremental backup" />
 <task creationDateTime="2026-02-14 12:14:56.430845" id="41c727a0-1471-4642-814f-5b80fd7bca53" modificationDateTime="2026-02-14 12:14:56.430852" status="1" subject="Restore backup" />
 <task creationDateTime="2026-02-14 12:14:56.431662" id="43cbc61f-42ff-4639-a82b-8b323c8759ad" modificationDateTime="2026-02-14 12:14:56.431671" status="1" subject="Create snapshot" />
@@ -1441,7 +1448,7 @@
 <task creationDateTime="2026-02-14 12:14:56.430411" id="b43a3aad-b5d8-4e10-8e80-1de68b7bc214" modificationDateTime="2026-02-14 12:14:56.430420" status="1" subject="Full backup" />
 <task creationDateTime="2026-02-14 12:14:56.431449" id="c813c3a2-e7fd-4484-8e97-2888b759a1b6" modificationDateTime="2026-02-14 12:14:56.431456" status="1" subject="Delete source then sync" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.445208" expandedContexts="('taskviewer',)" id="50619196-917e-494f-aa84-fe491ff8e062" modificationDateTime="2026-02-14 12:14:56.445220" status="1" subject="Handy Backup">
+<task creationDateTime="2026-02-14 12:14:56.445208" id="50619196-917e-494f-aa84-fe491ff8e062" modificationDateTime="2026-02-14 12:14:56.445220" status="1" subject="Handy Backup">
 <task creationDateTime="2026-02-14 12:14:56.445771" id="23db4183-96d9-4c3d-a73d-f6bcbea46892" modificationDateTime="2026-02-14 12:14:56.445781" status="1" subject="Incremental backup" />
 <task creationDateTime="2026-02-14 12:14:56.446307" id="4c968c7b-047d-4fe8-98e5-616c9df814ff" modificationDateTime="2026-02-14 12:14:56.446318" status="1" subject="Sync 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.446030" id="659b2a1a-af62-42fe-a688-3812d65ded06" modificationDateTime="2026-02-14 12:14:56.446039" status="1" subject="Restore backup" />
@@ -1450,7 +1457,7 @@
 <task creationDateTime="2026-02-14 12:14:56.447045" id="de44ff7f-abfd-44b9-a5ac-19d79be3381c" modificationDateTime="2026-02-14 12:14:56.447053" status="1" subject="Create snapshot" />
 <task creationDateTime="2026-02-14 12:14:56.445513" id="e08a0e08-133c-44db-949a-6a5d89960278" modificationDateTime="2026-02-14 12:14:56.445522" status="1" subject="Full backup" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.431973" expandedContexts="('taskviewer',)" id="655bb129-7b82-42a6-9908-8ab1d7e5114a" modificationDateTime="2026-02-14 12:14:56.431981" status="1" subject="Cobian Backup">
+<task creationDateTime="2026-02-14 12:14:56.431973" id="655bb129-7b82-42a6-9908-8ab1d7e5114a" modificationDateTime="2026-02-14 12:14:56.431981" status="1" subject="Cobian Backup">
 <task creationDateTime="2026-02-14 12:14:56.432799" id="29afa3d1-57c6-4743-a7be-8ca1f0db8fd0" modificationDateTime="2026-02-14 12:14:56.432810" status="1" subject="Restore backup" />
 <task creationDateTime="2026-02-14 12:14:56.433270" id="961198e8-cdf3-4c91-955d-a544d730f2f7" modificationDateTime="2026-02-14 12:14:56.433279" status="1" subject="Mirror mode sync" />
 <task creationDateTime="2026-02-14 12:14:56.433546" id="9a88ac04-3091-4ff3-9529-7294e502d817" modificationDateTime="2026-02-14 12:14:56.433558" status="1" subject="Delete source then sync" />
@@ -1468,7 +1475,7 @@
 <task creationDateTime="2026-02-14 12:14:56.453362" id="4b92872f-b76d-41b5-9fb7-ff9777643c8d" modificationDateTime="2026-02-14 12:14:56.453370" status="1" subject="Incremental backup" />
 <task creationDateTime="2026-02-14 12:14:56.453107" id="ca89b10d-35b0-434c-a88b-ddf6d57a6c10" modificationDateTime="2026-02-14 12:14:56.453117" status="1" subject="Full backup" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.459914" expandedContexts="('taskviewer',)" id="67365547-1a1e-4ee5-ac67-e35433d8ce38" modificationDateTime="2026-02-14 12:14:56.459925" status="1" subject="TeraCopy">
+<task creationDateTime="2026-02-14 12:14:56.459914" id="67365547-1a1e-4ee5-ac67-e35433d8ce38" modificationDateTime="2026-02-14 12:14:56.459925" status="1" subject="TeraCopy">
 <task creationDateTime="2026-02-14 12:14:56.461103" id="4121561c-da8e-493e-aab2-ca9cf9dac96a" modificationDateTime="2026-02-14 12:14:56.461112" status="1" subject="Sync 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.460543" id="4b228d5c-6b6f-49d1-bc4a-6606ab3b4787" modificationDateTime="2026-02-14 12:14:56.460553" status="1" subject="Incremental backup" />
 <task creationDateTime="2026-02-14 12:14:56.461641" id="644c9582-c399-4e26-a02d-3acb5ecf6be2" modificationDateTime="2026-02-14 12:14:56.461651" status="1" subject="Delete source then sync" />
@@ -1486,7 +1493,7 @@
 <task creationDateTime="2026-02-14 12:14:56.429430" id="afe0ab35-efd8-4580-abd4-39649affa40f" modificationDateTime="2026-02-14 12:14:56.429438" status="1" subject="Mirror mode sync" />
 <task creationDateTime="2026-02-14 12:14:56.428973" id="f34d704d-8d54-4f1d-aa20-1d217f3527e4" modificationDateTime="2026-02-14 12:14:56.428985" status="1" subject="Restore backup" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.449907" expandedContexts="('taskviewer',)" id="9e8f8bac-48ee-4979-9030-1b6b7379e7f9" modificationDateTime="2026-02-14 12:14:56.449917" status="1" subject="MegaSync">
+<task creationDateTime="2026-02-14 12:14:56.449907" id="9e8f8bac-48ee-4979-9030-1b6b7379e7f9" modificationDateTime="2026-02-14 12:14:56.449917" status="1" subject="MegaSync">
 <task creationDateTime="2026-02-14 12:14:56.452098" id="11c36b0f-95b2-4501-83c7-ef5d3b17f157" modificationDateTime="2026-02-14 12:14:56.452107" status="1" subject="Delete source then sync" />
 <task creationDateTime="2026-02-14 12:14:56.452367" id="34568495-0efc-4b38-ab24-3106c78e19b5" modificationDateTime="2026-02-14 12:14:56.452376" status="1" subject="Create snapshot" />
 <task creationDateTime="2026-02-14 12:14:56.451811" id="43232681-5ddc-437d-9b6e-051ba9bd522f" modificationDateTime="2026-02-14 12:14:56.451822" status="1" subject="Mirror mode sync" />
@@ -1495,7 +1502,7 @@
 <task creationDateTime="2026-02-14 12:14:56.451074" id="c6b057d0-8545-4501-aaa0-221143d1dd51" modificationDateTime="2026-02-14 12:14:56.451086" status="1" subject="Restore backup" />
 <task creationDateTime="2026-02-14 12:14:56.450642" id="cf983ef4-3602-47cd-9d87-68eb8cc1500b" modificationDateTime="2026-02-14 12:14:56.450656" status="1" subject="Incremental backup" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.455039" expandedContexts="('taskviewer',)" id="9fae0326-dbde-4266-9a4e-6be5b73f05fe" modificationDateTime="2026-02-14 12:14:56.455050" status="1" subject="Resilio Sync">
+<task creationDateTime="2026-02-14 12:14:56.455039" id="9fae0326-dbde-4266-9a4e-6be5b73f05fe" modificationDateTime="2026-02-14 12:14:56.455050" status="1" subject="Resilio Sync">
 <task creationDateTime="2026-02-14 12:14:56.456414" id="25550b61-3c9d-4b63-aebb-7713716231ed" modificationDateTime="2026-02-14 12:14:56.456423" status="1" subject="Mirror mode sync" />
 <task creationDateTime="2026-02-14 12:14:56.456146" id="42246d96-cd61-4225-a53d-c79797785334" modificationDateTime="2026-02-14 12:14:56.456154" status="1" subject="Sync 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.456668" id="4c7194c7-8629-4a48-8cfa-af2fd45ee699" modificationDateTime="2026-02-14 12:14:56.456677" status="1" subject="Delete source then sync" />
@@ -1504,7 +1511,7 @@
 <task creationDateTime="2026-02-14 12:14:56.455893" id="fbe0541a-4751-49ec-8e2c-44542489ea91" modificationDateTime="2026-02-14 12:14:56.455901" status="1" subject="Restore backup" />
 <task creationDateTime="2026-02-14 12:14:56.455357" id="feebbd81-fff3-492f-b380-659940aa7438" modificationDateTime="2026-02-14 12:14:56.455366" status="1" subject="Full backup" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.467595" expandedContexts="('taskviewer',)" id="a6b1e3ee-200d-4c4f-a988-087662e65323" modificationDateTime="2026-02-14 12:14:56.467605" status="1" subject="robocopy">
+<task creationDateTime="2026-02-14 12:14:56.467595" id="a6b1e3ee-200d-4c4f-a988-087662e65323" modificationDateTime="2026-02-14 12:14:56.467605" status="1" subject="robocopy">
 <task creationDateTime="2026-02-14 12:14:56.469403" id="06c6ac91-6b3b-488c-b082-43b58559d2fb" modificationDateTime="2026-02-14 12:14:56.469413" status="1" subject="Delete source then sync" />
 <task creationDateTime="2026-02-14 12:14:56.468539" id="0c77d3fd-c224-4dae-b666-af9b23e08089" modificationDateTime="2026-02-14 12:14:56.468549" status="1" subject="Restore backup" />
 <task creationDateTime="2026-02-14 12:14:56.469690" id="dae2150c-2777-489d-a222-f988842bdecf" modificationDateTime="2026-02-14 12:14:56.469698" status="1" subject="Create snapshot" />
@@ -1513,7 +1520,7 @@
 <task creationDateTime="2026-02-14 12:14:56.468841" id="f2c822cc-8930-4747-95de-ad93a05539ed" modificationDateTime="2026-02-14 12:14:56.468851" status="1" subject="Sync 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.469116" id="f3f4f974-a942-4dde-83ef-ef768c923ab2" modificationDateTime="2026-02-14 12:14:56.469124" status="1" subject="Mirror mode sync" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.462353" expandedContexts="('taskviewer',)" id="bb445c61-96f1-48b9-bd97-6add5408a80e" modificationDateTime="2026-02-14 12:14:56.462364" status="1" subject="pCloud">
+<task creationDateTime="2026-02-14 12:14:56.462353" id="bb445c61-96f1-48b9-bd97-6add5408a80e" modificationDateTime="2026-02-14 12:14:56.462364" status="1" subject="pCloud">
 <task creationDateTime="2026-02-14 12:14:56.464007" id="0a263325-07e8-4f50-8851-a04d5feca39c" modificationDateTime="2026-02-14 12:14:56.464015" status="1" subject="Delete source then sync" />
 <task creationDateTime="2026-02-14 12:14:56.463751" id="42de569b-c8ee-44a6-bb31-3928a6927ca7" modificationDateTime="2026-02-14 12:14:56.463759" status="1" subject="Mirror mode sync" />
 <task creationDateTime="2026-02-14 12:14:56.463492" id="5944e418-3f5e-40df-817b-cad2a84fce91" modificationDateTime="2026-02-14 12:14:56.463500" status="1" subject="Sync 10k files" />
@@ -1531,7 +1538,7 @@
 <task creationDateTime="2026-02-14 12:14:56.427724" id="a3fd4846-4da4-484e-95a5-07f157955804" modificationDateTime="2026-02-14 12:14:56.427734" status="1" subject="Delete source then sync" />
 <task creationDateTime="2026-02-14 12:14:56.427176" id="fd7f5c3e-0fdd-4bff-a15e-70cb687069a7" modificationDateTime="2026-02-14 12:14:56.427187" status="1" subject="Sync 10k files" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.438813" expandedContexts="('taskviewer',)" id="d68cdf29-b58e-48d9-91d7-5cf1569ee50a" modificationDateTime="2026-02-14 12:14:56.438823" status="1" subject="FreeFileSync">
+<task creationDateTime="2026-02-14 12:14:56.438813" id="d68cdf29-b58e-48d9-91d7-5cf1569ee50a" modificationDateTime="2026-02-14 12:14:56.438823" status="1" subject="FreeFileSync">
 <task creationDateTime="2026-02-14 12:14:56.439747" id="1a95b21e-7ca3-46d2-9d4e-2aeb27b20d60" modificationDateTime="2026-02-14 12:14:56.439754" status="1" subject="Sync 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.440189" id="843a8168-50b5-424f-b03a-ae330eedc1f8" modificationDateTime="2026-02-14 12:14:56.440197" status="1" subject="Delete source then sync" />
 <task creationDateTime="2026-02-14 12:14:56.439966" id="8ddae4e2-205e-46a3-8f5e-fcb6c12962da" modificationDateTime="2026-02-14 12:14:56.439975" status="1" subject="Mirror mode sync" />
@@ -1540,7 +1547,7 @@
 <task creationDateTime="2026-02-14 12:14:56.440411" id="d6a4d1ea-eb2d-44d4-9707-12c1616a0333" modificationDateTime="2026-02-14 12:14:56.440419" status="1" subject="Create snapshot" />
 <task creationDateTime="2026-02-14 12:14:56.439534" id="e6b4dd78-e440-4cb8-b02d-38ddaee1da03" modificationDateTime="2026-02-14 12:14:56.439541" status="1" subject="Restore backup" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.464694" expandedContexts="('taskviewer',)" id="d7c137fb-6c11-49b9-a946-064b44446ae5" modificationDateTime="2026-02-14 12:14:56.464703" status="1" subject="rclone">
+<task creationDateTime="2026-02-14 12:14:56.464694" id="d7c137fb-6c11-49b9-a946-064b44446ae5" modificationDateTime="2026-02-14 12:14:56.464703" status="1" subject="rclone">
 <task creationDateTime="2026-02-14 12:14:56.467121" id="0a73d537-d2e0-4cd1-ae8a-1a007de30896" modificationDateTime="2026-02-14 12:14:56.467132" status="1" subject="Create snapshot" />
 <task creationDateTime="2026-02-14 12:14:56.465340" id="62971b19-ba5f-4cfb-a18a-b70578b14990" modificationDateTime="2026-02-14 12:14:56.465353" status="1" subject="Incremental backup" />
 <task creationDateTime="2026-02-14 12:14:56.465044" id="648276e7-d59f-4997-948f-2085f3fb48a1" modificationDateTime="2026-02-14 12:14:56.465053" status="1" subject="Full backup" />
@@ -1549,7 +1556,7 @@
 <task creationDateTime="2026-02-14 12:14:56.466728" id="cdac3db9-34cb-44bd-ade3-ecf9e8e3a85a" modificationDateTime="2026-02-14 12:14:56.466740" status="1" subject="Delete source then sync" />
 <task creationDateTime="2026-02-14 12:14:56.465720" id="dd810e54-36b0-4b7c-8770-bc97a1b32d2d" modificationDateTime="2026-02-14 12:14:56.465732" status="1" subject="Restore backup" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.434151" expandedContexts="('taskviewer',)" id="d7f83aaa-80a8-4bdf-b9e5-cf523e2d6e15" modificationDateTime="2026-02-14 12:14:56.434161" status="1" subject="Dropbox">
+<task creationDateTime="2026-02-14 12:14:56.434151" id="d7f83aaa-80a8-4bdf-b9e5-cf523e2d6e15" modificationDateTime="2026-02-14 12:14:56.434161" status="1" subject="Dropbox">
 <task creationDateTime="2026-02-14 12:14:56.435386" id="162cfe7b-13c1-4946-a473-37250c553ee7" modificationDateTime="2026-02-14 12:14:56.435396" status="1" subject="Sync 10k files" />
 <task creationDateTime="2026-02-14 12:14:56.436116" id="26b570e9-3c1b-4452-ac72-acb84680ce5a" modificationDateTime="2026-02-14 12:14:56.436125" status="1" subject="Delete source then sync" />
 <task creationDateTime="2026-02-14 12:14:56.434400" id="2f4d98e9-4973-48f2-8b15-7dc2e9f8c44e" modificationDateTime="2026-02-14 12:14:56.434409" status="1" subject="Full backup" />
@@ -1558,7 +1565,7 @@
 <task creationDateTime="2026-02-14 12:14:56.435879" id="70dfbb79-20ba-440d-b184-cec32ca5f8c4" modificationDateTime="2026-02-14 12:14:56.435890" status="1" subject="Mirror mode sync" />
 <task creationDateTime="2026-02-14 12:14:56.435117" id="7261a2b6-3ed3-4d40-9ea6-0b683fe6d59a" modificationDateTime="2026-02-14 12:14:56.435129" status="1" subject="Restore backup" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.436671" expandedContexts="('taskviewer',)" id="e4151916-35de-4ebf-b328-b2d5965d48b8" modificationDateTime="2026-02-14 12:14:56.436681" status="1" subject="EaseUS Todo Backup">
+<task creationDateTime="2026-02-14 12:14:56.436671" id="e4151916-35de-4ebf-b328-b2d5965d48b8" modificationDateTime="2026-02-14 12:14:56.436681" status="1" subject="EaseUS Todo Backup">
 <task creationDateTime="2026-02-14 12:14:56.438258" id="10d39864-96aa-4cbb-8511-4821c06c33e8" modificationDateTime="2026-02-14 12:14:56.438266" status="1" subject="Delete source then sync" />
 <task creationDateTime="2026-02-14 12:14:56.438035" id="3325796c-f67d-440a-b4fb-85dbdf33673d" modificationDateTime="2026-02-14 12:14:56.438042" status="1" subject="Mirror mode sync" />
 <task creationDateTime="2026-02-14 12:14:56.437790" id="36423402-a656-4fc0-bbee-2b16ac7a22ec" modificationDateTime="2026-02-14 12:14:56.437798" status="1" subject="Sync 10k files" />
@@ -1568,7 +1575,7 @@
 <task creationDateTime="2026-02-14 12:14:56.438484" id="e00deaeb-99c1-4ad6-bbee-3b033f07dc85" modificationDateTime="2026-02-14 12:14:56.438492" status="1" subject="Create snapshot" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.895670" id="67e38afb-5a79-4e66-b405-24648d4e309d" modificationDateTime="2026-02-14 12:14:56.895680" status="1" subject="Forensics / Reverse Engineering">
+<task creationDateTime="2026-02-14 12:14:56.895670" id="67e38afb-5a79-4e66-b405-24648d4e309d" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Forensics / Reverse Engineering">
 <task creationDateTime="2026-02-14 12:14:56.928861" expandedContexts="('taskviewer',)" id="07c0de93-4a1c-4a96-bfe5-6c68e739be43" modificationDateTime="2026-02-14 12:14:56.928870" status="1" subject="hashdeep">
 <task creationDateTime="2026-02-14 12:14:56.930815" id="187df2b9-fc10-43d3-8a1a-e87ad3ffddfc" modificationDateTime="2026-02-14 12:14:56.930825" status="1" subject="Scan file signature" />
 <task creationDateTime="2026-02-14 12:14:56.931356" id="a5cf6def-62b1-4554-b3d4-e60c7d1c6aa7" modificationDateTime="2026-02-14 12:14:56.931365" status="1" subject="Export analysis report" />
@@ -1660,7 +1667,7 @@
 <task creationDateTime="2026-02-14 12:14:56.911491" id="ec373ae6-c5f7-4dad-bb95-d6280c0c308e" modificationDateTime="2026-02-14 12:14:56.911499" status="1" subject="Scan file signature" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:57.741976" id="77480385-1f72-4aed-a586-f7b39f3096f3" modificationDateTime="2026-02-14 12:14:57.741982" status="1" subject="PDF Tools">
+<task creationDateTime="2026-02-14 12:14:57.741976" id="77480385-1f72-4aed-a586-f7b39f3096f3" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="PDF Tools">
 <task creationDateTime="2026-02-14 12:14:57.825665" expandedContexts="('taskviewer',)" id="01ed214c-816c-4431-af4d-44db3c4c2eb9" modificationDateTime="2026-02-14 12:14:57.825677" status="1" subject="SumatraPDF">
 <task creationDateTime="2026-02-14 12:14:57.828139" id="3536fe33-4bda-49de-981b-cb96f395c382" modificationDateTime="2026-02-14 12:14:57.828150" status="1" subject="Merge 50 PDFs" />
 <task creationDateTime="2026-02-14 12:14:57.833418" id="5ae58e7d-84b2-443b-b2c2-14841b56e2aa" modificationDateTime="2026-02-14 12:14:57.833430" status="1" subject="Batch convert 100 PDFs" />
@@ -1750,7 +1757,7 @@
 <task creationDateTime="2026-02-14 12:14:57.794040" id="de46815d-1871-4d1f-86dd-09e5e2266088" modificationDateTime="2026-02-14 12:14:57.794050" status="1" subject="Split PDF" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:58.501328" id="7ac7489c-d021-432d-9bdf-e6580b2645d3" modificationDateTime="2026-02-14 12:14:58.501340" status="1" subject="Video Editing / Transcoding">
+<task creationDateTime="2026-02-14 12:14:58.501328" id="7ac7489c-d021-432d-9bdf-e6580b2645d3" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Video Editing / Transcoding">
 <task creationDateTime="2026-02-14 12:14:58.546170" expandedContexts="('taskviewer',)" id="02908c29-51ea-4f69-bdd1-d519b7894d4f" modificationDateTime="2026-02-14 12:14:58.546182" status="1" subject="Lightworks">
 <task creationDateTime="2026-02-14 12:14:58.549406" id="1e5d2b87-4f2f-45b2-b796-672e5ef0032f" modificationDateTime="2026-02-14 12:14:58.549418" status="1" subject="Render output file" />
 <task creationDateTime="2026-02-14 12:14:58.553136" id="5edcea45-7eff-49b8-8c61-c8085b4cf537" modificationDateTime="2026-02-14 12:14:58.553148" status="1" subject="Export multiple formats" />
@@ -1808,20 +1815,59 @@
 <task creationDateTime="2026-02-14 12:14:58.529717" id="e8d484f3-e551-4317-b6fc-b80931a1063e" modificationDateTime="2026-02-14 12:14:58.529729" status="1" subject="Batch convert 50 videos" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.470082" id="87aeddea-a039-40f6-9e99-7dacd52115df" modificationDateTime="2026-02-14 12:14:56.470099" status="1" subject="Browser">
+<task creationDateTime="2026-02-14 12:14:56.470082" expandedContexts="('taskviewer',)" id="87aeddea-a039-40f6-9e99-7dacd52115df" modificationDateTime="2026-02-20 20:23:49.746000" priority="2" status="1" subject="Browser">
+<task creationDateTime="2026-02-14 12:14:56.470517" expandedContexts="('taskviewer',)" id="075a735f-d330-4d8a-b373-57f2d697789f" modificationDateTime="2026-02-18 10:53:18.763000" status="1" subject="Edge">
 <task creationDateTime="2026-02-14 12:14:56.472852" id="06b08de0-6c28-4a06-b8dd-56728f9863a4" modificationDateTime="2026-02-14 12:14:56.472861" status="1" subject="Clear browsing data" />
-<task creationDateTime="2026-02-14 12:14:56.470517" expandedContexts="('taskviewer',)" id="075a735f-d330-4d8a-b373-57f2d697789f" modificationDateTime="2026-02-14 12:14:56.470555" status="1" subject="Brave">
-<task creationDateTime="2026-02-14 12:14:56.471863" id="44b0814d-7fda-4d5d-83f5-c22934af5fff" modificationDateTime="2026-02-14 12:14:56.471873" status="1" subject="Open 30 tabs" />
+<task completiondate="2026-02-18 10:53:40.893000" creationDateTime="2026-02-14 12:14:56.471863" id="44b0814d-7fda-4d5d-83f5-c22934af5fff" modificationDateTime="2026-02-18 10:53:40.893000" percentageComplete="100" status="1" subject="Open 30 tabs" />
 <task creationDateTime="2026-02-14 12:14:56.472201" id="4bf59ad0-a107-4e01-b836-94ff873fb475" modificationDateTime="2026-02-14 12:14:56.472211" status="1" subject="Download 100 small files" />
 <task creationDateTime="2026-02-14 12:14:56.472534" id="5621ff12-5258-476f-9657-737366fc2881" modificationDateTime="2026-02-14 12:14:56.472543" status="1" subject="Download 1 large file (&gt;1GB)" />
-<task creationDateTime="2026-02-14 12:14:56.471199" id="a80ffb40-acb8-4611-96fb-f329b61212bd" modificationDateTime="2026-02-14 12:14:56.471209" status="1" subject="Update" />
+<task completiondate="2026-02-20 20:24:08.784000" creationDateTime="2026-02-14 12:14:56.471199" id="a80ffb40-acb8-4611-96fb-f329b61212bd" modificationDateTime="2026-02-20 20:24:08.784000" percentageComplete="100" status="1" subject="Update" />
 <task creationDateTime="2026-02-14 12:14:56.470860" id="b2151408-2125-46bc-a6fa-27f751e2e817" modificationDateTime="2026-02-14 12:14:56.470871" status="1" subject="Install" />
-<task creationDateTime="2026-02-14 12:14:56.471529" id="be112a2d-0b6f-402a-988f-b15f1a0c605c" modificationDateTime="2026-02-14 12:14:56.471540" status="1" subject="Heavy browsing 60 minutes" />
-</task>
+<task completiondate="2026-02-18 10:54:00.019000" creationDateTime="2026-02-14 12:14:56.471529" id="be112a2d-0b6f-402a-988f-b15f1a0c605c" modificationDateTime="2026-02-18 10:54:00.019000" percentageComplete="100" status="1" subject="Heavy browsing 60 minutes" />
 <task creationDateTime="2026-02-14 12:14:56.473201" id="d6e1ade7-3937-4bce-9a27-a8203d053ff1" modificationDateTime="2026-02-14 12:14:56.473213" status="1" subject="Export bookmarks" />
 <task creationDateTime="2026-02-14 12:14:56.473580" id="e88985e3-8e91-48c3-82a4-cdb4c16535ff" modificationDateTime="2026-02-14 12:14:56.473591" status="1" subject="Import bookmarks" />
 </task>
-<task creationDateTime="2026-02-14 12:14:57.605588" id="88f61565-45ea-4353-af5c-6a96cb405c1c" modificationDateTime="2026-02-14 12:14:57.605598" status="1" subject="Office / Productivity">
+<task creationDateTime="2026-02-18 10:53:05.071000" id="54583bf0-0c7d-11f1-b801-d8bbc16feea2" status="1" subject="Brave">
+<task creationDateTime="2026-02-18 10:53:05.065000" id="5457518f-0c7d-11f1-80a1-d8bbc16feea2" status="1" subject="Open 30 tabs" />
+<task creationDateTime="2026-02-18 10:53:05.067000" id="54579fae-0c7d-11f1-9c82-d8bbc16feea2" status="1" subject="Download 100 small files" />
+<task creationDateTime="2026-02-18 10:53:05.067000" id="54579faf-0c7d-11f1-b3cb-d8bbc16feea2" status="1" subject="Download 1 large file (&gt;1GB)" />
+<task creationDateTime="2026-02-18 10:53:05.067000" id="54579fb0-0c7d-11f1-8514-d8bbc16feea2" status="1" subject="Update" />
+<task creationDateTime="2026-02-18 10:53:05.068000" id="5457c6c0-0c7d-11f1-85af-d8bbc16feea2" status="1" subject="Install" />
+<task creationDateTime="2026-02-18 10:53:05.068000" id="5457c6c1-0c7d-11f1-a260-d8bbc16feea2" status="1" subject="Heavy browsing 60 minutes" />
+<task creationDateTime="2026-02-18 10:53:05.069000" id="5457edcf-0c7d-11f1-aec6-d8bbc16feea2" status="1" subject="Import bookmarks" />
+<task creationDateTime="2026-02-18 10:53:05.070000" id="545814de-0c7d-11f1-a970-d8bbc16feea2" status="1" subject="Export bookmarks" />
+<task creationDateTime="2026-02-18 10:53:05.070000" id="545814df-0c7d-11f1-9567-d8bbc16feea2" status="1" subject="Clear browsing data" />
+</task>
+<task completiondate="2026-02-20 21:32:00.734000" creationDateTime="2026-02-18 10:54:34.968000" expandedContexts="('taskviewer',)" id="89ed6d82-0c7d-11f1-9e55-d8bbc16feea2" modificationDateTime="2026-02-20 21:32:00.734000" percentageComplete="100" status="1" subject="Chrome">
+<task completiondate="2026-02-20 21:29:12.494000" creationDateTime="2026-02-18 10:54:34.966000" id="89ed1f61-0c7d-11f1-910b-d8bbc16feea2" modificationDateTime="2026-02-20 21:29:12.494000" percentageComplete="100" status="1" subject="Open 30 tabs" />
+<task completiondate="2026-02-20 21:29:18.638000" creationDateTime="2026-02-18 10:54:34.966000" id="89ed1f62-0c7d-11f1-83a5-d8bbc16feea2" modificationDateTime="2026-02-20 21:29:18.638000" percentageComplete="100" status="1" subject="Download 100 small files">
+<description>
+F12 -&gt; Console, paste vào rồi chạy:for (let i = 0; i &lt; 100; i++) {
+    window.open("https://httpbin.org/bytes/1024");
+}
+</description>
+</task>
+<task completiondate="2026-02-20 21:29:21.395000" creationDateTime="2026-02-18 10:54:34.966000" id="89ed1f63-0c7d-11f1-9259-d8bbc16feea2" modificationDateTime="2026-02-20 21:29:21.395000" percentageComplete="100" status="1" subject="Download 1 large file (&gt;1GB)" />
+<task completiondate="2026-02-20 21:29:06.909000" creationDateTime="2026-02-18 10:54:34.966000" id="89ed1f64-0c7d-11f1-85b7-d8bbc16feea2" modificationDateTime="2026-02-20 21:29:06.909000" percentageComplete="100" status="1" subject="Update" />
+<task completiondate="2026-02-20 21:29:09.558000" creationDateTime="2026-02-18 10:54:34.966000" id="89ed1f65-0c7d-11f1-9cf1-d8bbc16feea2" modificationDateTime="2026-02-20 21:29:09.558000" percentageComplete="100" status="1" subject="Install" />
+<task completiondate="2026-02-20 21:29:15.044000" creationDateTime="2026-02-18 10:54:34.966000" id="89ed1f66-0c7d-11f1-b8b9-d8bbc16feea2" modificationDateTime="2026-02-20 21:29:15.044000" percentageComplete="100" status="1" subject="Heavy browsing 60 minutes" />
+<task completiondate="2026-02-20 21:32:00.734000" creationDateTime="2026-02-18 10:54:34.966000" id="89ed1f67-0c7d-11f1-b5e9-d8bbc16feea2" modificationDateTime="2026-02-20 20:24:23.475000" percentageComplete="100" status="1" subject="Import bookmarks" />
+<task completiondate="2026-02-20 21:32:00.734000" creationDateTime="2026-02-18 10:54:34.968000" id="89ed6d80-0c7d-11f1-a2fd-d8bbc16feea2" modificationDateTime="2026-02-20 20:24:23.475000" percentageComplete="100" status="1" subject="Export bookmarks" />
+<task completiondate="2026-02-20 21:32:00.734000" creationDateTime="2026-02-18 10:54:34.968000" id="89ed6d81-0c7d-11f1-a785-d8bbc16feea2" modificationDateTime="2026-02-20 20:24:23.475000" percentageComplete="100" status="1" subject="Clear browsing data" />
+</task>
+<task creationDateTime="2026-02-18 10:57:49.519000" id="fde38df5-0c7d-11f1-9f13-d8bbc16feea2" modificationDateTime="2026-02-18 10:57:56.420000" status="1" subject="Firefox">
+<task creationDateTime="2026-02-18 10:57:49.518000" id="fde366de-0c7d-11f1-b902-d8bbc16feea2" status="1" subject="Open 30 tabs" />
+<task creationDateTime="2026-02-18 10:57:49.518000" id="fde366df-0c7d-11f1-8164-d8bbc16feea2" status="1" subject="Download 100 small files" />
+<task creationDateTime="2026-02-18 10:57:49.518000" id="fde366e0-0c7d-11f1-89bd-d8bbc16feea2" status="1" subject="Download 1 large file (&gt;1GB)" />
+<task creationDateTime="2026-02-18 10:57:49.518000" id="fde366e1-0c7d-11f1-8ad1-d8bbc16feea2" status="1" subject="Update" />
+<task creationDateTime="2026-02-18 10:57:49.519000" id="fde38df0-0c7d-11f1-b9b1-d8bbc16feea2" status="1" subject="Install" />
+<task creationDateTime="2026-02-18 10:57:49.519000" id="fde38df1-0c7d-11f1-a3b8-d8bbc16feea2" status="1" subject="Heavy browsing 60 minutes" />
+<task creationDateTime="2026-02-18 10:57:49.519000" id="fde38df2-0c7d-11f1-91a1-d8bbc16feea2" status="1" subject="Import bookmarks" />
+<task creationDateTime="2026-02-18 10:57:49.519000" id="fde38df3-0c7d-11f1-87dd-d8bbc16feea2" status="1" subject="Export bookmarks" />
+<task creationDateTime="2026-02-18 10:57:49.519000" id="fde38df4-0c7d-11f1-a1ea-d8bbc16feea2" status="1" subject="Clear browsing data" />
+</task>
+</task>
+<task creationDateTime="2026-02-14 12:14:57.605588" id="88f61565-45ea-4353-af5c-6a96cb405c1c" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Office / Productivity">
 <task creationDateTime="2026-02-14 12:14:57.611028" id="1e79e84c-a445-4a82-a3af-49d4f71c6874" modificationDateTime="2026-02-14 12:14:57.611039" status="1" subject="Save file 20 times" />
 <task creationDateTime="2026-02-14 12:14:57.613649" id="28be7291-1e61-4153-86aa-066e622a6901" modificationDateTime="2026-02-14 12:14:57.613661" status="1" subject="Export PDF" />
 <task creationDateTime="2026-02-14 12:14:57.612331" id="5e1d5cc2-fd86-488e-835d-289285a37a67" modificationDateTime="2026-02-14 12:14:57.612342" status="1" subject="Save As 10 different files" />
@@ -1832,7 +1878,7 @@
 <task creationDateTime="2026-02-14 12:14:57.614956" id="ae69213c-016b-431d-897f-169b8d7f3fa7" modificationDateTime="2026-02-14 12:14:57.614968" status="1" subject="Batch open 50 documents" />
 <task creationDateTime="2026-02-14 12:14:57.616284" id="d70378df-5416-40a7-b8cd-0b6de8299298" modificationDateTime="2026-02-14 12:14:57.616295" status="1" subject="Enable AutoSave for 15 minutes" />
 </task>
-<task creationDateTime="2026-02-14 12:14:58.083691" id="896e154b-2c15-4aa0-9314-12d6e414b0f1" modificationDateTime="2026-02-14 12:14:58.083702" status="1" subject="Security: Antivirus">
+<task creationDateTime="2026-02-14 12:14:58.083691" id="896e154b-2c15-4aa0-9314-12d6e414b0f1" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Security: Antivirus">
 <task creationDateTime="2026-02-14 12:14:58.182176" expandedContexts="('taskviewer',)" id="075d2c19-deba-476b-905d-e907a657d72a" modificationDateTime="2026-02-14 12:14:58.182188" status="1" subject="ZoneAlarm">
 <task creationDateTime="2026-02-14 12:14:58.183624" id="045360da-a477-4f8f-9a10-68127badb242" modificationDateTime="2026-02-14 12:14:58.183635" status="1" subject="Full disk scan" />
 <task creationDateTime="2026-02-14 12:14:58.185067" id="285581a3-7f83-4e39-8ab2-a11bd32f6f8c" modificationDateTime="2026-02-14 12:14:58.185078" status="1" subject="Quick scan" />
@@ -1914,7 +1960,7 @@
 <task creationDateTime="2026-02-14 12:14:58.156393" id="ffbc7282-60ac-4e76-97e7-b823fc823176" modificationDateTime="2026-02-14 12:14:58.156405" status="1" subject="Quarantine file" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:57.961081" id="a32dbfa5-e8af-4abd-89b7-8ef9f155db2b" modificationDateTime="2026-02-14 12:14:57.961093" status="1" subject="Screen Capture / Recording">
+<task creationDateTime="2026-02-14 12:14:57.961081" id="a32dbfa5-e8af-4abd-89b7-8ef9f155db2b" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Screen Capture / Recording">
 <task creationDateTime="2026-02-14 12:14:58.069010" expandedContexts="('taskviewer',)" id="20c572d8-b300-4100-bdcd-e5c326d303f5" modificationDateTime="2026-02-14 12:14:58.069022" status="1" subject="Snagit">
 <task creationDateTime="2026-02-14 12:14:58.072492" id="2d0465af-810d-45b6-ad38-0136c0082049" modificationDateTime="2026-02-14 12:14:58.072502" status="1" subject="Take 200 screenshots" />
 <task creationDateTime="2026-02-14 12:14:58.071595" id="8dbda0d3-3b04-44e4-baae-d806f929fe3c" modificationDateTime="2026-02-14 12:14:58.071607" status="1" subject="Record 4K video" />
@@ -2021,7 +2067,7 @@
 <task creationDateTime="2026-02-14 12:14:57.981139" id="ca61da5b-5d71-4191-8861-85f21e4b6110" modificationDateTime="2026-02-14 12:14:57.981151" status="1" subject="Record 4K video" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:58.192510" id="a659a9e2-1de3-435d-97cf-95a6339c93ec" modificationDateTime="2026-02-14 12:14:58.192523" status="1" subject="Security: Crypto Tools">
+<task creationDateTime="2026-02-14 12:14:58.192510" id="a659a9e2-1de3-435d-97cf-95a6339c93ec" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Security: Crypto Tools">
 <task creationDateTime="2026-02-14 12:14:58.204185" expandedContexts="('taskviewer',)" id="1d82d3aa-e096-4a36-ae69-ff7bb6292fcc" modificationDateTime="2026-02-14 12:14:58.204197" status="1" subject="gpg">
 <task creationDateTime="2026-02-14 12:14:58.208529" id="3cb7c524-285f-4fba-bbe4-0028769f8454" modificationDateTime="2026-02-14 12:14:58.208541" status="1" subject="Generate keypair" />
 <task creationDateTime="2026-02-14 12:14:58.205670" id="3eda106f-69e0-4509-828d-da5477671b91" modificationDateTime="2026-02-14 12:14:58.205681" status="1" subject="Encrypt 10GB folder" />
@@ -2079,7 +2125,7 @@
 <task creationDateTime="2026-02-14 12:14:58.220576" id="f3fe293f-f61c-4e00-9018-de1a4c4f0c96" modificationDateTime="2026-02-14 12:14:58.220587" status="1" subject="Verify signature" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:57.303950" id="aa3bd75a-4d97-46c5-b02a-cf8745f4b09b" modificationDateTime="2026-02-14 12:14:57.303966" status="1" subject="Misc">
+<task creationDateTime="2026-02-14 12:14:57.303950" id="aa3bd75a-4d97-46c5-b02a-cf8745f4b09b" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Misc">
 <task creationDateTime="2026-02-14 12:14:57.331319" expandedContexts="('taskviewer',)" id="0ba2a04e-b9e5-455a-9e5d-67a7bb83229e" modificationDateTime="2026-02-14 12:14:57.331331" status="1" subject="ansible" />
 <task creationDateTime="2026-02-14 12:14:57.341232" expandedContexts="('taskviewer',)" id="169594cf-b302-41c6-a526-fb1f3e0439a1" modificationDateTime="2026-02-14 12:14:57.341245" status="1" subject="java" />
 <task creationDateTime="2026-02-14 12:14:57.313476" expandedContexts="('taskviewer',)" id="173716ed-8eb8-441e-bc00-6adf9187ba92" modificationDateTime="2026-02-14 12:14:57.313488" status="1" subject="EmEditor" />
@@ -2123,7 +2169,7 @@
 <task creationDateTime="2026-02-14 12:14:57.320235" expandedContexts="('taskviewer',)" id="e8a4c104-71b0-4d66-bfa4-29d75a74a28b" modificationDateTime="2026-02-14 12:14:57.320253" status="1" subject="JetBrains PyCharm" />
 <task creationDateTime="2026-02-14 12:14:57.314916" expandedContexts="('taskviewer',)" id="ff836a46-5537-4efd-bc72-4554c0057f17" modificationDateTime="2026-02-14 12:14:57.314933" status="1" subject="GlassWire" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.719944" id="b089ff61-c9b4-446e-94a6-157a4afd9cc2" modificationDateTime="2026-02-14 12:14:56.719955" status="1" subject="Disc / ISO / USB Tools">
+<task creationDateTime="2026-02-14 12:14:56.719944" id="b089ff61-c9b4-446e-94a6-157a4afd9cc2" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Disc / ISO / USB Tools">
 <task creationDateTime="2026-02-14 12:14:56.738488" expandedContexts="('taskviewer',)" id="04135be6-7c03-455d-908e-d01a6aee4577" modificationDateTime="2026-02-14 12:14:56.738498" status="1" subject="Rufus">
 <task creationDateTime="2026-02-14 12:14:56.739378" id="9bbed17e-2d0a-40cc-8e5a-4679a4fd4e13" modificationDateTime="2026-02-14 12:14:56.739387" status="1" subject="Burn ISO to USB" />
 <task creationDateTime="2026-02-14 12:14:56.739816" id="c081d090-30a2-4afc-a37a-df49133dc24b" modificationDateTime="2026-02-14 12:14:56.739825" status="1" subject="Extract ISO" />
@@ -2179,7 +2225,7 @@
 <task creationDateTime="2026-02-14 12:14:56.723739" id="fbbbea87-84c2-49c1-bc8d-de03293ced3d" modificationDateTime="2026-02-14 12:14:56.723749" status="1" subject="Create ISO image" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.882343" id="b27cfede-40ca-439f-ba75-1dfe2ca66feb" modificationDateTime="2026-02-14 12:14:56.882352" status="1" subject="File Rename / Copy Utility">
+<task creationDateTime="2026-02-14 12:14:56.882343" id="b27cfede-40ca-439f-ba75-1dfe2ca66feb" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="File Rename / Copy Utility">
 <task creationDateTime="2026-02-14 12:14:56.892643" expandedContexts="('taskviewer',)" id="0ac5724e-eddb-4c1c-86b5-4e442015a314" modificationDateTime="2026-02-14 12:14:56.892653" status="1" subject="FastCopy">
 <task creationDateTime="2026-02-14 12:14:56.894576" id="941d63e3-e2b7-4a42-855b-b6559d513804" modificationDateTime="2026-02-14 12:14:56.894587" status="1" subject="Move large dataset" />
 <task creationDateTime="2026-02-14 12:14:56.895117" id="af1b4bac-96cb-453d-8a0e-3e7230a6abd9" modificationDateTime="2026-02-14 12:14:56.895127" status="1" subject="Verify copied files" />
@@ -2205,7 +2251,7 @@
 <task creationDateTime="2026-02-14 12:14:56.887791" id="a226eddf-47f3-4032-9385-406ce06a2d15" modificationDateTime="2026-02-14 12:14:56.887802" status="1" subject="Copy 50GB folder" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:57.905299" id="b872d54f-8b32-4626-9bc1-5e0dff5946e5" modificationDateTime="2026-02-14 12:14:57.905311" status="1" subject="Remote Access / SSH">
+<task creationDateTime="2026-02-14 12:14:57.905299" id="b872d54f-8b32-4626-9bc1-5e0dff5946e5" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Remote Access / SSH">
 <task creationDateTime="2026-02-14 12:14:57.952888" expandedContexts="('taskviewer',)" id="19510dfe-00b4-414f-8654-5082581a4d04" modificationDateTime="2026-02-14 12:14:57.952900" status="1" subject="psexec">
 <task creationDateTime="2026-02-14 12:14:57.956814" id="0f4c8b8e-6fac-4212-a809-d365fc1680c1" modificationDateTime="2026-02-14 12:14:57.956825" status="1" subject="Download 1GB file" />
 <task creationDateTime="2026-02-14 12:14:57.954090" id="13345f99-4e53-4bfc-a1ce-1a42680fb00d" modificationDateTime="2026-02-14 12:14:57.954101" status="1" subject="Connect to remote host" />
@@ -2256,7 +2302,7 @@
 <task creationDateTime="2026-02-14 12:14:57.951062" id="f423461f-69d5-4c1d-ae2e-f4fa5774e056" modificationDateTime="2026-02-14 12:14:57.951074" status="1" subject="Session reconnect test" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:58.458924" id="bd7abe91-223d-461d-b6db-70142c845a49" modificationDateTime="2026-02-14 12:14:58.458936" status="1" subject="Torrent / P2P">
+<task creationDateTime="2026-02-14 12:14:58.458924" id="bd7abe91-223d-461d-b6db-70142c845a49" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Torrent / P2P">
 <task creationDateTime="2026-02-14 12:14:58.481362" expandedContexts="('taskviewer',)" id="3d9f3ea6-820a-4846-b4b4-26dc88d2f688" modificationDateTime="2026-02-14 12:14:58.481374" status="1" subject="qBittorrent">
 <task creationDateTime="2026-02-14 12:14:58.487738" id="1bf75ac4-cdcb-4bbd-a634-5e7513312404" modificationDateTime="2026-02-14 12:14:58.487748" status="1" subject="Force recheck" />
 <task creationDateTime="2026-02-14 12:14:58.482809" id="4d901ac0-0cf4-4ee2-8232-0c5aab468045" modificationDateTime="2026-02-14 12:14:58.482821" status="1" subject="Download 5GB torrent" />
@@ -2286,7 +2332,7 @@
 <task creationDateTime="2026-02-14 12:14:58.477603" id="a95928ec-4b8d-41a6-8715-6efffe80a800" modificationDateTime="2026-02-14 12:14:58.477614" status="1" subject="Force recheck" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:57.202752" id="be16e19b-a3af-4208-beb6-804622d9ef27" modificationDateTime="2026-02-14 12:14:57.202763" status="1" subject="Media Player / Library">
+<task creationDateTime="2026-02-14 12:14:57.202752" id="be16e19b-a3af-4208-beb6-804622d9ef27" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Media Player / Library">
 <task creationDateTime="2026-02-14 12:14:57.216024" expandedContexts="('taskviewer',)" id="043f79d6-a0ad-495e-a3c2-67edc43353ef" modificationDateTime="2026-02-14 12:14:57.216040" status="1" subject="Emby">
 <task creationDateTime="2026-02-14 12:14:57.219807" id="045ba88c-0f85-493a-b428-2b1f745c2c0e" modificationDateTime="2026-02-14 12:14:57.219818" status="1" subject="Generate media thumbnails" />
 <task creationDateTime="2026-02-14 12:14:57.218858" id="12e7596f-0147-4eea-bb63-21ce3bfd916f" modificationDateTime="2026-02-14 12:14:57.218870" status="1" subject="Scan media library" />
@@ -2400,7 +2446,7 @@
 <task creationDateTime="2026-02-14 12:14:57.237558" id="d0e6e891-fc19-4cf2-92b2-8b048937898b" modificationDateTime="2026-02-14 12:14:57.237569" status="1" subject="Generate media thumbnails" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:58.590849" id="c1dd0295-f0bf-41da-9833-dc234708c2dc" modificationDateTime="2026-02-14 12:14:58.590863" status="1" subject="Virtualization / Sandbox / Encryption">
+<task creationDateTime="2026-02-14 12:14:58.590849" id="c1dd0295-f0bf-41da-9833-dc234708c2dc" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Virtualization / Sandbox / Encryption">
 <task creationDateTime="2026-02-14 12:14:58.703984" expandedContexts="('taskviewer',)" id="072af557-521d-48c7-89ad-7a829541282e" modificationDateTime="2026-02-14 12:14:58.703997" status="1" subject="VMware Workstation">
 <task creationDateTime="2026-02-14 12:14:58.714193" id="1c367590-24e8-4a60-8301-b111fff5b2ae" modificationDateTime="2026-02-14 12:14:58.714207" status="1" subject="Delete virtual machine" />
 <task creationDateTime="2026-02-14 12:14:58.708919" id="6bdbcfa7-8d50-4abf-bec3-5028049127be" modificationDateTime="2026-02-14 12:14:58.708931" status="1" subject="Create snapshot" />
@@ -2506,13 +2552,13 @@
 <task creationDateTime="2026-02-14 12:14:58.735923" id="c0d182b7-c594-4bf3-956f-19e86998bca8" modificationDateTime="2026-02-14 12:14:58.735934" status="1" subject="Restore snapshot" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.609885" id="c53857a0-d4a2-447a-a8a7-b1f3cae1747d" modificationDateTime="2026-02-14 12:14:56.609894" status="1" subject="Dev: Diff / Merge">
+<task creationDateTime="2026-02-14 12:14:56.609885" id="c53857a0-d4a2-447a-a8a7-b1f3cae1747d" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Dev: Diff / Merge">
 <task creationDateTime="2026-02-14 12:14:56.611295" expandedContexts="('taskviewer',)" id="11c45d8d-ba80-43b4-ac64-ac2edf72c607" modificationDateTime="2026-02-14 12:14:56.611304" status="1" subject="DiffMerge" />
 <task creationDateTime="2026-02-14 12:14:56.611776" expandedContexts="('taskviewer',)" id="90f7494e-a734-4610-82ce-c12e170afc20" modificationDateTime="2026-02-14 12:14:56.611787" status="1" subject="WinMerge" />
 <task creationDateTime="2026-02-14 12:14:56.610839" expandedContexts="('taskviewer',)" id="a9a95a94-6879-41b9-b298-3d70de5bbd9e" modificationDateTime="2026-02-14 12:14:56.610848" status="1" subject="Beyond Compare" />
 <task creationDateTime="2026-02-14 12:14:56.610371" expandedContexts="('taskviewer',)" id="cc892b61-3a8e-4ccb-b833-e558175562a7" modificationDateTime="2026-02-14 12:14:56.610383" status="1" subject="Araxis Merge" />
 </task>
-<task creationDateTime="2026-02-14 12:14:56.542929" id="cc303e07-6734-4881-95d3-42798f62180d" modificationDateTime="2026-02-14 12:14:56.542938" status="1" subject="Dev: Build / Toolchain">
+<task creationDateTime="2026-02-14 12:14:56.542929" id="cc303e07-6734-4881-95d3-42798f62180d" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Dev: Build / Toolchain">
 <task creationDateTime="2026-02-14 12:14:56.597345" expandedContexts="('taskviewer',)" id="01491f77-b2fa-47ec-a61b-18bbf4a59421" modificationDateTime="2026-02-14 12:14:56.597354" status="1" subject="rustc">
 <task creationDateTime="2026-02-14 12:14:56.598897" id="14186605-ce58-47ca-8c19-27d61ba042b0" modificationDateTime="2026-02-14 12:14:56.598907" status="1" subject="Clean build directory" />
 <task creationDateTime="2026-02-14 12:14:56.599274" id="5fbea8cd-bf12-4ab4-a95f-65df0d141673" modificationDateTime="2026-02-14 12:14:56.599282" status="1" subject="Package binary" />
@@ -2717,7 +2763,7 @@
 <task creationDateTime="2026-02-14 12:14:56.609149" id="f5f01240-7846-4025-b73c-704505d34937" modificationDateTime="2026-02-14 12:14:56.609160" status="1" subject="Clean build directory" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.504997" id="d2dd27a8-d5f5-439a-9b90-c389eca6ba61" modificationDateTime="2026-02-14 12:14:56.505001" status="1" subject="Database Tools">
+<task creationDateTime="2026-02-14 12:14:56.504997" id="d2dd27a8-d5f5-439a-9b90-c389eca6ba61" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Database Tools">
 <task creationDateTime="2026-02-14 12:14:56.533944" expandedContexts="('taskviewer',)" id="11b52d0c-bc14-4c9c-ad3c-a7465f859e7b" modificationDateTime="2026-02-14 12:14:56.533955" status="1" subject="pg_restore">
 <task creationDateTime="2026-02-14 12:14:56.535506" id="0894088d-0215-4f01-86d4-4c15f8988c25" modificationDateTime="2026-02-14 12:14:56.535514" status="1" subject="Import database dump" />
 <task creationDateTime="2026-02-14 12:14:56.535786" id="533b9cfd-3775-412a-bf43-881b424b3748" modificationDateTime="2026-02-14 12:14:56.535793" status="1" subject="Vacuum optimize database" />
@@ -2855,7 +2901,7 @@
 <task creationDateTime="2026-02-14 12:14:56.523717" id="cd2b31d5-8b00-41bd-a8c9-de7973ef409b" modificationDateTime="2026-02-14 12:14:56.523723" status="1" subject="Export database dump" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.743106" id="d4da8bee-2eeb-4578-ae19-2488531df893" modificationDateTime="2026-02-14 12:14:56.743115" status="1" subject="Disk / Partition / Recovery">
+<task creationDateTime="2026-02-14 12:14:56.743106" id="d4da8bee-2eeb-4578-ae19-2488531df893" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Disk / Partition / Recovery">
 <task creationDateTime="2026-02-14 12:14:56.758294" expandedContexts="('taskviewer',)" id="34a0d659-8d5f-4801-aebc-cfff7b62622b" modificationDateTime="2026-02-14 12:14:56.758304" status="1" subject="bcdedit">
 <task creationDateTime="2026-02-14 12:14:56.760213" id="10e3c688-ed11-40a3-b16c-743738b36671" modificationDateTime="2026-02-14 12:14:56.760222" status="1" subject="Format partition" />
 <task creationDateTime="2026-02-14 12:14:56.761118" id="499fd315-c18c-4aa9-82ef-1b6882b55493" modificationDateTime="2026-02-14 12:14:56.761128" status="1" subject="Run disk repair" />
@@ -2953,7 +2999,7 @@
 <task creationDateTime="2026-02-14 12:14:56.752688" id="dd6f60bc-fd40-4b6e-b9f7-67c846632783" modificationDateTime="2026-02-14 12:14:56.752697" status="1" subject="Resize partition" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:56.699128" id="daa86028-8e5f-4f60-be0d-0b5c54170290" modificationDateTime="2026-02-14 12:14:56.699148" status="1" subject="DevOps: Container / K8s / Stack">
+<task creationDateTime="2026-02-14 12:14:56.699128" id="daa86028-8e5f-4f60-be0d-0b5c54170290" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="DevOps: Container / K8s / Stack">
 <task creationDateTime="2026-02-14 12:14:56.703053" expandedContexts="('taskviewer',)" id="18fe5933-cb82-45b3-85d6-7f8d2ef1125f" modificationDateTime="2026-02-14 12:14:56.703063" status="1" subject="Kubernetes Dashboard">
 <task creationDateTime="2026-02-14 12:14:56.704380" id="83288a4b-bf1c-4730-8e7c-a92204d8efac" modificationDateTime="2026-02-14 12:14:56.704389" status="1" subject="Scale container replicas" />
 <task creationDateTime="2026-02-14 12:14:56.705197" id="8ed3042a-f6f1-4260-89dd-e9a61ae28a12" modificationDateTime="2026-02-14 12:14:56.705207" status="1" subject="Remove container stack" />
@@ -3004,7 +3050,7 @@
 <task creationDateTime="2026-02-14 12:14:56.702026" id="93048750-c625-47ce-be86-631804759972" modificationDateTime="2026-02-14 12:14:56.702036" status="1" subject="Deploy to Kubernetes" />
 </task>
 </task>
-<task creationDateTime="2026-02-14 12:14:57.063010" id="de754336-9247-45b2-a603-0e074d226bf7" modificationDateTime="2026-02-14 12:14:57.063021" status="1" subject="Hardware Monitoring / Drivers">
+<task creationDateTime="2026-02-14 12:14:57.063010" id="de754336-9247-45b2-a603-0e074d226bf7" modificationDateTime="2026-02-18 10:51:31.489000" priority="1" status="1" subject="Hardware Monitoring / Drivers">
 <task creationDateTime="2026-02-14 12:14:57.070013" expandedContexts="('taskviewer',)" id="073f39ad-2376-4021-b8ab-26834d442860" modificationDateTime="2026-02-14 12:14:57.070023" status="1" subject="AMD Adrenalin">
 <task creationDateTime="2026-02-14 12:14:57.074320" id="0ecf89bd-5798-479c-84eb-cfdd66eec7c6" modificationDateTime="2026-02-14 12:14:57.074330" status="1" subject="Log sensor data" />
 <task creationDateTime="2026-02-14 12:14:57.070868" id="2fb24aa8-536c-4d33-aac7-22ff4a4b0053" modificationDateTime="2026-02-14 12:14:57.070880" status="1" subject="Continuous monitoring 60 minutes" />

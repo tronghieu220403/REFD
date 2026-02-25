@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?taskcoach release="1.4.6" tskversion="37"?>
+
+<tasks>
+<task completiondate="2026-02-23 18:17:45.006000" creationDateTime="2026-02-23 00:01:37.065000" id="2624c09e-1010-11f1-9d8b-d8bbc16feea2" modificationDateTime="2026-02-23 18:17:45.006000" percentageComplete="100" status="1" subject="Trần Việt Phương" />
+<task creationDateTime="2026-02-22 23:40:16.979000" id="2b26fa30-100d-11f1-8ecf-d8bbc16feea2" modificationDateTime="2026-02-22 23:40:25.863000" status="1" subject="Nguyễn Thùy An" />
+<task completiondate="2026-02-22 23:44:40.771000" creationDateTime="2026-02-22 23:40:57.964000" id="4394cac0-100d-11f1-9c43-d8bbc16feea2" modificationDateTime="2026-02-22 23:44:40.771000" percentageComplete="100" status="1" subject="Nguyễn Việt Anh Khoa" />
+<task completiondate="2026-02-22 23:44:44.090000" creationDateTime="2026-02-22 23:41:06.079000" id="486b0af0-100d-11f1-a3b7-d8bbc16feea2" modificationDateTime="2026-02-22 23:44:44.090000" percentageComplete="100" status="1" subject="Phạm Lê Minh" />
+<task completiondate="2026-02-22 23:44:37.444000" creationDateTime="2026-02-22 23:41:11.381000" id="4b94104f-100d-11f1-bcb2-d8bbc16feea2" modificationDateTime="2026-02-22 23:44:37.444000" percentageComplete="100" status="1" subject="Hà Minh Tuấn" />
+<task completiondate="2026-02-23 18:18:19.407000" creationDateTime="2026-02-23 18:18:13.294000" id="57c064de-10a9-11f1-a5e8-d8bbc16feea2" modificationDateTime="2026-02-23 18:18:19.407000" percentageComplete="100" status="1" subject="Đoàn Hữu Phúc" />
+<task completiondate="2026-02-25 19:37:05.149000" creationDateTime="2026-02-23 18:18:40.519000" id="67fa9970-10a9-11f1-bec3-d8bbc16feea2" modificationDateTime="2026-02-25 19:37:05.149000" percentageComplete="100" status="1" subject="Đỗ Quang Minh" />
+<task completiondate="2026-02-23 20:25:08.501000" creationDateTime="2026-02-23 18:19:00.302000" id="73c53ee1-10a9-11f1-825d-d8bbc16feea2" modificationDateTime="2026-02-23 20:25:08.501000" percentageComplete="100" status="1" subject="Nguyễn Quốc Huy" />
+<task completiondate="2026-02-24 01:15:55.455000" creationDateTime="2026-02-22 23:56:42.797000" id="76beddcf-100f-11f1-863d-d8bbc16feea2" modificationDateTime="2026-02-24 01:15:55.455000" percentageComplete="100" status="1" subject="Hoàng Kim Trí Thành" />
+<task completiondate="2026-02-23 00:01:15.035000" creationDateTime="2026-02-22 23:43:12.010000" id="937a969e-100d-11f1-a8c8-d8bbc16feea2" modificationDateTime="2026-02-23 00:01:15.035000" percentageComplete="100" status="1" subject="Lê Đức Dũng" />
+<task completiondate="2026-02-25 00:51:27.333000" creationDateTime="2026-02-22 23:43:16.888000" id="9662e980-100d-11f1-ac1a-d8bbc16feea2" modificationDateTime="2026-02-25 00:51:27.333000" percentageComplete="100" status="1" subject="Nguyễn Hoàng Vĩnh Phong" />
+<task creationDateTime="2026-02-22 23:43:53.057000" id="abf20421-100d-11f1-a55e-d8bbc16feea2" modificationDateTime="2026-02-22 23:43:55.767000" status="1" subject="Trần Công Minh" />
+<task creationDateTime="2026-02-23 00:26:51.665000" id="acea380f-1013-11f1-880b-d8bbc16feea2" modificationDateTime="2026-02-23 00:26:55.645000" status="1" subject="Phùng Gia Trung" />
+<task creationDateTime="2026-02-22 23:43:56.657000" id="ae172e11-100d-11f1-88ba-d8bbc16feea2" modificationDateTime="2026-02-22 23:44:02.730000" status="1" subject="Phạm Minh Anh" />
+<task completiondate="2026-02-24 01:15:53.631000" creationDateTime="2026-02-23 00:26:56.991000" id="b016e6f0-1013-11f1-903a-d8bbc16feea2" modificationDateTime="2026-02-24 01:15:53.631000" percentageComplete="100" status="1" subject="Nguyễn Quang Pháp" />
+<task creationDateTime="2026-02-22 23:44:03.218000" id="b2004f1e-100d-11f1-8cac-d8bbc16feea2" modificationDateTime="2026-02-22 23:44:13.260000" status="1" subject="Vũ Ngọc Quyền" />
+<task completiondate="2026-02-23 18:17:49.383000" creationDateTime="2026-02-23 00:27:17.528000" id="bc549980-1013-11f1-8abc-d8bbc16feea2" modificationDateTime="2026-02-23 18:17:49.383000" percentageComplete="100" status="1" subject="Nguyễn Trọng Hiếu" />
+<task completiondate="2026-02-22 23:58:14.044000" creationDateTime="2026-02-22 23:44:51.006000" id="ce7c2de1-100d-11f1-a9a0-d8bbc16feea2" modificationDateTime="2026-02-22 23:58:14.044000" percentageComplete="100" status="1" subject="Trịnh Thu Nga" />
+<syncmlconfig>
+<TaskCoach-0000019c8638d4be2b3098a0000a81c0d1ff313b>
+<spds>
+<sources>
+<TaskCoach-0000019c8638d4be2b3098a0000a81c0d1ff313b.Tasks />
+<TaskCoach-0000019c8638d4be2b3098a0000a81c0d1ff313b.Notes />
+</sources>
+<syncml>
+<Auth />
+<Conn />
+</syncml>
+</spds>
+</TaskCoach-0000019c8638d4be2b3098a0000a81c0d1ff313b>
+</syncmlconfig>
+<guid>
+0000019c8638d4be2b3098a0000a81c0d1ff313b
+</guid>
+</tasks>
