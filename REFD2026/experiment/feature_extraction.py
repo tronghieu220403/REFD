@@ -134,32 +134,32 @@ class FileBehaviorFeatureExtractor:
         d_count = sum(1 for o in ops if o == "D")
         r_count = sum(1 for o in ops if o == "R")
 
-        f1_total_events = float(N)
-        f2_create_count = float(c_count)
-        f3_write_count = float(w_count)
-        f4_delete_count = float(d_count)
-        f5_rename_count = float(r_count)
-        f6_total_event_rate = N / (delta + eps)
-        f7_write_ratio = w_count / (N + eps)
-        f8_delete_ratio = d_count / (N + eps)
-        f9_rename_ratio = r_count / (N + eps)
+        f_total_events = float(N)
+        f_create_count = float(c_count)
+        f_write_count = float(w_count)
+        f_delete_count = float(d_count)
+        f_rename_count = float(r_count)
+        f_total_event_rate = N / (delta + eps)
+        f_write_ratio = w_count / (N + eps)
+        f_delete_ratio = d_count / (N + eps)
+        f_rename_ratio = r_count / (N + eps)
 
         op_counts = [c_count, w_count, d_count, r_count]
-        f10_op_type_entropy = self._entropy_from_counts(op_counts, N)
+        f_op_type_entropy = self._entropy_from_counts(op_counts, N)
 
         if N >= 2:
             tau = np.diff(np.asarray(times, dtype=np.float64))
             mu_tau = float(np.mean(tau))
             sigma_tau = float(np.std(tau))
-            f11_interarrival_mean = float(np.sum(tau) / max(N - 1, 1))
-            f12_interarrival_cv = sigma_tau / (mu_tau + eps)
-            f13_interarrival_p90 = float(np.percentile(tau, 90))
-            f16_burstiness_B = (sigma_tau - mu_tau) / (sigma_tau + mu_tau + eps)
+            f_interarrival_mean = float(np.sum(tau) / max(N - 1, 1))
+            f_interarrival_cv = sigma_tau / (mu_tau + eps)
+            f_interarrival_p90 = float(np.percentile(tau, 90))
+            f_burstiness_B = (sigma_tau - mu_tau) / (sigma_tau + mu_tau + eps)
         else:
-            f11_interarrival_mean = 0.0
-            f12_interarrival_cv = 0.0
-            f13_interarrival_p90 = 0.0
-            f16_burstiness_B = 0.0
+            f_interarrival_mean = 0.0
+            f_interarrival_cv = 0.0
+            f_interarrival_p90 = 0.0
+            f_burstiness_B = 0.0
 
         ts = times[0] if N > 0 else 0.0
         bins = [0] * self.TIME_BINS
@@ -179,59 +179,59 @@ class FileBehaviorFeatureExtractor:
         bins_arr = np.asarray(bins, dtype=np.float64)
         bar_n = float(np.mean(bins_arr))
         s2_n = float(np.mean((bins_arr - bar_n) ** 2))
-        f14_vmr_10bins = s2_n / (bar_n + eps)
-        f15_max_bin_ratio = float(np.max(bins_arr)) / (N + eps)
-        f17_inactivity_bin_fraction = float(np.sum(bins_arr == 0)) / float(self.TIME_BINS)
+        f_vmr_10bins = s2_n / (bar_n + eps)
+        f_max_bin_ratio = float(np.max(bins_arr)) / (N + eps)
+        f_inactivity_bin_fraction = float(np.sum(bins_arr == 0)) / float(self.TIME_BINS)
 
         half_t = ts + (delta / 2.0)
         n1 = sum(1 for t in times if t < half_t)
         n2 = N - n1
-        f18_half_window_imbalance = abs(n1 - n2) / (N + eps)
+        f_half_window_imbalance = abs(n1 - n2) / (N + eps)
 
         flags_user_data = [self._is_user_data(p) for p in paths]
         flags_appdata = [self._is_appdata(p) for p in paths]
         flags_temp = [self._is_temp(p) for p in paths]
         flags_system = [self._is_system(p) for p in paths]
 
-        f19_user_data_event_count = float(sum(flags_user_data))
-        f20_user_data_write_count = float(sum(1 for i in range(N) if ops[i] == "W" and flags_user_data[i]))
-        f21_user_data_delete_count = float(sum(1 for i in range(N) if ops[i] == "D" and flags_user_data[i]))
-        f22_user_data_rename_count = float(sum(1 for i in range(N) if ops[i] == "R" and flags_user_data[i]))
-        f23_appdata_event_count = float(sum(flags_appdata))
-        f24_temp_event_count = float(sum(flags_temp))
-        f25_system_event_count = float(sum(flags_system))
+        f_user_data_event_count = float(sum(flags_user_data))
+        f_user_data_write_count = float(sum(1 for i in range(N) if ops[i] == "W" and flags_user_data[i]))
+        f_user_data_delete_count = float(sum(1 for i in range(N) if ops[i] == "D" and flags_user_data[i]))
+        f_user_data_rename_count = float(sum(1 for i in range(N) if ops[i] == "R" and flags_user_data[i]))
+        f_appdata_event_count = float(sum(flags_appdata))
+        f_temp_event_count = float(sum(flags_temp))
+        f_system_event_count = float(sum(flags_system))
 
         root_counter = Counter(roots)
-        f28_unique_root_count = float(len(root_counter))
-        f29_root_entropy = self._entropy_from_counts(list(root_counter.values()), N)
+        f_unique_root_count = float(len(root_counter))
+        f_root_entropy = self._entropy_from_counts(list(root_counter.values()), N)
 
         write_groups = [self._extension_group(exts[i]) for i in range(N) if ops[i] == "W"]
-        f30_doclike_write_count = float(sum(1 for g in write_groups if g == "doc"))
-        f31_exelike_write_count = float(sum(1 for g in write_groups if g == "exe"))
+        f_doclike_write_count = float(sum(1 for g in write_groups if g == "doc"))
+        f_exelike_write_count = float(sum(1 for g in write_groups if g == "exe"))
         group_order = ["doc", "exe", "archive", "media", "image", "code", "other"]
         write_group_counter = Counter(write_groups)
         f32_counts = [write_group_counter.get(g, 0) for g in group_order]
-        f32_write_ext_group_entropy = self._entropy_from_counts(f32_counts, w_count)
+        f_write_ext_group_entropy = self._entropy_from_counts(f32_counts, w_count)
 
         file_counter = Counter(paths)
         dir_counter = Counter(dirs)
         ext_counter = Counter(exts)
 
-        f33_unique_file_count = float(len(file_counter))
-        f34_unique_dir_count = float(len(dir_counter))
-        f35_unique_ext_count = float(len(ext_counter))
-        f36_events_per_file_mean = N / (len(file_counter) + eps)
-        f37_file_event_gini = self._gini_from_counts(list(file_counter.values()))
-        f38_dir_entropy = self._entropy_from_counts(list(dir_counter.values()), N)
-        f39_ext_entropy = self._entropy_from_counts(list(ext_counter.values()), N)
+        f_unique_file_count = float(len(file_counter))
+        f_unique_dir_count = float(len(dir_counter))
+        f_unique_ext_count = float(len(ext_counter))
+        f_events_per_file_mean = N / (len(file_counter) + eps)
+        f_file_event_gini = self._gini_from_counts(list(file_counter.values()))
+        f_dir_entropy = self._entropy_from_counts(list(dir_counter.values()), N)
+        f_ext_entropy = self._entropy_from_counts(list(ext_counter.values()), N)
 
-        f40_path_depth_mean = float(np.sum(np.asarray(depths, dtype=np.float64)) / (N + eps))
+        f_path_depth_mean = float(np.sum(np.asarray(depths, dtype=np.float64)) / (N + eps))
         if N > 0:
             depth_arr = np.asarray(depths, dtype=np.float64)
-            f41_path_depth_std = float(np.sqrt(np.sum((depth_arr - f40_path_depth_mean) ** 2) / (N + eps)))
+            f_path_depth_std = float(np.sqrt(np.sum((depth_arr - f_path_depth_mean) ** 2) / (N + eps)))
         else:
-            f41_path_depth_std = 0.0
-        f42_dominant_dir_ratio = (float(max(dir_counter.values())) / (N + eps)) if N > 0 else 0.0
+            f_path_depth_std = 0.0
+        f_dominant_dir_ratio = (float(max(dir_counter.values())) / (N + eps)) if N > 0 else 0.0
 
         if N >= 2:
             same_dir_adj = sum(1 for i in range(N - 1) if dirs[i] == dirs[i + 1])
@@ -240,19 +240,19 @@ class FileBehaviorFeatureExtractor:
             w_to_r = sum(1 for i in range(N - 1) if ops[i] == "W" and ops[i + 1] == "R")
             w_to_d = sum(1 for i in range(N - 1) if ops[i] == "W" and ops[i + 1] == "D")
 
-            f43_adjacent_same_dir_ratio = same_dir_adj / float(N - 1)
-            f44_adjacent_same_path_ratio = same_path_adj / float(N - 1)
-            f45_transition_create_to_write = c_to_w / (N - 1 + eps)
-            f46_transition_write_to_rename = w_to_r / (N - 1 + eps)
-            f47_transition_write_to_delete = w_to_d / (N - 1 + eps)
+            f_adjacent_same_dir_ratio = same_dir_adj / float(N - 1)
+            f_adjacent_same_path_ratio = same_path_adj / float(N - 1)
+            f_transition_create_to_write = c_to_w / (N - 1 + eps)
+            f_transition_write_to_rename = w_to_r / (N - 1 + eps)
+            f_transition_write_to_delete = w_to_d / (N - 1 + eps)
         else:
-            f43_adjacent_same_dir_ratio = 0.0
-            f44_adjacent_same_path_ratio = 0.0
-            f45_transition_create_to_write = 0.0
-            f46_transition_write_to_rename = 0.0
-            f47_transition_write_to_delete = 0.0
+            f_adjacent_same_dir_ratio = 0.0
+            f_adjacent_same_path_ratio = 0.0
+            f_transition_create_to_write = 0.0
+            f_transition_write_to_rename = 0.0
+            f_transition_write_to_delete = 0.0
 
-        f48_longest_same_op_run = float(self._longest_run(ops))
+        f_longest_same_op_run = float(self._longest_run(ops))
 
         rename_indices = [i for i, o in enumerate(ops) if o == "R"]
         if r_count > 0:
@@ -269,29 +269,36 @@ class FileBehaviorFeatureExtractor:
                 b = self._filename(new_paths[idx])
                 lcp_scores.append(self._lcp_len(a, b) / max(len(a), 1))
 
-            f49_rename_ext_change_ratio = ext_changed / (r_count + eps)
-            f50_rename_dominant_new_ext_ratio = (max(new_ext_counter.values()) if new_ext_counter else 0.0) / (r_count + eps)
-            f51_rename_filename_prefix_similarity = float(np.mean(np.asarray(lcp_scores, dtype=np.float64))) if lcp_scores else 0.0
-            f52_rename_same_dir_ratio = same_dir_rename / (r_count + eps)
+            f_rename_ext_change_ratio = ext_changed / (r_count + eps)
+            f_rename_dominant_new_ext_ratio = (max(new_ext_counter.values()) if new_ext_counter else 0.0) / (r_count + eps)
+            f_rename_filename_prefix_similarity = float(np.mean(np.asarray(lcp_scores, dtype=np.float64))) if lcp_scores else 0.0
+            f_rename_same_dir_ratio = same_dir_rename / (r_count + eps)
         else:
-            f49_rename_ext_change_ratio = 0.0
-            f50_rename_dominant_new_ext_ratio = 0.0
-            f51_rename_filename_prefix_similarity = 0.0
-            f52_rename_same_dir_ratio = 0.0
+            f_rename_ext_change_ratio = 0.0
+            f_rename_dominant_new_ext_ratio = 0.0
+            f_rename_filename_prefix_similarity = 0.0
+            f_rename_same_dir_ratio = 0.0
 
         create_name_dirs: Dict[str, Set[str]] = defaultdict(set)
         for i in range(N):
             if ops[i] == "C":
                 create_name_dirs[self._filename(paths[i])].add(dirs[i])
-        f53_create_filename_replication = float(max((len(v) for v in create_name_dirs.values()), default=0))
+        f_create_filename_replication = float(max((len(v) for v in create_name_dirs.values()), default=0))
 
         feats = np.asarray([
-            f1_total_events, f2_create_count, f3_write_count, f4_delete_count, f5_rename_count, f6_total_event_rate, f7_write_ratio, f8_delete_ratio, f9_rename_ratio, f10_op_type_entropy,
-            f11_interarrival_mean, f12_interarrival_cv, f13_interarrival_p90, f14_vmr_10bins, f15_max_bin_ratio, f16_burstiness_B, f17_inactivity_bin_fraction, f18_half_window_imbalance,
-            f19_user_data_event_count, f20_user_data_write_count, f21_user_data_delete_count, f22_user_data_rename_count, f23_appdata_event_count, f24_temp_event_count, f25_system_event_count, f28_unique_root_count, f29_root_entropy, f30_doclike_write_count, f31_exelike_write_count, f32_write_ext_group_entropy,
-            f33_unique_file_count, f34_unique_dir_count, f35_unique_ext_count, f36_events_per_file_mean, f37_file_event_gini, f38_dir_entropy, f39_ext_entropy, f40_path_depth_mean, f41_path_depth_std, f42_dominant_dir_ratio,
-            f43_adjacent_same_dir_ratio, f44_adjacent_same_path_ratio, f45_transition_create_to_write, f46_transition_write_to_rename, f47_transition_write_to_delete, f48_longest_same_op_run,
-            f49_rename_ext_change_ratio, f50_rename_dominant_new_ext_ratio, f51_rename_filename_prefix_similarity, f52_rename_same_dir_ratio, f53_create_filename_replication,
+
+            f_total_events, f_create_count, f_write_count, f_delete_count, f_rename_count, f_total_event_rate, f_write_ratio, f_delete_ratio, f_rename_ratio, f_op_type_entropy,
+            
+            f_interarrival_mean, f_interarrival_cv, f_interarrival_p90, f_vmr_10bins, f_max_bin_ratio, f_burstiness_B, f_inactivity_bin_fraction, f_half_window_imbalance,
+            
+            f_user_data_event_count, f_user_data_write_count, f_user_data_delete_count, f_user_data_rename_count, f_appdata_event_count, f_temp_event_count, f_system_event_count, f_unique_root_count, f_root_entropy, f_doclike_write_count, f_exelike_write_count, f_write_ext_group_entropy,
+            
+            f_unique_file_count, f_unique_dir_count, f_unique_ext_count, f_events_per_file_mean, f_file_event_gini, f_dir_entropy, f_ext_entropy, f_path_depth_mean, f_path_depth_std, f_dominant_dir_ratio,
+            
+            f_adjacent_same_dir_ratio, f_adjacent_same_path_ratio, f_transition_create_to_write, f_transition_write_to_rename, f_transition_write_to_delete, f_longest_same_op_run,
+            
+            f_rename_ext_change_ratio, f_rename_dominant_new_ext_ratio, f_rename_filename_prefix_similarity, f_rename_same_dir_ratio, f_create_filename_replication,
+            
         ], dtype=np.float32)
         return feats
 

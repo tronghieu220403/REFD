@@ -2,7 +2,7 @@
 
 ## Khung vấn đề và taxonomy nhóm đặc trưng
 
-Bài toán của bạn là **phân loại nhị phân (malware vs benign)** dựa **duy nhất** trên luồng sự kiện thao tác file của **một tiến trình đơn (một PID)** trong một **cửa sổ thời gian trượt**. So với nhiều hướng nghiên cứu “behavioral malware detection” kinh điển, đây là một bối cảnh **thông tin cực hạn chế**: không có read/open/close, không có bytes/size, không có entropy nội dung, không có trạng thái thành công/thất bại, không có tên tiến trình/cha-con, không có user/session. Điều này loại bỏ trực tiếp một số chỉ báo rất mạnh thường dùng trong phát hiện ransomware dựa trên I/O (ví dụ: so sánh entropy dữ liệu đọc/ghi, mẫu read→encrypt→overwrite) như trong UNVEIL/CryptoDrop.
+Bài toán của tôi là **phân loại nhị phân (malware vs benign)** dựa **duy nhất** trên luồng sự kiện thao tác file của **một tiến trình đơn (một PID)** trong một **cửa sổ thời gian trượt**. So với nhiều hướng nghiên cứu “behavioral malware detection” kinh điển, đây là một bối cảnh **thông tin cực hạn chế**: không có read/open/close, không có bytes/size, không có entropy nội dung, không có trạng thái thành công/thất bại, không có tên tiến trình/cha-con, không có user/session. Điều này loại bỏ trực tiếp một số chỉ báo rất mạnh thường dùng trong phát hiện ransomware dựa trên I/O (ví dụ: so sánh entropy dữ liệu đọc/ghi, mẫu read→encrypt→overwrite) như trong UNVEIL/CryptoDrop.
 
 Vì vậy, mục tiêu thiết kế cần chuyển từ “nhận biết nội dung bị mã hóa” sang “nhận biết **hình thái hành vi (shape)** của tiến trình khi thao tác file”: cường độ, phân bố theo thời gian, mức độ lan rộng theo namespace, cấu trúc rename, và đặc biệt là **ngữ nghĩa đường dẫn (path semantics)** (ví dụ đụng đến User Documents/ProgramData/Temp/System). Các nghiên cứu về ransomware đều nhấn mạnh rằng để tấn công thành công, ransomware **phải can thiệp vào file của nạn nhân** (write/overwrite/delete/rename) với hành vi lặp đi lặp lại trên nhiều file, tạo ra dấu vết I/O đặc trưng—dù cơ chế mã hóa có thể khác nhau.
 
@@ -38,7 +38,7 @@ Sắp xếp các sự kiện theo thời gian tăng dần: \(t_1 \le \dots \le t
 - \(ext(p)\): phần mở rộng (ký tự sau dấu `.` cuối cùng trong \(fname\); nếu không có thì rỗng).
 - \(depth(p)\): số lượng segment thư mục (không tính drive letter/UNC root).
 
-Với các đặc trưng theo **nhóm extension**, định nghĩa hàm \(g(ext)\in\{\text{doc},\text{exe},\text{archive},\text{media},\text{image},\text{code},\text{other}\}\) theo danh sách đuôi mở rộng do bạn cố định (ví dụ doc: doc/docx/xls/xlsx/ppt/pptx/pdf/txt/rtf/odt/…; exe: exe/dll/sys/scr/…).
+Với các đặc trưng theo **nhóm extension**, định nghĩa hàm \(g(ext)\in\{\text{doc},\text{exe},\text{archive},\text{media},\text{image},\text{code},\text{other}\}\) theo danh sách đuôi mở rộng do tôi cố định (ví dụ doc: doc/docx/xls/xlsx/ppt/pptx/pdf/txt/rtf/odt/…; exe: exe/dll/sys/scr/…).
 
 Với các đặc trưng theo **vùng đường dẫn Windows**, dùng luật match theo prefix/segment (không cần username cụ thể), ví dụ:
 - `\Windows\`, `\Windows\System32\` (system)
@@ -151,7 +151,7 @@ Các đúng/sai của điển hình đường dẫn “Known Folders” và bi�
 
 ### Nhóm C — Ngữ nghĩa đường dẫn & mục tiêu
 
-Các đặc trưng này dựa trên phân loại đường dẫn theo vùng Windows. Đây là cách “đưa tri thức hệ điều hành” vào features mà không cần metadata khác, phù hợp với gợi ý của bạn về Known Folders. 
+Các đặc trưng này dựa trên phân loại đường dẫn theo vùng Windows. Đây là cách “đưa tri thức hệ điều hành” vào features mà không cần metadata khác, phù hợp với gợi ý của tôi về Known Folders. 
 
 **f_user_data_event_count — Số sự kiện trong user_data (int)**  
 Định nghĩa: \(f_user_data_event_count = |\{i: p_i \in user\_data\}|\), với user_data ≈ Documents/Desktop/Downloads/Pictures/Music/Videos (và UNC/network share) dưới `\Users\<*>\`.  
@@ -358,7 +358,7 @@ Lý do tập này mạnh:
 
 ## Họ đặc trưng mở rộng tùy chọn
 
-Các họ dưới đây hữu ích khi bạn muốn tăng “độ bắt được biến thể” hoặc tăng chống né tránh, đổi lại vector lớn hơn và/hoặc tính toán nặng hơn. Tất cả vẫn computable từ strict schema.
+Các họ dưới đây hữu ích khi tôi muốn tăng “độ bắt được biến thể” hoặc tăng chống né tránh, đổi lại vector lớn hơn và/hoặc tính toán nặng hơn. Tất cả vẫn computable từ strict schema.
 
 ### Histogram mặt nạ hành vi theo file
 
@@ -404,7 +404,7 @@ Một số phần mềm hợp lệ có thể tạo dấu vết gần như ransom
 
 Ngay cả CryptoDrop cũng thừa nhận giới hạn cơ bản: hệ thống quan sát thay đổi dữ liệu khó “hiểu ý định” và cần phối hợp nhiều chỉ báo để giảm false positives.
 
-Cách giảm nhầm trong khung feature của bạn là **bắt tương tác**:
+Cách giảm nhầm trong khung feature của tôi là **bắt tương tác**:
 - Nếu “nặng nhưng lành”: thường tập trung ở AppData/Temp (f_appdata_event_count/f_temp_event_count cao), Gini cao (f_file_event_gini cao) hoặc f_adjacent_same_path_ratio cao (lặp cùng file), rename không đổi extension (f_rename_ext_change_ratio thấp).  
 - Nếu “nặng và phá”: Write/Delete/Rename cao (f_write_count/f_delete_count/f_rename_count), lan rộng (f_unique_file_count/f_dir_entropy), tập trung vào user_data/UNC (f_user_data_write_count/f_unc_event_count), và có dấu hiệu đổi extension hàng loạt (f_rename_ext_change_ratio/f_rename_dominant_new_ext_ratio) hoặc tạo cùng filename trên nhiều thư mục (f_create_filename_replication).
 
@@ -416,14 +416,14 @@ Cách giảm nhầm trong khung feature của bạn là **bắt tương tác**:
   - Khắc phục bằng các đặc trưng phân bố (entropy/Gini) vốn khó “đánh lừa” nếu malware vẫn phải xử lý hàng loạt file thật.  
 - **Randomize extension hoặc không đổi extension:** làm suy yếu f_rename_dominant_new_ext_ratio/f_rename_ext_change_ratio.  
   - Bù bằng motif Write→Delete (f_transition_write_to_delete), lan rộng (f_unique_file_count/f_unique_dir_count), và “tạo file note hàng loạt” (f_create_filename_replication) nếu tồn tại.
-- **Chia nhỏ hành vi qua nhiều PID:** vì bạn quan sát “mỗi PID độc lập”, attacker có thể dùng multi-process để làm mỗi PID trông bình thường.  
+- **Chia nhỏ hành vi qua nhiều PID:** vì tôi quan sát “mỗi PID độc lập”, attacker có thể dùng multi-process để làm mỗi PID trông bình thường.  
   - Đây là giới hạn cấu trúc của bài toán (không giải bằng feature trong schema). Nếu giữ nguyên ràng buộc “một PID”, cách giảm tác hại là chọn cửa sổ đủ dài và tận dụng rename/note replication vốn khó phân tán hoàn toàn.  
 
 ### Rủi ro từ dữ liệu huấn luyện và triển khai
 
 Nhiều nghiên cứu gần đây chỉ ra khoảng cách hiệu năng lớn khi mô hình hành vi huấn luyện trên sandbox đem ra endpoint do **distribution shift, label noise, và spurious features**; ngoài ra malware còn có thể né sandbox bằng đặc trưng “wear-and-tear”.
 
-Hệ quả cho feature engineering trong schema của bạn:
+Hệ quả cho feature engineering trong schema của tôi:
 
 - Ưu tiên đặc trưng **tương đối/chuẩn hóa** (tỷ lệ, entropy, Gini, VMR) hơn là token path cụ thể.  
 - Các đặc trưng dựa trên “Known Folder” (Nhóm C) hữu ích nhưng cần viết rule robust (không hardcode username) và nên coi là “context features” thay vì quyết định một mình.
