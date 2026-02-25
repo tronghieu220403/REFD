@@ -52,291 +52,291 @@ Các đúng/sai của điển hình đường dẫn “Known Folders” và bi�
 
 ### Nhóm A — Cường độ & phối trộn op_type
 
-**f1 — Tổng số sự kiện (int)**  
-Định nghĩa: \(f1 = N\).  
+**f_total_events — Tổng số sự kiện (int)**  
+Định nghĩa: \(f_total_events = N\).  
 (A) Cơ chế phân biệt: Nhiều lớp malware, đặc biệt ransomware, tạo ra **khối lượng thao tác file cao** khi can thiệp hàng loạt file nạn nhân; các nghiên cứu I/O-based ransomware nhấn mạnh đặc trưng “nhiều thao tác I/O trong thời gian ngắn”. citeturn5view0turn3view0turn15view0  
 (B) Bổ trợ: Một mình \(N\) dễ false positive (backup/sync/installer). Nó cần đi cùng đặc trưng ngữ nghĩa đường dẫn (Nhóm C) và độ lan rộng (Nhóm D) để phân biệt “tác vụ nặng nhưng hợp lệ” với “tác vụ nặng và phá hoại”.
 
-**f2 — Số Create (int)**  
-Định nghĩa: \(f2 = |\{i:o_i=C\}|\).  
+**f_create_count — Số Create (int)**  
+Định nghĩa: \(f_create_count = |\{i:o_i=C\}|\).  
 (A) Create nhiều có thể xuất hiện trong dropper (thả nhiều file) hoặc ransomware tạo file note/aux; tuy nhiên benign cũng tạo temp/cache. citeturn15view0turn4view0  
-(B) Bổ trợ: Create trở nên đáng ngờ khi đồng thời (i) xảy ra trong user_data hoặc Program Files (Nhóm C), (ii) kèm Write/Delete/Rename cao (A/B/D/F), hoặc (iii) “tạo cùng một tên file ở nhiều thư mục” (f53).
+(B) Bổ trợ: Create trở nên đáng ngờ khi đồng thời (i) xảy ra trong user_data hoặc Program Files (Nhóm C), (ii) kèm Write/Delete/Rename cao (A/B/D/F), hoặc (iii) “tạo cùng một tên file ở nhiều thư mục” (f_create_filename_replication).
 
-**f3 — Số Write/Modify (int)**  
-Định nghĩa: \(f3 = |\{i:o_i=W\}|\).  
+**f_write_count — Số Write/Modify (int)**  
+Định nghĩa: \(f_write_count = |\{i:o_i=W\}|\).  
 (A) Ransomware file-locker/crypto-ransomware buộc phải ghi/ghi đè dữ liệu trên nhiều file (hoặc tạo file mới rồi ghi), do đó Write là trụ cột của I/O-based detection. citeturn5view0turn3view0turn17search3  
-(B) Bổ trợ: Write cũng phổ biến ở benign (browser cache, DB). Kết hợp với “độ lan rộng” (f33–f39), “mục tiêu user_data” (f19–f22), và dấu rename/extension-change (f49–f52) để giảm nhầm.
+(B) Bổ trợ: Write cũng phổ biến ở benign (browser cache, DB). Kết hợp với “độ lan rộng” (f_unique_file_count–f_ext_entropy), “mục tiêu user_data” (f_user_data_event_count–f_user_data_rename_count), và dấu rename/extension-change (f_rename_ext_change_ratio–f_rename_same_dir_ratio) để giảm nhầm.
 
-**f4 — Số Delete (int)**  
-Định nghĩa: \(f4 = |\{i:o_i=D\}|\).  
+**f_delete_count — Số Delete (int)**  
+Định nghĩa: \(f_delete_count = |\{i:o_i=D\}|\).  
 (A) Delete cao có thể gợi ý wiper hoặc chiến lược “tạo ciphertext rồi xóa bản gốc”; các mô tả hành vi ransomware cũng nêu xóa/đổi tên bản gốc như một cách hoàn tất tấn công. citeturn17search13turn5view0  
-(B) Bổ trợ: Delete đơn lẻ dễ nhầm với cleanup hợp lệ; mạnh hơn khi đi cùng Write/Rename cao và tập trung vào user_data (f21/f4 tương quan theo cơ chế “phá dữ liệu người dùng”).
+(B) Bổ trợ: Delete đơn lẻ dễ nhầm với cleanup hợp lệ; mạnh hơn khi đi cùng Write/Rename cao và tập trung vào user_data (f_user_data_delete_count/f_delete_count tương quan theo cơ chế “phá dữ liệu người dùng”).
 
-**f5 — Số Rename (int)**  
-Định nghĩa: \(f5 = |\{i:o_i=R\}|\).  
+**f_rename_count — Số Rename (int)**  
+Định nghĩa: \(f_rename_count = |\{i:o_i=R\}|\).  
 (A) Rename nổi bật trong nhiều kịch bản ransomware: append extension, đổi tên file, hoặc di chuyển để đánh dấu đã xử lý; nhiều mẫu ransomware quan sát được có hành vi đổi extension trên diện rộng. citeturn15view0turn17search13  
-(B) Bổ trợ: Rename hợp lệ cũng phổ biến (editor lưu tạm, tool batch-rename). Cần kết hợp dấu “đổi extension” (f49), “dominant extension mới” (f50), và “cùng lúc Write/Delete tăng” (f3/f4) để tránh nhầm.
+(B) Bổ trợ: Rename hợp lệ cũng phổ biến (editor lưu tạm, tool batch-rename). Cần kết hợp dấu “đổi extension” (f_rename_ext_change_ratio), “dominant extension mới” (f_rename_dominant_new_ext_ratio), và “cùng lúc Write/Delete tăng” (f_write_count/f_delete_count) để tránh nhầm.
 
-**f6 — Tốc độ sự kiện tổng (float)**  
-Định nghĩa: \(f6 = \frac{N}{\Delta+\varepsilon}\).  
+**f_total_event_rate — Tốc độ sự kiện tổng (float)**  
+Định nghĩa: \(f_total_event_rate = \frac{N}{\Delta+\varepsilon}\).  
 (A) Ransomware thường cố mã hóa nhanh để tối đa hóa thiệt hại trước khi bị chặn; các nghiên cứu quan sát I/O cho thấy tần suất thao tác file/crypto API có thể đạt hàng nghìn/giây trong sandbox. citeturn15view0turn3view0  
-(B) Bổ trợ: Nếu malware “throttling” để né, f6 suy yếu; khi đó các đặc trưng cấu trúc (entropy thư mục, đa ổ đĩa, rename patterns) sẽ bù.
+(B) Bổ trợ: Nếu malware “throttling” để né, f_total_event_rate suy yếu; khi đó các đặc trưng cấu trúc (entropy thư mục, đa ổ đĩa, rename patterns) sẽ bù.
 
-**f7 — Tỷ lệ Write (float)**  
-Định nghĩa: \(f7 = \frac{f3}{N+\varepsilon}\).  
+**f_write_ratio — Tỷ lệ Write (float)**  
+Định nghĩa: \(f_write_ratio = \frac{f_write_count}{N+\varepsilon}\).  
 (A) Ransomware file-encrypting thường bị chi phối bởi thao tác ghi; do đó tỷ lệ Write trong op mix là tín hiệu mạnh hơn “đếm tuyệt đối” trong bối cảnh cửa sổ có thể ngắn. citeturn3view0turn17search3  
-(B) Bổ trợ: Dùng cùng f10 (entropy op) và f19–f22 (đích user_data) để phân biệt “Write nhiều nhưng vào cache/Temp” với “Write nhiều vào tài liệu”.
+(B) Bổ trợ: Dùng cùng f_op_type_entropy (entropy op) và f_user_data_event_count–f_user_data_rename_count (đích user_data) để phân biệt “Write nhiều nhưng vào cache/Temp” với “Write nhiều vào tài liệu”.
 
-**f8 — Tỷ lệ Delete (float)**  
-Định nghĩa: \(f8 = \frac{f4}{N+\varepsilon}\).  
+**f_delete_ratio — Tỷ lệ Delete (float)**  
+Định nghĩa: \(f_delete_ratio = \frac{f_delete_count}{N+\varepsilon}\).  
 (A) Delete cao tương thích với wiper/cleanup phá hoại hoặc chiến lược xóa bản gốc sau khi tạo ciphertext; là một trong các nhóm I/O characteristics thường được xem xét trong I/O-based ransomware detection. citeturn17search3turn17search13  
-(B) Bổ trợ: Delete cũng là cleanup bình thường; cần nhìn cùng (i) Write trước Delete (f47), (ii) vùng user_data (f21), (iii) mức lan rộng (f33–f38).
+(B) Bổ trợ: Delete cũng là cleanup bình thường; cần nhìn cùng (i) Write trước Delete (f_transition_write_to_delete), (ii) vùng user_data (f_user_data_delete_count), (iii) mức lan rộng (f_unique_file_count–f_dir_entropy).
 
-**f9 — Tỷ lệ Rename (float)**  
-Định nghĩa: \(f9 = \frac{f5}{N+\varepsilon}\).  
+**f_rename_ratio — Tỷ lệ Rename (float)**  
+Định nghĩa: \(f_rename_ratio = \frac{f_rename_count}{N+\varepsilon}\).  
 (A) Append extension trên hàng loạt file sẽ làm tỷ lệ Rename tăng đáng kể; nhiều quan sát cho thấy đổi extension là dấu hiệu gắn với mã hóa. citeturn15view0  
-(B) Bổ trợ: Nếu ransomware không rename (chỉ overwrite), f9 thấp; khi đó f3/f6/f14 (burstiness) và f30 (write_doclike) sẽ “gánh”.
+(B) Bổ trợ: Nếu ransomware không rename (chỉ overwrite), f_rename_ratio thấp; khi đó f_write_count/f_total_event_rate/f_vmr_10bins (burstiness) và f_doclike_write_count (write_doclike) sẽ “gánh”.
 
-**f10 — Entropy phối trộn op_type (float)**  
+**f_op_type_entropy — Entropy phối trộn op_type (float)**  
 Định nghĩa: đặt \(p_o=\frac{|\{i:o_i=o\}|}{N+\varepsilon}\) với \(o\in\{C,W,D,R\}\).  
-\(f10 = -\sum_{o} p_o \log_2(p_o+\varepsilon)\).  
+\(f_op_type_entropy = -\sum_{o} p_o \log_2(p_o+\varepsilon)\).  
 (A) Entropy thấp nghĩa là tiến trình “chỉ làm một kiểu thao tác” (ví dụ: write-dominant), thường thấy trong pha mã hóa hàng loạt; entropy cao hơn có thể xuất hiện ở workflow benign phức tạp, nhưng cần xem theo đường dẫn. citeturn3view0turn5view0  
-(B) Bổ trợ: f10 giảm nhiễu cho các count tuyệt đối (f2–f5) bằng cách mô tả “hình dạng” distribution; kết hợp với f32/f39 (entropy theo extension/dir) để phân biệt loại “đơn điệu nhưng lan rộng” (đáng ngờ) với “đơn điệu nhưng cục bộ” (ví dụ log writer).
+(B) Bổ trợ: f_op_type_entropy giảm nhiễu cho các count tuyệt đối (f_create_count–f_rename_count) bằng cách mô tả “hình dạng” distribution; kết hợp với f_write_ext_group_entropy/f_ext_entropy (entropy theo extension/dir) để phân biệt loại “đơn điệu nhưng lan rộng” (đáng ngờ) với “đơn điệu nhưng cục bộ” (ví dụ log writer).
 
 ### Nhóm B — Động học thời gian
 
 Đặt inter-arrival times \(\tau_i = t_{i+1}-t_i\) cho \(i=1..N-1\) (nếu \(N<2\) thì các đặc trưng dựa trên \(\tau\) lấy 0). Chia cửa sổ thành \(m=10\) time-bin đều nhau, đếm \(n_j\) là số sự kiện trong bin \(j\).
 
-**f11 — Trung bình inter-arrival (float)**  
-Định nghĩa: \(f11=\frac{1}{\max(N-1,1)}\sum_{i=1}^{N-1}\tau_i\).  
+**f_interarrival_mean — Trung bình inter-arrival (float)**  
+Định nghĩa: \(f_interarrival_mean=\frac{1}{\max(N-1,1)}\sum_{i=1}^{N-1}\tau_i\).  
 (A) Ransomware thường tạo chuỗi thao tác dày → inter-arrival nhỏ; benign tương tác người dùng thường thưa/gián đoạn hơn. Quan sát về “burst” trong chuỗi sự kiện là nền tảng của nhiều thước đo temporal. citeturn12search12turn13search0  
-(B) Bổ trợ: Bị yếu khi malware cố chèn delay; khi đó dùng f14/f17 (bin-level burstiness & khoảng lặng) và Nhóm C/D (đích & lan rộng) để vẫn bắt được footprint.
+(B) Bổ trợ: Bị yếu khi malware cố chèn delay; khi đó dùng f_vmr_10bins/f_inactivity_bin_fraction (bin-level burstiness & khoảng lặng) và Nhóm C/D (đích & lan rộng) để vẫn bắt được footprint.
 
-**f12 — Hệ số biến thiên inter-arrival (float)**  
-Định nghĩa: \(\mu=\text{mean}(\tau),\ \sigma=\text{std}(\tau)\). \(f12=\frac{\sigma}{\mu+\varepsilon}\).  
+**f_interarrival_cv — Hệ số biến thiên inter-arrival (float)**  
+Định nghĩa: \(\mu=\text{mean}(\tau),\ \sigma=\text{std}(\tau)\). \(f_interarrival_cv=\frac{\sigma}{\mu+\varepsilon}\).  
 (A) CV cao thường phản ánh burst xen kẽ khoảng lặng; nhiều tiến trình benign có nhịp đều hơn hoặc theo “chunk” có cấu trúc khác ransomware. citeturn13search0turn13search2  
-(B) Bổ trợ: CV kết hợp với f14 (VMR) giúp tách “burst do công việc nặng” khỏi “burst do traversal phá hoại”; đi cùng f19–f22 để tránh nhầm các app sync hợp lệ.
+(B) Bổ trợ: CV kết hợp với f_vmr_10bins (VMR) giúp tách “burst do công việc nặng” khỏi “burst do traversal phá hoại”; đi cùng f_user_data_event_count–f_user_data_rename_count để tránh nhầm các app sync hợp lệ.
 
-**f13 — Bách phân vị 90% inter-arrival (float)**  
-Định nghĩa: \(f13 = Q_{0.9}(\{\tau_i\})\).  
+**f_interarrival_p90 — Bách phân vị 90% inter-arrival (float)**  
+Định nghĩa: \(f_interarrival_p90 = Q_{0.9}(\{\tau_i\})\).  
 (A) Nếu tiến trình có nhiều khoảng nghỉ dài xen kẽ burst, Q90 sẽ lớn; ransomware “chạy liên tục” thường có Q90 nhỏ hơn trong pha mã hóa. citeturn15view0  
-(B) Bổ trợ: f13 bổ sung cho f11/f12 bằng cách “nhìn đuôi”; kết hợp với f18 (mất cân bằng nửa cửa sổ) để bắt kịch bản ransomware bắt đầu muộn trong cửa sổ.
+(B) Bổ trợ: f_interarrival_p90 bổ sung cho f_interarrival_mean/f_interarrival_cv bằng cách “nhìn đuôi”; kết hợp với f_half_window_imbalance (mất cân bằng nửa cửa sổ) để bắt kịch bản ransomware bắt đầu muộn trong cửa sổ.
 
-**f14 — Variance-to-mean ratio theo 10 bin (float)**  
+**f_vmr_10bins — Variance-to-mean ratio theo 10 bin (float)**  
 Định nghĩa: \(\bar n=\frac{1}{m}\sum_{j=1}^m n_j,\ s^2=\frac{1}{m}\sum_{j=1}^m (n_j-\bar n)^2\).  
-\(f14=\frac{s^2}{\bar n+\varepsilon}\).  
+\(f_vmr_10bins=\frac{s^2}{\bar n+\varepsilon}\).  
 (A) VMR > 1 mô tả clustering/burstiness; các mô hình và thước đo burstiness được dùng rộng rãi để đặc trưng chuỗi sự kiện không-Poisson. citeturn13search0turn13search2turn12search12  
-(B) Bổ trợ: f14 ít nhạy với reorder ở mức nhỏ, và vẫn hoạt động khi N lớn; kết hợp với f6 (rate) để phân biệt “nhiều sự kiện đều” vs “nhiều sự kiện dồn cục”.
+(B) Bổ trợ: f_vmr_10bins ít nhạy với reorder ở mức nhỏ, và vẫn hoạt động khi N lớn; kết hợp với f_total_event_rate (rate) để phân biệt “nhiều sự kiện đều” vs “nhiều sự kiện dồn cục”.
 
-**f15 — Tỷ lệ bin dày nhất (float)**  
-Định nghĩa: \(f15=\frac{\max_j n_j}{N+\varepsilon}\).  
+**f_max_bin_ratio — Tỷ lệ bin dày nhất (float)**  
+Định nghĩa: \(f_max_bin_ratio=\frac{\max_j n_j}{N+\varepsilon}\).  
 (A) Ransomware có thể tạo “đỉnh” khi vào pha mã hóa; benign tương tác người dùng thường ít tạo một đỉnh chiếm tỷ trọng quá lớn trong cửa sổ ngắn. citeturn15view0  
-(B) Bổ trợ: f15 tương tác mạnh với f19–f22 (nếu đỉnh nằm trong user_data thì đáng ngờ hơn) và với f24 (nếu đỉnh nằm trong temp thì có thể là cache benign).
+(B) Bổ trợ: f_max_bin_ratio tương tác mạnh với f_user_data_event_count–f_user_data_rename_count (nếu đỉnh nằm trong user_data thì đáng ngờ hơn) và với f_temp_event_count (nếu đỉnh nằm trong temp thì có thể là cache benign).
 
-**f16 — Burstiness tham số B (float)**  
-Định nghĩa (Goh–Barabási): \(B=\frac{\sigma-\mu}{\sigma+\mu+\varepsilon}\) với \(\mu=\text{mean}(\tau),\sigma=\text{std}(\tau)\). \(f16=B\). citeturn13search0turn13search8  
+**f_burstiness_B — Burstiness tham số B (float)**  
+Định nghĩa (Goh–Barabási): \(B=\frac{\sigma-\mu}{\sigma+\mu+\varepsilon}\) với \(\mu=\text{mean}(\tau),\sigma=\text{std}(\tau)\). \(f_burstiness_B=B\). citeturn13search0turn13search8  
 (A) \(B\to 1\) biểu thị cực bursty; \(B\to -1\) gần đều; ransomware thường có burstiness cao trong pha mã hóa. citeturn15view0  
-(B) Bổ trợ: B có hiệu ứng “finite-size” khi N nhỏ; nghiên cứu đã bàn về điều này và đề xuất hiệu chỉnh. citeturn13search2 Vì vậy, trong triển khai nên dùng f16 cùng f14 (bin-level) để ổn định.
+(B) Bổ trợ: B có hiệu ứng “finite-size” khi N nhỏ; nghiên cứu đã bàn về điều này và đề xuất hiệu chỉnh. citeturn13search2 Vì vậy, trong triển khai nên dùng f_burstiness_B cùng f_vmr_10bins (bin-level) để ổn định.
 
-**f17 — Tỷ lệ bin trống (float)**  
-Định nghĩa: \(f17=\frac{|\{j: n_j=0\}|}{m}\).  
-(A) Malware “throttling” để né detector sẽ tạo nhiều khoảng lặng → f17 tăng; ngược lại ransomware chạy liên tục thì f17 thấp. citeturn15view0  
-(B) Bổ trợ: f17 bù cho các đặc trưng “rate” (f6) bị vô hiệu bởi delay; kết hợp với f33/f34 (vẫn lan rộng dù chậm) để bắt kịch bản né tránh.
+**f_inactivity_bin_fraction — Tỷ lệ bin trống (float)**  
+Định nghĩa: \(f_inactivity_bin_fraction=\frac{|\{j: n_j=0\}|}{m}\).  
+(A) Malware “throttling” để né detector sẽ tạo nhiều khoảng lặng → f_inactivity_bin_fraction tăng; ngược lại ransomware chạy liên tục thì f_inactivity_bin_fraction thấp. citeturn15view0  
+(B) Bổ trợ: f_inactivity_bin_fraction bù cho các đặc trưng “rate” (f_total_event_rate) bị vô hiệu bởi delay; kết hợp với f_unique_file_count/f_unique_dir_count (vẫn lan rộng dù chậm) để bắt kịch bản né tránh.
 
-**f18 — Mất cân bằng nửa cửa sổ (float)**  
+**f_half_window_imbalance — Mất cân bằng nửa cửa sổ (float)**  
 Định nghĩa: \(N_1\)=số sự kiện trong \([T_s, T_s+\Delta/2)\), \(N_2\)=số sự kiện trong \([T_s+\Delta/2,T_e)\).  
-\(f18=\frac{|N_1-N_2|}{N+\varepsilon}\).  
+\(f_half_window_imbalance=\frac{|N_1-N_2|}{N+\varepsilon}\).  
 (A) Hữu ích khi ransomware “bùng pha” (đầu hoặc cuối cửa sổ) hoặc khi benign có pha chuẩn bị rồi thao tác; UNVEIL mô tả “access patterns” và pha hoạt động rõ rệt trong runtime. citeturn3view0  
-(B) Bổ trợ: f18 hỗ trợ giảm phụ thuộc vào việc cửa sổ có cắt ngang pha hoạt động hay không; đi cùng f15/f14 để mô tả hình thái trong thời gian.
+(B) Bổ trợ: f_half_window_imbalance hỗ trợ giảm phụ thuộc vào việc cửa sổ có cắt ngang pha hoạt động hay không; đi cùng f_max_bin_ratio/f_vmr_10bins để mô tả hình thái trong thời gian.
 
 ### Nhóm C — Ngữ nghĩa đường dẫn & mục tiêu
 
 Các đặc trưng này dựa trên phân loại đường dẫn theo vùng Windows. Đây là cách “đưa tri thức hệ điều hành” vào features mà không cần metadata khác, phù hợp với gợi ý của bạn về Known Folders. citeturn6search0turn6search1
 
-**f19 — Số sự kiện trong user_data (int)**  
-Định nghĩa: \(f19 = |\{i: p_i \in user\_data\}|\), với user_data ≈ Documents/Desktop/Downloads/Pictures/Music/Videos (và UNC/network share) dưới `\Users\<*>\`.  
+**f_user_data_event_count — Số sự kiện trong user_data (int)**  
+Định nghĩa: \(f_user_data_event_count = |\{i: p_i \in user\_data\}|\), với user_data ≈ Documents/Desktop/Downloads/Pictures/Music/Videos (và UNC/network share) dưới `\Users\<*>\`.  
 (A) Ransomware nhắm vào dữ liệu người dùng nên tương tác mạnh với các thư mục này; UNVEIL nhấn mạnh điều kiện “tamper with user’s files” để tấn công thành công. citeturn3view0turn5view0  
-(B) Bổ trợ: Kết hợp f19 với entropy theo thư mục (f38) và unique_dirs (f34) để phân biệt “editor chỉnh một thư mục” với “traversal nhiều thư mục user”.
+(B) Bổ trợ: Kết hợp f_user_data_event_count với entropy theo thư mục (f_dir_entropy) và unique_dirs (f_unique_dir_count) để phân biệt “editor chỉnh một thư mục” với “traversal nhiều thư mục user”.
 
-**f20 — Số Write trong user_data (int)**  
-Định nghĩa: \(f20 = |\{i: o_i=W \land p_i \in user\_data\}|\).  
+**f_user_data_write_count — Số Write trong user_data (int)**  
+Định nghĩa: \(f_user_data_write_count = |\{i: o_i=W \land p_i \in user\_data\}|\).  
 (A) Đây là tín hiệu trực tiếp của “sửa dữ liệu người dùng”; ransomware file locker buộc phải ghi/ghi đè. citeturn17search3turn3view0  
-(B) Bổ trợ: Nếu benign backup/sync cũng Write nhiều vào user_data, thì rename patterns (f49–f52) và “dominant extension mới” (f50) giúp giảm nhầm.
+(B) Bổ trợ: Nếu benign backup/sync cũng Write nhiều vào user_data, thì rename patterns (f_rename_ext_change_ratio–f_rename_same_dir_ratio) và “dominant extension mới” (f_rename_dominant_new_ext_ratio) giúp giảm nhầm.
 
-**f21 — Số Delete trong user_data (int)**  
-Định nghĩa: \(f21 = |\{i: o_i=D \land p_i \in user\_data\}|\).  
+**f_user_data_delete_count — Số Delete trong user_data (int)**  
+Định nghĩa: \(f_user_data_delete_count = |\{i: o_i=D \land p_i \in user\_data\}|\).  
 (A) Delete tài liệu người dùng có thể là wiper hoặc xóa bản gốc sau mã hóa; là dấu hiệu phá hoại hơn so với delete temp. citeturn17search13turn5view0  
-(B) Bổ trợ: f21 nên đi cùng f47 (Write→Delete) và f37 (Gini) để phân biệt “xóa hàng loạt” với “xóa một nhóm nhỏ theo thao tác người dùng”.
+(B) Bổ trợ: f_user_data_delete_count nên đi cùng f_transition_write_to_delete (Write→Delete) và f_file_event_gini (Gini) để phân biệt “xóa hàng loạt” với “xóa một nhóm nhỏ theo thao tác người dùng”.
 
-**f22 — Số Rename trong user_data (int)**  
-Định nghĩa: \(f22 = |\{i: o_i=R \land p_i \in user\_data\}|\) (dựa trên **old path**).  
+**f_user_data_rename_count — Số Rename trong user_data (int)**  
+Định nghĩa: \(f_user_data_rename_count = |\{i: o_i=R \land p_i \in user\_data\}|\) (dựa trên **old path**).  
 (A) Hành vi đổi tên/append extension trên tài liệu người dùng là mẫu thường gặp; nhiều đo đạc cho thấy phần lớn mẫu ransomware append extension mới khi mã hóa. citeturn15view0  
-(B) Bổ trợ: f22 mạnh hơn khi f49 cao (đổi extension), hoặc f50 cao (hầu hết rename ra cùng extension), gợi ý “đánh dấu file đã mã hóa”.
+(B) Bổ trợ: f_user_data_rename_count mạnh hơn khi f_rename_ext_change_ratio cao (đổi extension), hoặc f_rename_dominant_new_ext_ratio cao (hầu hết rename ra cùng extension), gợi ý “đánh dấu file đã mã hóa”.
 
-**f23 — Số sự kiện trong AppData (int)**  
-Định nghĩa: \(f23 = |\{i: p_i \in appdata\}|\), appdata ≈ `\Users\<*>\AppData\Roaming\` hoặc `\Users\<*>\AppData\Local\` (không bao gồm Temp).  
-(A) Nhiều benign (browser, app) hoạt động mạnh ở AppData; ngược lại, malware/persistence cũng hay thả cấu hình, payload ở đây. Do thiếu process name, f23 giúp phân biệt “hành vi nặng nhưng ở vùng hợp lệ”. citeturn6search1turn8view0  
-(B) Bổ trợ: f23 không mang tính kết luận; nó bù cho f1/f3 bằng “bối cảnh”. Ví dụ cùng mức Write, nếu phần lớn nằm ở AppData/Temp thì ít đáng ngờ hơn so với user_data.
+**f_appdata_event_count — Số sự kiện trong AppData (int)**  
+Định nghĩa: \(f_appdata_event_count = |\{i: p_i \in appdata\}|\), appdata ≈ `\Users\<*>\AppData\Roaming\` hoặc `\Users\<*>\AppData\Local\` (không bao gồm Temp).  
+(A) Nhiều benign (browser, app) hoạt động mạnh ở AppData; ngược lại, malware/persistence cũng hay thả cấu hình, payload ở đây. Do thiếu process name, f_appdata_event_count giúp phân biệt “hành vi nặng nhưng ở vùng hợp lệ”. citeturn6search1turn8view0  
+(B) Bổ trợ: f_appdata_event_count không mang tính kết luận; nó bù cho f_total_events/f_write_count bằng “bối cảnh”. Ví dụ cùng mức Write, nếu phần lớn nằm ở AppData/Temp thì ít đáng ngờ hơn so với user_data.
 
-**f24 — Số sự kiện trong Temp (int)**  
-Định nghĩa: \(f24 = |\{i: p_i \in temp/cache\}|\), temp/cache ≈ `\Users\<*>\AppData\Local\Temp\` (và các vùng cache/tạm tương đương theo taxonomy). citeturn6search1  
+**f_temp_event_count — Số sự kiện trong Temp (int)**  
+Định nghĩa: \(f_temp_event_count = |\{i: p_i \in temp/cache\}|\), temp/cache ≈ `\Users\<*>\AppData\Local\Temp\` (và các vùng cache/tạm tương đương theo taxonomy). citeturn6search1  
 (A) Rất nhiều phần mềm benign ghi temp; ransomware cũng có thể dùng temp staging. Do đó cần đọc như “điểm neo benignness”, không phải “điểm malware”. citeturn15view0  
-(B) Bổ trợ: Khi f6/f3 cao nhưng f24 cũng rất cao và f20 thấp, mô hình có thể giảm điểm nghi ngờ; ngược lại, nếu f24 thấp nhưng f20 cao, tăng nghi ngờ.
+(B) Bổ trợ: Khi f_total_event_rate/f_write_count cao nhưng f_temp_event_count cũng rất cao và f_user_data_write_count thấp, mô hình có thể giảm điểm nghi ngờ; ngược lại, nếu f_temp_event_count thấp nhưng f_user_data_write_count cao, tăng nghi ngờ.
 
-**f25 — Số sự kiện trong System (int)**  
-Định nghĩa: \(f25 = |\{i: p_i \in system\}|\), system ≈ \Windows\ và/hoặc \Windows\System32\.  
+**f_system_event_count — Số sự kiện trong System (int)**  
+Định nghĩa: \(f_system_event_count = |\{i: p_i \in system\}|\), system ≈ \Windows\ và/hoặc \Windows\System32\.  
 (A) Sửa file hệ thống thường hiếm đối với app thường, và có thể là dấu hiệu persistence/tampering. citeturn6search0turn5view0  
-(B) Bổ trợ: Kết hợp với các đặc trưng ngữ cảnh vùng system/program để phân biệt installer hợp lệ (có thể ghi) với hành vi bất thường khác (đặc biệt nếu đồng thời f19–f22 cao).
+(B) Bổ trợ: Kết hợp với các đặc trưng ngữ cảnh vùng system/program để phân biệt installer hợp lệ (có thể ghi) với hành vi bất thường khác (đặc biệt nếu đồng thời f_user_data_event_count–f_user_data_rename_count cao).
 
-**f28 — Số root khác nhau (int)**  
-Định nghĩa: root(p) = drive letter (`C:`) hoặc UNC share prefix (`\\server\share`). \(f28 = |\{root(p_i)\}|\).  
+**f_unique_root_count — Số root khác nhau (int)**  
+Định nghĩa: root(p) = drive letter (`C:`) hoặc UNC share prefix (`\\server\share`). \(f_unique_root_count = |\{root(p_i)\}|\).  
 (A) Một số ransomware duyệt nhiều ổ (thậm chí A:..Z:) và nhiều thư mục khi mã hóa; số root tăng phản ánh traversal rộng. citeturn15view0  
-(B) Bổ trợ: f28 bị yếu nếu cửa sổ ngắn hoặc malware giới hạn phạm vi; khi đó f34/f38 (unique_dirs/dir_entropy) và f27 (UNC) bù.
+(B) Bổ trợ: f_unique_root_count bị yếu nếu cửa sổ ngắn hoặc malware giới hạn phạm vi; khi đó f_unique_dir_count/f_dir_entropy (unique_dirs/dir_entropy) và f_unc_event_count (UNC) bù.
 
-**f29 — Entropy theo root (float)**  
+**f_root_entropy — Entropy theo root (float)**  
 Định nghĩa: với \(q_r=\frac{|\{i:root(p_i)=r\}|}{N+\varepsilon}\),  
-\(f29 = -\sum_r q_r\log_2(q_r+\varepsilon)\).  
-(A) Entropy cao nghĩa là hoạt động phân tán trên nhiều ổ/share; trong bối cảnh ransomware “quét” rộng, đây là dấu cấu trúc tốt hơn chỉ đếm f28. citeturn15view0  
-(B) Bổ trợ: Kết hợp với f24/f23 để phân biệt “phân tán nhưng chủ yếu ở cache” vs “phân tán vào user_data/UNC”.
+\(f_root_entropy = -\sum_r q_r\log_2(q_r+\varepsilon)\).  
+(A) Entropy cao nghĩa là hoạt động phân tán trên nhiều ổ/share; trong bối cảnh ransomware “quét” rộng, đây là dấu cấu trúc tốt hơn chỉ đếm f_unique_root_count. citeturn15view0  
+(B) Bổ trợ: Kết hợp với f_temp_event_count/f_appdata_event_count để phân biệt “phân tán nhưng chủ yếu ở cache” vs “phân tán vào user_data/UNC”.
 
-**f30 — Số Write vào doc-like (int)**  
-Định nghĩa: \(f30 = |\{i:o_i=W \land g(ext(p_i))=\text{doc}\}|\).  
+**f_doclike_write_count — Số Write vào doc-like (int)**  
+Định nghĩa: \(f_doclike_write_count = |\{i:o_i=W \land g(ext(p_i))=\text{doc}\}|\).  
 (A) Nhiều ransomware nhắm tài liệu người dùng (doc/xls/ppt/pdf…) vì giá trị cao; I/O-based detection thường xét “file type coverage”. citeturn17search3turn4view0turn11search13  
-(B) Bổ trợ: Benign cũng Write doc-like (soạn thảo); cần đi cùng f33 (unique_files) và f6/f14 (burst) để tách “edit 1 file” khỏi “đụng 1000 file”.
+(B) Bổ trợ: Benign cũng Write doc-like (soạn thảo); cần đi cùng f_unique_file_count (unique_files) và f_total_event_rate/f_vmr_10bins (burst) để tách “edit 1 file” khỏi “đụng 1000 file”.
 
-**f31 — Số Write vào executable-like (int)**  
-Định nghĩa: \(f31 = |\{i:o_i=W \land g(ext(p_i))=\text{exe}\}|\).  
+**f_exelike_write_count — Số Write vào executable-like (int)**  
+Định nghĩa: \(f_exelike_write_count = |\{i:o_i=W \land g(ext(p_i))=\text{exe}\}|\).  
 (A) Việc ghi lên exe/dll/sys có thể gợi ý dropper hoặc tampering hệ thống; ít thấy ở người dùng thông thường ngoài cài đặt/cập nhật. citeturn10view0turn6search8  
-(B) Bổ trợ: f31 tương tác với f25/f26 (vùng system/program files) để tăng độ phân biệt; nếu Write exe-like nằm trong Temp/AppData có thể là installer cache, cần f24/f23 để giảm nhầm.
+(B) Bổ trợ: f_exelike_write_count tương tác với f_system_event_count/f_program_files_create_write_count (vùng system/program files) để tăng độ phân biệt; nếu Write exe-like nằm trong Temp/AppData có thể là installer cache, cần f_temp_event_count/f_appdata_event_count để giảm nhầm.
 
-**f32 — Entropy nhóm extension trong các Write (float)**  
+**f_write_ext_group_entropy — Entropy nhóm extension trong các Write (float)**  
 Định nghĩa: xét tập Write events, đếm theo nhóm \(k \in \{\text{doc,exe,archive,media,image,code,other}\}\):  
-\(w_k=\frac{|\{i:o_i=W \land g(ext(p_i))=k\}|}{f3+\varepsilon}\),  
-\(f32=-\sum_k w_k\log_2(w_k+\varepsilon)\).  
+\(w_k=\frac{|\{i:o_i=W \land g(ext(p_i))=k\}|}{f_write_count+\varepsilon}\),  
+\(f_write_ext_group_entropy=-\sum_k w_k\log_2(w_k+\varepsilon)\).  
 (A) Một số ransomware “funnel” vào nhóm file giá trị (doc/image) → entropy thấp; trong khi một số benign (backup) có thể trải rộng → entropy cao. Các thảo luận về “file type coverage” xuất hiện trong tổng quan I/O-based detection. citeturn17search3turn4view0  
-(B) Bổ trợ: Vì entropy thấp cũng có thể do workflow chuyên biệt (ví dụ công cụ xử lý ảnh), nên cần kết hợp chặt với f19–f22 (mục tiêu thư mục) và f49–f50 (đổi extension).
+(B) Bổ trợ: Vì entropy thấp cũng có thể do workflow chuyên biệt (ví dụ công cụ xử lý ảnh), nên cần kết hợp chặt với f_user_data_event_count–f_user_data_rename_count (mục tiêu thư mục) và f_rename_ext_change_ratio–f_rename_dominant_new_ext_ratio (đổi extension).
 
 ### Nhóm D — Đa dạng & tập trung theo namespace
 
-**f33 — Số file khác nhau (int)**  
-Định nghĩa: \(F=\{norm(p_i)\}\) trên **full_path** của mọi sự kiện; \(f33=|F|\).  
+**f_unique_file_count — Số file khác nhau (int)**  
+Định nghĩa: \(F=\{norm(p_i)\}\) trên **full_path** của mọi sự kiện; \(f_unique_file_count=|F|\).  
 (A) Ransomware thường tác động rất nhiều file; UNVEIL và các phân tích ransomware nhấn mạnh traversal rộng. citeturn3view0turn15view0  
-(B) Bổ trợ: f33 kết hợp với f36/f37 (tập trung hay lan rộng) để phân biệt “đụng nhiều file” (ransomware/backup) vs “đụng ít file nhưng nhiều event” (DB).
+(B) Bổ trợ: f_unique_file_count kết hợp với f_events_per_file_mean/f_file_event_gini (tập trung hay lan rộng) để phân biệt “đụng nhiều file” (ransomware/backup) vs “đụng ít file nhưng nhiều event” (DB).
 
-**f34 — Số thư mục khác nhau (int)**  
-Định nghĩa: \(D=\{dir(norm(p_i))\}\). \(f34=|D|\).  
+**f_unique_dir_count — Số thư mục khác nhau (int)**  
+Định nghĩa: \(D=\{dir(norm(p_i))\}\). \(f_unique_dir_count=|D|\).  
 (A) Ransomware thường đi qua nhiều thư mục; đo đạc trong nghiên cứu cũng cho thấy số thư mục “touched” lớn. citeturn15view0  
-(B) Bổ trợ: f34 giảm nhầm với ứng dụng thao tác nhiều file nhưng trong một thư mục (ví dụ build system); kết hợp f43 (same_dir_adjacent_rate) để nhận ra traversal theo cụm.
+(B) Bổ trợ: f_unique_dir_count giảm nhầm với ứng dụng thao tác nhiều file nhưng trong một thư mục (ví dụ build system); kết hợp f_adjacent_same_dir_ratio (same_dir_adjacent_rate) để nhận ra traversal theo cụm.
 
-**f35 — Số extension khác nhau (int)**  
-Định nghĩa: \(X=\{ext(norm(p_i))\}\). \(f35=|X|\).  
+**f_unique_ext_count — Số extension khác nhau (int)**  
+Định nghĩa: \(X=\{ext(norm(p_i))\}\). \(f_unique_ext_count=|X|\).  
 (A) Ransomware có thể nhắm nhiều loại file; hoặc ngược lại chỉ nhắm một số loại giá trị—cả hai đều có ý nghĩa. citeturn17search3turn4view0  
-(B) Bổ trợ: f35 phải đọc cùng f32 (entropy) để biết “nhiều extension” có phân tán thật hay chỉ vài nhóm chiếm ưu thế. Nó cũng bù cho f30 (doc-like) khi ransomware nhắm ảnh/media.
+(B) Bổ trợ: f_unique_ext_count phải đọc cùng f_write_ext_group_entropy (entropy) để biết “nhiều extension” có phân tán thật hay chỉ vài nhóm chiếm ưu thế. Nó cũng bù cho f_doclike_write_count (doc-like) khi ransomware nhắm ảnh/media.
 
-**f36 — Trung bình sự kiện trên mỗi file (float)**  
-Định nghĩa: \(f36=\frac{N}{|F|+\varepsilon}\).  
-(A) Ransomware kiểu “đi qua từng file một, làm ít thao tác rồi chuyển file khác” thường cho f36 gần 1–vài; ngược lại app xử lý một file nhiều lần cho f36 lớn. citeturn3view0turn5view0  
-(B) Bổ trợ: f36 kết hợp với f33 để phân biệt “many-files shallow” vs “few-files deep”; bù cho f1 vốn chỉ nói tổng khối lượng.
+**f_events_per_file_mean — Trung bình sự kiện trên mỗi file (float)**  
+Định nghĩa: \(f_events_per_file_mean=\frac{N}{|F|+\varepsilon}\).  
+(A) Ransomware kiểu “đi qua từng file một, làm ít thao tác rồi chuyển file khác” thường cho f_events_per_file_mean gần 1–vài; ngược lại app xử lý một file nhiều lần cho f_events_per_file_mean lớn. citeturn3view0turn5view0  
+(B) Bổ trợ: f_events_per_file_mean kết hợp với f_unique_file_count để phân biệt “many-files shallow” vs “few-files deep”; bù cho f_total_events vốn chỉ nói tổng khối lượng.
 
-**f37 — Gini của số sự kiện theo file (float)**  
+**f_file_event_gini — Gini của số sự kiện theo file (float)**  
 Định nghĩa: đặt \(c_f = |\{i:norm(p_i)=f\}|\) cho mỗi \(f\in F\), \(k=|F|\).  
-\(f37 = \frac{\sum_{a=1}^{k}\sum_{b=1}^{k} |c_a-c_b|}{2k\sum_{a=1}^{k}c_a+\varepsilon}\).  
+\(f_file_event_gini = \frac{\sum_{a=1}^{k}\sum_{b=1}^{k} |c_a-c_b|}{2k\sum_{a=1}^{k}c_a+\varepsilon}\).  
 (A) Gini thấp → phân bố đều trên nhiều file (ransomware “quét”); Gini cao → tập trung vào vài file (nhiều benign như DB/log). citeturn3view0turn15view0  
-(B) Bổ trợ: Gini giúp chống né tránh bằng “thêm nhiễu vài file”: nếu malware cố đẩy công việc về ít file để bắt chước benign, f33/f34 và f19–f22 sẽ thay đổi theo hướng khác, tạo tương tác hữu ích.
+(B) Bổ trợ: Gini giúp chống né tránh bằng “thêm nhiễu vài file”: nếu malware cố đẩy công việc về ít file để bắt chước benign, f_unique_file_count/f_unique_dir_count và f_user_data_event_count–f_user_data_rename_count sẽ thay đổi theo hướng khác, tạo tương tác hữu ích.
 
-**f38 — Entropy phân bố theo thư mục (float)**  
+**f_dir_entropy — Entropy phân bố theo thư mục (float)**  
 Định nghĩa: với \(p_d=\frac{|\{i:dir(norm(p_i))=d\}|}{N+\varepsilon}\),  
-\(f38=-\sum_{d\in D} p_d\log_2(p_d+\varepsilon)\).  
+\(f_dir_entropy=-\sum_{d\in D} p_d\log_2(p_d+\varepsilon)\).  
 (A) Entropy cao phản ánh lan tỏa trên nhiều thư mục; ransomware traversal thường làm tăng. citeturn15view0turn3view0  
-(B) Bổ trợ: Entropy cao cũng có thể do tool index/search. Kết hợp với op mix (f7–f9), đặc biệt rename/ext-change (f49), để tăng độ chắc.
+(B) Bổ trợ: Entropy cao cũng có thể do tool index/search. Kết hợp với op mix (f_write_ratio–f_rename_ratio), đặc biệt rename/ext-change (f_rename_ext_change_ratio), để tăng độ chắc.
 
-**f39 — Entropy phân bố theo extension (float)**  
+**f_ext_entropy — Entropy phân bố theo extension (float)**  
 Định nghĩa: với \(p_x=\frac{|\{i:ext(norm(p_i))=x\}|}{N+\varepsilon}\),  
-\(f39=-\sum_{x\in X} p_x\log_2(p_x+\varepsilon)\).  
-(A) Nhiều ransomware nhắm tập file cụ thể → entropy thấp; một số nhắm rộng → entropy cao; cả hai đều hữu ích khi đặt trong ngữ cảnh thư mục (f19–f22). citeturn17search3turn4view0  
-(B) Bổ trợ: f39 bổ sung cho f35 bằng cách đo “độ đều”; giúp mô hình phân biệt “nhiều extension nhưng chủ yếu vẫn một nhóm” vs “thực sự đa dạng”.
+\(f_ext_entropy=-\sum_{x\in X} p_x\log_2(p_x+\varepsilon)\).  
+(A) Nhiều ransomware nhắm tập file cụ thể → entropy thấp; một số nhắm rộng → entropy cao; cả hai đều hữu ích khi đặt trong ngữ cảnh thư mục (f_user_data_event_count–f_user_data_rename_count). citeturn17search3turn4view0  
+(B) Bổ trợ: f_ext_entropy bổ sung cho f_unique_ext_count bằng cách đo “độ đều”; giúp mô hình phân biệt “nhiều extension nhưng chủ yếu vẫn một nhóm” vs “thực sự đa dạng”.
 
-**f40 — Độ sâu đường dẫn trung bình (float)**  
-Định nghĩa: \(f40=\frac{1}{N+\varepsilon}\sum_{i=1}^{N} depth(norm(p_i))\).  
+**f_path_depth_mean — Độ sâu đường dẫn trung bình (float)**  
+Định nghĩa: \(f_path_depth_mean=\frac{1}{N+\varepsilon}\sum_{i=1}^{N} depth(norm(p_i))\).  
 (A) Truy cập dữ liệu người dùng thường nằm sâu dưới `Users\<user>\...`; traversal đệ quy qua nhiều nhánh tăng độ sâu trung bình. Nghiên cứu về namespace/độ sâu thư mục trong hệ file cũng cho thấy cấu trúc phân cấp là một thuộc tính đo được và biến thiên theo workload. citeturn11search13turn3view0  
 (B) Bổ trợ: depth bị phụ thuộc môi trường; do đó cần kết hợp với phân loại known-folder (Nhóm C) để “giải nghĩa” độ sâu (sâu vì user profile hay sâu vì cache).
 
-**f41 — Độ lệch chuẩn độ sâu đường dẫn (float)**  
-Định nghĩa: \(f41=\sqrt{\frac{1}{N+\varepsilon}\sum_i (depth(norm(p_i)) - f40)^2}\).  
+**f_path_depth_std — Độ lệch chuẩn độ sâu đường dẫn (float)**  
+Định nghĩa: \(f_path_depth_std=\sqrt{\frac{1}{N+\varepsilon}\sum_i (depth(norm(p_i)) - f_path_depth_mean)^2}\).  
 (A) Độ lệch chuẩn cao gợi ý tiến trình đụng cả file ở các mức rất khác nhau (root + sâu), có thể tương ứng traversal rộng. citeturn15view0  
-(B) Bổ trợ: Kết hợp với f28/f29 (root diversity) để phân biệt “nhiều mức trong một ổ” vs “nhiều mức trên nhiều ổ/share”.
+(B) Bổ trợ: Kết hợp với f_unique_root_count/f_root_entropy (root diversity) để phân biệt “nhiều mức trong một ổ” vs “nhiều mức trên nhiều ổ/share”.
 
-**f42 — Tỷ lệ thư mục chiếm ưu thế nhất (float)**  
-Định nghĩa: \(f42=\frac{\max_{d\in D} |\{i:dir(norm(p_i))=d\}|}{N+\varepsilon}\).  
+**f_dominant_dir_ratio — Tỷ lệ thư mục chiếm ưu thế nhất (float)**  
+Định nghĩa: \(f_dominant_dir_ratio=\frac{\max_{d\in D} |\{i:dir(norm(p_i))=d\}|}{N+\varepsilon}\).  
 (A) Ransomware traversal thường giảm sự “độc chiếm” của một thư mục; ngược lại nhiều benign workload tập trung vào một working dir/cache dir. citeturn3view0turn15view0  
-(B) Bổ trợ: f42 tương tác với f38: entropy thấp thường kéo theo f42 cao; kết hợp cả hai giúp mô hình không cần học quá nhiều từ raw path tokens (giảm rủi ro spurious feature). citeturn8view0
+(B) Bổ trợ: f_dominant_dir_ratio tương tác với f_dir_entropy: entropy thấp thường kéo theo f_dominant_dir_ratio cao; kết hợp cả hai giúp mô hình không cần học quá nhiều từ raw path tokens (giảm rủi ro spurious feature). citeturn8view0
 
 ### Nhóm E — Cấu trúc chuỗi (sequential structure)
 
 Các đặc trưng này dựa trên thứ tự thời gian của sự kiện. Lưu ý: đặc trưng chuỗi thuần túy có thể bị né tránh bằng cách chèn “noise operations” hoặc đổi thứ tự độc lập—điểm yếu đã được nêu trong nghiên cứu về mô hình hành vi dựa trên system call sequence. citeturn10view0 Vì vậy, chúng được thiết kế để **phối hợp** với Nhóm C/D/F.
 
-**f43 — Tỷ lệ hai sự kiện liên tiếp cùng thư mục (float)**  
+**f_adjacent_same_dir_ratio — Tỷ lệ hai sự kiện liên tiếp cùng thư mục (float)**  
 Định nghĩa: nếu \(N<2\) thì 0, ngược lại  
-\(f43=\frac{|\{i: dir(p_i)=dir(p_{i+1})\}|}{N-1}\).  
-(A) Ransomware thường xử lý nhiều file trong cùng thư mục trước khi chuyển sang thư mục khác → f43 có thể cao; đồng thời nhiều benign scan/index có thể thấp (đổi thư mục liên tục). citeturn15view0  
-(B) Bổ trợ: f43 kết hợp với f34/f38 để phân biệt “làm sâu trong từng thư mục” vs “nhảy thư mục”; và kết hợp với f49–f50 để nhận ra pattern “append extension hàng loạt trong cùng folder”.
+\(f_adjacent_same_dir_ratio=\frac{|\{i: dir(p_i)=dir(p_{i+1})\}|}{N-1}\).  
+(A) Ransomware thường xử lý nhiều file trong cùng thư mục trước khi chuyển sang thư mục khác → f_adjacent_same_dir_ratio có thể cao; đồng thời nhiều benign scan/index có thể thấp (đổi thư mục liên tục). citeturn15view0  
+(B) Bổ trợ: f_adjacent_same_dir_ratio kết hợp với f_unique_dir_count/f_dir_entropy để phân biệt “làm sâu trong từng thư mục” vs “nhảy thư mục”; và kết hợp với f_rename_ext_change_ratio–f_rename_dominant_new_ext_ratio để nhận ra pattern “append extension hàng loạt trong cùng folder”.
 
-**f44 — Tỷ lệ hai sự kiện liên tiếp cùng full_path (float)**  
-Định nghĩa: \(f44=\frac{|\{i: norm(p_i)=norm(p_{i+1})\}|}{N-1}\) (0 nếu \(N<2\)).  
-(A) App như DB/log writer thường có nhiều thao tác lặp trên cùng file → f44 cao; ransomware quét nhiều file → f44 thấp. citeturn3view0turn5view0  
-(B) Bổ trợ: f44 bổ sung cho f37 (Gini): f37 nhìn phân bố toàn cục, f44 nhìn “tính cục bộ theo thời gian”; cả hai cùng giúp phân biệt “few-files deep” vs “many-files shallow”.
+**f_adjacent_same_path_ratio — Tỷ lệ hai sự kiện liên tiếp cùng full_path (float)**  
+Định nghĩa: \(f_adjacent_same_path_ratio=\frac{|\{i: norm(p_i)=norm(p_{i+1})\}|}{N-1}\) (0 nếu \(N<2\)).  
+(A) App như DB/log writer thường có nhiều thao tác lặp trên cùng file → f_adjacent_same_path_ratio cao; ransomware quét nhiều file → f_adjacent_same_path_ratio thấp. citeturn3view0turn5view0  
+(B) Bổ trợ: f_adjacent_same_path_ratio bổ sung cho f_file_event_gini (Gini): f_file_event_gini nhìn phân bố toàn cục, f_adjacent_same_path_ratio nhìn “tính cục bộ theo thời gian”; cả hai cùng giúp phân biệt “few-files deep” vs “many-files shallow”.
 
-**f45 — Xác suất chuyển Create→Write (float)**  
-Định nghĩa: \(f45=\frac{|\{i:o_i=C \land o_{i+1}=W\}|}{N-1+\varepsilon}\).  
+**f_transition_create_to_write — Xác suất chuyển Create→Write (float)**  
+Định nghĩa: \(f_transition_create_to_write=\frac{|\{i:o_i=C \land o_{i+1}=W\}|}{N-1+\varepsilon}\).  
 (A) Nhiều xử lý hợp lệ lẫn malware có Create→Write; nhưng trong ransomware kiểu “tạo bản mã hóa mới rồi thao tác”, mẫu này có thể tăng. citeturn17search13turn3view0  
-(B) Bổ trợ: f45 mạnh hơn khi đồng thời f4/f47 (Delete sau đó) tăng, tạo motif “Create→Write→Delete” trên nhiều file; motif dạng này bù cho thiếu read/entropy.
+(B) Bổ trợ: f_transition_create_to_write mạnh hơn khi đồng thời f_delete_count/f_transition_write_to_delete (Delete sau đó) tăng, tạo motif “Create→Write→Delete” trên nhiều file; motif dạng này bù cho thiếu read/entropy.
 
-**f46 — Xác suất chuyển Write→Rename (float)**  
-Định nghĩa: \(f46=\frac{|\{i:o_i=W \land o_{i+1}=R\}|}{N-1+\varepsilon}\).  
+**f_transition_write_to_rename — Xác suất chuyển Write→Rename (float)**  
+Định nghĩa: \(f_transition_write_to_rename=\frac{|\{i:o_i=W \land o_{i+1}=R\}|}{N-1+\varepsilon}\).  
 (A) Nhiều ransomware ghi ciphertext rồi đổi tên/append extension để đánh dấu; quan sát về delete/rename sau khi tạo ciphertext được mô tả trong phân tích ransomware. citeturn17search13turn15view0  
-(B) Bổ trợ: f46 kết hợp trực tiếp với f49/f50: nếu Write→Rename cao và đa số rename đổi extension theo một pattern, độ phân biệt tăng mạnh; nếu malware “không rename”, f46 không giúp, lúc đó dùng f47 + f30/f20.
+(B) Bổ trợ: f_transition_write_to_rename kết hợp trực tiếp với f_rename_ext_change_ratio/f_rename_dominant_new_ext_ratio: nếu Write→Rename cao và đa số rename đổi extension theo một pattern, độ phân biệt tăng mạnh; nếu malware “không rename”, f_transition_write_to_rename không giúp, lúc đó dùng f_transition_write_to_delete + f_doclike_write_count/f_user_data_write_count.
 
-**f47 — Xác suất chuyển Write→Delete (float)**  
-Định nghĩa: \(f47=\frac{|\{i:o_i=W \land o_{i+1}=D\}|}{N-1+\varepsilon}\).  
+**f_transition_write_to_delete — Xác suất chuyển Write→Delete (float)**  
+Định nghĩa: \(f_transition_write_to_delete=\frac{|\{i:o_i=W \land o_{i+1}=D\}|}{N-1+\varepsilon}\).  
 (A) Gợi ý hành vi overwrite rồi xóa hoặc tạo file mới rồi xóa bản cũ (trong cửa sổ quan sát); phù hợp với mô tả “delete original after producing encrypted file”. citeturn17search13turn5view0  
-(B) Bổ trợ: Write→Delete đôi khi benign (temp file). Vì vậy phải gắn với vùng user_data (f21) và “rename ext-change” thấp/cao để suy ra đúng motif (wiper vs ransomware vs temp cleanup).
+(B) Bổ trợ: Write→Delete đôi khi benign (temp file). Vì vậy phải gắn với vùng user_data (f_user_data_delete_count) và “rename ext-change” thấp/cao để suy ra đúng motif (wiper vs ransomware vs temp cleanup).
 
-**f48 — Run dài nhất của cùng op_type (int)**  
-Định nghĩa: xét chuỗi \(o_1..o_N\), \(f48=\max\) độ dài đoạn liên tiếp có cùng op_type.  
+**f_longest_same_op_run — Run dài nhất của cùng op_type (int)**  
+Định nghĩa: xét chuỗi \(o_1..o_N\), \(f_longest_same_op_run=\max\) độ dài đoạn liên tiếp có cùng op_type.  
 (A) Ransomware thường có “đoạn dài” bị chi phối bởi Write hoặc Rename (một kiểu thao tác lặp lại hàng loạt). UNVEIL quan sát các mẫu I/O lặp mạnh do chiến lược tấn công giống nhau cho mỗi file. citeturn3view0turn5view0  
-(B) Bổ trợ: Run-length là đặc trưng chuỗi tương đối bền trước việc đổi thứ tự giữa các nhóm file (nếu vẫn lặp cùng loại thao tác). Kết hợp với f10 (op entropy) để phân biệt “một run dài” với “phân bố đều”.
+(B) Bổ trợ: Run-length là đặc trưng chuỗi tương đối bền trước việc đổi thứ tự giữa các nhóm file (nếu vẫn lặp cùng loại thao tác). Kết hợp với f_op_type_entropy (op entropy) để phân biệt “một run dài” với “phân bố đều”.
 
 ### Nhóm F — Rename & nhân bản tên file
 
-**f49 — Tỷ lệ Rename đổi extension (float)**  
-Định nghĩa: nếu \(f5=0\) thì 0, ngược lại  
-\(f49=\frac{|\{i:o_i=R \land ext(p_i)\ne ext(p_i^{new})\}|}{f5+\varepsilon}\).  
+**f_rename_ext_change_ratio — Tỷ lệ Rename đổi extension (float)**  
+Định nghĩa: nếu \(f_rename_count=0\) thì 0, ngược lại  
+\(f_rename_ext_change_ratio=\frac{|\{i:o_i=R \land ext(p_i)\ne ext(p_i^{new})\}|}{f_rename_count+\varepsilon}\).  
 (A) Đổi extension là dấu hiệu mạnh của “file type changing/marking” trong nhiều mẫu ransomware; đo đạc gần đây cho thấy đa số mẫu append extension mới. citeturn15view0turn17search3  
-(B) Bổ trợ: Nếu malware randomize extension để né f50, f49 vẫn có thể cao; nếu malware không rename, f49=0 và cần dựa vào f20/f30/f33/f38.
+(B) Bổ trợ: Nếu malware randomize extension để né f_rename_dominant_new_ext_ratio, f_rename_ext_change_ratio vẫn có thể cao; nếu malware không rename, f_rename_ext_change_ratio=0 và cần dựa vào f_user_data_write_count/f_doclike_write_count/f_unique_file_count/f_dir_entropy.
 
-**f50 — Dominant new-extension ratio trong Rename (float)**  
+**f_rename_dominant_new_ext_ratio — Dominant new-extension ratio trong Rename (float)**  
 Định nghĩa: với mỗi extension \(e\), \(u_e = |\{i:o_i=R \land ext(p_i^{new})=e\}|\).  
-\(f50=\frac{\max_e u_e}{f5+\varepsilon}\) (0 nếu \(f5=0\)).  
+\(f_rename_dominant_new_ext_ratio=\frac{\max_e u_e}{f_rename_count+\varepsilon}\) (0 nếu \(f_rename_count=0\)).  
 (A) Nhiều ransomware gắn một extension “thương hiệu” cho toàn bộ file đã mã hóa → một \(e\) chiếm ưu thế. citeturn15view0  
-(B) Bổ trợ: f50 chống false positive của batch-rename “đa dạng” (ví dụ đổi tên ảnh có giữ extension) vì khi benign rename mà không đổi extension, f49 thấp. Cặp (f49,f50) là tương tác then chốt.
+(B) Bổ trợ: f_rename_dominant_new_ext_ratio chống false positive của batch-rename “đa dạng” (ví dụ đổi tên ảnh có giữ extension) vì khi benign rename mà không đổi extension, f_rename_ext_change_ratio thấp. Cặp (f_rename_ext_change_ratio,f_rename_dominant_new_ext_ratio) là tương tác then chốt.
 
-**f51 — Độ giống tiền tố tên file cũ–mới trung bình (float)**  
+**f_rename_filename_prefix_similarity — Độ giống tiền tố tên file cũ–mới trung bình (float)**  
 Định nghĩa: với rename event \(i\), đặt \(a=fname(p_i), b=fname(p_i^{new})\), \(LCP(a,b)\)=độ dài common prefix theo ký tự.  
 \(s_i=\frac{LCP(a,b)}{\max(|a|,1)}\).  
-\(f51=\text{mean}(s_i)\) trên mọi rename.  
+\(f_rename_filename_prefix_similarity=\text{mean}(s_i)\) trên mọi rename.  
 (A) Append extension kiểu `report.docx` → `report.docx.locked` tạo LCP rất cao; đây là một fingerprint “string-level” không cần nội dung/bytes. citeturn15view0  
-(B) Bổ trợ: Nếu malware đổi tên hoàn toàn (LCP thấp) thì f51 yếu; khi đó f49 (đổi extension) và f34/f38 (lan rộng) vẫn hỗ trợ. Đồng thời f51 giúp chống benign rename có mẫu khác (ví dụ đổi tên theo template nhưng không append).
+(B) Bổ trợ: Nếu malware đổi tên hoàn toàn (LCP thấp) thì f_rename_filename_prefix_similarity yếu; khi đó f_rename_ext_change_ratio (đổi extension) và f_unique_dir_count/f_dir_entropy (lan rộng) vẫn hỗ trợ. Đồng thời f_rename_filename_prefix_similarity giúp chống benign rename có mẫu khác (ví dụ đổi tên theo template nhưng không append).
 
-**f52 — Tỷ lệ Rename giữ nguyên thư mục (float)**  
-Định nghĩa: \(f52=\frac{|\{i:o_i=R \land dir(p_i)=dir(p_i^{new})\}|}{f5+\varepsilon}\) (0 nếu \(f5=0\)).  
-(A) Nhiều ransomware chỉ đổi tên/extension ngay tại chỗ (same directory) thay vì di chuyển; do đó f52 thường cao trong append-extension scenario. citeturn15view0turn17search13  
-(B) Bổ trợ: f52 kết hợp với f22 (rename trong user_data) giúp phân biệt “append extension tại chỗ” (ransomware) với “move/organize” (benign file manager).
+**f_rename_same_dir_ratio — Tỷ lệ Rename giữ nguyên thư mục (float)**  
+Định nghĩa: \(f_rename_same_dir_ratio=\frac{|\{i:o_i=R \land dir(p_i)=dir(p_i^{new})\}|}{f_rename_count+\varepsilon}\) (0 nếu \(f_rename_count=0\)).  
+(A) Nhiều ransomware chỉ đổi tên/extension ngay tại chỗ (same directory) thay vì di chuyển; do đó f_rename_same_dir_ratio thường cao trong append-extension scenario. citeturn15view0turn17search13  
+(B) Bổ trợ: f_rename_same_dir_ratio kết hợp với f_user_data_rename_count (rename trong user_data) giúp phân biệt “append extension tại chỗ” (ransomware) với “move/organize” (benign file manager).
 
-**f53 — Mức nhân bản filename khi Create (int)**  
+**f_create_filename_replication — Mức nhân bản filename khi Create (int)**  
 Định nghĩa: xét tập Create events \(I_C=\{i:o_i=C\}\). Với mỗi filename \(u=fname(norm(p_i))\), đặt \(S_u=\{dir(norm(p_i)) : i\in I_C \land fname(norm(p_i))=u\}\).  
-\(f53=\max_u |S_u|\) (nếu không có Create thì 0).  
+\(f_create_filename_replication=\max_u |S_u|\) (nếu không có Create thì 0).  
 (A) Ransomware thường tạo **ransom note** với cùng tên trong nhiều thư mục; đặc trưng này bắt tín hiệu đó mà không cần biết tên note cụ thể. citeturn17search13turn15view0  
-(B) Bổ trợ: f53 bù cho trường hợp ransomware không rename extension (f49 thấp) nhưng vẫn thả note; hoặc ngược lại, nếu note name ngẫu nhiên, f53 giảm và ta dựa vào f33/f38/f46. Nó cũng giúp giảm false positive của installer: installer ít khi tạo cùng một filename ở hàng trăm thư mục user.
+(B) Bổ trợ: f_create_filename_replication bù cho trường hợp ransomware không rename extension (f_rename_ext_change_ratio thấp) nhưng vẫn thả note; hoặc ngược lại, nếu note name ngẫu nhiên, f_create_filename_replication giảm và ta dựa vào f_unique_file_count/f_dir_entropy/f_transition_write_to_rename. Nó cũng giúp giảm false positive của installer: installer ít khi tạo cùng một filename ở hàng trăm thư mục user.
 
 ## Tập đặc trưng lõi khuyến nghị
 
@@ -344,16 +344,16 @@ Một tập “lõi” (ít nhưng mạnh) nên ưu tiên các đặc trưng v�
 
 Tập lõi đề xuất (15 đặc trưng, lấy từ master):
 
-- **Cường độ & mix:** f3 (Write), f4 (Delete), f5 (Rename), f6 (rate_total), f10 (op entropy).  
-- **Temporal:** f14 (VMR_10), f17 (inactivity_frac).  
-- **Targeting:** f20 (Write trong user_data), f22 (Rename trong user_data), f24 (Temp activity), f27 (UNC activity).  
-- **Lan rộng:** f33 (unique_files), f34 (unique_dirs), f37 (Gini per-file), f38 (dir entropy).  
-- **Rename cấu trúc:** f49 (ext-change frac), f50 (dominant new-ext ratio) *hoặc* f53 (create filename replication) tùy mục tiêu ransomware/không.
+- **Cường độ & mix:** f_write_count (Write), f_delete_count (Delete), f_rename_count (Rename), f_total_event_rate (rate_total), f_op_type_entropy (op entropy).  
+- **Temporal:** f_vmr_10bins (VMR_10), f_inactivity_bin_fraction (inactivity_frac).  
+- **Targeting:** f_user_data_write_count (Write trong user_data), f_user_data_rename_count (Rename trong user_data), f_temp_event_count (Temp activity), f_unc_event_count (UNC activity).  
+- **Lan rộng:** f_unique_file_count (unique_files), f_unique_dir_count (unique_dirs), f_file_event_gini (Gini per-file), f_dir_entropy (dir entropy).  
+- **Rename cấu trúc:** f_rename_ext_change_ratio (ext-change frac), f_rename_dominant_new_ext_ratio (dominant new-ext ratio) *hoặc* f_create_filename_replication (create filename replication) tùy mục tiêu ransomware/không.
 
 Lý do tập này mạnh:
 
-- Nó ghép thành “tam giác” **cường độ (f6/f3) + lan rộng (f33/f38/f37) + mục tiêu (f20/f22 vs f24)**, bám sát insight rằng ransomware phải đụng vào file nạn nhân và thường thực hiện hàng loạt. citeturn3view0turn5view0turn4view0  
-- Nó bổ sung một lớp “tín hiệu rename” (f49/f50) vốn rất hữu ích khi thiếu entropy/bytes; đồng thời có “escape hatch” f53 cho biến thể tạo note. citeturn15view0turn17search13  
+- Nó ghép thành “tam giác” **cường độ (f_total_event_rate/f_write_count) + lan rộng (f_unique_file_count/f_dir_entropy/f_file_event_gini) + mục tiêu (f_user_data_write_count/f_user_data_rename_count vs f_temp_event_count)**, bám sát insight rằng ransomware phải đụng vào file nạn nhân và thường thực hiện hàng loạt. citeturn3view0turn5view0turn4view0  
+- Nó bổ sung một lớp “tín hiệu rename” (f_rename_ext_change_ratio/f_rename_dominant_new_ext_ratio) vốn rất hữu ích khi thiếu entropy/bytes; đồng thời có “escape hatch” f_create_filename_replication cho biến thể tạo note. citeturn15view0turn17search13  
 - Nó giảm phụ thuộc vào dữ liệu sandbox: phần lớn dựa trên tỷ lệ/entropy/phân bố thay vì token cụ thể của path, phù hợp với khuyến nghị hạn chế học “spurious features” và xử lý phân phối endpoint khác nhau. citeturn8view0turn16search3  
 
 ## Họ đặc trưng mở rộng tùy chọn
@@ -405,17 +405,17 @@ Một số phần mềm hợp lệ có thể tạo dấu vết gần như ransom
 Ngay cả CryptoDrop cũng thừa nhận giới hạn cơ bản: hệ thống quan sát thay đổi dữ liệu khó “hiểu ý định” và cần phối hợp nhiều chỉ báo để giảm false positives. citeturn4view0
 
 Cách giảm nhầm trong khung feature của bạn là **bắt tương tác**:
-- Nếu “nặng nhưng lành”: thường tập trung ở AppData/Temp (f23/f24 cao), Gini cao (f37 cao) hoặc f44 cao (lặp cùng file), rename không đổi extension (f49 thấp).  
-- Nếu “nặng và phá”: Write/Delete/Rename cao (f3/f4/f5), lan rộng (f33/f38), tập trung vào user_data/UNC (f20/f27), và có dấu hiệu đổi extension hàng loạt (f49/f50) hoặc tạo cùng filename trên nhiều thư mục (f53). citeturn5view0turn3view0turn15view0turn17search13  
+- Nếu “nặng nhưng lành”: thường tập trung ở AppData/Temp (f_appdata_event_count/f_temp_event_count cao), Gini cao (f_file_event_gini cao) hoặc f_adjacent_same_path_ratio cao (lặp cùng file), rename không đổi extension (f_rename_ext_change_ratio thấp).  
+- Nếu “nặng và phá”: Write/Delete/Rename cao (f_write_count/f_delete_count/f_rename_count), lan rộng (f_unique_file_count/f_dir_entropy), tập trung vào user_data/UNC (f_user_data_write_count/f_unc_event_count), và có dấu hiệu đổi extension hàng loạt (f_rename_ext_change_ratio/f_rename_dominant_new_ext_ratio) hoặc tạo cùng filename trên nhiều thư mục (f_create_filename_replication). citeturn5view0turn3view0turn15view0turn17search13  
 
 ### Malware có thể né các đặc trưng “ngây thơ” ra sao
 
-- **Throttling/slow encryption:** giảm f6 và làm f11 lớn, tăng f17; đây là kỹ thuật né dễ nhất đối với detector dựa trên rate.  
-  - Giảm brittleness bằng cách dựa thêm vào lan rộng/entropy thư mục (f33/f38) và dấu rename cấu trúc (f49–f52).  
+- **Throttling/slow encryption:** giảm f_total_event_rate và làm f_interarrival_mean lớn, tăng f_inactivity_bin_fraction; đây là kỹ thuật né dễ nhất đối với detector dựa trên rate.  
+  - Giảm brittleness bằng cách dựa thêm vào lan rộng/entropy thư mục (f_unique_file_count/f_dir_entropy) và dấu rename cấu trúc (f_rename_ext_change_ratio–f_rename_same_dir_ratio).  
 - **Chèn nhiễu / xen thao tác vô hại:** tương tự vấn đề đã được nêu trong nghiên cứu về mô hình chuỗi system call: chuỗi thuần túy có thể bị phá bằng reorder/chèn call độc lập. citeturn10view0  
   - Khắc phục bằng các đặc trưng phân bố (entropy/Gini) vốn khó “đánh lừa” nếu malware vẫn phải xử lý hàng loạt file thật.  
-- **Randomize extension hoặc không đổi extension:** làm suy yếu f50/f49.  
-  - Bù bằng motif Write→Delete (f47), lan rộng (f33/f34), và “tạo file note hàng loạt” (f53) nếu tồn tại. citeturn17search13turn15view0  
+- **Randomize extension hoặc không đổi extension:** làm suy yếu f_rename_dominant_new_ext_ratio/f_rename_ext_change_ratio.  
+  - Bù bằng motif Write→Delete (f_transition_write_to_delete), lan rộng (f_unique_file_count/f_unique_dir_count), và “tạo file note hàng loạt” (f_create_filename_replication) nếu tồn tại. citeturn17search13turn15view0  
 - **Chia nhỏ hành vi qua nhiều PID:** vì bạn quan sát “mỗi PID độc lập”, attacker có thể dùng multi-process để làm mỗi PID trông bình thường.  
   - Đây là giới hạn cấu trúc của bài toán (không giải bằng feature trong schema). Nếu giữ nguyên ràng buộc “một PID”, cách giảm tác hại là chọn cửa sổ đủ dài và tận dụng rename/note replication vốn khó phân tán hoàn toàn.  
 
