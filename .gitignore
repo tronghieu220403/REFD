@@ -36,3 +36,5 @@ REFD2026/experiment/model/shap_beeswarm.png
 REFD2026/experiment/model/shap_summary_bar.png
 REFD2026/experiment/model/xgb_gain_importance.png
 REFD2026/experiment/test_report.json
+REFD2026/experiment/model/test_roc_curve.png
+REFD2026/experiment/model/top_30_features.json

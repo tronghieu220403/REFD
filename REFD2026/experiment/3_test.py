@@ -132,7 +132,7 @@ def collect_test_predictions(
 
     all_probs: List[float] = []
     all_true: List[int] = []
-    all_names: List[str] = []
+    all_process_keys: List[str] = []
 
     for dir_path, true_label in ((benign_dir, 0), (ransom_dir, 1)):
         if not os.path.isdir(dir_path):
@@ -155,33 +155,36 @@ def collect_test_predictions(
 
             scores = predict_scores(booster, df, feature_cols)
 
-            if "name" in df.columns:
-                names = df["name"].fillna("").astype(str).tolist()
-                fallback_name = os.path.splitext(fn)[0]
-                names = [n if n else fallback_name for n in names]
-            else:
-                names = [os.path.splitext(fn)[0]] * len(scores)
+            fallback_name = os.path.splitext(fn)[0]
+            name_series = df["name"].fillna("").astype(str) if "name" in df.columns else pd.Series([fallback_name] * len(df))
+            pid_series = pd.to_numeric(df["pid"], errors="coerce").fillna(-1).astype(int) if "pid" in df.columns else pd.Series([-1] * len(df))
+            pid_path_series = df["pid_path"].fillna("").astype(str) if "pid_path" in df.columns else pd.Series([""] * len(df))
+
+            process_keys = [
+                f"{(n if n else fallback_name)}||{int(p)}||{pp}"
+                for n, p, pp in zip(name_series.tolist(), pid_series.tolist(), pid_path_series.tolist())
+            ]
 
             all_probs.extend(scores.tolist())
             all_true.extend([true_label] * len(scores))
-            all_names.extend(names)
+            all_process_keys.extend(process_keys)
 
     if not all_probs:
         raise RuntimeError("No test feature rows found")
 
-    return np.asarray(all_true, dtype=np.int32), np.asarray(all_probs, dtype=np.float64), all_names
+    return np.asarray(all_true, dtype=np.int32), np.asarray(all_probs, dtype=np.float64), all_process_keys
 
 
 def build_name_level(
     y_true: np.ndarray,
     y_prob: np.ndarray,
-    names: List[str],
+    process_keys: List[str],
     threshold: float,
 ) -> Tuple[np.ndarray, np.ndarray]:
     name_max_prob: Dict[str, float] = {}
     name_true: Dict[str, int] = {}
 
-    for n, yt, yp in zip(names, y_true.tolist(), y_prob.tolist()):
+    for n, yt, yp in zip(process_keys, y_true.tolist(), y_prob.tolist()):
         if n not in name_max_prob or yp > name_max_prob[n]:
             name_max_prob[n] = float(yp)
 
@@ -208,7 +211,7 @@ def main() -> None:
 
     print(f"[+] Loaded model: {args.model_path}")
 
-    y_true_window, y_prob_window, names = collect_test_predictions(
+    y_true_window, y_prob_window, process_keys = collect_test_predictions(
         feature_base=args.feature_base,
         booster=booster,
         feature_cols=feature_cols,
@@ -249,7 +252,7 @@ def main() -> None:
         y_true_name, y_pred_name = build_name_level(
             y_true=y_true_window,
             y_prob=y_prob_window,
-            names=names,
+            process_keys=process_keys,
             threshold=threshold,
         )
         name_metrics = safe_metrics(y_true_name, y_pred_name, y_prob=None)
@@ -259,9 +262,8 @@ def main() -> None:
             first_window_metrics = window_metrics
             first_name_metrics = name_metrics
 
+        print("\n============================================================")
         print(f"[+] Threshold         : {threshold:.6f}")
-
-        print("============================================================")
         print("[+] WINDOW-LEVEL METRICS")
         print(f"[+] Confusion matrix  : {window_metrics['confusion_matrix']}")
         # print(f"[+] Precision         : {window_metrics['precision']:.6f}")
@@ -269,16 +271,18 @@ def main() -> None:
         # print(f"[+] F1                : {window_metrics['f1']:.6f}")
         # print(f"[+] Accuracy          : {window_metrics['accuracy']:.6f}")
         print(f"[+] FPR               : {window_metrics['fpr']:.6f}")
-        print(f"[+] FNR               : {window_metrics['fnr']:.6f}")
-        print("[+] NAME-LEVEL METRICS (OR AGGREGATION BY NAME)")
+        # print(f"[+] TPR               : {name_metrics['recall']:.6f}")
+        # print(f"[+] FNR               : {window_metrics['fnr']:.6f}")
+        print("[+] PID-LEVEL METRICS (OR AGGREGATION BY <name+pid+pid_path>)")
         print(f"[+] Confusion matrix  : {name_metrics['confusion_matrix']}")
         # print(f"[+] Precision         : {name_metrics['precision']:.6f}")
         # print(f"[+] Recall            : {name_metrics['recall']:.6f}")
         # print(f"[+] F1                : {name_metrics['f1']:.6f}")
         # print(f"[+] Accuracy          : {name_metrics['accuracy']:.6f}")
-        print(f"[+] FPR               : {name_metrics['fpr']:.6f}")
-        print(f"[+] FNR               : {name_metrics['fnr']:.6f}")
-        print("============================================================")
+        # print(f"[+] FPR               : {name_metrics['fpr']:.6f}")
+        print(f"[+] TPR               : {name_metrics['recall']:.6f}")
+        # print(f"[+] FNR               : {name_metrics['fnr']:.6f}")
+        print("============================================================\n")
 
         threshold_reports.append(
             {
