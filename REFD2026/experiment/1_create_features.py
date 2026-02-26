@@ -5,6 +5,7 @@ import logging
 import math
 import multiprocessing as mp
 import os
+import time
 from collections import defaultdict
 from multiprocessing import Pool, cpu_count
 from typing import Any, Dict, Iterator, List, Optional, Tuple
@@ -17,6 +18,7 @@ LOGGER = logging.getLogger("create_features")
 _EXTRACTOR = None
 _EVENT_CLS = None
 _FEATURE_NAMES_HINT: Optional[List[str]] = None
+PROGRESS_EVERY = 200
 
 
 def _safe_float(value: Any) -> float:
@@ -63,21 +65,7 @@ def _normalize_extract_result(result: Any) -> Dict[str, float]:
 
 
 def _extract_window_features(window_events: List[Dict[str, Any]]) -> Dict[str, float]:
-    payload = []
-    for ev in window_events:
-        op = str(ev.get("op", ""))
-        path = str(ev.get("file", ""))
-        ts_seconds = float(ev.get("ts", 0)) / 1000.0
-        new_path = ev.get("new_path")
-        payload.append(
-            _EVENT_CLS(  # type: ignore
-                operation=op,
-                path=path,
-                time=ts_seconds,
-                new_path="" if new_path is None else str(new_path),
-            )
-        )
-
+    payload = [ev["event_obj"] for ev in window_events]
     result = _EXTRACTOR.extract(payload)  # type: ignore
     return _normalize_extract_result(result)
 
@@ -160,10 +148,24 @@ def _normalize_events(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
         op = str(ev.get("op", "")).lower()
         path = str(ev.get("file", ""))
-        fixed = {"ts": ts, "op": op, "file": path}
-
+        new_path = ""
         if op == "rename":
-            fixed["new_path"] = ""
+            new_path = ""
+
+        event_obj = _EVENT_CLS(  # type: ignore
+            operation=op,
+            path=path,
+            time=float(ts) / 1000.0,
+            new_path=new_path,
+        )
+
+        fixed = {
+            "ts": ts,
+            "op": op,
+            "file": path,
+            "new_path": new_path,
+            "event_obj": event_obj,
+        }
 
         normalized.append(fixed)
 
@@ -311,16 +313,43 @@ def build_dataset_from_paths(
     split: str,
     feature_base: str,
     n_workers: Optional[int] = None,
+    progress_every: int = PROGRESS_EVERY,
 ) -> None:
     if n_workers is None:
         n_workers = max(cpu_count() - 1, 1)
 
     tasks = iter_tasks(paths_with_labels, split)
     all_results: List[Tuple[Dict[str, Any], Dict[str, Any], str]] = []
+    processed_records = 0
+    total_rows = 0
+    started_at = time.time()
     with Pool(processes=n_workers, initializer=init_worker, initargs=(WINDOW_MS,)) as pool:
         for out in pool.imap_unordered(process_record_worker, tasks, chunksize=128):
+            processed_records += 1
             if out:
                 all_results.extend(out)
+                total_rows += len(out)
+
+            if progress_every > 0 and processed_records % progress_every == 0:
+                elapsed = max(time.time() - started_at, 1e-9)
+                LOGGER.info(
+                    "[progress][%s] records=%d rows=%d elapsed=%.1fs rate=%.2f rec/s",
+                    split,
+                    processed_records,
+                    total_rows,
+                    elapsed,
+                    processed_records / elapsed,
+                )
+
+    elapsed = max(time.time() - started_at, 1e-9)
+    LOGGER.info(
+        "[done][%s] records=%d rows=%d elapsed=%.1fs rate=%.2f rec/s",
+        split,
+        processed_records,
+        total_rows,
+        elapsed,
+        processed_records / elapsed,
+    )
 
     write_rows_grouped(all_results, feature_base)
 
@@ -331,6 +360,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--base", default=os.path.join(script_dir, "dataset"))
     parser.add_argument("--feature-base", default=os.path.join(script_dir, "features"))
     parser.add_argument("--workers", type=int, default=min(cpu_count() // 2, 8))
+    parser.add_argument("--progress-every", type=int, default=PROGRESS_EVERY)
     parser.add_argument("--split", choices=["all", "train", "test"], default="all")
     parser.add_argument(
         "--log-level",
@@ -360,6 +390,7 @@ def main() -> None:
             split="train",
             feature_base=args.feature_base,
             n_workers=n_workers,
+            progress_every=args.progress_every,
         )
         print("[+] Train features generated")
 
@@ -372,6 +403,7 @@ def main() -> None:
             split="test",
             feature_base=args.feature_base,
             n_workers=n_workers,
+            progress_every=args.progress_every,
         )
         print("[+] Test features generated")
 
