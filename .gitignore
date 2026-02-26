@@ -29,3 +29,10 @@ REFD2026/vm/ggez.txt
 /REFD2026/experiment/__pycache__
 /REFD2026/experiment/dataset
 /REFD2026/experiment/features
+REFD2026/experiment/model/bottom_30_features.json
+REFD2026/experiment/model/feature_list.json
+REFD2026/experiment/model/importance_gain.json
+REFD2026/experiment/model/shap_beeswarm.png
+REFD2026/experiment/model/shap_summary_bar.png
+REFD2026/experiment/model/xgb_gain_importance.png
+REFD2026/experiment/test_report.json

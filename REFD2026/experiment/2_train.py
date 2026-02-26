@@ -3,19 +3,11 @@ import glob
 import json
 import os
 import random
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 import xgboost as xgb
-from sklearn.metrics import (
-    accuracy_score,
-    confusion_matrix,
-    f1_score,
-    precision_score,
-    recall_score,
-    roc_auc_score,
-)
 from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
 
@@ -43,7 +35,6 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--random-seed", type=int, default=42, help="Random seed")
     parser.add_argument("--val-size", type=float, default=0.2, help="Validation split ratio")
-    parser.add_argument("--threshold", type=float, default=0.5, help="Decision threshold")
 
     parser.add_argument("--n-estimators", type=int, default=2000)
     parser.add_argument("--learning-rate", type=float, default=0.05)
@@ -132,52 +123,18 @@ def split_train_valid(
         groups = df["name"].fillna("__missing__").astype(str)
         if groups.nunique() >= 2:
             splitter = GroupShuffleSplit(n_splits=1, test_size=val_size, random_state=random_seed)
-            train_idx, valid_idx = next(splitter.split(df, y=y, groups=groups))
+            train_idx, valid_idx = next(splitter.split(df, y=y, groups=groups)) # type:ignore
             return train_idx, valid_idx, "group_by_name"
 
-    stratify = y if len(np.unique(y)) > 1 else None
+    stratify = y if len(np.unique(y)) > 1 else None # type:ignore
     idx = np.arange(len(df))
     train_idx, valid_idx = train_test_split(
         idx,
         test_size=val_size,
         random_state=random_seed,
-        stratify=stratify,
+        stratify=stratify, # type:ignore
     )
     return train_idx, valid_idx, "stratified_random"
-
-
-def evaluate(y_true: np.ndarray, y_prob: np.ndarray, threshold: float) -> Dict[str, float]:
-    y_pred = (y_prob >= threshold).astype(int)
-    cm = confusion_matrix(y_true, y_pred, labels=[0, 1])
-    tn, fp, fn, tp = cm.ravel()
-
-    roc_auc = float("nan")
-    if len(np.unique(y_true)) > 1:
-        roc_auc = float(roc_auc_score(y_true, y_prob))
-
-    return {
-        "roc_auc": roc_auc,
-        "precision": float(precision_score(y_true, y_pred, zero_division=0)),
-        "recall": float(recall_score(y_true, y_pred, zero_division=0)),
-        "f1": float(f1_score(y_true, y_pred, zero_division=0)),
-        "accuracy": float(accuracy_score(y_true, y_pred)),
-        "tn": int(tn),
-        "fp": int(fp),
-        "fn": int(fn),
-        "tp": int(tp),
-        "confusion_matrix": cm.tolist(),
-    }
-
-
-def to_jsonable_metrics(metrics: Dict[str, float]) -> Dict[str, Optional[float]]:
-    out: Dict[str, Optional[float]] = {}
-    for k, v in metrics.items():
-        if isinstance(v, float) and not np.isfinite(v):
-            out[k] = None
-        else:
-            out[k] = v
-    return out
-
 
 def main() -> None:
     args = parse_args()
@@ -234,19 +191,6 @@ def main() -> None:
         verbose=False,
     )
 
-    valid_prob = model.predict_proba(X_valid)[:, 1]
-    metrics = evaluate(y_valid, valid_prob, threshold=args.threshold)
-
-    print("============================================================")
-    print("[+] VALIDATION METRICS (WINDOW-LEVEL)")
-    print(f"[+] Split method    : {split_method}")
-    print(f"[+] ROC-AUC         : {metrics['roc_auc']:.6f}" if np.isfinite(metrics["roc_auc"]) else "[+] ROC-AUC         : nan")
-    print(f"[+] Precision       : {metrics['precision']:.6f}")
-    print(f"[+] Recall          : {metrics['recall']:.6f}")
-    print(f"[+] F1              : {metrics['f1']:.6f}")
-    print(f"[+] Accuracy        : {metrics['accuracy']:.6f}")
-    print(f"[+] Confusion matrix: {metrics['confusion_matrix']}")
-
     os.makedirs(args.model_dir, exist_ok=True)
 
     model_path = os.path.join(args.model_dir, "model.json")
@@ -262,15 +206,11 @@ def main() -> None:
     meta = {
         "model_path": model_path,
         "feature_order": feature_cols,
-        "threshold": float(args.threshold),
         "random_seed": int(args.random_seed),
         "split_method": split_method,
         "train_rows": int(len(train_df)),
         "valid_rows": int(len(valid_df)),
         "params": params,
-        "metrics": {
-            "validation_window_level": to_jsonable_metrics(metrics),
-        },
         "best_iteration": int(model.best_iteration) if getattr(model, "best_iteration", None) is not None else None,
     }
 

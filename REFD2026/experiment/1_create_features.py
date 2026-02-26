@@ -5,6 +5,7 @@ import logging
 import math
 import multiprocessing as mp
 import os
+import shutil
 import time
 from collections import defaultdict
 from multiprocessing import Pool, cpu_count
@@ -19,6 +20,7 @@ _EXTRACTOR = None
 _EVENT_CLS = None
 _FEATURE_NAMES_HINT: Optional[List[str]] = None
 PROGRESS_EVERY = 200
+FLUSH_EVERY_ROWS = 50000
 
 
 def _safe_float(value: Any) -> float:
@@ -96,6 +98,13 @@ def split_events_by_time_windows(
 
 def ensure_dir(path: str) -> None:
     os.makedirs(path, exist_ok=True)
+
+
+def clear_split_output(feature_base: str, split: str) -> None:
+    split_dir = os.path.join(feature_base, split)
+    if os.path.isdir(split_dir):
+        shutil.rmtree(split_dir)
+        LOGGER.info("[clean] Removed old output: %s", split_dir)
 
 
 def _safe_int(value: Any, default: int = 0) -> int:
@@ -314,44 +323,57 @@ def build_dataset_from_paths(
     feature_base: str,
     n_workers: Optional[int] = None,
     progress_every: int = PROGRESS_EVERY,
+    flush_every_rows: int = FLUSH_EVERY_ROWS,
 ) -> None:
     if n_workers is None:
         n_workers = max(cpu_count() - 1, 1)
 
     tasks = iter_tasks(paths_with_labels, split)
-    all_results: List[Tuple[Dict[str, Any], Dict[str, Any], str]] = []
+    pending_results: List[Tuple[Dict[str, Any], Dict[str, Any], str]] = []
     processed_records = 0
     total_rows = 0
+    flushed_rows = 0
     started_at = time.time()
     with Pool(processes=n_workers, initializer=init_worker, initargs=(WINDOW_MS,)) as pool:
         for out in pool.imap_unordered(process_record_worker, tasks, chunksize=128):
             processed_records += 1
             if out:
-                all_results.extend(out)
+                pending_results.extend(out)
                 total_rows += len(out)
+
+                if flush_every_rows > 0 and len(pending_results) >= flush_every_rows:
+                    write_rows_grouped(pending_results, feature_base)
+                    flushed_rows += len(pending_results)
+                    pending_results.clear()
 
             if progress_every > 0 and processed_records % progress_every == 0:
                 elapsed = max(time.time() - started_at, 1e-9)
                 LOGGER.info(
-                    "[progress][%s] records=%d rows=%d elapsed=%.1fs rate=%.2f rec/s",
+                    "[progress][%s] records=%d rows=%d flushed=%d pending=%d elapsed=%.1fs rate=%.2f rec/s",
                     split,
                     processed_records,
                     total_rows,
+                    flushed_rows,
+                    len(pending_results),
                     elapsed,
                     processed_records / elapsed,
                 )
 
+    if pending_results:
+        write_rows_grouped(pending_results, feature_base)
+        flushed_rows += len(pending_results)
+        pending_results.clear()
+
     elapsed = max(time.time() - started_at, 1e-9)
     LOGGER.info(
-        "[done][%s] records=%d rows=%d elapsed=%.1fs rate=%.2f rec/s",
+        "[done][%s] records=%d rows=%d flushed=%d elapsed=%.1fs rate=%.2f rec/s",
         split,
         processed_records,
         total_rows,
+        flushed_rows,
         elapsed,
         processed_records / elapsed,
     )
-
-    write_rows_grouped(all_results, feature_base)
 
 
 def parse_args() -> argparse.Namespace:
@@ -361,6 +383,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--feature-base", default=os.path.join(script_dir, "features"))
     parser.add_argument("--workers", type=int, default=min(cpu_count() // 2, 8))
     parser.add_argument("--progress-every", type=int, default=PROGRESS_EVERY)
+    parser.add_argument("--flush-every-rows", type=int, default=FLUSH_EVERY_ROWS)
     parser.add_argument("--split", choices=["all", "train", "test"], default="all")
     parser.add_argument(
         "--log-level",
@@ -382,6 +405,7 @@ def main() -> None:
     n_workers = max(int(args.workers), 1)
 
     if args.split in ("all", "train"):
+        clear_split_output(args.feature_base, "train")
         build_dataset_from_paths(
             [
                 (os.path.join(base, "train", "benign.jsonl"), 0),
@@ -391,10 +415,12 @@ def main() -> None:
             feature_base=args.feature_base,
             n_workers=n_workers,
             progress_every=args.progress_every,
+            flush_every_rows=args.flush_every_rows,
         )
         print("[+] Train features generated")
 
     if args.split in ("all", "test"):
+        clear_split_output(args.feature_base, "test")
         build_dataset_from_paths(
             [
                 (os.path.join(base, "test", "benign.jsonl"), 0),
@@ -404,6 +430,7 @@ def main() -> None:
             feature_base=args.feature_base,
             n_workers=n_workers,
             progress_every=args.progress_every,
+            flush_every_rows=args.flush_every_rows,
         )
         print("[+] Test features generated")
 

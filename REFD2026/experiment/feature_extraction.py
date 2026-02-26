@@ -320,6 +320,18 @@ class FileBehaviorFeatureExtractor:
         p = str(path).strip().lower()
         p = p.replace("/", "\\")
 
+        # ------------------------------
+        # Convert \Device\HarddiskVolumeX to drive letter
+        # ------------------------------
+        m = re.match(r"^\\device\\harddiskvolume(\d+)(\\.*)?", p)
+        if m:
+            volume_index = int(m.group(1))
+            suffix = m.group(2) or ""
+
+            # A + (X - 1)
+            drive_letter = chr(ord('a') + volume_index - 1)
+            p = f"{drive_letter}:{suffix}"
+
         if p.startswith("\\\\?\\"):
             p = p[4:]
             if p.startswith("unc\\"):

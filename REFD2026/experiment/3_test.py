@@ -3,6 +3,9 @@ import json
 import os
 from typing import Dict, List, Optional, Tuple
 
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import xgboost as xgb
@@ -12,6 +15,7 @@ from sklearn.metrics import (
     f1_score,
     precision_score,
     recall_score,
+    roc_curve,
     roc_auc_score,
 )
 
@@ -46,9 +50,21 @@ def parse_args() -> argparse.Namespace:
         help="Decision threshold",
     )
     parser.add_argument(
+        "--thresholds",
+        nargs="+",
+        type=float,
+        default=[0.5, 0.7, 0.9, 0.95, 0.97, 0.99, 0.993, 0.995, 0.997],
+        help="Optional list of thresholds to evaluate (e.g. --thresholds 0.3 0.5 0.7)",
+    )
+    parser.add_argument(
         "--report-path",
         default=os.path.join(script_dir, "test_report.json"),
         help="Output test report JSON path",
+    )
+    parser.add_argument(
+        "--roc-plot-path",
+        default=os.path.join(script_dir, "model", "test_roc_curve.png"),
+        help="Output ROC curve plot path",
     )
     return parser.parse_args()
 
@@ -81,6 +97,8 @@ def safe_metrics(
         "fp": int(fp),
         "fn": int(fn),
         "tp": int(tp),
+        "fpr": float(fp / (fp + tn)) if (fp + tn) > 0 else 0.0,
+        "fnr": float(fn / (fn + tp)) if (fn + tp) > 0 else 0.0,
         "precision": float(precision_score(y_true, y_pred, zero_division=0)),
         "recall": float(recall_score(y_true, y_pred, zero_division=0)),
         "f1": float(f1_score(y_true, y_pred, zero_division=0)),
@@ -196,43 +214,88 @@ def main() -> None:
         feature_cols=feature_cols,
     )
 
-    threshold = float(args.threshold)
+    thresholds = args.thresholds if args.thresholds is not None else [float(args.threshold)]
+    thresholds = sorted(set(float(t) for t in thresholds))
 
-    y_pred_window = (y_prob_window >= threshold).astype(np.int32)
-    window_metrics = safe_metrics(y_true_window, y_pred_window, y_prob=y_prob_window)
+    roc_plot_path = None
+    first_window_metrics = None
+    first_name_metrics = None
 
-    y_true_name, y_pred_name = build_name_level(
-        y_true=y_true_window,
-        y_prob=y_prob_window,
-        names=names,
-        threshold=threshold,
-    )
-    name_metrics = safe_metrics(y_true_name, y_pred_name, y_prob=None)
-    name_metrics.pop("roc_auc", None)
+    if len(np.unique(y_true_window)) > 1:
+        fpr_curve, tpr_curve, _ = roc_curve(y_true_window, y_prob_window)
+        roc_auc_value = float(roc_auc_score(y_true_window, y_prob_window))
+        roc_plot_path = args.roc_plot_path
+        roc_plot_dir = os.path.dirname(os.path.abspath(roc_plot_path))
+        os.makedirs(roc_plot_dir, exist_ok=True)
 
-    print("============================================================")
-    print("[+] WINDOW-LEVEL METRICS")
-    print(f"[+] Threshold         : {threshold:.6f}")
-    print(f"[+] Confusion matrix  : {window_metrics['confusion_matrix']}")
-    print(f"[+] Precision         : {window_metrics['precision']:.6f}")
-    print(f"[+] Recall            : {window_metrics['recall']:.6f}")
-    print(f"[+] F1                : {window_metrics['f1']:.6f}")
-    print(f"[+] Accuracy          : {window_metrics['accuracy']:.6f}")
-    roc_auc_text = "nan" if window_metrics["roc_auc"] is None else f"{window_metrics['roc_auc']:.6f}"
-    print(f"[+] ROC-AUC           : {roc_auc_text}")
+        plt.figure(figsize=(7, 6))
+        plt.plot(fpr_curve, tpr_curve, label=f"ROC (AUC = {roc_auc_value:.4f})")
+        plt.plot([0, 1], [0, 1], linestyle="--", color="gray", label="Random")
+        plt.xlim(0.0, 1.0)
+        plt.ylim(0.0, 1.0)
+        plt.xlabel("False Positive Rate")
+        plt.ylabel("True Positive Rate")
+        plt.title("Test ROC Curve")
+        plt.legend(loc="lower right")
+        plt.tight_layout()
+        plt.savefig(roc_plot_path, dpi=200, bbox_inches="tight")
+        plt.close()
 
-    print("============================================================")
-    print("[+] NAME-LEVEL METRICS (OR AGGREGATION BY NAME)")
-    print(f"[+] Confusion matrix  : {name_metrics['confusion_matrix']}")
-    print(f"[+] Precision         : {name_metrics['precision']:.6f}")
-    print(f"[+] Recall            : {name_metrics['recall']:.6f}")
-    print(f"[+] F1                : {name_metrics['f1']:.6f}")
-    print(f"[+] Accuracy          : {name_metrics['accuracy']:.6f}")
+    threshold_reports = []
+    for idx, threshold in enumerate(thresholds):
+        y_pred_window = (y_prob_window >= threshold).astype(np.int32)
+        window_metrics = safe_metrics(y_true_window, y_pred_window, y_prob=y_prob_window)
+
+        y_true_name, y_pred_name = build_name_level(
+            y_true=y_true_window,
+            y_prob=y_prob_window,
+            names=names,
+            threshold=threshold,
+        )
+        name_metrics = safe_metrics(y_true_name, y_pred_name, y_prob=None)
+        name_metrics.pop("roc_auc", None)
+
+        if idx == 0:
+            first_window_metrics = window_metrics
+            first_name_metrics = name_metrics
+
+        print(f"[+] Threshold         : {threshold:.6f}")
+
+        print("============================================================")
+        print("[+] WINDOW-LEVEL METRICS")
+        print(f"[+] Confusion matrix  : {window_metrics['confusion_matrix']}")
+        # print(f"[+] Precision         : {window_metrics['precision']:.6f}")
+        # print(f"[+] Recall            : {window_metrics['recall']:.6f}")
+        # print(f"[+] F1                : {window_metrics['f1']:.6f}")
+        # print(f"[+] Accuracy          : {window_metrics['accuracy']:.6f}")
+        print(f"[+] FPR               : {window_metrics['fpr']:.6f}")
+        print(f"[+] FNR               : {window_metrics['fnr']:.6f}")
+        print("[+] NAME-LEVEL METRICS (OR AGGREGATION BY NAME)")
+        print(f"[+] Confusion matrix  : {name_metrics['confusion_matrix']}")
+        # print(f"[+] Precision         : {name_metrics['precision']:.6f}")
+        # print(f"[+] Recall            : {name_metrics['recall']:.6f}")
+        # print(f"[+] F1                : {name_metrics['f1']:.6f}")
+        # print(f"[+] Accuracy          : {name_metrics['accuracy']:.6f}")
+        print(f"[+] FPR               : {name_metrics['fpr']:.6f}")
+        print(f"[+] FNR               : {name_metrics['fnr']:.6f}")
+        print("============================================================")
+
+        threshold_reports.append(
+            {
+                "threshold": threshold,
+                "window_metrics": window_metrics,
+                "name_metrics": name_metrics,
+            }
+        )
 
     report = {
-        "threshold_used": threshold,
-        "window_metrics": window_metrics,
-        "name_metrics": name_metrics,
+        "thresholds_used": thresholds,
+        "results_by_threshold": threshold_reports,
+        "roc_plot_path": roc_plot_path,
+        # Backward-compat fields: keep first-threshold summary if downstream code expects it.
+        "threshold_used": thresholds[0],
+        "window_metrics": first_window_metrics,
+        "name_metrics": first_name_metrics,
     }
 
     report_dir = os.path.dirname(os.path.abspath(args.report_path))
@@ -243,6 +306,8 @@ def main() -> None:
 
     print("============================================================")
     print(f"[+] Saved report: {args.report_path}")
+    if roc_plot_path is not None:
+        print(f"[+] Saved ROC plot: {roc_plot_path}")
 
 
 if __name__ == "__main__":

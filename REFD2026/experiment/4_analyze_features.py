@@ -247,14 +247,9 @@ def main() -> None:
     plt.close()
 
     print("============================================================")
-    print("[+] TOP FEATURES (SHAP)")
-    for item in top_30:
-        print(f"    - {item['feature']}: {item['mean_abs_shap']:.6f}")
-
-    print("============================================================")
-    print("[+] BOTTOM FEATURES (SHAP)")
-    for item in bottom_30:
-        print(f"    - {item['feature']}: {item['mean_abs_shap']:.6f}")
+    print("[+] FULL FEATURE RANKING (SHAP, HIGH -> LOW)")
+    for rank, item in enumerate(shap_rank, start=1):
+        print(f"    {rank:03d}. {item['feature']}: {item['mean_abs_shap']:.6f}")
 
     print("============================================================")
     print(f"[+] Saved: {shap_bar_path}")
