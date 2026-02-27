@@ -218,8 +218,9 @@ def process_record_worker(args: Tuple[str, int, str]) -> List[Tuple[Dict[str, An
     # sorted_tss = sorted(tss)
     # sorted_tss = sorted_tss[:1] if label == 0 else sorted_tss[:1]
     sorted_tss = [t_start]
-    
+
     rows: List[Tuple[Dict[str, Any], Dict[str, Any], str]] = []
+    time_window_counter = 0
     for ts in sorted_tss:
         windows = split_events_by_time_windows(normalized_events, WINDOW_MS, ts)
         for idx, win_events in enumerate(windows):
@@ -236,12 +237,14 @@ def process_record_worker(args: Tuple[str, int, str]) -> List[Tuple[Dict[str, An
                 "name": str(record.get("name", "")),
                 "pid": _safe_int(record.get("pid"), 0),
                 "pid_path": str(record.get("pid_path", "")),
+                "time_window_index": int(time_window_counter),
                 "window_start": int(ts + idx * WINDOW_MS),
                 "window_end": int(ts + (idx + 1) * WINDOW_MS),
                 "label": label,
             }
             row.update(features)
             rows.append((record, row, split))
+            time_window_counter += 1
 
     return rows
 
@@ -257,16 +260,17 @@ def write_rows_grouped(
 
     for out_csv, rows in sorted(cache.items(), key=lambda x: x[0]):
         ensure_dir(os.path.dirname(out_csv))
-        rows.sort(
-            key=lambda r: (
-                str(r.get("name", "")),
-                _safe_int(r.get("pid"), 0),
-                _safe_int(r.get("window_start"), 0),
-                _safe_int(r.get("window_end"), 0),
-            )
-        )
+        # rows.sort(
+        #     key=lambda r: (
+        #         str(r.get("name", "")),
+        #         _safe_int(r.get("pid"), 0),
+        #         _safe_int(r.get("time_window_index"), 0),
+        #         _safe_int(r.get("window_start"), 0),
+        #         _safe_int(r.get("window_end"), 0),
+        #     )
+        # )
         write_header = not os.path.exists(out_csv)
-        meta_cols = ["name", "pid", "pid_path", "window_start", "window_end"]
+        meta_cols = ["name", "pid", "pid_path", "time_window_index", "window_start", "window_end"]
         ignore = set(meta_cols + ["label"])
         feature_cols: List[str] = []
         seen = set()

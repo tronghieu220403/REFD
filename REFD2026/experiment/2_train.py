@@ -12,42 +12,7 @@ from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
 
 LABEL_COL = "label"
-META_COLS = {"name", "pid", "pid_path", "window_start", "window_end", LABEL_COL}
-
-
-def parse_args() -> argparse.Namespace:
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-
-    parser = argparse.ArgumentParser(description="Train XGBoost malware detector")
-    parser.add_argument(
-        "--input-glob",
-        nargs="+",
-        default=[
-            os.path.join(script_dir, "features", "train", "benign", "*.csv"),
-            os.path.join(script_dir, "features", "train", "ransom", "*.csv"),
-        ],
-        help="CSV glob patterns or directories",
-    )
-    parser.add_argument(
-        "--model-dir",
-        default=os.path.join(script_dir, "model"),
-        help="Directory to save model artifacts",
-    )
-    parser.add_argument("--random-seed", type=int, default=42, help="Random seed")
-    parser.add_argument("--val-size", type=float, default=0.2, help="Validation split ratio")
-
-    parser.add_argument("--n-estimators", type=int, default=2000)
-    parser.add_argument("--learning-rate", type=float, default=0.05)
-    parser.add_argument("--max-depth", type=int, default=6)
-    parser.add_argument("--subsample", type=float, default=0.9)
-    parser.add_argument("--colsample-bytree", type=float, default=0.9)
-    parser.add_argument("--min-child-weight", type=float, default=1.0)
-    parser.add_argument("--reg-lambda", type=float, default=1.0)
-    parser.add_argument("--early-stopping-rounds", type=int, default=50)
-    parser.add_argument("--n-jobs", type=int, default=1, help="Set 1 for max determinism")
-
-    return parser.parse_args()
-
+META_COLS = {"name", "pid", "pid_path", "time_window_index", "window_start", "window_end", LABEL_COL}
 
 def expand_input_paths(patterns: List[str]) -> List[str]:
     files: List[str] = []
@@ -136,6 +101,45 @@ def split_train_valid(
     )
     return train_idx, valid_idx, "stratified_random"
 
+def parse_args() -> argparse.Namespace:
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    parser = argparse.ArgumentParser(description="Train XGBoost malware detector")
+    parser.add_argument(
+        "--input-glob",
+        nargs="+",
+        default=[
+            os.path.join(script_dir, "features", "train", "benign", "*.csv"),
+            os.path.join(script_dir, "features", "train", "ransom", "*.csv"),
+        ],
+        help="CSV glob patterns or directories",
+    )
+    parser.add_argument(
+        "--model-dir",
+        default=os.path.join(script_dir, "model"),
+        help="Directory to save model artifacts",
+    )
+    parser.add_argument("--random-seed", type=int, default=42, help="Random seed")
+    parser.add_argument("--val-size", type=float, default=0.2, help="Validation split ratio")
+    parser.add_argument(
+        "--max-ransom-time-window",
+        type=int,
+        default=100000,
+        help="Keep ransomware rows with time_window_index < this value",
+    )
+
+    parser.add_argument("--n-estimators", type=int, default=2000)
+    parser.add_argument("--learning-rate", type=float, default=0.05)
+    parser.add_argument("--max-depth", type=int, default=6)
+    parser.add_argument("--subsample", type=float, default=0.9)
+    parser.add_argument("--colsample-bytree", type=float, default=0.9)
+    parser.add_argument("--min-child-weight", type=float, default=1.0)
+    parser.add_argument("--reg-lambda", type=float, default=1.0)
+    parser.add_argument("--early-stopping-rounds", type=int, default=50)
+    parser.add_argument("--n-jobs", type=int, default=1, help="Set 1 for max determinism")
+
+    return parser.parse_args()
+
 def main() -> None:
     args = parse_args()
 
@@ -147,6 +151,15 @@ def main() -> None:
         raise RuntimeError("No CSV files matched --input-glob")
 
     df = load_dataframe(files)
+
+    if "time_window_index" in df.columns:
+        tw = pd.to_numeric(df["time_window_index"], errors="coerce").fillna(10**9).astype(int)
+        mask_keep = ~((df[LABEL_COL] == 1) & (tw >= int(args.max_ransom_time_window)))
+        removed = int((~mask_keep).sum())
+        if removed > 0:
+            print(f"[+] Filtered ransomware rows by time_window_index: removed={removed}")
+        df = df.loc[mask_keep].copy()
+
     feature_cols = infer_feature_columns(df)
 
     for col in feature_cols:
