@@ -207,17 +207,18 @@ def process_record_worker(args: Tuple[str, int, str]) -> List[Tuple[Dict[str, An
         return []
 
     t_start = int(normalized_events[0]["ts"])
-    tss = set()
-    for ev in normalized_events:
-        r = int(ev["ts"]) % WINDOW_MS
-        k = (t_start - r) // WINDOW_MS
-        n = k * WINDOW_MS + r
-        if n <= t_start:
-            tss.add(n)
+    # tss = set()
+    # for ev in normalized_events:
+    #     r = int(ev["ts"]) % WINDOW_MS
+    #     k = (t_start - r) // WINDOW_MS
+    #     n = k * WINDOW_MS + r
+    #     if n <= t_start:
+    #         tss.add(n)
 
-    sorted_tss = sorted(tss)
-    sorted_tss = sorted_tss[:1] if label == 0 else sorted_tss[:1]
-
+    # sorted_tss = sorted(tss)
+    # sorted_tss = sorted_tss[:1] if label == 0 else sorted_tss[:1]
+    sorted_tss = [t_start]
+    
     rows: List[Tuple[Dict[str, Any], Dict[str, Any], str]] = []
     for ts in sorted_tss:
         windows = split_events_by_time_windows(normalized_events, WINDOW_MS, ts)
@@ -256,14 +257,14 @@ def write_rows_grouped(
 
     for out_csv, rows in sorted(cache.items(), key=lambda x: x[0]):
         ensure_dir(os.path.dirname(out_csv))
-        # rows.sort(
-        #     key=lambda r: (
-        #         str(r.get("name", "")),
-        #         _safe_int(r.get("pid"), 0),
-        #         _safe_int(r.get("window_start"), 0),
-        #         _safe_int(r.get("window_end"), 0),
-        #     )
-        # )
+        rows.sort(
+            key=lambda r: (
+                str(r.get("name", "")),
+                _safe_int(r.get("pid"), 0),
+                _safe_int(r.get("window_start"), 0),
+                _safe_int(r.get("window_end"), 0),
+            )
+        )
         write_header = not os.path.exists(out_csv)
         meta_cols = ["name", "pid", "pid_path", "window_start", "window_end"]
         ignore = set(meta_cols + ["label"])
