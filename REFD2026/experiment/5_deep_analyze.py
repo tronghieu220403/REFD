@@ -192,45 +192,47 @@ def aggregate_feature_impacts(
 
 
 def print_case_report(case_index: int, case: Dict[str, object]) -> None:
-    print("============================================================")
-    print(f"[FPR CASE {case_index}]")
-    print(f"[+] score             : {case['score']:.6f}")
-    print(f"[+] name              : {case['name']}")
-    print(f"[+] pid               : {case['pid']}")
-    print(f"[+] pid_path          : {case['pid_path']}")
-    print(f"[+] split             : {case['split']}")
-    print(f"[+] source_file       : {case['source_file']}")
-    print(f"[+] time_window_index : {case['time_window_index']}")
-    print(f"[+] window_start      : {case['window_start']}")
-    print(f"[+] window_end        : {case['window_end']}")
-    print("[+] FEATURE IMPACTS (increase score -> decrease score)")
-    for impact in case["feature_impacts"]:
-        print(
-            f"    {impact['contribution']:+.6f} | {impact['feature']} | "
-            f"value={impact['feature_value']}"
-        )
+    # print("============================================================")
+    # print(f"[FPR CASE {case_index}]")
+    # print(f"[+] score             : {case['score']:.6f}")
+    # print(f"[+] name              : {case['name']}")
+    # print(f"[+] pid               : {case['pid']}")
+    # print(f"[+] pid_path          : {case['pid_path']}")
+    # print(f"[+] split             : {case['split']}")
+    # print(f"[+] source_file       : {case['source_file']}")
+    # print(f"[+] time_window_index : {case['time_window_index']}")
+    # print(f"[+] window_start      : {case['window_start']}")
+    # print(f"[+] window_end        : {case['window_end']}")
+    # print("[+] FEATURE IMPACTS (increase score -> decrease score)")
+    # for impact in case["feature_impacts"]:
+    #     print(
+    #         f"    {impact['contribution']:+.6f} | {impact['feature']} | "
+    #         f"value={impact['feature_value']}"
+    #     )
+    return
 
 
 def print_overall_report(title: str, summary: Dict[str, List[Dict[str, object]]]) -> None:
-    print("============================================================")
-    print(title)
-    for rank, item in enumerate(summary["overall_influence_desc"], start=1):
-        print(
-            f"    {rank:03d}. {item['feature']} | "
-            f"mean_abs={item['mean_abs_contribution']:.6f} | "
-            f"mean={item['mean_contribution']:+.6f} | "
-            f"pos={item['positive_case_count']} | neg={item['negative_case_count']}"
-        )
+    # print("============================================================")
+    # print(title)
+    # for rank, item in enumerate(summary["overall_influence_desc"], start=1):
+    #     print(
+    #         f"    {rank:03d}. {item['feature']} | "
+    #         f"mean_abs={item['mean_abs_contribution']:.6f} | "
+    #         f"mean={item['mean_contribution']:+.6f} | "
+    #         f"pos={item['positive_case_count']} | neg={item['negative_case_count']}"
+    #     )
 
-    print("============================================================")
-    print("[+] FEATURES THAT MOST INCREASE SCORE")
-    for rank, item in enumerate(summary["increase_score_desc"], start=1):
-        print(f"    {rank:03d}. {item['feature']} | mean={item['mean_contribution']:+.6f}")
+    # print("============================================================")
+    # print("[+] FEATURES THAT MOST INCREASE SCORE")
+    # for rank, item in enumerate(summary["increase_score_desc"], start=1):
+    #     print(f"    {rank:03d}. {item['feature']} | mean={item['mean_contribution']:+.6f}")
 
-    print("============================================================")
-    print("[+] FEATURES THAT MOST DECREASE SCORE")
-    for rank, item in enumerate(summary["decrease_score_desc"], start=1):
-        print(f"    {rank:03d}. {item['feature']} | mean={item['mean_contribution']:+.6f}")
+    # print("============================================================")
+    # print("[+] FEATURES THAT MOST DECREASE SCORE")
+    # for rank, item in enumerate(summary["decrease_score_desc"], start=1):
+    #     print(f"    {rank:03d}. {item['feature']} | mean={item['mean_contribution']:+.6f}")
+    return
 
 
 def analyze_benign_fpr(
@@ -326,30 +328,30 @@ def analyze_missed_ransom(
 
     missed_cases.sort(key=lambda item: float(item["max_score"]), reverse=True)
 
-    print("============================================================")
-    print(f"[+] MISSED RANSOM NAME COUNT    : {len(missed_cases)}")
-    for rank, case in enumerate(missed_cases, start=1):
-        print("============================================================")
-        print(f"[MISSED RANSOM NAME {rank}]")
-        print(f"[+] name              : {case['ransom_name']}")
-        print(f"[+] process_count     : {case['process_count']}")
-        print(f"[+] pid_list          : {case['pid_list']}")
-        print(f"[+] pid_path_list     : {case['pid_path_list']}")
-        print(f"[+] split             : {case['split']}")
-        print(f"[+] source_file       : {case['source_file']}")
-        print(f"[+] window_count      : {case['window_count']}")
-        print(f"[+] max_score         : {case['max_score']:.6f}")
-        print(f"[+] median_score      : {case['median_score']:.6f}")
-        print(f"[+] top_10_scores_desc: {case['top_10_scores_desc']}")
-        print(f"[+] best_window_index : {case['best_window_time_window_index']}")
-        print(f"[+] best_window_start : {case['best_window_window_start']}")
-        print(f"[+] best_window_end   : {case['best_window_window_end']}")
-        print("[+] FEATURE IMPACTS OF BEST WINDOW (increase score -> decrease score)")
-        for impact in case["feature_impacts"]:
-            print(
-                f"    {impact['contribution']:+.6f} | {impact['feature']} | "
-                f"value={impact['feature_value']}"
-            )
+    # print("============================================================")
+    # print(f"[+] MISSED RANSOM NAME COUNT    : {len(missed_cases)}")
+    # for rank, case in enumerate(missed_cases, start=1):
+    #     print("============================================================")
+    #     print(f"[MISSED RANSOM NAME {rank}]")
+    #     print(f"[+] name              : {case['ransom_name']}")
+    #     print(f"[+] process_count     : {case['process_count']}")
+    #     print(f"[+] pid_list          : {case['pid_list']}")
+    #     print(f"[+] pid_path_list     : {case['pid_path_list']}")
+    #     print(f"[+] split             : {case['split']}")
+    #     print(f"[+] source_file       : {case['source_file']}")
+    #     print(f"[+] window_count      : {case['window_count']}")
+    #     print(f"[+] max_score         : {case['max_score']:.6f}")
+    #     print(f"[+] median_score      : {case['median_score']:.6f}")
+    #     print(f"[+] top_10_scores_desc: {case['top_10_scores_desc']}")
+    #     print(f"[+] best_window_index : {case['best_window_time_window_index']}")
+    #     print(f"[+] best_window_start : {case['best_window_window_start']}")
+    #     print(f"[+] best_window_end   : {case['best_window_window_end']}")
+    #     print("[+] FEATURE IMPACTS OF BEST WINDOW (increase score -> decrease score)")
+    #     for impact in case["feature_impacts"]:
+    #         print(
+    #             f"    {impact['contribution']:+.6f} | {impact['feature']} | "
+    #             f"value={impact['feature_value']}"
+    #         )
 
     overall_summary = aggregate_feature_impacts(missed_cases, feature_order) if missed_cases else {
         "overall_influence_desc": [],
