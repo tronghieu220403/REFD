@@ -53,20 +53,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--report-path",
         default=os.path.join(script_dir, "result", "fpr_deep_analysis.json"),
-        help="Output JSON report path",
+        help="Output benign FPR JSON report path",
+    )
+    parser.add_argument(
+        "--ransom-report-path",
+        default=os.path.join(script_dir, "result", "missed_ransom_deep_analysis.json"),
+        help="Output missed-ransomware JSON report path",
     )
     return parser.parse_args()
 
 
-def load_benign_rows(feature_base: str, splits: List[str]) -> pd.DataFrame:
+def load_rows(feature_base: str, splits: List[str], class_name: str) -> pd.DataFrame:
     frames: List[pd.DataFrame] = []
 
     for split in splits:
-        benign_dir = os.path.join(feature_base, split, "benign")
-        if not os.path.isdir(benign_dir):
+        class_dir = os.path.join(feature_base, split, class_name)
+        if not os.path.isdir(class_dir):
             continue
 
-        for path in sorted(glob.glob(os.path.join(benign_dir, "*.csv"))):
+        for path in sorted(glob.glob(os.path.join(class_dir, "*.csv"))):
             try:
                 df = pd.read_csv(path)
             except Exception as exc:
@@ -82,7 +87,7 @@ def load_benign_rows(feature_base: str, splits: List[str]) -> pd.DataFrame:
             frames.append(df)
 
     if not frames:
-        raise RuntimeError("No benign feature rows found for the selected splits")
+        raise RuntimeError(f"No {class_name} feature rows found for the selected splits")
 
     return pd.concat(frames, ignore_index=True)
 
@@ -121,6 +126,10 @@ def get_case_metadata(row: pd.Series) -> Dict[str, object]:
         "split": str(row.get("__split", "")),
         "source_file": str(row.get("__source_file", "")),
     }
+
+
+def build_ransom_name_key(row: pd.Series) -> str:
+    return str(row.get("name", ""))
 
 
 def build_feature_impacts(
@@ -202,9 +211,9 @@ def print_case_report(case_index: int, case: Dict[str, object]) -> None:
         )
 
 
-def print_overall_report(summary: Dict[str, List[Dict[str, object]]]) -> None:
+def print_overall_report(title: str, summary: Dict[str, List[Dict[str, object]]]) -> None:
     print("============================================================")
-    print("[+] OVERALL FEATURE INFLUENCE ON FPR CASES (DESC BY MEAN ABS CONTRIBUTION)")
+    print(title)
     for rank, item in enumerate(summary["overall_influence_desc"], start=1):
         print(
             f"    {rank:03d}. {item['feature']} | "
@@ -214,40 +223,25 @@ def print_overall_report(summary: Dict[str, List[Dict[str, object]]]) -> None:
         )
 
     print("============================================================")
-    print("[+] FEATURES THAT MOST INCREASE FALSE POSITIVE SCORE")
+    print("[+] FEATURES THAT MOST INCREASE SCORE")
     for rank, item in enumerate(summary["increase_score_desc"], start=1):
         print(f"    {rank:03d}. {item['feature']} | mean={item['mean_contribution']:+.6f}")
 
     print("============================================================")
-    print("[+] FEATURES THAT MOST DECREASE FALSE POSITIVE SCORE")
+    print("[+] FEATURES THAT MOST DECREASE SCORE")
     for rank, item in enumerate(summary["decrease_score_desc"], start=1):
         print(f"    {rank:03d}. {item['feature']} | mean={item['mean_contribution']:+.6f}")
 
 
-def main() -> None:
-    args = parse_args()
-
-    feature_cols = load_feature_list(args.feature_list_path)
-
-    booster = xgb.Booster()
-    booster.load_model(args.model_path)
-    print(f"[+] Loaded model: {args.model_path}")
-
-    benign_df = load_benign_rows(args.feature_base, args.splits)
-    feature_frame, feature_plan = build_scoring_frame(
-        df=benign_df,
-        feature_cols=feature_cols,
-        config_path=args.feature_config_path,
-    )
-    feature_order = list(feature_plan.feature_order)
-
-    print(f"[+] Loaded benign rows: {len(benign_df)}")
-    print(f"[+] Active features   : {len(feature_plan.active_features)}/{len(feature_plan.feature_order)}")
-
-    scores, contribs = predict_scores_and_contribs(booster, feature_frame, feature_order)
-    fp_indices = np.flatnonzero(scores >= float(args.threshold))
-
-    print(f"[+] Threshold X      : {float(args.threshold):.6f}")
+def analyze_benign_fpr(
+    benign_df: pd.DataFrame,
+    feature_frame: pd.DataFrame,
+    scores: np.ndarray,
+    contribs: np.ndarray,
+    feature_order: List[str],
+    threshold: float,
+) -> Dict[str, object]:
+    fp_indices = np.flatnonzero(scores >= threshold)
     print(f"[+] FPR case count   : {int(fp_indices.size)}")
 
     fp_cases: List[Dict[str, object]] = []
@@ -270,9 +264,158 @@ def main() -> None:
         "increase_score_desc": [],
         "decrease_score_desc": [],
     }
-    print_overall_report(overall_summary)
+    print_overall_report("[+] OVERALL FEATURE INFLUENCE ON FPR CASES (DESC BY MEAN ABS CONTRIBUTION)", overall_summary)
 
-    report = {
+    return {
+        "total_benign_rows": int(len(benign_df)),
+        "fpr_case_count": int(fp_indices.size),
+        "cases": fp_cases,
+        "overall_summary": overall_summary,
+    }
+
+
+def analyze_missed_ransom(
+    ransom_df: pd.DataFrame,
+    feature_frame: pd.DataFrame,
+    scores: np.ndarray,
+    contribs: np.ndarray,
+    feature_order: List[str],
+    threshold: float,
+) -> Dict[str, object]:
+    name_groups: Dict[str, List[int]] = {}
+    for idx in range(len(ransom_df)):
+        key = build_ransom_name_key(ransom_df.iloc[idx])
+        name_groups.setdefault(key, []).append(idx)
+
+    missed_cases: List[Dict[str, object]] = []
+    for ransom_name, indices in name_groups.items():
+        ransom_scores = np.asarray([float(scores[idx]) for idx in indices], dtype=np.float64)
+        if np.any(ransom_scores >= threshold):
+            continue
+
+        best_local_pos = int(np.argmax(ransom_scores))
+        best_idx = indices[best_local_pos]
+        raw_row = ransom_df.iloc[best_idx]
+        masked_row = feature_frame.iloc[best_idx]
+
+        pid_set = sorted({
+            int(pd.to_numeric(pd.Series([ransom_df.iloc[idx].get("pid", -1)]), errors="coerce").fillna(-1).iloc[0])
+            for idx in indices
+        })
+        pid_path_set = sorted({str(ransom_df.iloc[idx].get("pid_path", "")) for idx in indices})
+
+        case = get_case_metadata(raw_row)
+        case["ransom_name"] = ransom_name
+        case["process_count"] = int(len(pid_set))
+        case["pid_list"] = pid_set
+        case["pid_path_list"] = pid_path_set
+        case["window_count"] = int(len(indices))
+        case["max_score"] = float(np.max(ransom_scores))
+        case["median_score"] = float(np.median(ransom_scores))
+        case["top_10_scores_desc"] = sorted((float(score) for score in ransom_scores.tolist()), reverse=True)[:10]
+        case["best_window_time_window_index"] = case["time_window_index"]
+        case["best_window_window_start"] = case["window_start"]
+        case["best_window_window_end"] = case["window_end"]
+        case["bias"] = float(contribs[best_idx][-1]) if contribs.shape[1] == len(feature_order) + 1 else None
+        case["feature_impacts"] = build_feature_impacts(
+            feature_row=masked_row,
+            feature_cols=feature_order,
+            contrib_row=contribs[best_idx][: len(feature_order)],
+        )
+        missed_cases.append(case)
+
+    missed_cases.sort(key=lambda item: float(item["max_score"]), reverse=True)
+
+    print("============================================================")
+    print(f"[+] MISSED RANSOM NAME COUNT    : {len(missed_cases)}")
+    for rank, case in enumerate(missed_cases, start=1):
+        print("============================================================")
+        print(f"[MISSED RANSOM NAME {rank}]")
+        print(f"[+] name              : {case['ransom_name']}")
+        print(f"[+] process_count     : {case['process_count']}")
+        print(f"[+] pid_list          : {case['pid_list']}")
+        print(f"[+] pid_path_list     : {case['pid_path_list']}")
+        print(f"[+] split             : {case['split']}")
+        print(f"[+] source_file       : {case['source_file']}")
+        print(f"[+] window_count      : {case['window_count']}")
+        print(f"[+] max_score         : {case['max_score']:.6f}")
+        print(f"[+] median_score      : {case['median_score']:.6f}")
+        print(f"[+] top_10_scores_desc: {case['top_10_scores_desc']}")
+        print(f"[+] best_window_index : {case['best_window_time_window_index']}")
+        print(f"[+] best_window_start : {case['best_window_window_start']}")
+        print(f"[+] best_window_end   : {case['best_window_window_end']}")
+        print("[+] FEATURE IMPACTS OF BEST WINDOW (increase score -> decrease score)")
+        for impact in case["feature_impacts"]:
+            print(
+                f"    {impact['contribution']:+.6f} | {impact['feature']} | "
+                f"value={impact['feature_value']}"
+            )
+
+    overall_summary = aggregate_feature_impacts(missed_cases, feature_order) if missed_cases else {
+        "overall_influence_desc": [],
+        "increase_score_desc": [],
+        "decrease_score_desc": [],
+    }
+    print_overall_report("[+] OVERALL FEATURE INFLUENCE ON MISSED RANSOM NAME-LEVEL CASES (DESC BY MEAN ABS CONTRIBUTION)", overall_summary)
+
+    return {
+        "total_ransom_rows": int(len(ransom_df)),
+        "total_ransom_names": int(len(name_groups)),
+        "missed_ransom_name_count": int(len(missed_cases)),
+        "missed_ransom_name_cases": missed_cases,
+        "ransom_name_level_overall_summary": overall_summary,
+    }
+
+
+def main() -> None:
+    args = parse_args()
+
+    feature_cols = load_feature_list(args.feature_list_path)
+
+    booster = xgb.Booster()
+    booster.load_model(args.model_path)
+    print(f"[+] Loaded model: {args.model_path}")
+    print(f"[+] Threshold   : {float(args.threshold):.6f}")
+
+    benign_df = load_rows(args.feature_base, args.splits, "benign")
+    benign_feature_frame, feature_plan = build_scoring_frame(
+        df=benign_df,
+        feature_cols=feature_cols,
+        config_path=args.feature_config_path,
+    )
+    feature_order = list(feature_plan.feature_order)
+    benign_scores, benign_contribs = predict_scores_and_contribs(booster, benign_feature_frame, feature_order)
+
+    print(f"[+] Loaded benign rows: {len(benign_df)}")
+    print(f"[+] Active features   : {len(feature_plan.active_features)}/{len(feature_plan.feature_order)}")
+    benign_analysis = analyze_benign_fpr(
+        benign_df=benign_df,
+        feature_frame=benign_feature_frame,
+        scores=benign_scores,
+        contribs=benign_contribs,
+        feature_order=feature_order,
+        threshold=float(args.threshold),
+    )
+
+    ransom_df = load_rows(args.feature_base, args.splits, "ransom")
+    ransom_feature_frame, _ = build_scoring_frame(
+        df=ransom_df,
+        feature_cols=feature_cols,
+        config_path=args.feature_config_path,
+    )
+    ransom_scores, ransom_contribs = predict_scores_and_contribs(booster, ransom_feature_frame, feature_order)
+
+    print(f"[+] Loaded ransom rows: {len(ransom_df)}")
+    ransom_analysis = analyze_missed_ransom(
+        ransom_df=ransom_df,
+        feature_frame=ransom_feature_frame,
+        scores=ransom_scores,
+        contribs=ransom_contribs,
+        feature_order=feature_order,
+        threshold=float(args.threshold),
+    )
+
+    common_meta = {
         "threshold": float(args.threshold),
         "splits_analyzed": args.splits,
         "feature_config_path": args.feature_config_path,
@@ -282,19 +425,27 @@ def main() -> None:
             "include": list(feature_plan.include),
             "exclude": list(feature_plan.exclude),
         },
-        "total_benign_rows": int(len(benign_df)),
-        "fpr_case_count": int(fp_indices.size),
-        "cases": fp_cases,
-        "overall_summary": overall_summary,
     }
+
+    benign_report = dict(common_meta)
+    benign_report.update(benign_analysis)
+
+    ransom_report = dict(common_meta)
+    ransom_report.update(ransom_analysis)
 
     report_dir = os.path.dirname(os.path.abspath(args.report_path))
     os.makedirs(report_dir, exist_ok=True)
     with open(args.report_path, "w", encoding="utf-8") as f:
-        json.dump(report, f, indent=2)
+        json.dump(benign_report, f, indent=2)
+
+    ransom_report_dir = os.path.dirname(os.path.abspath(args.ransom_report_path))
+    os.makedirs(ransom_report_dir, exist_ok=True)
+    with open(args.ransom_report_path, "w", encoding="utf-8") as f:
+        json.dump(ransom_report, f, indent=2)
 
     print("============================================================")
-    print(f"[+] Saved report: {args.report_path}")
+    print(f"[+] Saved benign FPR report   : {args.report_path}")
+    print(f"[+] Saved missed ransom report: {args.ransom_report_path}")
 
 
 if __name__ == "__main__":

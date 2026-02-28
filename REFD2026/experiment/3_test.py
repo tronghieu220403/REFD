@@ -80,10 +80,11 @@ def collect_predictions(
     booster: xgb.Booster,
     feature_cols: List[str],
     config_path: Optional[str],
-) -> Tuple[np.ndarray, np.ndarray, List[str], np.ndarray, object]:
+) -> Tuple[np.ndarray, np.ndarray, List[str], List[str], np.ndarray, object]:
     all_probs: List[float] = []
     all_true: List[int] = []
-    all_process_keys: List[str] = []
+    all_entity_keys: List[str] = []
+    all_ransom_names: List[str] = []
     all_time_windows: List[float] = []
     feature_plan = None
 
@@ -121,10 +122,11 @@ def collect_predictions(
                 pid_series = pd.to_numeric(df["pid"], errors="coerce").fillna(-1).astype(int) if "pid" in df.columns else pd.Series([-1] * len(df))
                 pid_path_series = df["pid_path"].fillna("").astype(str) if "pid_path" in df.columns else pd.Series([""] * len(df))
 
-                process_keys = [
-                    f"{(name if name else fallback_name)}||{int(pid)}||{pid_path}"
+                names = [(name if name else fallback_name) for name in name_series.tolist()]
+                entity_keys = [
+                    name if true_label == 1 else f"{split}||{name}||{int(pid)}||{pid_path}"
                     for name, pid, pid_path in zip(
-                        name_series.tolist(),
+                        names,
                         pid_series.tolist(),
                         pid_path_series.tolist(),
                     )
@@ -139,7 +141,8 @@ def collect_predictions(
 
                 all_probs.extend(scores.tolist())
                 all_true.extend([true_label] * len(scores))
-                all_process_keys.extend(process_keys)
+                all_entity_keys.extend(entity_keys)
+                all_ransom_names.extend(names)
                 all_time_windows.extend(tw_series.tolist())
 
     if not all_probs:
@@ -148,7 +151,8 @@ def collect_predictions(
     return (
         np.asarray(all_true, dtype=np.int32),
         np.asarray(all_probs, dtype=np.float64),
-        all_process_keys,
+        all_entity_keys,
+        all_ransom_names,
         np.asarray(all_time_windows, dtype=np.float64),
         feature_plan,
     )
@@ -157,24 +161,24 @@ def collect_predictions(
 def build_name_level(
     y_true: np.ndarray,
     y_prob: np.ndarray,
-    process_keys: List[str],
+    entity_keys: List[str],
     threshold: float,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    process_max_prob: Dict[str, float] = {}
-    process_true: Dict[str, int] = {}
+    entity_max_prob: Dict[str, float] = {}
+    entity_true: Dict[str, int] = {}
 
-    for process_key, y_true_item, y_prob_item in zip(process_keys, y_true.tolist(), y_prob.tolist()):
-        if process_key not in process_max_prob or y_prob_item > process_max_prob[process_key]:
-            process_max_prob[process_key] = float(y_prob_item)
+    for entity_key, y_true_item, y_prob_item in zip(entity_keys, y_true.tolist(), y_prob.tolist()):
+        if entity_key not in entity_max_prob or y_prob_item > entity_max_prob[entity_key]:
+            entity_max_prob[entity_key] = float(y_prob_item)
 
-        if process_key not in process_true:
-            process_true[process_key] = int(y_true_item)
+        if entity_key not in entity_true:
+            entity_true[entity_key] = int(y_true_item)
         else:
-            process_true[process_key] = max(process_true[process_key], int(y_true_item))
+            entity_true[entity_key] = max(entity_true[entity_key], int(y_true_item))
 
-    ordered_keys = sorted(process_max_prob.keys())
-    y_true_name = np.asarray([process_true[key] for key in ordered_keys], dtype=np.int32)
-    y_prob_name = np.asarray([process_max_prob[key] for key in ordered_keys], dtype=np.float64)
+    ordered_keys = sorted(entity_max_prob.keys())
+    y_true_name = np.asarray([entity_true[key] for key in ordered_keys], dtype=np.int32)
+    y_prob_name = np.asarray([entity_max_prob[key] for key in ordered_keys], dtype=np.float64)
     y_pred_name = (y_prob_name >= threshold).astype(np.int32)
     return y_true_name, y_pred_name
 
@@ -182,30 +186,32 @@ def build_name_level(
 def ransomware_detection_time_stats(
     y_true_window: np.ndarray,
     y_pred_window: np.ndarray,
-    process_keys: List[str],
+    ransom_names: List[str],
     time_windows: np.ndarray,
 ) -> Dict[str, object]:
-    process_true_label: Dict[str, int] = {}
+    ransom_name_set = set()
     first_detect_time: Dict[str, float] = {}
 
-    for process_key, y_true_item, y_pred_item, time_window in zip(
-        process_keys,
+    for ransom_name, y_true_item, y_pred_item, time_window in zip(
+        ransom_names,
         y_true_window.tolist(),
         y_pred_window.tolist(),
         time_windows.tolist(),
     ):
-        process_true_label[process_key] = max(process_true_label.get(process_key, 0), int(y_true_item))
-        if int(y_true_item) == 1 and int(y_pred_item) == 1:
-            if process_key not in first_detect_time or time_window < first_detect_time[process_key]:
-                first_detect_time[process_key] = float(time_window)
+        if int(y_true_item) != 1:
+            continue
+        ransom_name_set.add(ransom_name)
+        if int(y_pred_item) == 1:
+            if ransom_name not in first_detect_time or time_window < first_detect_time[ransom_name]:
+                first_detect_time[ransom_name] = float(time_window)
 
-    ransom_processes = [process_key for process_key, label in process_true_label.items() if label == 1]
-    detected_times = [first_detect_time[process_key] for process_key in ransom_processes if process_key in first_detect_time]
+    ordered_ransom_names = sorted(ransom_name_set)
+    detected_times = [first_detect_time[name] for name in ordered_ransom_names if name in first_detect_time]
 
     if not detected_times:
         return {
-            "detected_ransom_processes": 0,
-            "total_ransom_processes": len(ransom_processes),
+            "detected_ransom_names": 0,
+            "total_ransom_names": len(ordered_ransom_names),
             "avg_detection_time_window": None,
             "median_detection_time_window": None,
             "min_detection_time_window": None,
@@ -215,8 +221,8 @@ def ransomware_detection_time_stats(
 
     arr = np.asarray(detected_times, dtype=np.float64)
     return {
-        "detected_ransom_processes": int(arr.size),
-        "total_ransom_processes": len(ransom_processes),
+        "detected_ransom_names": int(arr.size),
+        "total_ransom_names": len(ordered_ransom_names),
         "avg_detection_time_window": float(np.mean(arr)),
         "median_detection_time_window": float(np.median(arr)),
         "min_detection_time_window": float(np.min(arr)),
@@ -259,7 +265,7 @@ def parse_args() -> argparse.Namespace:
         "--thresholds",
         nargs="+",
         type=float,
-        default=[0.999],
+        default=[0.997],
         help="Optional list of thresholds to evaluate (e.g. --thresholds 0.3 0.5 0.7)",
     )
     parser.add_argument(
@@ -301,7 +307,7 @@ def main() -> None:
     print(f"[+] Loaded model: {args.model_path}")
     print(f"[+] Evaluation splits: {splits}")
 
-    y_true_window, y_prob_window, process_keys, time_windows, feature_plan = collect_predictions(
+    y_true_window, y_prob_window, entity_keys, ransom_names, time_windows, feature_plan = collect_predictions(
         feature_base=args.feature_base,
         splits=splits,
         booster=booster,
@@ -343,14 +349,14 @@ def main() -> None:
         detection_stats = ransomware_detection_time_stats(
             y_true_window=y_true_window,
             y_pred_window=y_pred_window,
-            process_keys=process_keys,
+            ransom_names=ransom_names,
             time_windows=time_windows,
         )
 
         y_true_name, y_pred_name = build_name_level(
             y_true=y_true_window,
             y_prob=y_prob_window,
-            process_keys=process_keys,
+            entity_keys=entity_keys,
             threshold=threshold,
         )
         name_metrics = safe_metrics(y_true_name, y_pred_name, y_prob=None)
@@ -371,7 +377,7 @@ def main() -> None:
         print(f"   [+] FPR               : {window_metrics['fpr']:.6f}")
         # print(f"   [+] TPR               : {name_metrics['recall']:.6f}")
         # print(f"   [+] FNR               : {window_metrics['fnr']:.6f}")
-        print("[X] PID-LEVEL METRICS (OR AGGREGATION BY <name+pid+pid_path>)")
+        print("[X] ENTITY-LEVEL METRICS (benign: split+name+pid+pid_path, ransom: name)")
         print(f"   [+] Confusion matrix  : {name_metrics['confusion_matrix']}")
         # print(f"   [+] Precision         : {name_metrics['precision']:.6f}")
         # print(f"   [+] Recall            : {name_metrics['recall']:.6f}")
@@ -381,7 +387,7 @@ def main() -> None:
         print(f"   [+] TPR               : {name_metrics['recall']:.6f}")
         # print(f"   [+] FNR               : {name_metrics['fnr']:.6f}")
         print("[X] RANSOM DETECTION TIME (time_window_index)")
-        print(f"   [+] Detected/Total    : {detection_stats['detected_ransom_processes']}/{detection_stats['total_ransom_processes']}")
+        print(f"   [+] Detected/Total    : {detection_stats['detected_ransom_names']}/{detection_stats['total_ransom_names']}")
         print(f"   [+] Avg               : {detection_stats['avg_detection_time_window']}")
         print(f"   [+] Median, Min, Max  : {detection_stats['median_detection_time_window']}, {detection_stats['min_detection_time_window']}, {detection_stats['max_detection_time_window']}")
         print(f"   [+] Top-10 desc       : {detection_stats['top_detection_time_windows_desc']}")
