@@ -1,18 +1,31 @@
+# type: ignore
 import argparse
 import glob
 import json
 import os
 import random
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
 import xgboost as xgb
 from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
+from feature_vector_utils import build_feature_frame
+
 
 LABEL_COL = "label"
-META_COLS = {"name", "pid", "pid_path", "time_window_index", "window_start", "window_end", LABEL_COL}
+META_COLS = {
+    "name",
+    "pid",
+    "pid_path",
+    "time_window_index",
+    "window_start",
+    "window_end",
+    LABEL_COL,
+    "__source_file",
+}
+
 
 def expand_input_paths(patterns: List[str]) -> List[str]:
     files: List[str] = []
@@ -63,7 +76,7 @@ def load_dataframe(csv_files: List[str]) -> pd.DataFrame:
 
 
 def infer_feature_columns(df: pd.DataFrame) -> List[str]:
-    candidate = [c for c in df.columns if c not in META_COLS and c != "__source_file"]
+    candidate = [c for c in df.columns if c not in META_COLS]
     if not candidate:
         raise RuntimeError("No candidate feature columns found")
 
@@ -88,18 +101,19 @@ def split_train_valid(
         groups = df["name"].fillna("__missing__").astype(str)
         if groups.nunique() >= 2:
             splitter = GroupShuffleSplit(n_splits=1, test_size=val_size, random_state=random_seed)
-            train_idx, valid_idx = next(splitter.split(df, y=y, groups=groups)) # type:ignore
+            train_idx, valid_idx = next(splitter.split(df, y=y, groups=groups))
             return train_idx, valid_idx, "group_by_name"
 
-    stratify = y if len(np.unique(y)) > 1 else None # type:ignore
+    stratify = y if len(np.unique(y)) > 1 else None
     idx = np.arange(len(df))
     train_idx, valid_idx = train_test_split(
         idx,
         test_size=val_size,
         random_state=random_seed,
-        stratify=stratify, # type:ignore
+        stratify=stratify,
     )
     return train_idx, valid_idx, "stratified_random"
+
 
 def parse_args() -> argparse.Namespace:
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -119,15 +133,19 @@ def parse_args() -> argparse.Namespace:
         default=os.path.join(script_dir, "model"),
         help="Directory to save model artifacts",
     )
+    parser.add_argument(
+        "--feature-config-path",
+        default=None,
+        help="Optional JSON config with include/exclude feature lists",
+    )
     parser.add_argument("--random-seed", type=int, default=42, help="Random seed")
     parser.add_argument("--val-size", type=float, default=0.2, help="Validation split ratio")
     parser.add_argument(
         "--max-ransom-time-window",
         type=int,
-        default=100000,
+        default=1000000,
         help="Keep ransomware rows with time_window_index < this value",
     )
-
     parser.add_argument("--n-estimators", type=int, default=2000)
     parser.add_argument("--learning-rate", type=float, default=0.05)
     parser.add_argument("--max-depth", type=int, default=6)
@@ -139,6 +157,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--n-jobs", type=int, default=1, help="Set 1 for max determinism")
 
     return parser.parse_args()
+
 
 def main() -> None:
     args = parse_args()
@@ -162,9 +181,6 @@ def main() -> None:
 
     feature_cols = infer_feature_columns(df)
 
-    for col in feature_cols:
-        df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0.0)
-
     train_idx, valid_idx, split_method = split_train_valid(
         df=df,
         random_seed=args.random_seed,
@@ -174,10 +190,21 @@ def main() -> None:
     train_df = df.iloc[train_idx].copy()
     valid_df = df.iloc[valid_idx].copy()
 
-    X_train = train_df[feature_cols].astype(np.float32)
+    train_feature_frame, feature_plan = build_feature_frame(
+        df=train_df,
+        feature_order=feature_cols,
+        config_path=args.feature_config_path,
+    )
+    valid_feature_frame, _ = build_feature_frame(
+        df=valid_df,
+        feature_order=feature_cols,
+        config_path=args.feature_config_path,
+    )
+
+    X_train = train_feature_frame.to_numpy(dtype=np.float32, copy=False)
     y_train = train_df[LABEL_COL].astype(int).values
 
-    X_valid = valid_df[feature_cols].astype(np.float32)
+    X_valid = valid_feature_frame.to_numpy(dtype=np.float32, copy=False)
     y_valid = valid_df[LABEL_COL].astype(int).values
 
     params = {
@@ -219,6 +246,11 @@ def main() -> None:
     meta = {
         "model_path": model_path,
         "feature_order": feature_cols,
+        "feature_config_path": args.feature_config_path,
+        "active_features": list(feature_plan.active_features),
+        "inactive_features": list(feature_plan.inactive_features),
+        "include": list(feature_plan.include),
+        "exclude": list(feature_plan.exclude),
         "random_seed": int(args.random_seed),
         "split_method": split_method,
         "train_rows": int(len(train_df)),
@@ -231,8 +263,9 @@ def main() -> None:
         json.dump(meta, f, indent=2)
 
     print("============================================================")
-    print(f"[+] Saved model      : {model_path}")
-    print(f"[+] Saved meta       : {meta_path}")
+    print(f"[+] Active features   : {len(feature_plan.active_features)}/{len(feature_plan.feature_order)}")
+    print(f"[+] Saved model       : {model_path}")
+    print(f"[+] Saved meta        : {meta_path}")
     print(f"[+] Saved feature list: {feature_path}")
 
 

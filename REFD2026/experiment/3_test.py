@@ -258,8 +258,6 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--include-train-set",
-        nargs="+",
-        type=bool,
         default=True,
         help="Include train set to evaluate",
     )
@@ -356,8 +354,6 @@ def main() -> None:
         print("[X] RANSOM DETECTION TIME (time_window_index)")
         print(f"   [+] Detected/Total    : {detection_stats['detected_ransom_processes']}/{detection_stats['total_ransom_processes']}")
         print(f"   [+] Avg               : {detection_stats['avg_detection_time_window']}")
-        print(f"   [+] Median            : {detection_stats['median_detection_time_window']}")
-        print(f"   [+] Min               : {detection_stats['min_detection_time_window']}")
         print(f"   [+] Max               : {detection_stats['max_detection_time_window']}")
         print(f"   [+] Top-10 desc       : {detection_stats['top_detection_time_windows_desc']}")
         print("============================================================\n")

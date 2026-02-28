@@ -18,16 +18,27 @@ class FileBehaviorFeatureExtractor:
     TIME_BINS = 10
     _PATH_RULES = [
         ("temp/cache", re.compile(r"^c:\\users\\[^\\]+\\appdata\\local\\temp(\\|$)")),
+        
         ("program", re.compile(r"^c:\\users\\[^\\]+\\appdata\\roaming(\\|$)")),
         ("program", re.compile(r"^c:\\users\\[^\\]+\\appdata\\locallow(\\|$)")),
         ("program", re.compile(r"^c:\\users\\[^\\]+\\appdata\\local(\\|$)")),
         ("program", re.compile(r"^c:\\program files \(x86\)(\\|$)")),
         ("program", re.compile(r"^c:\\program files(\\|$)")),
         ("program", re.compile(r"^c:\\programdata(\\|$)")),
-        ("system", re.compile(r"^c:\\windows(\\|$)")),
+        
+        ("system", re.compile(r"^c:\\windows(\\|$)", re.IGNORECASE)),
+        ("system", re.compile(r"^c:\\\$winreagent(\\|$)", re.IGNORECASE)),
+        ("system", re.compile(r"^c:\\windows\.old(\\|$)", re.IGNORECASE)),
+        ("system", re.compile(r"^c:\\\$windows\.~bt(\\|$)", re.IGNORECASE)),
+        ("system", re.compile(r"^c:\\\$getcurrent(\\|$)", re.IGNORECASE)),
+        ("system", re.compile(r"^c:\\recovery(\\|$)", re.IGNORECASE)),
+        ("system", re.compile(r"^c:\\boot(\\|$)", re.IGNORECASE)),
+        ("system", re.compile(r"^c:\\system volume information(\\|$)", re.IGNORECASE)),
+
         ("user", re.compile(r"^c:\\users\\public(\\|$)")),
         ("user", re.compile(r"^c:\\users\\[^\\]+(\\|$)")),
         ("user", re.compile(r"^\\\\(\\|$)")),
+        
     ]
 
     _DOC_EXTS = {
