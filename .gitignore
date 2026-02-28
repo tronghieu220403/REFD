@@ -40,3 +40,4 @@ REFD2026/experiment/model/test_roc_curve.png
 REFD2026/experiment/model/top_30_features.json
 test-benign/benign-machine.tsk.delta
 /REFD2026/experiment/model
+/REFD2026/experiment/result
