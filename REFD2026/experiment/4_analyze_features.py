@@ -48,7 +48,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--random-seed", type=int, default=42)
     parser.add_argument(
         "--output-dir",
-        default=os.path.join(script_dir, "model"),
+        default=os.path.join(script_dir, "result"),
         help="Directory for outputs",
     )
     return parser.parse_args()
@@ -126,6 +126,22 @@ def save_json(path: str, obj: object) -> None:
         json.dump(obj, f, indent=2)
 
 
+def build_ordered_importance_payload(feature_order: List[str], contribution_map: Dict[str, float]) -> List[Dict[str, object]]:
+    sorted_features = sorted(
+        feature_order,
+        key=lambda feature: (-float(contribution_map.get(feature, 0.0)), feature_order.index(feature)),
+    )
+    rank_map = {feature: rank for rank, feature in enumerate(sorted_features, start=1)}
+    return [
+        {
+            "feature": feature,
+            "contribution": float(contribution_map.get(feature, 0.0)),
+            "rank": int(rank_map[feature]),
+        }
+        for feature in feature_order
+    ]
+
+
 def main() -> None:
     args = parse_args()
     np.random.seed(args.random_seed)
@@ -170,19 +186,20 @@ def main() -> None:
         )
 
     mean_abs_shap = np.mean(np.abs(shap_core), axis=0)
-    shap_rank = [
-        {"feature": feature_order[idx], "mean_abs_shap": float(mean_abs_shap[idx])}
+    shap_contribution_map = {
+        feature_order[idx]: float(mean_abs_shap[idx])
         for idx in range(len(feature_order))
-    ]
-    shap_rank.sort(key=lambda item: item["mean_abs_shap"], reverse=True)
+    }
+    shap_rank = build_ordered_importance_payload(feature_order, shap_contribution_map)
+    shap_rank_sorted = sorted(shap_rank, key=lambda item: item["rank"])
 
-    top_30 = shap_rank[:30]
-    bottom_30 = list(reversed(shap_rank[-30:]))
+    # top_30 = shap_rank_sorted[:30]
+    # bottom_30 = list(reversed(shap_rank_sorted[-30:]))
 
-    top_path = os.path.join(args.output_dir, "top_30_features.json")
-    bottom_path = os.path.join(args.output_dir, "bottom_30_features.json")
-    save_json(top_path, top_30)
-    save_json(bottom_path, bottom_30)
+    # top_path = os.path.join(args.output_dir, "top_30_features.json")
+    # bottom_path = os.path.join(args.output_dir, "bottom_30_features.json")
+    # save_json(top_path, top_30)
+    # save_json(bottom_path, bottom_30)
 
     plt.figure(figsize=(10, 8))
     shap.summary_plot(
@@ -220,11 +237,13 @@ def main() -> None:
         if mapped in gain_map:
             gain_map[mapped] = float(value)
 
+    gain_rank = build_ordered_importance_payload(feature_order, gain_map)
+
     full_ranking_path = os.path.join(args.output_dir, "full_feature_ranking_shap.json")
     save_json(full_ranking_path, shap_rank)
 
     gain_path = os.path.join(args.output_dir, "importance_gain_raw.json")
-    save_json(gain_path, gain_map)
+    save_json(gain_path, gain_rank)
 
     gain_sorted = sorted(gain_map.items(), key=lambda item: item[1], reverse=True)[:30]
     labels = [item[0] for item in gain_sorted][::-1]
@@ -243,15 +262,15 @@ def main() -> None:
     print("============================================================")
     print(f"[+] Active features: {len(feature_plan.active_features)}/{len(feature_plan.feature_order)}")
     print("[+] FULL FEATURE RANKING (SHAP, HIGH -> LOW)")
-    for rank, item in enumerate(shap_rank, start=1):
-        print(f"    {rank:03d}. {item['feature']}: {item['mean_abs_shap']:.6f}")
+    for item in shap_rank_sorted:
+        print(f"    {item['rank']:03d}. {item['feature']}: {item['contribution']:.6f}")
 
     print("============================================================")
     print(f"[+] Saved: {shap_bar_path}")
     print(f"[+] Saved: {shap_beeswarm_path} (if generated)")
     print(f"[+] Saved: {gain_plot_path}")
-    print(f"[+] Saved: {top_path}")
-    print(f"[+] Saved: {bottom_path}")
+    # print(f"[+] Saved: {top_path}")
+    # print(f"[+] Saved: {bottom_path}")
     print(f"[+] Saved: {full_ranking_path}")
     print(f"[+] Saved: {gain_path}")
 

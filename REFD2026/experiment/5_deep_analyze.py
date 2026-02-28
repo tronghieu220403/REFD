@@ -52,7 +52,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--report-path",
-        default=os.path.join(script_dir, "model", "fpr_deep_analysis.json"),
+        default=os.path.join(script_dir, "result", "fpr_deep_analysis.json"),
         help="Output JSON report path",
     )
     return parser.parse_args()

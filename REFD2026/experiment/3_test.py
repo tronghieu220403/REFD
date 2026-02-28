@@ -264,12 +264,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--report-path",
-        default=os.path.join(script_dir, "test_report.json"),
+        default=os.path.join(script_dir, "result", "test_report.json"),
         help="Output test report JSON path",
     )
     parser.add_argument(
         "--roc-plot-path",
-        default=os.path.join(script_dir, "model", "test_roc_curve.png"),
+        default=os.path.join(script_dir, "result", "test_roc_curve.png"),
         help="Output ROC curve plot path",
     )
     parser.add_argument(
