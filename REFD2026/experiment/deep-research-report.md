@@ -378,6 +378,80 @@ Trong đó:
   - \( user\_id(p) \) là định danh user suy ra từ segment user trong đường dẫn (hoặc principal tương đương).  
   - Chỉ tính trên các sự kiện thuộc nhóm `user`. Lưu ý nếu có nhiều hơn 1 folder nằm ngoài `C:\Users\<*>\` thì chỉ tính là 1.
 
+### Số file có nhiều hơn 2 đuôi bị tác động
+
+- **f_impacted_multi_suffix_file_count — Số file nhiều hơn 2 đuôi bị tác động (int)**  
+
+Định nghĩa số đuôi:  
+Với một path \( p \),  
+\(
+suffix\_cnt(p) = \max(0,\ |\text{split}(\text{basename}(p), ".")| - 1)
+\).  
+
+Ví dụ:  
+- `a.docx` → 1  
+- `a.docx.locked` → 2  
+- `a.docx.locked.v2` → 3  
+
+Định nghĩa “bị tác động”:  
+Với mỗi file logic \( f \),  
+\(
+impact(f) = n_C(f) + n_W(f) + n_{Rnew}(f)
+\).  
+
+File được coi là impacted nếu \( impact(f) > 0 \).
+
+Trong trường hợp có rename, có thể nối old-path và new-path trong cùng cửa sổ để tạo file logic duy nhất.
+
+Định nghĩa của đặc trưng:  
+\(
+f_{impacted\_multi\_suffix\_file\_count} =
+\left| 
+\{ f : impact(f) > 0 \land \max suffix\_cnt(f) > 2 \}
+\right|
+\).
+
+### Tương quan giữa PID_Path và thư mục bị tác động
+
+- **f_pidpath_in_programfiles — PID_Path nằm trong Program Files hay không (int ∈ {0,1})**
+
+Định nghĩa:  
+\(
+f_{pidpath\_in\_programfiles} = 1
+\) nếu `pid_path` match:  
+- `^C:\Program Files\`  
+- `^C:\Program Files (x86)\`  
+
+Ngược lại bằng 0.
+
+- **f_impacted_in_pid_appdir_ratio — Tỉ lệ file bị tác động nằm trong thư mục app của PID (float)**  
+
+Nếu  
+\(
+f_{pidpath\_in\_programfiles} = 0
+\)  
+thì feature này = 0.
+
+Ngược lại:  
+
+- Xác định `app_base` từ `pid_path`:  
+  lấy segment thư mục cấp 1 dưới `Program Files` hoặc `Program Files (x86)`.
+
+- Gọi \( \mathcal{F}_{imp} \) là tập file impacted trong cửa sổ.
+
+- \( f \in \mathcal{F}_{imp} \) được coi là “thuộc app” nếu  
+  `dir(p_f)` có prefix `app_base`.
+
+Định nghĩa của đặc trưng:  
+\(
+f_{impacted\_in\_pid\_appdir\_ratio} =
+\frac{
+|\{ f \in \mathcal{F}_{imp} : under\_app\_base(f)=1 \}|
+}{
+|\mathcal{F}_{imp}| + \varepsilon
+}
+\).
+
 ### Histogram mặt nạ hành vi theo file
 
 Ý tưởng: với mỗi file \(f\), xét trong cửa sổ các op-type đã xảy ra trên file đó, tạo mặt nạ 4-bit:  

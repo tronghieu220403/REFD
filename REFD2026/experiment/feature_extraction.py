@@ -18,7 +18,8 @@ class FileBehaviorFeatureExtractor:
     TIME_BINS = 10
     _PATH_RULES = [
         ("temp/cache", re.compile(r"^c:\\users\\[^\\]+\\appdata\\local\\temp(\\|$)")),
-        
+        ("temp/cache", re.compile(r"^c:\\windows\\temp(\\|$)")),
+
         ("program", re.compile(r"^c:\\users\\[^\\]+\\appdata\\roaming(\\|$)")),
         ("program", re.compile(r"^c:\\users\\[^\\]+\\appdata\\locallow(\\|$)")),
         ("program", re.compile(r"^c:\\users\\[^\\]+\\appdata\\local(\\|$)")),
